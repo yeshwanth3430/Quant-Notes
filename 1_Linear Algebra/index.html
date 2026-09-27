@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linear Algebra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <b>Linear Algebra</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page">
+  <p class="meta">Subject 01</p>
+  <h1>Linear Algebra</h1>
+  <p class="subtitle">Vectors, matrices, elimination, vector spaces, orthogonality, determinants, eigenvalues, SVD — the language of portfolios and factor models.</p>
+
+  <!-- NOTES: lectures numbered continuously across units. When written: drop class="todo", wrap title in <a>, set status. -->
+  <h2>Unit I: Ax = b and the Four Subspaces</h2>
+  <ol class="toc">
+    <li><span class="n">01</span><span class="t"><a href="01_geometry-of-linear-equations.html">The Geometry of Linear Equations</a></span><span class="s">Written</span></li>
+    <li><span class="n">02</span><span class="t"><a href="02_overview-of-key-ideas.html">An Overview of Key Ideas</a></span><span class="s">Written</span></li>
+    <li class="todo"><span class="n">03</span><span class="t">Elimination with Matrices</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">04</span><span class="t">Multiplication and Inverse Matrices</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">05</span><span class="t">Factorization into A = LU</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">06</span><span class="t">Transposes, Permutations, Vector Spaces</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">07</span><span class="t">Column Space and Nullspace</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">08</span><span class="t">Solving Ax = 0: Pivot Variables, Special Solutions</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">09</span><span class="t">Solving Ax = b: Row Reduced Form R</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">10</span><span class="t">Independence, Basis and Dimension</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">11</span><span class="t">The Four Fundamental Subspaces</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">12</span><span class="t">Matrix Spaces; Rank 1; Small World Graphs</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">13</span><span class="t">Graphs, Networks, Incidence Matrices</span><span class="s">Not written</span></li>
+    <li class="todo exam"><span class="n">R</span><span class="t">Exam 1 Review</span><span class="s">Review</span></li>
+    <li class="todo exam"><span class="n">E</span><span class="t">Exam 1</span><span class="s">Exam</span></li>
+  </ol>
+
+  <h2>Unit II: Least Squares, Determinants and Eigenvalues</h2>
+  <ol class="toc">
+    <li class="todo"><span class="n">14</span><span class="t">Orthogonal Vectors and Subspaces</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">15</span><span class="t">Projections onto Subspaces</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">16</span><span class="t">Projection Matrices and Least Squares</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">17</span><span class="t">Orthogonal Matrices and Gram-Schmidt</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">18</span><span class="t">Properties of Determinants</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">19</span><span class="t">Determinant Formulas and Cofactors</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">20</span><span class="t">Cramer's Rule, Inverse Matrix and Volume</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">21</span><span class="t">Eigenvalues and Eigenvectors</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">22</span><span class="t">Diagonalization and Powers of A</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">23</span><span class="t">Differential Equations and exp(At)</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">24</span><span class="t">Markov Matrices; Fourier Series</span><span class="s">Not written</span></li>
+    <li class="todo exam"><span class="n">R</span><span class="t">Exam 2 Review</span><span class="s">Review</span></li>
+    <li class="todo exam"><span class="n">E</span><span class="t">Exam 2</span><span class="s">Exam</span></li>
+  </ol>
+
+  <h2>Unit III: Positive Definite Matrices and Applications</h2>
+  <ol class="toc">
+    <li class="todo"><span class="n">25</span><span class="t">Symmetric Matrices and Positive Definiteness</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">26</span><span class="t">Complex Matrices; Fast Fourier Transform (FFT)</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">27</span><span class="t">Positive Definite Matrices and Minima</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">28</span><span class="t">Similar Matrices and Jordan Form</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">29</span><span class="t">Singular Value Decomposition</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">30</span><span class="t">Linear Transformations and their Matrices</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">31</span><span class="t">Change of Basis; Image Compression</span><span class="s">Not written</span></li>
+    <li class="todo"><span class="n">32</span><span class="t">Left and Right Inverses; Pseudoinverse</span><span class="s">Not written</span></li>
+    <li class="todo exam"><span class="n">R</span><span class="t">Exam 3 Review</span><span class="s">Review</span></li>
+    <li class="todo exam"><span class="n">E</span><span class="t">Exam 3</span><span class="s">Exam</span></li>
+  </ol>
+</main>
+</body>
+</html>

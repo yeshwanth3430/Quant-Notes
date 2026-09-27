@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LECTURE TITLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<!--
+  TEMPLATE for one lecture note. Copy into a subject folder as
+  NN_short-name.html (e.g. 01_vectors.html), then fill in.
+  Math: $inline$ and $$display$$ (KaTeX).
+  Boxes: definition | theorem | example | intuition | finance | pitfall
+-->
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">SUBJECT</a> / <b>LECTURE TITLE</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture NN</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">SUBJECT · Lecture NN</p>
+  <h1>LECTURE TITLE</h1>
+  <p class="subtitle">One-line summary of what this lecture is about.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <h2>1. Section</h2>
+    <p>Body text with inline math $Ax = b$.</p>
+
+    <div class="box definition"><span class="label">Definition</span>
+      <p>…</p>
+    </div>
+
+    <div class="box theorem"><span class="label">Theorem</span>
+      <p>$$ \det(AB) = \det A \,\det B $$</p>
+    </div>
+    <details class="proof"><summary>Proof</summary>
+      <p>…</p>
+    </details>
+
+    <div class="box example"><span class="label">Example</span><p>…</p></div>
+    <div class="box intuition"><span class="label">Intuition</span><p>…</p></div>
+    <div class="box finance"><span class="label">In finance</span><p>…</p></div>
+    <div class="box pitfall"><span class="label">Watch out</span><p>…</p></div>
+
+    <div class="summary">
+      <h3>Key takeaways</h3>
+      <ul><li>…</li></ul>
+    </div>
+  </div>
+  </section>
+
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+    <h2>Worked examples</h2>
+    <div class="worked">
+      <h3>Example 1: …</h3>
+      <div class="box example"><span class="label">Problem</span><p>…</p></div>
+      <div class="steps">
+        <p><b>Step.</b> …</p>
+        <p class="answer">Answer: …</p>
+      </div>
+    </div>
+
+    <h2>Practice problems</h2>
+    <details class="proof"><summary>1. …</summary><p>…</p></details>
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="index.html">← All lectures</a>
+    <!-- <a href="NN_next.html">Next →</a> -->
+  </nav>
+  </div>
+</main>
+</body>
+</html>

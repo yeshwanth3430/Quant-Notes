@@ -1,0 +1,1270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geometry of Linear Equations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>The Geometry of Linear Equations</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 01</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 01</p>
+  <h1>The Geometry of Linear Equations</h1>
+  <p class="subtitle">One system $Ax = b$, three ways to see it: the row picture, the column picture, and the matrix form.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s1">The problem: solving $Ax = b$</a></li>
+        <li><a href="#s2">Vectors: the building blocks</a></li>
+        <li><a href="#s3">From equations to matrix form</a></li>
+        <li><a href="#s4">The row picture</a></li>
+        <li><a href="#s5">The column picture ★</a></li>
+        <li><a href="#s6">Row vs column: side by side</a></li>
+        <li><a href="#s7">All combinations: which $b$ can we reach?</a></li>
+        <li><a href="#s8">Three equations, three unknowns</a></li>
+        <li><a href="#s9">When it goes wrong: singular matrices</a></li>
+        <li><a href="#s10">Thinking in $n$ dimensions</a></li>
+        <li><a href="#s11">Matrix × vector, two ways</a></li>
+        <li><a href="#s12">Vocabulary and summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. The problem: solving $Ax = b$</h2>
+
+    <div class="box definition"><span class="label">Definition: Linear equation</span>
+      <p>An equation is <b>linear</b> if each unknown is just multiplied by a number, and the terms are added together.</p>
+      <p>An equation is <b>non-linear</b> if an unknown is squared (or raised to another power), multiplied by another unknown, or put inside a function like $\sqrt{x}$ or $\sin x$.</p>
+      <table>
+        <tr><th>Linear ✓</th><th>Not linear ✗</th></tr>
+        <tr><td>$2x - y = 0$</td><td>$x^2 + y = 1$ &nbsp;(has a square)</td></tr>
+        <tr><td>$-x + 2y = 3$</td><td>$xy = 3$ &nbsp;(unknowns multiplied together)</td></tr>
+      </table>
+    </div>
+
+    <table>
+      <tr><th>View</th><th>You look at…</th><th>The question becomes…</th></tr>
+      <tr><td><b>Row picture</b></td><td>one equation (row) at a time</td><td>Where do all the lines or planes <b>meet</b>?</td></tr>
+      <tr><td><b>Column picture ★</b></td><td>one column at a time</td><td>What <b>combination</b> of the columns makes $b$?</td></tr>
+      <tr><td><b>Matrix form</b></td><td>the whole system at once</td><td>Find $x$ with $Ax = b$. This is the compact algebra behind both pictures.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">2. Vectors: the building blocks</h2>
+
+    <div class="box definition"><span class="label">Definition: Vector</span>
+      <p>A <b>vector</b> is an ordered list of numbers, written as a column:</p>
+      $$ v = \begin{bmatrix} 2 \\ 1 \end{bmatrix} $$
+      <p>Each number in the list is a <b>component</b>. This $v$ has 2 components: $2$ and $1$.</p>
+    </div>
+
+    <h3>What are $\mathbb{R}$, $\mathbb{R}^2$, $\mathbb{R}^3$ and $\mathbb{R}^n$?</h3>
+    <p>$\mathbb{R}$ stands for the <b>real numbers</b>: every number on the number line, such as $0$, $-3$, $2.5$, $\sqrt{2}$ and $\pi$. The small raised number says <b>how many components</b> each vector has.</p>
+    <table>
+      <tr><th>Symbol</th><th>What it contains</th><th>Picture</th><th>Example</th></tr>
+      <tr><td>$\mathbb{R}$</td><td>single real numbers</td><td>a line (1D)</td><td>$5$</td></tr>
+      <tr><td>$\mathbb{R}^2$</td><td>all vectors with <b>2</b> components $(x, y)$</td><td>the flat plane (2D), like a sheet of paper</td><td>$(2, 1)$</td></tr>
+      <tr><td>$\mathbb{R}^3$</td><td>all vectors with <b>3</b> components $(x, y, z)$</td><td>ordinary 3D space, like a room</td><td>$(1, -2, 4)$</td></tr>
+      <tr><td>$\mathbb{R}^n$</td><td>all vectors with <b>$n$</b> components</td><td>$n$-dimensional space (cannot be drawn when $n &gt; 3$)</td><td>$(v_1, v_2, \dots, v_n)$</td></tr>
+    </table>
+    <p>Read $\mathbb{R}^2$ as "R-two". So "$v$ is in $\mathbb{R}^2$" simply means "$v$ is a list of 2 real numbers".</p>
+
+    <h3>A vector as an arrow</h3>
+    <p>Every vector can be drawn as an <b>arrow that starts at the origin</b> $(0, 0)$. Its components say how far to move along each axis:</p>
+    <ul>
+      <li>first component $2$: move <b>2 to the right</b> (along the $x$-axis);</li>
+      <li>second component $1$: move <b>1 up</b> (along the $y$-axis).</li>
+    </ul>
+    <p>The arrow ends at the <b>point</b> $(2, 1)$. So the same two numbers can be seen as a point or as an arrow to that point. In linear algebra we usually think of the arrow.</p>
+
+    <figure class="fig" style="max-width:320px;margin:20px auto">
+      <svg viewBox="0 0 240 180" role="img" aria-label="The vector (2,1) drawn as an arrow from the origin">
+        <line class="axis" x1="20" y1="150" x2="230" y2="150"/>
+        <line class="axis" x1="40" y1="10" x2="40" y2="170"/>
+        <text class="tick" x="222" y="166">x</text><text class="tick" x="46" y="20">y</text>
+        <line class="l3 dash" x1="40" y1="150" x2="160" y2="150" style="stroke-width:2"/>
+        <line class="l2 dash" x1="160" y1="150" x2="160" y2="90" style="stroke-width:2"/>
+        <line class="l1" x1="40" y1="150" x2="156" y2="92" marker-end="url(#m1)" style="stroke-width:3"/>
+        <circle class="pt" cx="160" cy="90" r="3.5"/>
+        <text class="lbl c1" x="150" y="80" text-anchor="end">v = (2, 1)</text>
+        <text class="lbl c3" x="100" y="168" text-anchor="middle">2 right</text>
+        <text class="lbl c2" x="168" y="124">1 up</text>
+      </svg>
+      <figcaption>The vector $(2, 1)$: start at the origin, go 2 right and 1 up.</figcaption>
+    </figure>
+
+    <p>In $\mathbb{R}^3$ it works the same way with a third direction: $(1, -2, 4)$ means 1 along $x$, 2 backwards along $y$, and 4 up along $z$.</p>
+
+
+    <p>We only ever need <b>two operations</b> on vectors:</p>
+    <ol class="step-list">
+      <li><b>Scalar multiplication</b> stretches, shrinks or flips an arrow: multiply every component by the number.
+        $$ 2\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 4 \\ 2 \end{bmatrix}, \qquad -1\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} -2 \\ -1 \end{bmatrix} $$</li>
+      <li><b>Vector addition</b> adds component by component. Geometrically, put the tail of the second arrow on the head of the first ("head-to-tail").
+        $$ \begin{bmatrix} 2 \\ 1 \end{bmatrix} + \begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} 1 \\ 3 \end{bmatrix} $$</li>
+    </ol>
+
+    <div class="figs">
+      <figure class="fig">
+        <svg viewBox="0 0 260 200" role="img" aria-label="Scalar multiplication: v and 2v point the same way">
+          <defs>
+            <marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--def-b)"/></marker>
+            <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ex-b)"/></marker>
+            <marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--warn-b)"/></marker>
+          </defs>
+          <line class="axis" x1="10" y1="160" x2="250" y2="160"/>
+          <line class="axis" x1="60" y1="10" x2="60" y2="195"/>
+          <line class="l3" x1="60" y1="160" x2="237" y2="72" marker-end="url(#m3)"/>
+          <line class="l1" x1="60" y1="160" x2="146" y2="117" marker-end="url(#m1)" style="stroke-width:3.5"/>
+          <text class="lbl c1" x="150" y="142">v = (2, 1)</text>
+          <text class="lbl c3" x="170" y="70">2v = (4, 2)</text>
+        </svg>
+        <figcaption><b>Scalar multiplication.</b> $2v$ points the same way as $v$ and is twice as long.</figcaption>
+      </figure>
+      <figure class="fig">
+        <svg viewBox="0 0 260 200" role="img" aria-label="Vector addition head to tail">
+          <line class="axis" x1="10" y1="160" x2="250" y2="160"/>
+          <line class="axis" x1="100" y1="10" x2="100" y2="195"/>
+          <line class="l1" x1="100" y1="160" x2="176" y2="122" marker-end="url(#m1)"/>
+          <line class="l2 dash" x1="180" y1="120" x2="142" y2="44" marker-end="url(#m2)"/>
+          <line class="l3" x1="100" y1="160" x2="139" y2="44" marker-end="url(#m3)"/>
+          <text class="lbl c1" x="150" y="160">v = (2, 1)</text>
+          <text class="lbl c2" x="170" y="80">w = (−1, 2)</text>
+          <text class="lbl c3" x="40" y="54">v + w = (1, 3)</text>
+        </svg>
+        <figcaption><b>Addition.</b> Walk along $v$, then along $w$. Where you end up is $v + w$.</figcaption>
+      </figure>
+    </div>
+
+    <div class="box definition"><span class="label">Definition: Linear combination</span>
+      <p>Put the two operations together: multiply vectors by numbers, then add. The result is a <b>linear combination</b>:</p>
+      $$ c\,v + d\,w \qquad (c, d \text{ any numbers}) $$
+      <p>Strang calls this <b>the most fundamental operation in the whole course</b>. Almost every question in linear algebra is a question about linear combinations.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">3. From equations to matrix form</h2>
+    <p>Our first example has two equations and two unknowns:</p>
+    $$
+    \begin{aligned}
+      2x - y &= 0 \\
+      -x + 2y &= 3
+    \end{aligned}
+    $$
+    <p>Collect the numbers into three objects: the <b>coefficient matrix</b> $A$, the <b>vector of unknowns</b> $x$, and the <b>right-hand side</b> $b$.</p>
+    $$
+    \underbrace{\begin{bmatrix} 2 & -1 \\ -1 & 2 \end{bmatrix}}_{A}
+    \underbrace{\begin{bmatrix} x \\ y \end{bmatrix}}_{x}
+    =
+    \underbrace{\begin{bmatrix} 0 \\ 3 \end{bmatrix}}_{b}
+    $$
+
+    <div class="box definition"><span class="label">Definition: Matrix</span>
+      <p>A <b>matrix</b> is a rectangular array of numbers. A matrix with $m$ rows and $n$ columns is called $m \times n$. Here $A$ is $2 \times 2$.</p>
+    </div>
+
+    <p>How to read the matrix:</p>
+    <table>
+      <tr><th>Part of $A$</th><th>Corresponds to</th><th>In our example</th></tr>
+      <tr><td><b>Row $i$</b></td><td>equation $i$</td><td>Row 1 $= (2, -1)$ holds the coefficients of $2x - y = 0$</td></tr>
+      <tr><td><b>Column $j$</b></td><td>unknown $j$</td><td>Column 1 $= (2, -1)$ holds every coefficient of $x$; column 2 $= (-1, 2)$ holds every coefficient of $y$</td></tr>
+    </table>
+    <div class="box pitfall"><span class="label">Watch out</span>
+      <p>In this example row 1 and column 1 happen to both be $(2, -1)$, because $A$ is symmetric. That is a coincidence. In general rows and columns are different, so always keep track of which one you mean.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s4">4. The row picture</h2>
+    <p><b>Idea:</b> take one equation at a time and draw <b>all</b> the points $(x, y)$ that satisfy it. Each equation gives a line. A solution of the system must satisfy <b>every</b> equation, so it must lie on <b>every</b> line: it is where the lines meet.</p>
+
+    <h3>How to draw each line</h3>
+    <p>A line is fixed by any two of its points. An easy method is to set one unknown to $0$ and solve for the other, then pick one more convenient value.</p>
+    <table>
+      <tr><th></th><th>Equation 1: $2x - y = 0$</th><th>Equation 2: $-x + 2y = 3$</th></tr>
+      <tr><td>Through origin?</td><td>Yes: $(0,0)$ gives $0 = 0$ ✓</td><td>No: $(0,0)$ gives $0 \ne 3$</td></tr>
+      <tr><td>Point A</td><td>$(0, 0)$</td><td>$y = 0 \Rightarrow x = -3$: $(-3, 0)$</td></tr>
+      <tr><td>Point B</td><td>$x = 1 \Rightarrow y = 2$: $(1, 2)$</td><td>$x = -1 \Rightarrow y = 1$: $(-1, 1)$</td></tr>
+    </table>
+
+    <div class="box intuition"><span class="label">Tip: the origin test</span>
+      <p>A line goes through the origin <b>exactly when</b> its right-hand side is $0$. Checking this first tells you a lot about the picture before you draw anything.</p>
+    </div>
+
+    <figure class="fig" style="max-width:420px;margin:20px auto">
+      <svg viewBox="0 0 320 280" role="img" aria-label="Row picture: two lines meeting at (1,2)">
+        <line class="axis" x1="10" y1="200" x2="310" y2="200"/>
+        <line class="axis" x1="180" y1="30" x2="180" y2="270"/>
+        <text class="tick" x="296" y="216">x</text><text class="tick" x="186" y="40">y</text>
+        <line class="l1" x1="160" y1="240" x2="260" y2="40"/>
+        <line class="l2" x1="20"  y1="220" x2="300" y2="80"/>
+        <circle class="pt" cx="180" cy="200" r="3.5"/>
+        <circle class="pt" cx="60"  cy="200" r="3.5"/><text class="tick" x="48" y="216">(−3,0)</text>
+        <circle class="pt" cx="140" cy="160" r="3.5"/><text class="tick" x="104" y="154">(−1,1)</text>
+        <circle class="hit" cx="220" cy="120" r="6"/>
+        <text class="lbl ci" x="230" y="124">(1, 2)</text>
+        <text class="lbl c1" x="242" y="60" text-anchor="end">2x − y = 0</text>
+        <text class="lbl c2" x="16" y="248">−x + 2y = 3</text>
+      </svg>
+      <figcaption><b>Row picture.</b> Each equation is a line. The only point on both lines is $(1, 2)$, so that is the solution.</figcaption>
+    </figure>
+
+    <p><b>Check the solution</b> in both equations: $2(1) - 2 = 0$ ✓ and $-1 + 2(2) = 3$ ✓. So $x = 1,\ y = 2$.</p>
+    <p>This is the picture you have seen in school. It works well for 2 × 2, but as we will see in section 8 it becomes very hard to use once there are more unknowns.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s5">5. The column picture ★</h2>
+    <p>Now read the <b>same</b> two equations a column at a time. Nothing about the system changes. We only regroup it, pulling out everything that multiplies $x$ and everything that multiplies $y$:</p>
+    $$
+    \begin{bmatrix} 2x - y \\ -x + 2y \end{bmatrix} = \begin{bmatrix} 0 \\ 3 \end{bmatrix}
+    \quad\Longleftrightarrow\quad
+    x \underbrace{\begin{bmatrix} 2 \\ -1 \end{bmatrix}}_{\text{column 1}} + \; y \underbrace{\begin{bmatrix} -1 \\ 2 \end{bmatrix}}_{\text{column 2}} = \underbrace{\begin{bmatrix} 0 \\ 3 \end{bmatrix}}_{b}
+    $$
+    <p>This is <b>one vector equation</b> instead of two separate equations, and the question changes completely:</p>
+    <div class="box theorem"><span class="label">The column question</span>
+      <p>How much of column 1 ($x$) and how much of column 2 ($y$) must we combine to produce the vector $b$?</p>
+    </div>
+    <h3>Why $x = 1$ and $y = 2$?</h3>
+    <p>These numbers are <b>not picked</b>. The equations force them.</p>
+
+    <p><b>Step 1: Solve the equations.</b></p>
+    $$
+    \begin{aligned}
+      2x - y &= 0 &&\text{(1)} \\
+      -x + 2y &= 3 &&\text{(2)}
+    \end{aligned}
+    $$
+    <p>The plan: use one equation to write $y$ in terms of $x$, put that into the other equation to find $x$, then go back and find $y$.</p>
+
+    <p><b>1a. Write $y$ in terms of $x$ (from equation 1).</b></p>
+    $$
+    \begin{aligned}
+      2x - y &= 0 \\
+      2x &= y &&\text{add } y \text{ to both sides} \\
+      y &= 2x
+    \end{aligned}
+    $$
+    <p>So in any solution, $y$ must be exactly twice $x$.</p>
+
+    <p><b>1b. Find $x$ (substitute into equation 2).</b> Replace $y$ with $2x$ in equation (2):</p>
+    $$
+    \begin{aligned}
+      -x + 2y &= 3 \\
+      -x + 2(2x) &= 3 &&\text{put } y = 2x \\
+      -x + 4x &= 3 &&2(2x) = 4x \\
+      3x &= 3 &&-x + 4x = 3x \\
+      x &= 1 &&\text{divide both sides by } 3
+    \end{aligned}
+    $$
+
+    <p><b>1c. Find $y$ (put $x = 1$ back into $y = 2x$).</b></p>
+    $$
+    \begin{aligned}
+      y &= 2x \\
+      y &= 2(1) &&\text{put } x = 1 \\
+      y &= 2
+    \end{aligned}
+    $$
+    <p>You can also get $y$ from equation (2) directly, and it gives the same answer:</p>
+    $$
+    \begin{aligned}
+      -x + 2y &= 3 \\
+      -1 + 2y &= 3 &&\text{put } x = 1 \\
+      2y &= 4 &&\text{add } 1 \text{ to both sides} \\
+      y &= 2 &&\text{divide both sides by } 2
+    \end{aligned}
+    $$
+
+    <p><b>1d. Check both original equations</b> with $x = 1$, $y = 2$:</p>
+    $$
+    \begin{aligned}
+      \text{(1)}:&\quad 2(1) - 2 = 2 - 2 = 0 \;✓ \\
+      \text{(2)}:&\quad -1 + 2(2) = -1 + 4 = 3 \;✓
+    \end{aligned}
+    $$
+    <p>So $x = 1$, $y = 2$ is the only pair that satisfies both equations.</p>
+
+    <p><b>Step 2: Put those numbers into the column picture.</b> The column picture says $x\,(\text{column 1}) + y\,(\text{column 2}) = b$:</p>
+    $$
+    x \begin{bmatrix} 2 \\ -1 \end{bmatrix} + y \begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} 0 \\ 3 \end{bmatrix}
+    $$
+    <p>With $x = 1$ and $y = 2$:</p>
+    $$
+    1 \begin{bmatrix} 2 \\ -1 \end{bmatrix} + 2 \begin{bmatrix} -1 \\ 2 \end{bmatrix}
+    = \begin{bmatrix} 2 \\ -1 \end{bmatrix} + \begin{bmatrix} -2 \\ 4 \end{bmatrix}
+    = \begin{bmatrix} 2 + (-2) \\ -1 + 4 \end{bmatrix}
+    = \begin{bmatrix} 0 \\ 3 \end{bmatrix} = b \;✓
+    $$
+    <p>It lands exactly on $b = (0, 3)$. The same two numbers that satisfy the equations are the amounts that make the columns add up to $b$.</p>
+
+    <figure class="fig" style="max-width:420px;margin:20px auto">
+      <svg viewBox="0 0 320 280" role="img" aria-label="Column picture: 1 times column 1 plus 2 times column 2 equals b">
+        <line class="axis" x1="10" y1="200" x2="310" y2="200"/>
+        <line class="axis" x1="180" y1="30" x2="180" y2="270"/>
+        <text class="tick" x="296" y="216">x</text><text class="tick" x="186" y="40">y</text>
+        <line class="l1" x1="180" y1="200" x2="258" y2="239" marker-end="url(#m1)"/>
+        <text class="lbl c1" x="306" y="266" text-anchor="end">col 1 = (2, −1)</text>
+        <line class="l2" x1="180" y1="200" x2="142" y2="122" marker-end="url(#m2)"/>
+        <text class="lbl c2" x="40" y="118">col 2 = (−1, 2)</text>
+        <line class="l2 dash" x1="260" y1="240" x2="221" y2="162" marker-end="url(#m2)"/>
+        <line class="l2 dash" x1="220" y1="160" x2="181" y2="82"  marker-end="url(#m2)"/>
+        <line class="l3" x1="180" y1="200" x2="180" y2="84" marker-end="url(#m3)"/>
+        <circle class="hit" cx="180" cy="80" r="5"/>
+        <text class="lbl c3" x="190" y="72">b = (0, 3)</text>
+      </svg>
+      <figcaption><b>Column picture.</b> Walk once along column 1 (blue), then twice along column 2 (dashed green). You arrive exactly at $b$ (red).</figcaption>
+    </figure>
+
+    <p><b>Step 3: What $x$ and $y$ mean in each picture.</b> They are the same two numbers, but they play a different role:</p>
+    <table>
+      <tr><th></th><th>What $x$ and $y$ are</th><th>The question being asked</th></tr>
+      <tr><td><b>Row picture</b></td><td>coordinates of a <b>point</b></td><td>Which point lies on both lines?</td></tr>
+      <tr><td><b>Column picture</b></td><td><b>amounts</b> that scale each column vector</td><td>How much of each column do I need to reach $b$?</td></tr>
+    </table>
+    <p>In the column picture the columns are <b>fixed arrows</b>. You are not looking for a location. You are looking for <b>how far to travel along each arrow</b>. As a walk from the origin:</p>
+    <table>
+      <tr><th>Move</th><th>Now at</th></tr>
+      <tr><td>start</td><td>$(0, 0)$</td></tr>
+      <tr><td>go $1 \times (2, -1)$</td><td>$(2, -1)$</td></tr>
+      <tr><td>go $2 \times (-1, 2)$</td><td>$(0, 3) = b$ ✓</td></tr>
+    </table>
+    <p>That is why $x$ and $y$ are called <b>weights</b> rather than coordinates: $x = 1$ means "one unit of column 1", and $y = 2$ means "two units of column 2".</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">6. Row vs column: side by side</h2>
+    <p>Both pictures solve the <b>same</b> system and give the <b>same</b> answer $(x, y) = (1, 2)$. They just draw it differently.</p>
+    <table>
+      <tr><th></th><th>Row picture</th><th>Column picture</th></tr>
+      <tr><td>What is drawn</td><td>One line per <b>equation</b></td><td>One arrow per <b>unknown</b> (column), plus $b$</td></tr>
+      <tr><td>What $(x, y)$ means</td><td>A <b>point</b> in the plane</td><td><b>Weights</b> in a combination</td></tr>
+      <tr><td>Where the answer is</td><td>The point where lines <b>meet</b></td><td>The weights that make the arrows <b>reach $b$</b></td></tr>
+      <tr><td>If $b$ changes</td><td>The lines move</td><td>The arrows stay, only $b$ moves</td></tr>
+      <tr><td>In $n$ dimensions</td><td>$n$ hyperplanes meeting: impossible to picture</td><td>$n$ vectors combining to $b$: still a clear idea</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">7. All combinations: which $b$ can we reach?</h2>
+
+    <h3>The question</h3>
+    <p>So far the right-hand side was fixed at $b = (0, 3)$, and we found the one combination that reaches it. Now change the question:</p>
+    <div class="box theorem"><span class="label">The new question</span>
+      <p>If $b$ can be <b>any</b> vector, can we always find $x$ and $y$ with $x\,(\text{col 1}) + y\,(\text{col 2}) = b$?</p>
+      <p>In other words: if we try <b>every possible</b> $x$ and $y$, which points can the combination land on?</p>
+    </div>
+
+    <h3>Try some combinations</h3>
+    <p>Column 1 $= (2, -1)$ and column 2 $= (-1, 2)$. Pick a few values of $x$ and $y$ and see where we land:</p>
+    <table>
+      <tr><th>$x$</th><th>$y$</th><th>$x(2, -1) + y(-1, 2)$</th><th>Lands on</th></tr>
+      <tr><td>$1$</td><td>$0$</td><td>$(2, -1) + (0, 0)$</td><td>$(2, -1)$</td></tr>
+      <tr><td>$0$</td><td>$1$</td><td>$(0, 0) + (-1, 2)$</td><td>$(-1, 2)$</td></tr>
+      <tr><td>$1$</td><td>$1$</td><td>$(2, -1) + (-1, 2)$</td><td>$(1, 1)$</td></tr>
+      <tr><td>$1$</td><td>$2$</td><td>$(2, -1) + (-2, 4)$</td><td>$(0, 3)$ ← our $b$</td></tr>
+      <tr><td>$2$</td><td>$1$</td><td>$(4, -2) + (-1, 2)$</td><td>$(3, 0)$</td></tr>
+      <tr><td>$-1$</td><td>$-1$</td><td>$(-2, 1) + (1, -2)$</td><td>$(-1, -1)$</td></tr>
+    </table>
+    <p>The results go up, down, left and right. Drawing every whole-number combination gives a slanted grid that keeps going in all directions:</p>
+
+    <figure class="fig" style="max-width:440px;margin:20px auto">
+      <svg viewBox="0 0 320 280" role="img" aria-label="Grid made of column 1 and column 2 steps covering the whole plane">
+        <defs><clipPath id="gclip"><rect x="0" y="0" width="320" height="280"/></clipPath></defs>
+        <g clip-path="url(#gclip)">
+          <line class="l2" x1="16" y1="428" x2="-464" y2="-532" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-128" y1="284" x2="832" y2="764" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="64" y1="452" x2="-416" y2="-508" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-152" y1="236" x2="808" y2="716" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="112" y1="476" x2="-368" y2="-484" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-176" y1="188" x2="784" y2="668" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="160" y1="500" x2="-320" y2="-460" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-200" y1="140" x2="760" y2="620" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="208" y1="524" x2="-272" y2="-436" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-224" y1="92" x2="736" y2="572" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="256" y1="548" x2="-224" y2="-412" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-248" y1="44" x2="712" y2="524" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="304" y1="572" x2="-176" y2="-388" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-272" y1="-4" x2="688" y2="476" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="352" y1="596" x2="-128" y2="-364" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-296" y1="-52" x2="664" y2="428" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="400" y1="620" x2="-80" y2="-340" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-320" y1="-100" x2="640" y2="380" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="448" y1="644" x2="-32" y2="-316" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-344" y1="-148" x2="616" y2="332" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="496" y1="668" x2="16" y2="-292" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-368" y1="-196" x2="592" y2="284" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="544" y1="692" x2="64" y2="-268" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-392" y1="-244" x2="568" y2="236" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="592" y1="716" x2="112" y2="-244" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-416" y1="-292" x2="544" y2="188" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="640" y1="740" x2="160" y2="-220" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-440" y1="-340" x2="520" y2="140" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="688" y1="764" x2="208" y2="-196" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-464" y1="-388" x2="496" y2="92" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="736" y1="788" x2="256" y2="-172" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-488" y1="-436" x2="472" y2="44" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l2" x1="784" y1="812" x2="304" y2="-148" style="stroke-width:1.2;opacity:.6"/>
+          <line class="l1" x1="-512" y1="-484" x2="448" y2="-4" style="stroke-width:1.2;opacity:.6"/>
+        </g>
+        <line class="axis" x1="0" y1="140" x2="320" y2="140"/>
+        <line class="axis" x1="160" y1="0" x2="160" y2="280"/>
+        <line class="l1" x1="160" y1="140" x2="205" y2="162" marker-end="url(#m1)" style="stroke-width:3"/>
+        <line class="l2" x1="160" y1="140" x2="138" y2="96" marker-end="url(#m2)" style="stroke-width:3"/>
+        <circle class="pt" cx="160" cy="140" r="3.5"/>
+        <circle class="hit" cx="160" cy="68" r="5"/><text class="lbl c3" x="168" y="62">(0, 3)</text>
+        <circle class="hit" cx="232" cy="140" r="5"/><text class="lbl c3" x="238" y="132">(3, 0)</text>
+        <text class="lbl c1" x="210" y="180">col 1</text>
+        <text class="lbl c2" x="96" y="92">col 2</text>
+      </svg>
+      <figcaption>Blue lines are steps of column 1, green lines are steps of column 2. Every crossing is a whole-number combination, and the grid covers the <b>entire plane</b> in every direction. Points between the lines are reached with fractional $x$ and $y$.</figcaption>
+    </figure>
+
+    <h3>Proof that every $b$ can be reached</h3>
+    <p>Take any target $b = (b_1, b_2)$, where $b_1$ and $b_2$ are any numbers. We need $x$ and $y$ with</p>
+    $$ x \begin{bmatrix} 2 \\ -1 \end{bmatrix} + y \begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} b_1 \\ b_2 \end{bmatrix} $$
+    <p>Comparing the top and bottom components gives two equations:</p>
+    $$
+    \begin{aligned}
+      2x - y &= b_1 &&\text{(top)} \\
+      -x + 2y &= b_2 &&\text{(bottom)}
+    \end{aligned}
+    $$
+    <p>Solve exactly as in section 5, only with $b_1, b_2$ instead of $0, 3$.</p>
+
+    <p><b>Write $y$ in terms of $x$ (from the top equation).</b></p>
+    $$
+    \begin{aligned}
+      2x - y &= b_1 \\
+      2x &= b_1 + y &&\text{add } y \text{ to both sides} \\
+      y &= 2x - b_1 &&\text{subtract } b_1 \text{ from both sides}
+    \end{aligned}
+    $$
+
+    <p><b>Find $x$ (substitute into the bottom equation).</b></p>
+    $$
+    \begin{aligned}
+      -x + 2y &= b_2 \\
+      -x + 2(2x - b_1) &= b_2 &&\text{put } y = 2x - b_1 \\
+      -x + 4x - 2b_1 &= b_2 &&\text{multiply out the bracket} \\
+      3x - 2b_1 &= b_2 &&-x + 4x = 3x \\
+      3x &= 2b_1 + b_2 &&\text{add } 2b_1 \text{ to both sides} \\
+      x &= \frac{2b_1 + b_2}{3} &&\text{divide by } 3
+    \end{aligned}
+    $$
+
+    <p><b>Find $y$ (put $x$ back into $y = 2x - b_1$).</b></p>
+    $$
+    \begin{aligned}
+      y &= 2\cdot\frac{2b_1 + b_2}{3} - b_1 \\
+      y &= \frac{4b_1 + 2b_2}{3} - \frac{3b_1}{3} &&\text{write } b_1 \text{ as } \tfrac{3b_1}{3} \\
+      y &= \frac{b_1 + 2b_2}{3} &&4b_1 - 3b_1 = b_1
+    \end{aligned}
+    $$
+
+    <div class="box theorem"><span class="label">Result</span>
+      <p>For <b>any</b> $b = (b_1, b_2)$, the weights</p>
+      $$ x = \frac{2b_1 + b_2}{3}, \qquad y = \frac{b_1 + 2b_2}{3} $$
+      <p>reach it. The only step that could fail is dividing by $3$, and $3$ is never zero. So there is <b>always</b> an answer, and no $b$ is out of reach.</p>
+    </div>
+
+    <p><b>Test the formula</b> on three targets:</p>
+    <table>
+      <tr><th>Target $b$</th><th>$x = \frac{2b_1 + b_2}{3}$</th><th>$y = \frac{b_1 + 2b_2}{3}$</th><th>Check $x(2,-1) + y(-1,2)$</th></tr>
+      <tr><td>$(0, 3)$</td><td>$\frac{0 + 3}{3} = 1$</td><td>$\frac{0 + 6}{3} = 2$</td><td>$(2 - 2,\ -1 + 4) = (0, 3)$ ✓</td></tr>
+      <tr><td>$(3, 0)$</td><td>$\frac{6 + 0}{3} = 2$</td><td>$\frac{3 + 0}{3} = 1$</td><td>$(4 - 1,\ -2 + 2) = (3, 0)$ ✓</td></tr>
+      <tr><td>$(5, 7)$</td><td>$\frac{10 + 7}{3} = \frac{17}{3}$</td><td>$\frac{5 + 14}{3} = \frac{19}{3}$</td><td>$(\frac{34 - 19}{3},\ \frac{-17 + 38}{3}) = (5, 7)$ ✓</td></tr>
+    </table>
+
+    <h3>Why it works: the columns point in different directions</h3>
+    <p>Column 1 and column 2 are <b>not</b> on the same line. Two arrows in different directions work like "east" and "north" on a map: by walking some amount along each, you can reach any spot.</p>
+    <div class="box pitfall"><span class="label">Compare: when it would fail</span>
+      <p>Suppose column 2 were $(-2, 1)$ instead. That is just $-1 \times$ column 1, so both arrows lie on the <b>same line</b>. Every combination is</p>
+      $$ x(2, -1) + y(-2, 1) = (x - y)(2, -1), $$
+      <p>which is always a multiple of $(2, -1)$ and stays on that one line. A target like $(0, 3)$ is off the line and can <b>never</b> be reached. Section 9 looks at this case in detail.</p>
+    </div>
+
+    <h3>Name for it: span</h3>
+    <div class="box definition"><span class="label">Definition: Span</span>
+      <p>The <b>span</b> of some vectors is the set of <b>all</b> their linear combinations: every point you can land on.</p>
+      <ul>
+        <li>Span of $(2, -1)$ and $(-1, 2)$ = the <b>whole plane</b> $\mathbb{R}^2$.</li>
+        <li>Span of $(2, -1)$ and $(-2, 1)$ = just <b>one line</b>.</li>
+      </ul>
+      <p>For the columns of a matrix $A$, the span is called the <b>column space</b>, which comes later in the course.</p>
+    </div>
+
+    <p>From now on, every system comes with two questions:</p>
+    <table>
+      <tr><th>Question</th><th>In symbols</th></tr>
+      <tr><td>1. Which combination gives <b>this particular</b> $b$?</td><td>Solve $Ax = b$.</td></tr>
+      <tr><td>2. Which $b$ can be reached <b>at all</b>?</td><td>What is the span of the columns?</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">8. Three equations, three unknowns</h2>
+    $$
+    \begin{aligned}
+      2x - y \phantom{{}+2y-z} &= 0 &&\text{(1)} \\
+      -x + 2y - z &= -1 &&\text{(2)} \\
+      -3y + 4z &= 4 &&\text{(3)}
+    \end{aligned}
+    \qquad\Longleftrightarrow\qquad
+    \underbrace{\begin{bmatrix} 2 & -1 & 0 \\ -1 & 2 & -1 \\ 0 & -3 & 4 \end{bmatrix}}_{A}
+    \begin{bmatrix} x \\ y \\ z \end{bmatrix}
+    =
+    \underbrace{\begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix}}_{b}
+    $$
+    <p>Now $A$ is $3 \times 3$: three equations (rows) and three unknowns (columns).</p>
+
+    <h3>8.1 Solve it step by step</h3>
+    <p>The plan: equation (1) has only $x$ and $y$, so it gives $y$ in terms of $x$. Then (2) gives $z$ in terms of $x$. Then (3) has only one unknown left, $x$.</p>
+
+    <p><b>Step a. Write $y$ in terms of $x$ (from equation 1).</b></p>
+    $$
+    \begin{aligned}
+      2x - y &= 0 \\
+      2x &= y &&\text{add } y \text{ to both sides} \\
+      y &= 2x
+    \end{aligned}
+    $$
+
+    <p><b>Step b. Write $z$ in terms of $x$ (from equation 2).</b></p>
+    $$
+    \begin{aligned}
+      -x + 2y - z &= -1 \\
+      -x + 2(2x) - z &= -1 &&\text{put } y = 2x \\
+      -x + 4x - z &= -1 &&2(2x) = 4x \\
+      3x - z &= -1 &&-x + 4x = 3x \\
+      3x + 1 &= z &&\text{add } z \text{ and } 1 \text{ to both sides} \\
+      z &= 3x + 1
+    \end{aligned}
+    $$
+
+    <p><b>Step c. Find $x$ (substitute both into equation 3).</b></p>
+    $$
+    \begin{aligned}
+      -3y + 4z &= 4 \\
+      -3(2x) + 4(3x + 1) &= 4 &&\text{put } y = 2x,\ z = 3x + 1 \\
+      -6x + 12x + 4 &= 4 &&\text{multiply out the brackets} \\
+      6x + 4 &= 4 &&-6x + 12x = 6x \\
+      6x &= 0 &&\text{subtract } 4 \text{ from both sides} \\
+      x &= 0 &&\text{divide by } 6
+    \end{aligned}
+    $$
+
+    <p><b>Step d. Find $y$ and $z$ (put $x = 0$ back).</b></p>
+    $$
+    \begin{aligned}
+      y &= 2x = 2(0) = 0 \\
+      z &= 3x + 1 = 3(0) + 1 = 1
+    \end{aligned}
+    $$
+
+    <p><b>Step e. Check all three original equations</b> with $(x, y, z) = (0, 0, 1)$:</p>
+    $$
+    \begin{aligned}
+      \text{(1)}:&\quad 2(0) - 0 = 0 \;✓ \\
+      \text{(2)}:&\quad -0 + 2(0) - 1 = -1 \;✓ \\
+      \text{(3)}:&\quad -3(0) + 4(1) = 4 \;✓
+    \end{aligned}
+    $$
+    <div class="box theorem"><span class="label">Solution</span>
+      <p>$$ (x, y, z) = (0, 0, 1) $$</p>
+    </div>
+
+    <h3>8.2 Row picture: three planes</h3>
+    <p>With three unknowns, each equation is a flat <b>plane</b> in 3D space.</p>
+    <table>
+      <tr><th>Plane</th><th>Equation</th><th>Through the origin?</th><th>Shape</th></tr>
+      <tr><td><b>1</b></td><td>$2x - y = 0$</td><td>Yes (right side is $0$)</td><td>No $z$ in it, so $z$ can be anything. The plane is "vertical" and contains the whole $z$-axis.</td></tr>
+      <tr><td><b>2</b></td><td>$-x + 2y - z = -1$</td><td>No ($0 \ne -1$)</td><td>A tilted plane. Three of its points are $(1,0,0)$, $(0,0,1)$ and $(0,-\tfrac12,0)$.</td></tr>
+      <tr><td><b>3</b></td><td>$-3y + 4z = 4$</td><td>No ($0 \ne 4$)</td><td>No $x$ in it, so $x$ can be anything. The plane runs parallel to the $x$-axis.</td></tr>
+    </table>
+
+    <p>The steps in 8.1 have a picture:</p>
+    <ol class="step-list">
+      <li><b>Steps a and b = planes 1 and 2 meet in a line.</b> Points on both planes satisfy $y = 2x$ and $z = 3x + 1$. So their common line is all points $(x,\ 2x,\ 3x + 1)$, for example $(0, 0, 1)$ and $(1, 2, 4)$.</li>
+      <li><b>Step c = plane 3 cuts that line in one point.</b> Only $x = 0$ puts the line on plane 3.</li>
+      <li><b>That point is the solution</b> $(0, 0, 1)$: the only point on all three planes.</li>
+    </ol>
+
+    <figure class="fig plot3d">
+      <div id="rowplot3d" class="plot3d-box" role="img" aria-label="Three planes meeting at the point (0,0,1)"></div>
+      <figcaption><b>Row picture in 3D.</b> Plane 1 (blue), plane 2 (green) and plane 3 (orange). The dark line is where planes 1 and 2 meet, and the red dot $(0, 0, 1)$ is where plane 3 cuts it. <b>Drag to rotate, scroll to zoom.</b></figcaption>
+    </figure>
+
+    <div class="box pitfall"><span class="label">Limitation of the row picture</span>
+      <p>Two lines crossing is easy to see. Three planes meeting is already hard to see even with a 3D picture, and with four or more unknowns it cannot be drawn at all. This is why Strang drops the row picture here.</p>
+    </div>
+
+    <h3>8.3 Column picture: three vectors in 3D</h3>
+    <p>Group the same system by columns:</p>
+    $$
+    x \underbrace{\begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix}}_{\text{col 1}}
+    + y \underbrace{\begin{bmatrix} -1 \\ 2 \\ -3 \end{bmatrix}}_{\text{col 2}}
+    + z \underbrace{\begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix}}_{\text{col 3}}
+    = \underbrace{\begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix}}_{b}
+    $$
+    <p>The question: how much of each column do we need to build $b$?</p>
+    <p>Compare $b$ with the columns: $b = (0, -1, 4)$ is <b>exactly column 3</b>. So we need none of column 1, none of column 2 and one of column 3:</p>
+    $$
+    0 \begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix}
+    + 0 \begin{bmatrix} -1 \\ 2 \\ -3 \end{bmatrix}
+    + 1 \begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix}
+    = \begin{bmatrix} 0 + 0 + 0 \\ 0 + 0 - 1 \\ 0 + 0 + 4 \end{bmatrix}
+    = \begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix} = b \;✓
+    $$
+    <p>So $(x, y, z) = (0, 0, 1)$: the same answer as 8.1, found in one look.</p>
+
+    <figure class="fig plot3d">
+      <div id="colplot3d" class="plot3d-box" role="img" aria-label="The three column vectors in 3D; b equals column 3"></div>
+      <figcaption><b>Column picture in 3D.</b> Column 1 (blue), column 2 (green) and column 3 (orange) as arrows from the origin. The target $b$ (red, dashed) lies exactly on column 3. <b>Drag to rotate.</b></figcaption>
+    </figure>
+
+    <h3>8.4 Change only the right-hand side</h3>
+    <p>Keep the same $A$, but choose a new $b$ equal to column 1 + column 2:</p>
+    $$
+    b = \begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix} + \begin{bmatrix} -1 \\ 2 \\ -3 \end{bmatrix}
+      = \begin{bmatrix} 2 - 1 \\ -1 + 2 \\ 0 - 3 \end{bmatrix}
+      = \begin{bmatrix} 1 \\ 1 \\ -3 \end{bmatrix}
+    $$
+    <p>We built $b$ from one of column 1 and one of column 2, so the weights are $x = 1$, $y = 1$, $z = 0$.</p>
+    <p><b>Check in the equations</b> (now with right-hand sides $1, 1, -3$):</p>
+    $$
+    \begin{aligned}
+      \text{(1)}:&\quad 2(1) - 1 = 1 \;✓ \\
+      \text{(2)}:&\quad -1 + 2(1) - 0 = 1 \;✓ \\
+      \text{(3)}:&\quad -3(1) + 4(0) = -3 \;✓
+    \end{aligned}
+    $$
+    <table>
+      <tr><th></th><th>What changes when $b$ changes</th></tr>
+      <tr><td><b>Row picture</b></td><td>All three planes move (their right-hand sides changed) and now meet at a new point $(1, 1, 0)$.</td></tr>
+      <tr><td><b>Column picture</b></td><td>The three columns do not move at all. Only the mix changes, from $(0, 0, 1)$ to $(1, 1, 0)$.</td></tr>
+    </table>
+
+    <p>Here $b$ was chosen so the answer could be spotted. In general it cannot be, and substitution gets messy with many unknowns. The systematic method is <b>elimination</b>, covered in Lecture 03.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s9">9. When it goes wrong: singular matrices</h2>
+    <div class="box theorem"><span class="label">The key question, in two languages</span>
+      <p><b>Algebra:</b> Can I solve $Ax = b$ for <b>every</b> right-hand side $b$?</p>
+      <p><b>Geometry:</b> Do the linear combinations of the columns fill the <b>whole</b> space?</p>
+      <p>These are the same question: "$Ax = b$ has a solution" means exactly "$b$ is a combination of the columns".</p>
+    </div>
+
+    <p>For the 3 × 3 matrix above, the answer is <b>yes</b>. Strang calls it a good matrix: <b>non-singular</b>, or <b>invertible</b>.</p>
+
+    <h3>What could go wrong?</h3>
+    <p>Suppose the three columns all lie in the <b>same plane</b>. Stretching and adding vectors that lie in a plane can never leave that plane. So every combination stays in it, and any $b$ outside the plane is <b>unreachable</b>.</p>
+    <p>For example, if column 3 = column 1 + column 2, then column 3 gives nothing new. It points in a direction we could already reach, so three columns do the job of only two.</p>
+
+    <div class="box definition"><span class="label">Definition: Singular / non-singular</span>
+      <p>A square matrix is <b>non-singular (invertible)</b> if its columns fill the whole space, so $Ax = b$ has exactly one solution for every $b$.</p>
+      <p>It is <b>singular (not invertible)</b> if its columns fill less than the whole space. Then $Ax = b$ has no solution for most $b$.</p>
+    </div>
+
+    <h3>The three possible outcomes (2 × 2)</h3>
+    <div class="figs three">
+      <figure class="fig">
+        <svg viewBox="0 0 180 140" role="img" aria-label="Two lines crossing at one point">
+          <line class="axis" x1="5" y1="70" x2="175" y2="70"/><line class="axis" x1="90" y1="5" x2="90" y2="135"/>
+          <line class="l1" x1="30" y1="130" x2="150" y2="10"/><line class="l2" x1="20" y1="30" x2="160" y2="110"/>
+          <circle class="hit" cx="90" cy="70" r="5"/>
+        </svg>
+        <figcaption><b>One solution.</b> Lines cross. Columns point in different directions. <i>Non-singular.</i></figcaption>
+      </figure>
+      <figure class="fig">
+        <svg viewBox="0 0 180 140" role="img" aria-label="Two parallel lines">
+          <line class="axis" x1="5" y1="70" x2="175" y2="70"/><line class="axis" x1="90" y1="5" x2="90" y2="135"/>
+          <line class="l1" x1="10" y1="100" x2="130" y2="10"/><line class="l2" x1="50" y1="130" x2="170" y2="40"/>
+        </svg>
+        <figcaption><b>No solution.</b> Lines are parallel. Columns on one line, and $b$ is off it. <i>Singular.</i></figcaption>
+      </figure>
+      <figure class="fig">
+        <svg viewBox="0 0 180 140" role="img" aria-label="Two identical lines">
+          <line class="axis" x1="5" y1="70" x2="175" y2="70"/><line class="axis" x1="90" y1="5" x2="90" y2="135"/>
+          <line class="l1" x1="20" y1="120" x2="160" y2="15" style="stroke-width:6;opacity:.45"/><line class="l2 dash" x1="20" y1="120" x2="160" y2="15"/>
+        </svg>
+        <figcaption><b>Infinitely many.</b> Both equations give the same line. Columns on one line, and $b$ is on it too. <i>Singular.</i></figcaption>
+      </figure>
+    </div>
+
+    <div class="box pitfall"><span class="label">Watch out</span>
+      <ul>
+        <li>"Singular" does <b>not</b> mean "no solution". A singular system has <b>no solution</b> for most $b$, but <b>infinitely many</b> for the special $b$ that lie in the plane of the columns.</li>
+        <li>A linear system can <b>never</b> have exactly two solutions. The only possible counts are 0, 1 or infinitely many.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s10">10. Thinking in $n$ dimensions</h2>
+    <p>Now imagine 9 equations in 9 unknowns. There are nine columns, and each is a vector with 9 components, so it lives in 9-dimensional space $\mathbb{R}^9$. Nobody can picture that, but the <b>column question is exactly the same</b>: which combination of the nine columns gives $b$, and do their combinations fill all of $\mathbb{R}^9$?</p>
+    <ul>
+      <li>A <b>random</b> 9 × 9 matrix is almost certainly non-singular. Its nine columns point in "genuinely different" directions and fill the whole space.</li>
+      <li>If the 9th column equals the 8th, it adds nothing new. The combinations then fill only an <b>8-dimensional flat piece</b> (a "plane") inside 9-dimensional space, and every $b$ outside it is unreachable.</li>
+    </ul>
+    <div class="box intuition"><span class="label">Intuition</span>
+      <p>The same pattern holds in every dimension: <b>$n$ columns fill $\mathbb{R}^n$ unless one of them is a combination of the others.</b> You cannot see nine dimensions, but after a while the idea of "$n$ vectors and all their combinations" feels natural. Building that feeling is the central skill of linear algebra.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s11">11. Matrix × vector, two ways</h2>
+    <p>The matrix form $Ax = b$ contains a multiplication: a <b>matrix times a vector</b>. Take</p>
+    $$ A = \begin{bmatrix} 2 & 5 \\ 1 & 3 \end{bmatrix}, \qquad x = \begin{bmatrix} 1 \\ 2 \end{bmatrix}. $$
+
+    <h3>Way 1: by columns (Strang's favourite)</h3>
+    <p>$Ax$ is a combination of the columns of $A$, with the entries of $x$ as the weights:</p>
+    $$
+    Ax = 1 \begin{bmatrix} 2 \\ 1 \end{bmatrix} + 2 \begin{bmatrix} 5 \\ 3 \end{bmatrix}
+    = \begin{bmatrix} 2 + 10 \\ 1 + 6 \end{bmatrix}
+    = \begin{bmatrix} 12 \\ 7 \end{bmatrix}
+    $$
+
+    <h3>Way 2: by rows (dot products)</h3>
+    <p>Each entry of $Ax$ is one row of $A$ "dotted" with $x$: multiply matching entries and add.</p>
+    $$
+    Ax = \begin{bmatrix} \text{row}_1 \cdot x \\ \text{row}_2 \cdot x \end{bmatrix}
+    = \begin{bmatrix} 2(1) + 5(2) \\ 1(1) + 3(2) \end{bmatrix}
+    = \begin{bmatrix} 12 \\ 7 \end{bmatrix}
+    $$
+
+    <p>Look at the middle steps: both ways do <b>exactly the same four multiplications</b> ($2 \cdot 1$, $5 \cdot 2$, $1 \cdot 1$, $3 \cdot 2$). They only group them differently, so they must give the same answer.</p>
+
+    <table>
+      <tr><th></th><th>By columns</th><th>By rows</th></tr>
+      <tr><td>Thinks of $Ax$ as</td><td>a combination of columns</td><td>a list of dot products</td></tr>
+      <tr><td>Matches</td><td>the column picture</td><td>the row picture</td></tr>
+      <tr><td>Best for</td><td>understanding: what can $Ax$ be?</td><td>computing one entry quickly</td></tr>
+    </table>
+
+    <div class="box theorem"><span class="label">Key fact</span>
+      $$ Ax = x_1(\text{col}_1) + x_2(\text{col}_2) + \dots + x_n(\text{col}_n) $$
+      <p><b>$Ax$ is always a combination of the columns of $A$.</b> Solving $Ax = b$ means finding the weights $x_1, \dots, x_n$ that make that combination equal to $b$.</p>
+    </div>
+    <div class="box pitfall"><span class="label">Size rule</span>
+      <p>An $m \times n$ matrix times a vector with $n$ entries gives a vector with $m$ entries. The number of <b>columns</b> of $A$ must match the length of $x$, because there must be one weight per column.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <div class="box finance"><span class="label">In finance: replicating portfolios</span>
+      <p>The column picture is exactly how a quant thinks about <b>replication</b>:</p>
+      <ul>
+        <li>Each <b>column</b> of $A$ is the payoff of one asset across the possible future states of the world.</li>
+        <li>$x$ is how many units of each asset you hold (the weights).</li>
+        <li>$b$ is the payoff you want to build, such as an option.</li>
+      </ul>
+      <p>"Can I solve $Ax = b$ for <b>every</b> $b$?" becomes "Can I replicate <b>every</b> payoff?" If yes, the market is <b>complete</b>. If two assets have proportional payoffs (dependent columns), the extra asset adds nothing new and some payoffs cannot be hedged. That is the singular case. Example 6 in the Examples tab works this out with numbers.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s12">12. Vocabulary and summary</h2>
+    <dl class="vocab">
+      <dt>Linear equation</dt><dd>Unknowns only multiplied by constants and added. Its graph is a line (2D), plane (3D) or hyperplane.</dd>
+      <dt>Coefficient matrix $A$</dt><dd>The numbers multiplying the unknowns. Row $i$ is equation $i$, and column $j$ belongs to unknown $j$.</dd>
+      <dt>Vector</dt><dd>An ordered list of numbers, drawn as an arrow from the origin.</dd>
+      <dt>Linear combination</dt><dd>$c_1v_1 + \dots + c_nv_n$: scale vectors and add them. The most important operation in the course.</dd>
+      <dt>Span</dt><dd>The set of <b>all</b> linear combinations of some vectors.</dd>
+      <dt>Row picture</dt><dd>Each equation is a line or plane, and the solution is where they all meet.</dd>
+      <dt>Column picture</dt><dd>The solution is the set of weights that combine the columns into $b$.</dd>
+      <dt>Non-singular (invertible)</dt><dd>The columns fill the whole space, so there is exactly one solution for every $b$.</dd>
+      <dt>Singular</dt><dd>The columns fill less than the whole space, so there is no solution for most $b$ and infinitely many for the rest.</dd>
+    </dl>
+
+    <div class="summary">
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>The fundamental problem is to solve $Ax = b$.</li>
+        <li><b>Row picture:</b> each equation is a line or plane, and the solution is the point where all of them meet. It is easy in 2D, hard in 3D and impossible beyond.</li>
+        <li><b>Column picture ★:</b> $Ax = b$ asks which <b>linear combination of the columns</b> equals $b$. It works in every dimension.</li>
+        <li>$Ax$ can be computed by columns (a combination of columns) or by rows (dot products). The two ways do the same multiplications, just grouped differently.</li>
+        <li>$Ax = b$ is solvable for <b>every</b> $b$ exactly when the columns fill the whole space. Then $A$ is <b>non-singular</b>.</li>
+        <li>If one column is a combination of the others, the columns fill only a flat piece of the space, and $A$ is <b>singular</b>.</li>
+        <li>A linear system has 0, 1 or infinitely many solutions, never exactly two.</li>
+        <li>Coming up: <b>elimination</b> (Lecture 03), the systematic way to find $x$.</li>
+      </ul>
+    </div>
+  </div>
+  </section>
+
+    <section class="tab-panel" data-panel="examples" hidden>
+    <div class="notes">
+
+    <h2>Worked examples</h2>
+    <p>Each example is solved step by step. Try it yourself first, then read the solution.</p>
+
+    <!-- ---------- E1 ---------- -->
+    <div class="worked">
+      <h3>Example 1: Both pictures for one system</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Solve and describe the row and column pictures:</p>
+        $$ x + y = 3, \qquad x - y = 1 $$
+      </div>
+      <div class="steps">
+        <p><b>Matrix form.</b> $\begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 3 \\ 1 \end{bmatrix}$</p>
+        <p><b>Solve.</b> Adding the two equations gives $2x = 4$, so $x = 2$. Then $y = 3 - 2 = 1$.</p>
+        <p><b>Row picture.</b> Line $x + y = 3$ passes through $(3,0)$ and $(0,3)$. Line $x - y = 1$ passes through $(1,0)$ and $(0,-1)$. They cross at $(2, 1)$.</p>
+        <p><b>Column picture.</b>
+          $$ 2\begin{bmatrix} 1 \\ 1 \end{bmatrix} + 1\begin{bmatrix} 1 \\ -1 \end{bmatrix} = \begin{bmatrix} 3 \\ 1 \end{bmatrix} ✓ $$</p>
+        <p class="answer">Answer: $(x, y) = (2, 1)$</p>
+      </div>
+    </div>
+
+    <!-- ---------- E2 ---------- -->
+    <div class="worked">
+      <h3>Example 2: No solution (singular)</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ x + y = 1, \qquad 2x + 2y = 6 $$
+      </div>
+      <div class="steps">
+        <p><b>Row picture.</b> Divide the second equation by 2: $x + y = 3$. So the two lines have the same slope but different intercepts. They are <b>parallel</b> and never meet.</p>
+        <figure class="fig" style="max-width:360px">
+          <svg viewBox="0 0 300 260" role="img" aria-label="Two parallel lines x+y=1 and x+y=3">
+            <line class="axis" x1="10" y1="190" x2="295" y2="190"/>
+            <line class="axis" x1="100" y1="20" x2="100" y2="255"/>
+            <text class="tick" x="284" y="206">x</text><text class="tick" x="106" y="30">y</text>
+            <line class="l1" x1="20" y1="70" x2="200" y2="250"/>
+            <line class="l2" x1="60" y1="30" x2="280" y2="250"/>
+            <text class="lbl c1" x="28" y="112">x + y = 1</text>
+            <text class="lbl c2" x="186" y="120">x + y = 3</text>
+          </svg>
+          <figcaption>Parallel lines: no point lies on both, so there is no solution.</figcaption>
+        </figure>
+        <p><b>Column picture.</b> Column 1 = $(1, 2)$ and column 2 = $(1, 2)$ are the <b>same</b> vector. Every combination $x(1,2) + y(1,2) = (x+y)(1,2)$ lies on one line through the origin. $b = (1, 6)$ is not a multiple of $(1, 2)$, so it cannot be reached.</p>
+        <p class="answer">Answer: no solution. The matrix is singular.</p>
+      </div>
+    </div>
+
+    <!-- ---------- E3 ---------- -->
+    <div class="worked">
+      <h3>Example 3: Infinitely many solutions (singular)</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ x + y = 1, \qquad 2x + 2y = 2 $$
+      </div>
+      <div class="steps">
+        <p><b>Row picture.</b> The second equation is just 2 × the first. Both describe the <b>same line</b>, so every point on it is a solution.</p>
+        <p><b>Column picture.</b> Again both columns are $(1, 2)$. This time $b = (1, 2)$ <b>does</b> lie on that line, so it can be reached, and in many ways:</p>
+        $$ (x, y) = (1, 0),\; (0, 1),\; (2, -1),\; \dots \quad\text{any } x + y = 1 $$
+        <p class="answer">Answer: infinitely many solutions.</p>
+      </div>
+      <div class="box intuition"><span class="label">Compare Examples 2 and 3</span>
+        <p>Same singular matrix, different $b$. If $b$ lies in the space the columns can reach, there are infinitely many solutions. If it does not, there are none. A singular matrix never gives exactly one solution.</p>
+      </div>
+    </div>
+
+    <!-- ---------- E4 ---------- -->
+    <div class="worked">
+      <h3>Example 4: Matrix × vector, both ways</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ \begin{bmatrix} 1 & 2 & 0 \\ 0 & 1 & 3 \\ 2 & 0 & 1 \end{bmatrix}\begin{bmatrix} 1 \\ -1 \\ 2 \end{bmatrix} = \; ? $$
+      </div>
+      <div class="steps">
+        <p><b>By columns.</b>
+          $$ 1\begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix} - 1\begin{bmatrix} 2 \\ 1 \\ 0 \end{bmatrix} + 2\begin{bmatrix} 0 \\ 3 \\ 1 \end{bmatrix}
+             = \begin{bmatrix} 1 - 2 + 0 \\ 0 - 1 + 6 \\ 2 - 0 + 2 \end{bmatrix} = \begin{bmatrix} -1 \\ 5 \\ 4 \end{bmatrix} $$</p>
+        <p><b>By rows.</b> $(1,2,0)\cdot(1,-1,2) = -1$, &nbsp; $(0,1,3)\cdot(1,-1,2) = 5$, &nbsp; $(2,0,1)\cdot(1,-1,2) = 4$ ✓</p>
+        <p class="answer">Answer: $(-1, 5, 4)$</p>
+      </div>
+    </div>
+
+    <!-- ---------- E5 ---------- -->
+    <div class="worked">
+      <h3>Example 5: Is $b$ a combination of the columns?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Let $u = (1, 0, 1)$ and $v = (0, 1, 1)$. Is $b$ a combination of $u$ and $v$ when (a) $b = (2, 3, 5)$ and (b) $b = (1, 1, 1)$?</p>
+      </div>
+      <div class="steps">
+        <p><b>What the question means.</b> "$b$ is a combination of $u$ and $v$" means we can find two numbers $x$ and $y$ with</p>
+        $$ x\,u + y\,v = b. $$
+        <p>So we look for $x$ and $y$. If they exist, the answer is yes. If no pair works, the answer is no.</p>
+
+        <p><b>Step 1. Work out $x\,u + y\,v$ in general.</b></p>
+        $$
+        x \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + y \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}
+        = \begin{bmatrix} x \\ 0 \\ x \end{bmatrix} + \begin{bmatrix} 0 \\ y \\ y \end{bmatrix}
+        = \begin{bmatrix} x + 0 \\ 0 + y \\ x + y \end{bmatrix}
+        = \begin{bmatrix} x \\ y \\ x + y \end{bmatrix}
+        $$
+        <p>Every combination of $u$ and $v$ has this shape: <b>the third component is always the first plus the second.</b></p>
+
+        <p><b>Step 2. Set it equal to $b = (b_1, b_2, b_3)$.</b> Matching components gives three equations:</p>
+        $$
+        \begin{aligned}
+          x &= b_1 &&\text{(top)} \\
+          y &= b_2 &&\text{(middle)} \\
+          x + y &= b_3 &&\text{(bottom)}
+        \end{aligned}
+        $$
+        <p>There are <b>3 equations but only 2 unknowns</b>. The top and middle equations already fix $x$ and $y$. The bottom equation is then an extra condition that may or may not hold.</p>
+
+        <h4>(a) $b = (2, 3, 5)$</h4>
+        $$
+        \begin{aligned}
+          x &= 2 &&\text{top: } b_1 = 2 \\
+          y &= 3 &&\text{middle: } b_2 = 3 \\
+          x + y &= 2 + 3 = 5 &&\text{bottom needs } b_3 = 5 \;✓
+        \end{aligned}
+        $$
+        <p>All three equations hold. Check by building the combination:</p>
+        $$
+        2 \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + 3 \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}
+        = \begin{bmatrix} 2 \\ 0 \\ 2 \end{bmatrix} + \begin{bmatrix} 0 \\ 3 \\ 3 \end{bmatrix}
+        = \begin{bmatrix} 2 \\ 3 \\ 5 \end{bmatrix} = b \;✓
+        $$
+        <p class="answer">(a) Yes: $b = 2u + 3v$.</p>
+
+        <h4>(b) $b = (1, 1, 1)$</h4>
+        $$
+        \begin{aligned}
+          x &= 1 &&\text{top: } b_1 = 1 \\
+          y &= 1 &&\text{middle: } b_2 = 1 \\
+          x + y &= 1 + 1 = 2 &&\text{bottom needs } b_3 = 1, \text{ but } 2 \ne 1 \;✗
+        \end{aligned}
+        $$
+        <p>The top and middle equations <b>force</b> $x = 1$ and $y = 1$. There is no freedom left, and with those values the bottom gives $2$, not $1$. Check what that forced combination actually produces:</p>
+        $$
+        1 \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + 1 \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}
+        = \begin{bmatrix} 1 \\ 1 \\ 2 \end{bmatrix} \ne \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}
+        $$
+        <p>It misses $b$ by $1$ in the third component, and no other choice of $x, y$ can fix that.</p>
+        <p class="answer">(b) No: $(1, 1, 1)$ is not a combination of $u$ and $v$.</p>
+      </div>
+
+      <div class="box intuition"><span class="label">The picture: two vectors fill only a plane</span>
+        <p>All combinations have the form $(x,\ y,\ x + y)$, so they all lie on the flat plane $z = x + y$. That plane is the <b>span</b> of $u$ and $v$.</p>
+        <ul>
+          <li>$(2, 3, 5)$: $2 + 3 = 5$, so it is <b>on</b> the plane and can be reached.</li>
+          <li>$(1, 1, 1)$: $1 + 1 = 2 \ne 1$, so it is <b>below</b> the plane (by $1$) and can never be reached.</li>
+        </ul>
+        <p>Two vectors can never fill all of 3D space. Most points in 3D are off their plane.</p>
+      </div>
+
+      <figure class="fig plot3d">
+        <div id="ex5plot3d" class="plot3d-box" role="img" aria-label="The plane spanned by u and v, with (2,3,5) on it and (1,1,1) below it"></div>
+        <figcaption>The plane $z = x + y$ (purple) holds every combination of $u$ (blue) and $v$ (green). The dashed path $2u$ then $3v$ lands on $(2, 3, 5)$ ✓ on the plane. The point $(1, 1, 1)$ ✗ sits below the plane; the dotted line shows its gap of $1$ up to $(1, 1, 2)$. <b>Drag to rotate.</b></figcaption>
+      </figure>
+
+      <div class="box pitfall"><span class="label">In matrix form</span>
+        <p>This is the system $Ax = b$ with the $3 \times 2$ matrix $A = \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ 1 & 1 \end{bmatrix}$ (columns $u$ and $v$). With more equations than unknowns, $Ax = b$ is solvable only for the $b$ that lie in the plane of the columns.</p>
+      </div>
+    </div>
+
+    <!-- ---------- E6 ---------- -->
+    <div class="worked">
+      <h3>Example 6: Building a payoff from two assets (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>You buy assets <b>today</b>. <b>Tomorrow</b> the market goes either <b>up</b> or <b>down</b>, and each asset pays you money depending on which happens.</p>
+        <table>
+          <tr><th>Asset</th><th>Price today (you pay)</th><th>Pays tomorrow if up</th><th>Pays tomorrow if down</th></tr>
+          <tr><td><b>Bond</b></td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td><b>Stock</b></td><td>$2$</td><td>$3$</td><td>$1$</td></tr>
+        </table>
+        <p>You want to receive <b>$5$ if up</b> and <b>$3$ if down</b>. How many bonds and how many stocks should you buy, and what does it cost today?</p>
+      </div>
+
+      <div class="box intuition"><span class="label">First, the same problem as an everyday story</span>
+        <p>A shop sells two kinds of ticket. You buy them <b>today</b>. <b>Tomorrow</b> the weather is either ☀️ sunny or 🌧️ rainy, and each ticket pays you depending on the weather.</p>
+        <table>
+          <tr><th>Ticket</th><th>You pay today</th><th>Pays tomorrow if ☀️ sunny</th><th>Pays tomorrow if 🌧️ rainy</th></tr>
+          <tr><td><b>Ticket A</b> (safe)</td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td><b>Ticket B</b> (risky)</td><td>$2$</td><td>$3$</td><td>$1$</td></tr>
+        </table>
+        <ul>
+          <li>Ticket A is boring: pay $1$ today, get $1$ back tomorrow, whatever the weather.</li>
+          <li>Ticket B costs $2$ today. It pays a lot ($3$) if sunny but only $1$ if rainy.</li>
+        </ul>
+        <p>Goal: tomorrow you want <b>$5$ if sunny</b> and <b>$3$ if rainy</b>. The answer is to buy <b>2 of Ticket A and 1 of Ticket B</b>:</p>
+        <table>
+          <tr><th>📅 Today, you pay</th><th>Cost</th></tr>
+          <tr><td>2 × Ticket A</td><td>$2 \times 1 = 2$</td></tr>
+          <tr><td>1 × Ticket B</td><td>$1 \times 2 = 2$</td></tr>
+          <tr><td><b>Total paid today</b></td><td><b>$4$</b></td></tr>
+        </table>
+        <table>
+          <tr><th>📅 Tomorrow, you receive</th><th>If ☀️ sunny</th><th>If 🌧️ rainy</th></tr>
+          <tr><td>2 × Ticket A</td><td>$2 \times 1 = 2$</td><td>$2 \times 1 = 2$</td></tr>
+          <tr><td>1 × Ticket B</td><td>$1 \times 3 = 3$</td><td>$1 \times 1 = 1$</td></tr>
+          <tr><td><b>Total received</b></td><td><b>$5$</b> ✓</td><td><b>$3$</b> ✓</td></tr>
+        </table>
+        <p>Now replace the words: <b>sunny/rainy = market up/down</b>, <b>Ticket A = bond</b>, <b>Ticket B = stock</b>. That is exactly the problem above. The steps below show how "2 and 1" is found.</p>
+      </div>
+
+      <div class="steps">
+        <p><b>Step 1. Write it as columns.</b> Let $x$ = number of bonds and $y$ = number of stocks. Use only what each asset <b>pays tomorrow</b> (up on top, down below). Prices are not needed yet.</p>
+        $$
+        x \underbrace{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}_{\text{bond}} + y \underbrace{\begin{bmatrix} 3 \\ 1 \end{bmatrix}}_{\text{stock}} = \underbrace{\begin{bmatrix} 5 \\ 3 \end{bmatrix}}_{\text{what you want}}
+        \begin{matrix} \leftarrow \text{up} \\ \leftarrow \text{down} \end{matrix}
+        $$
+
+        <p><b>Step 2. One equation per state.</b></p>
+        $$
+        \begin{aligned}
+          x + 3y &= 5 &&\text{(up)} \\
+          x + y &= 3 &&\text{(down)}
+        \end{aligned}
+        $$
+
+        <p><b>Step 3. Solve.</b> Subtract (down) from (up), and $x$ disappears:</p>
+        $$
+        \begin{aligned}
+          (x + 3y) - (x + y) &= 5 - 3 \\
+          2y &= 2 \\
+          y &= 1
+        \end{aligned}
+        $$
+        <p>Put $y = 1$ into (down):</p>
+        $$
+        \begin{aligned}
+          x + 1 &= 3 \\
+          x &= 2
+        \end{aligned}
+        $$
+
+        <p><b>Step 4. Check what you receive tomorrow.</b></p>
+        <table>
+          <tr><th>State</th><th>2 bonds</th><th>1 stock</th><th>Total</th><th>Wanted</th></tr>
+          <tr><td>Up</td><td>$2 \times 1 = 2$</td><td>$1 \times 3 = 3$</td><td>$5$</td><td>$5$ ✓</td></tr>
+          <tr><td>Down</td><td>$2 \times 1 = 2$</td><td>$1 \times 1 = 1$</td><td>$3$</td><td>$3$ ✓</td></tr>
+        </table>
+        <p class="answer">Answer: buy 2 bonds and 1 stock.</p>
+
+        <p><b>Step 5. What it costs today.</b> Now use the prices:</p>
+        $$ \underbrace{2 \times 1}_{\text{2 bonds}} + \underbrace{1 \times 2}_{\text{1 stock}} = 2 + 2 = 4 $$
+        <p class="answer">You pay $4$ today, and tomorrow you receive $5$ (if up) or $3$ (if down).</p>
+        <p>This is the basic idea behind pricing options (Example 7): build the payoff from assets you know, then add up their prices.</p>
+      </div>
+
+      <div class="box pitfall"><span class="label">Two different numbers for every asset</span>
+        <table>
+          <tr><th></th><th>Price today</th><th>Payoff tomorrow</th></tr>
+          <tr><td>What it is</td><td>What you <b>pay</b> to buy it</td><td>What you <b>receive</b> (depends on up/down)</td></tr>
+          <tr><td>Used for</td><td>Step 5: the cost</td><td>Steps 1–4: how many to buy</td></tr>
+        </table>
+      </div>
+
+      <div class="box intuition"><span class="label">The link to this lecture</span>
+        <p>This is the column picture. The assets' payoffs are the columns, the wanted payoff is $b$, and "how many to buy" are the weights $x$ and $y$. Because the bond and the stock point in different directions, <b>any</b> payoff you want can be built this way.</p>
+      </div>
+    </div>
+
+    <!-- ---------- E7 ---------- -->
+    <div class="worked">
+      <h3>Example 7: Pricing a call option (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Same market as Example 6. Tomorrow is either <b>up</b> or <b>down</b>, and today a bond costs $1$ and a stock costs $2$:</p>
+        <table>
+          <tr><th>Asset</th><th>Price today</th><th>Pays if up</th><th>Pays if down</th></tr>
+          <tr><td><b>Bond</b></td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td><b>Stock</b></td><td>$2$</td><td>$3$</td><td>$1$</td></tr>
+        </table>
+        <p>A <b>call option with strike $1$</b> gives you the right (not the obligation) to buy the stock tomorrow for $1$. What is the option worth today?</p>
+      </div>
+      <div class="steps">
+        <p><b>Step 1. Work out what the option pays tomorrow.</b> You only use the option if the stock is worth more than $1$. Then you gain "stock price $- 1$".</p>
+        <table>
+          <tr><th>State</th><th>Stock price</th><th>Use the option?</th><th>Option pays</th></tr>
+          <tr><td>Up</td><td>$3$</td><td>Yes: buy for $1$ something worth $3$</td><td>$3 - 1 = 2$</td></tr>
+          <tr><td>Down</td><td>$1$</td><td>No gain: buy for $1$ something worth $1$</td><td>$0$</td></tr>
+        </table>
+        <p>So the option pays $(2, 0)$: $2$ if up, $0$ if down.</p>
+
+        <p><b>Step 2. Build the same payoff from bond and stock (column picture).</b> Find $x$ bonds and $y$ stocks with</p>
+        $$
+        x \underbrace{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}_{\text{bond}} + y \underbrace{\begin{bmatrix} 3 \\ 1 \end{bmatrix}}_{\text{stock}} = \underbrace{\begin{bmatrix} 2 \\ 0 \end{bmatrix}}_{\text{option}}
+        \begin{matrix} \leftarrow \text{up} \\ \leftarrow \text{down} \end{matrix}
+        $$
+
+        <p><b>Step 3. One equation per state.</b></p>
+        $$
+        \begin{aligned}
+          x + 3y &= 2 &&\text{(up)} \\
+          x + y &= 0 &&\text{(down)}
+        \end{aligned}
+        $$
+
+        <p><b>Step 4. Solve.</b> Subtract (down) from (up):</p>
+        $$
+        \begin{aligned}
+          (x + 3y) - (x + y) &= 2 - 0 \\
+          2y &= 2 \\
+          y &= 1
+        \end{aligned}
+        $$
+        <p>Put $y = 1$ into (down):</p>
+        $$
+        \begin{aligned}
+          x + 1 &= 0 \\
+          x &= -1
+        \end{aligned}
+        $$
+
+        <p><b>Step 5. Check.</b></p>
+        <table>
+          <tr><th>State</th><th>$-1$ bond</th><th>$1$ stock</th><th>Total</th><th>Option pays</th></tr>
+          <tr><td>Up</td><td>$-1 \times 1 = -1$</td><td>$1 \times 3 = 3$</td><td>$2$</td><td>$2$ ✓</td></tr>
+          <tr><td>Down</td><td>$-1 \times 1 = -1$</td><td>$1 \times 1 = 1$</td><td>$0$</td><td>$0$ ✓</td></tr>
+        </table>
+
+        <p><b>Step 6. What $x = -1$ means.</b> A negative number of bonds means you <b>borrow</b> instead of buy: you get $1$ today and must pay back $1$ tomorrow, whatever happens. So the recipe is</p>
+        <p class="answer">Buy 1 stock and borrow 1. This pays exactly the same as the option.</p>
+
+        <p><b>Step 7. Price the option.</b> The recipe costs</p>
+        $$ \underbrace{-1 \times 1}_{\text{borrow 1}} + \underbrace{1 \times 2}_{\text{buy 1 stock}} = -1 + 2 = 1. $$
+        <p>The option and the recipe pay the same tomorrow in every state, so they must cost the same today.</p>
+        <p class="answer">The option is worth $1$ today.</p>
+      </div>
+      <div class="box intuition"><span class="label">The idea in one line</span>
+        <p>To price an option: write its payoff as a combination of assets whose prices you know (solve $Ax = b$), then add up the cost of that combination. If the option sold for any other price, you could make risk-free money by buying the cheaper one and selling the dearer one.</p>
+      </div>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. In the lecture's 2 × 2 example, which line goes through the origin, and why?</summary>
+      <p>$2x - y = 0$, because its right-hand side is $0$, so $(0,0)$ satisfies it. The line $-x + 2y = 3$ does not, since $(0,0)$ gives $0 \ne 3$.</p>
+    </details>
+    <details class="proof"><summary>2. For the lecture's 3 × 3 matrix $A$, solve $Ax = (2, -1, 0)$ without any computation.</summary>
+      <p>$(2, -1, 0)$ is column 1, so $x = (1, 0, 0)$.</p>
+    </details>
+    <details class="proof"><summary>3. Columns $(1,0,1)$, $(0,1,1)$, $(1,1,2)$: can their combinations reach every $b$ in 3D?</summary>
+      <p>No. Column 3 = column 1 + column 2, so all three columns lie in one plane. The matrix is singular, and only $b$ in that plane can be reached.</p>
+    </details>
+    <details class="proof"><summary>4. Compute $\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}\begin{bmatrix} 2 \\ -1 \end{bmatrix}$ by columns.</summary>
+      <p>$2(1, 3) - 1(2, 4) = (2 - 2,\; 6 - 4) = (0, 2)$.</p>
+    </details>
+    <details class="proof"><summary>5. For which $c$ is $\begin{bmatrix} 1 & 2 \\ 3 & c \end{bmatrix}$ singular?</summary>
+      <p>It is singular when column 2 is a multiple of column 1: $(2, c) = 2(1, 3)$, so $c = 6$.</p>
+    </details>
+    <details class="proof"><summary>6. Write $3x - y = 5,\; x + 4y = 6$ in column form and solve it.</summary>
+      <p>$x(3, 1) + y(-1, 4) = (5, 6)$. From the second equation $x = 6 - 4y$. Substituting gives $18 - 13y = 5$, so $y = 1$ and $x = 2$. Check: $2(3,1) + 1(-1,4) = (5, 6)$ ✓.</p>
+    </details>
+
+    </div>
+    </section>
+
+  <nav class="pager">
+    <a href="index.html">← All lectures</a>
+    <a href="02_overview-of-key-ideas.html">Next: 02 An Overview of Key Ideas →</a>
+  </nav>
+  </div>
+</main>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script>
+// Interactive 3D figures for section 8 (row picture: planes; column picture: vectors).
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var blue = c("--def-b"), green = c("--ex-b"), orange = c("--int-b"), red = c("--warn-b"), ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule");
+
+  var paper2 = c("--paper-2");
+  // Fixed range + whole-number ticks, so the numbers never jump while rotating or zooming.
+  function axis(t, lo, hi) {
+    return { title: { text: t, font: { size: 15, color: ink } }, range: [lo, hi], autorange: false,
+      tickmode: "linear", tick0: 0, dtick: 1, tickfont: { size: 12, color: soft },
+      gridcolor: rule, gridwidth: 1, zeroline: true, zerolinecolor: soft, zerolinewidth: 3,
+      showbackground: true, backgroundcolor: paper2, showspikes: false, linecolor: soft, showline: true };
+  }
+  function scene(xr, yr, zr, eye) {
+    var span = function (r) { return r[1] - r[0]; }, m = Math.max(span(xr), span(yr), span(zr));
+    return { xaxis: axis("x", xr[0], xr[1]), yaxis: axis("y", yr[0], yr[1]), zaxis: axis("z", zr[0], zr[1]),
+      aspectmode: "manual", aspectratio: { x: span(xr) / m * 1.3, y: span(yr) / m * 1.3, z: span(zr) / m * 1.3 },
+      dragmode: "turntable", camera: { eye: eye, up: { x: 0, y: 0, z: 1 } } };
+  }
+  var layout = {
+    margin: { l: 0, r: 0, t: 0, b: 60 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true, uirevision: "keep",
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 12 }, bgcolor: "rgba(0,0,0,0)" },
+    scene: scene([-2, 2], [-2, 2], [-2, 4], { x: 1.7, y: -1.5, z: 0.9 })
+  };
+  var config = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["toImage"] };
+
+  // A plane as a flat quad (two triangles) through four corners.
+  function plane(corners, color, name) {
+    return { type: "mesh3d", name: name, showlegend: true, opacity: 0.45, color: color, flatshading: true,
+      x: corners.map(function (p) { return p[0]; }), y: corners.map(function (p) { return p[1]; }), z: corners.map(function (p) { return p[2]; }),
+      i: [0, 0], j: [1, 2], k: [2, 3], hoverinfo: "name" };
+  }
+  var rowData = [
+    plane([[-1,-2,-1],[1,2,-1],[1,2,3],[-1,-2,3]], blue, "Plane 1: 2x − y = 0"),
+    plane([[-1,-1,0],[1,-1,-2],[1,1,2],[-1,1,4]], green, "Plane 2: −x + 2y − z = −1"),
+    plane([[-1,-1.5,-0.125],[1,-1.5,-0.125],[1,1.5,2.125],[-1,1.5,2.125]], orange, "Plane 3: −3y + 4z = 4"),
+    { type: "scatter3d", mode: "lines", name: "Planes 1 & 2 meet: (x, 2x, 3x+1)", line: { color: ink, width: 6 },
+      x: [-0.6, 0.6], y: [-1.2, 1.2], z: [-0.8, 2.8] },
+    { type: "scatter3d", mode: "markers+text", name: "Solution (0, 0, 1)", marker: { color: red, size: 7 },
+      x: [0], y: [0], z: [1], text: ["(0, 0, 1)"], textposition: "middle right", textfont: { color: red, size: 16 } }
+  ];
+  Plotly.newPlot("rowplot3d", rowData, layout, config);
+
+  // Arrow from the origin: a line plus a cone for the head.
+  function arrow(v, color, name, dash) {
+    var L = Math.hypot(v[0], v[1], v[2]), h = 0.45 / L;
+    var base = [v[0] * (1 - h), v[1] * (1 - h), v[2] * (1 - h)];
+    return [
+      { type: "scatter3d", mode: "lines", name: name, line: { color: color, width: dash ? 9 : 7, dash: dash ? "dash" : "solid" },
+        x: [0, base[0]], y: [0, base[1]], z: [0, base[2]], legendgroup: name },
+      { type: "cone", x: [base[0]], y: [base[1]], z: [base[2]], u: [v[0] * h], v: [v[1] * h], w: [v[2] * h],
+        anchor: "tail", sizemode: "absolute", sizeref: 0.45, showscale: false, colorscale: [[0, color], [1, color]],
+        legendgroup: name, showlegend: false, hoverinfo: "skip" }
+    ];
+  }
+  var colData = [].concat(
+    arrow([2, -1, 0], blue, "col 1 = (2, −1, 0)"),
+    arrow([-1, 2, -3], green, "col 2 = (−1, 2, −3)"),
+    arrow([0, -1, 4], orange, "col 3 = (0, −1, 4)"),
+    arrow([0, -1, 4], red, "b = (0, −1, 4) = col 3", true),
+    [{ type: "scatter3d", mode: "markers", name: "origin", showlegend: false, marker: { color: ink, size: 4 }, x: [0], y: [0], z: [0] },
+     { type: "scatter3d", mode: "text", showlegend: false, hoverinfo: "skip",
+       x: [2.15, -1.3, 0.35], y: [-1.1, 2.3, -1.0], z: [0.25, -2.7, 3.8],
+       text: ["col 1", "col 2", "col 3 = b"], textfont: { size: 14, color: [blue, green, red] } }]
+  );
+  var colLayout = JSON.parse(JSON.stringify(layout));
+  colLayout.scene = scene([-2, 3], [-2, 3], [-3, 4], { x: 0.9, y: 1.9, z: 0.6 });
+  Plotly.newPlot("colplot3d", colData, colLayout, config);
+
+  // Example 5: the plane z = x + y spanned by u and v.
+  var purple = c("--thm-b");
+  var ex5 = [].concat(
+    [{ type: "mesh3d", name: "span of u, v: plane z = x + y", opacity: 0.35, color: purple, flatshading: true, hoverinfo: "name",
+       x: [-1, 3, 3, -1], y: [-1, -1, 3, 3], z: [-2, 2, 6, 2], i: [0, 0], j: [1, 2], k: [2, 3] }],
+    arrow([1, 0, 1], blue, "u = (1, 0, 1)"),
+    arrow([0, 1, 1], green, "v = (0, 1, 1)"),
+    [{ type: "scatter3d", mode: "lines", name: "2u, then 3v", line: { color: ink, width: 5, dash: "dash" },
+       x: [0, 2, 2], y: [0, 0, 3], z: [0, 2, 5] },
+     { type: "scatter3d", mode: "markers+text", name: "(2, 3, 5) ✓ on the plane", marker: { color: green, size: 7 },
+       x: [2], y: [3], z: [5], text: ["(2, 3, 5) ✓"], textposition: "middle left", textfont: { color: green, size: 14 } },
+     { type: "scatter3d", mode: "markers+text", name: "(1, 1, 1) ✗ off the plane", marker: { color: red, size: 7 },
+       x: [1], y: [1], z: [1], text: ["(1, 1, 1) ✗"], textposition: "bottom right", textfont: { color: red, size: 14 } },
+     { type: "scatter3d", mode: "lines", name: "gap of 1 to (1, 1, 2)", line: { color: red, width: 4, dash: "dot" },
+       x: [1, 1], y: [1, 1], z: [1, 2] }]
+  );
+  var ex5Layout = JSON.parse(JSON.stringify(layout));
+  ex5Layout.scene = scene([-1, 3], [-1, 3], [-2, 6], { x: -0.7, y: -2.0, z: 1.2 });
+  Plotly.newPlot("ex5plot3d", ex5, ex5Layout, config);
+
+  // Plots drawn while their tab was hidden need a resize once the tab is shown.
+  document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      setTimeout(function () { document.querySelectorAll(".plot3d-box").forEach(function (el) { Plotly.Plots.resize(el); }); }, 0);
+    });
+  });
+});
+</script>
+</body>
+</html>

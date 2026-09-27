@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview of Key Ideas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>An Overview of Key Ideas</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 02</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 02</p>
+  <h1>An Overview of Key Ideas</h1>
+  <p class="subtitle">Mixing vectors, matrices as machines, and when a machine can be run backwards.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s1">The lecture in four questions</a></li>
+        <li><a href="#s2">Mixing vectors</a></li>
+        <li><a href="#s3">A matrix is a machine</a></li>
+        <li><a href="#s4">Running the machine backwards</a></li>
+        <li><a href="#s5">A machine that cannot be undone</a></li>
+        <li><a href="#s6">Why: one column is a mix of the others</a></li>
+        <li><a href="#s7">Subspaces</a></li>
+        <li><a href="#s8">Summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. The lecture in four questions</h2>
+    <table>
+      <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
+      <tr><td>1</td><td>What can we do with vectors?</td><td><b>Mix</b> them: multiply by numbers and add.</td></tr>
+      <tr><td>2</td><td>What does a matrix do?</td><td>It is a <b>machine</b>: put numbers in, get numbers out.</td></tr>
+      <tr><td>3</td><td>Can we run the machine backwards?</td><td>For matrix $A$, <b>yes</b>. The "undo" machine is called the <b>inverse</b>.</td></tr>
+      <tr><td>4</td><td>When can we <b>not</b> run it backwards?</td><td>For matrix $C$. One of its columns is just a mix of the others.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">2. Mixing vectors</h2>
+    <p>A vector is a list of numbers. The lecture uses these three:</p>
+    $$
+    u = \begin{bmatrix} 1 \\ -1 \\ 0 \end{bmatrix}, \qquad
+    v = \begin{bmatrix} 0 \\ 1 \\ -1 \end{bmatrix}, \qquad
+    w = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}
+    $$
+    <div class="box definition"><span class="label">Definition: Linear combination (a mix)</span>
+      <p>Multiply each vector by a number, then add them up. The numbers are called <b>scalars</b>.</p>
+    </div>
+
+    <div class="box example"><span class="label">Example: mix 2 of u, 3 of v and 1 of w</span>
+      <p>Work position by position, top to bottom:</p>
+      <table>
+        <tr><th>Position</th><th>$2u$</th><th>$3v$</th><th>$1w$</th><th>Add</th></tr>
+        <tr><td>top</td><td>$2 \times 1 = 2$</td><td>$3 \times 0 = 0$</td><td>$1 \times 0 = 0$</td><td>$2$</td></tr>
+        <tr><td>middle</td><td>$2 \times (-1) = -2$</td><td>$3 \times 1 = 3$</td><td>$1 \times 0 = 0$</td><td>$1$</td></tr>
+        <tr><td>bottom</td><td>$2 \times 0 = 0$</td><td>$3 \times (-1) = -3$</td><td>$1 \times 1 = 1$</td><td>$-2$</td></tr>
+      </table>
+      <p>So $2u + 3v + 1w = (2, 1, -2)$.</p>
+    </div>
+
+    <h3>What do <b>all</b> the mixes fill?</h3>
+    <p>Imagine trying every possible number:</p>
+    <table>
+      <tr><th>Mix of…</th><th>Fills</th><th>In plain words</th></tr>
+      <tr><td>$u$ only</td><td>a <b>line</b></td><td>One arrow, stretched forwards and backwards.</td></tr>
+      <tr><td>$u$ and $v$</td><td>a <b>plane</b> (flat sheet)</td><td>Two arrows in different directions sweep out a flat sheet.</td></tr>
+      <tr><td>$u$, $v$ and $w$</td><td><b>all of 3D space</b></td><td>$w$ points off the sheet, so now you can reach every point.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">3. A matrix is a machine</h2>
+    <p>Put the three vectors side by side as the <b>columns</b> of a matrix:</p>
+    $$
+    A = \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 0 & -1 & 1 \end{bmatrix}
+    \qquad \text{(column 1 is } u\text{, column 2 is } v\text{, column 3 is } w\text{)}
+    $$
+    <p>Feeding a vector $x = (x_1, x_2, x_3)$ into $A$ means mixing the columns with those amounts:</p>
+    $$ Ax = x_1 u + x_2 v + x_3 w $$
+
+    <div class="box example"><span class="label">Example: feed in x = (1, 4, 9)</span>
+      <table>
+        <tr><th>Position</th><th>$1u$</th><th>$4v$</th><th>$9w$</th><th>Add</th></tr>
+        <tr><td>top</td><td>$1$</td><td>$0$</td><td>$0$</td><td>$1$</td></tr>
+        <tr><td>middle</td><td>$-1$</td><td>$4$</td><td>$0$</td><td>$3$</td></tr>
+        <tr><td>bottom</td><td>$0$</td><td>$-4$</td><td>$9$</td><td>$5$</td></tr>
+      </table>
+      <p>In: $(1, 4, 9)$. &nbsp; Out: $(1, 3, 5)$.</p>
+    </div>
+
+    <h3>What is this machine doing?</h3>
+    <p>Look closely at the output:</p>
+    <table>
+      <tr><th>Output</th><th>Where it comes from</th></tr>
+      <tr><td>$1$</td><td>the first input, $1$</td></tr>
+      <tr><td>$3$</td><td>second minus first: $4 - 1$</td></tr>
+      <tr><td>$5$</td><td>third minus second: $9 - 4$</td></tr>
+    </table>
+    <p>In general, $A$ turns $(x_1, x_2, x_3)$ into $(x_1,\ x_2 - x_1,\ x_3 - x_2)$. It takes <b>differences</b>, so it is called the <b>difference matrix</b>.</p>
+
+    <div class="box intuition"><span class="label">Story: a savings jar</span>
+      <p>You check your savings jar every evening. The totals are $1$, $4$, $9$. How much did you <b>add</b> each day?</p>
+      <table>
+        <tr><th>Day</th><th>Total in jar</th><th>Added that day</th></tr>
+        <tr><td>1</td><td>$1$</td><td>$1 - 0 = 1$</td></tr>
+        <tr><td>2</td><td>$4$</td><td>$4 - 1 = 3$</td></tr>
+        <tr><td>3</td><td>$9$</td><td>$9 - 4 = 5$</td></tr>
+      </table>
+      <p>That is exactly what $A$ does: <b>totals in, daily amounts out.</b></p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s4">4. Running the machine backwards</h2>
+    <p>Now reverse the question: you know the <b>daily amounts</b> $(1, 3, 5)$. What were the <b>totals</b>? Just keep adding:</p>
+    <table>
+      <tr><th>Day</th><th>Added that day</th><th>Running total</th></tr>
+      <tr><td>1</td><td>$1$</td><td>$1$</td></tr>
+      <tr><td>2</td><td>$3$</td><td>$1 + 3 = 4$</td></tr>
+      <tr><td>3</td><td>$5$</td><td>$1 + 3 + 5 = 9$</td></tr>
+    </table>
+    <p>We are back at $(1, 4, 9)$.</p>
+
+    <h3>The same thing with letters</h3>
+    <p>If the output is $b = (b_1, b_2, b_3)$, the three equations are:</p>
+    $$
+    \begin{aligned}
+      x_1 &= b_1 \\
+      x_2 - x_1 &= b_2 \\
+      x_3 - x_2 &= b_3
+    \end{aligned}
+    $$
+    <p>Solve from the top, one line at a time:</p>
+    $$
+    \begin{aligned}
+      x_1 &= b_1 &&\text{read it off the first line} \\
+      x_2 &= b_2 + x_1 = b_1 + b_2 &&\text{add } x_1 \text{ to both sides of line 2} \\
+      x_3 &= b_3 + x_2 = b_1 + b_2 + b_3 &&\text{add } x_2 \text{ to both sides of line 3}
+    \end{aligned}
+    $$
+    <p>Each answer is a <b>running total</b>. The "adding up" machine is the matrix</p>
+    $$ S = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 1 & 1 \end{bmatrix}, \qquad S \begin{bmatrix} b_1 \\ b_2 \\ b_3 \end{bmatrix} = \begin{bmatrix} b_1 \\ b_1 + b_2 \\ b_1 + b_2 + b_3 \end{bmatrix} $$
+
+    <div class="box definition"><span class="label">Definition: Inverse (the undo button)</span>
+      <p>The <b>inverse</b> of $A$, written $A^{-1}$, is the machine that undoes $A$. If $A$ turns $x$ into $b$, then $A^{-1}$ turns $b$ back into $x$.</p>
+      <p>Here $A^{-1} = S$: <b>differences</b> are undone by <b>running totals</b>.</p>
+    </div>
+
+    <figure class="fig" style="max-width:560px;margin:20px auto">
+      <svg viewBox="0 0 520 160" role="img" aria-label="A takes (1,4,9) to (1,3,5); S takes it back">
+        <defs>
+          <marker id="l2m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--def-b)"/></marker>
+          <marker id="l2m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ex-b)"/></marker>
+        </defs>
+        <rect x="10" y="50" width="130" height="60" rx="10" style="fill:var(--paper);stroke:var(--rule)"/>
+        <text class="lbl ci" x="75" y="76" text-anchor="middle">(1, 4, 9)</text>
+        <text class="tick" x="75" y="96" text-anchor="middle">totals</text>
+        <rect x="380" y="50" width="130" height="60" rx="10" style="fill:var(--paper);stroke:var(--rule)"/>
+        <text class="lbl ci" x="445" y="76" text-anchor="middle">(1, 3, 5)</text>
+        <text class="tick" x="445" y="96" text-anchor="middle">daily amounts</text>
+        <path class="l1" d="M145,60 C230,20 290,20 375,60" marker-end="url(#l2m1)"/>
+        <text class="lbl c1" x="260" y="24" text-anchor="middle">A: take differences</text>
+        <path class="l2" d="M375,100 C290,140 230,140 145,100" marker-end="url(#l2m3)"/>
+        <text class="lbl c2" x="260" y="150" text-anchor="middle">S = A⁻¹: add up (running totals)</text>
+      </svg>
+      <figcaption>$A$ goes one way, and $S$ brings you back.</figcaption>
+    </figure>
+
+    <div class="box theorem"><span class="label">Why A can be undone</span>
+      <p>At every step there was exactly <b>one</b> possible answer. Different inputs always give different outputs, so from any output you can tell exactly which input it came from.</p>
+    </div>
+    <p>In calculus, the same pair appears as the <b>derivative</b> (differences) and the <b>integral</b> (running totals), and one undoes the other.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s5">5. A machine that cannot be undone</h2>
+    <p>Change only the third column, from $w = (0, 0, 1)$ to $w^* = (-1, 0, 1)$:</p>
+    $$
+    C = \begin{bmatrix} 1 & 0 & -1 \\ -1 & 1 & 0 \\ 0 & -1 & 1 \end{bmatrix},
+    \qquad
+    C \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} x_1 - x_3 \\ x_2 - x_1 \\ x_3 - x_2 \end{bmatrix}
+    $$
+    <p>Every output is now a difference, going round in a circle: the first output compares $x_1$ with $x_3$.</p>
+
+    <div class="box intuition"><span class="label">Story: three friends at a round table</span>
+      <p>Friends 1, 2 and 3 sit in a circle with $x_1$, $x_2$, $x_3$ coins. Each friend only says <b>how much more they have than the person before them</b> (friend 1's "before" is friend 3, because it's a circle).</p>
+      <p>Say they have $5$, $7$ and $6$:</p>
+      <table>
+        <tr><th>Friend</th><th>Compares with</th><th>Says</th></tr>
+        <tr><td>1 (has 5)</td><td>friend 3 (has 6)</td><td>$5 - 6 = -1$</td></tr>
+        <tr><td>2 (has 7)</td><td>friend 1 (has 5)</td><td>$7 - 5 = 2$</td></tr>
+        <tr><td>3 (has 6)</td><td>friend 2 (has 7)</td><td>$6 - 7 = -1$</td></tr>
+      </table>
+      <p>That is $C(5, 7, 6) = (-1, 2, -1)$.</p>
+    </div>
+
+    <h3>Problem 1: you cannot work out how much they have</h3>
+    <p>Give everyone $10$ more, so they have $15, 17, 16$:</p>
+    $$ C \begin{bmatrix} 15 \\ 17 \\ 16 \end{bmatrix} = \begin{bmatrix} 15 - 16 \\ 17 - 15 \\ 16 - 17 \end{bmatrix} = \begin{bmatrix} -1 \\ 2 \\ -1 \end{bmatrix} $$
+    <p>Exactly the <b>same</b> answers. Hearing $(-1, 2, -1)$, you cannot tell whether they have $(5, 7, 6)$ or $(15, 17, 16)$ or anything else shifted up or down. The same happens with everyone equal:</p>
+    $$ C \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix} = C \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix} $$
+    <p>Two different inputs give the same output, so <b>no undo button can exist</b>. $C$ has no inverse.</p>
+
+    <h3>Problem 2: some outputs are impossible</h3>
+    <p>Add the three answers: $-1 + 2 + (-1) = 0$. That is not luck. Add the three outputs in general:</p>
+    $$
+    (x_1 - x_3) + (x_2 - x_1) + (x_3 - x_2) = 0
+    $$
+    <p>Every amount appears once with $+$ and once with $-$, so everything cancels. <b>The three answers always add up to $0$.</b></p>
+    <p>So if someone claims the friends said $(1, 1, 1)$, that is impossible, because $1 + 1 + 1 = 3$, not $0$. The equation $Cx = (1, 1, 1)$ has <b>no solution</b>.</p>
+    <div class="box theorem"><span class="label">Rule for the C machine</span>
+      <p>$Cx = b$ can be solved <b>only if</b> $b_1 + b_2 + b_3 = 0$. When it can, there are many answers (you can always add the same amount to everyone).</p>
+    </div>
+
+    <div class="box intuition"><span class="label">Why A worked and C does not</span>
+      <p>With $A$, friend 1 says their <b>actual amount</b> ($x_1$), not a difference. That one real number pins everything down. With $C$, everyone only gives differences, so the actual amounts are lost.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">6. Why: one column is a mix of the others</h2>
+    <p>The real cause is in the columns. Is $w^*$ a mix of $u$ and $v$? Try $-1$ of $u$ and $-1$ of $v$:</p>
+    <table>
+      <tr><th>Position</th><th>$-1 \times u$</th><th>$-1 \times v$</th><th>Add</th><th>$w^*$</th></tr>
+      <tr><td>top</td><td>$-1$</td><td>$0$</td><td>$-1$</td><td>$-1$ ✓</td></tr>
+      <tr><td>middle</td><td>$1$</td><td>$-1$</td><td>$0$</td><td>$0$ ✓</td></tr>
+      <tr><td>bottom</td><td>$0$</td><td>$1$</td><td>$1$</td><td>$1$ ✓</td></tr>
+    </table>
+    <p>So $w^* = -u - v$. The third column of $C$ is made from the first two, so it adds <b>no new direction</b>. All three columns lie on the <b>same flat sheet</b>, and mixing them can never leave that sheet. That is why most outputs are unreachable.</p>
+    <p>The original $w = (0, 0, 1)$ is <b>not</b> a mix of $u$ and $v$ (see Example 5 in the Examples tab). It points off the sheet, which is why $A$ reaches everything.</p>
+
+    <div class="figs">
+      <figure class="fig plot3d" style="margin:0">
+        <div id="l2plotA" class="plot3d-box" role="img" aria-label="u and v span a plane; w sticks out"></div>
+        <figcaption><b>Matrix $A$.</b> $u$ and $v$ make the purple sheet. $w$ (orange) points <b>off</b> the sheet, so all of 3D can be reached.</figcaption>
+      </figure>
+      <figure class="fig plot3d" style="margin:0">
+        <div id="l2plotC" class="plot3d-box" role="img" aria-label="u, v and w star all lie in one plane"></div>
+        <figcaption><b>Matrix $C$.</b> $w^*$ (red) lies <b>on</b> the same sheet. All three columns are stuck on it. <b>Drag to rotate.</b></figcaption>
+      </figure>
+    </div>
+
+    <div class="box definition"><span class="label">Definition: Independent and dependent</span>
+      <p>Vectors are <b>independent</b> if none of them is a mix of the others. Each one brings a new direction. ($u, v, w$)</p>
+      <p>Vectors are <b>dependent</b> if one of them is a mix of the others. ($u, v, w^*$, because $w^* = -u - v$)</p>
+    </div>
+    <div class="box definition"><span class="label">Definition: Basis</span>
+      <p>A <b>basis</b> of 3D space is 3 independent vectors. Mixing them reaches every point. $u, v, w$ is a basis; $u, v, w^*$ is not.</p>
+    </div>
+
+    <div class="box theorem"><span class="label">The big rule</span>
+      <p>For a square matrix, these always go together:</p>
+      <table>
+        <tr><th>Columns independent</th><th>⇔</th><th>Mixes reach every point</th><th>⇔</th><th>Matrix has an undo button (inverse)</th></tr>
+      </table>
+      <p>$A$ has all three. $C$ has none.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">7. Subspaces</h2>
+    <div class="box definition"><span class="label">Definition: Subspace</span>
+      <p>A <b>subspace</b> is a collection of vectors that you <b>cannot escape by mixing</b>. Multiply any of them by any number, or add any two, and you are still inside. It must contain the zero vector.</p>
+    </div>
+    <p>In plain words: a subspace is a flat line, sheet or space <b>through the origin</b>.</p>
+    <table>
+      <tr><th>Subspaces of 3D space</th><th>Example</th></tr>
+      <tr><td>just the origin $(0, 0, 0)$</td><td>the point $0$ alone</td></tr>
+      <tr><td>a line through the origin</td><td>all mixes of $u$</td></tr>
+      <tr><td>a plane through the origin</td><td>all mixes of $u$ and $v$</td></tr>
+      <tr><td>all of 3D space</td><td>all mixes of $u$, $v$, $w$</td></tr>
+    </table>
+    <div class="box pitfall"><span class="label">Not subspaces</span>
+      <ul>
+        <li>A line or plane that <b>misses the origin</b>. $0 \times$ any vector $= 0$ would be outside.</li>
+        <li>A <b>piece</b> of a plane, like a triangle. Doubling a vector jumps outside it.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <div class="box finance"><span class="label">In finance</span>
+      <ul>
+        <li>$A$ turns an account balance each day into <b>daily profit or loss</b>.</li>
+        <li>$S$ turns daily profit or loss into the <b>running total</b>.</li>
+        <li>Like $C$: daily price changes alone never tell you the price level. Prices $(100, 103, 101)$ and $(50, 53, 51)$ have the same changes. You need one real starting price.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">8. Summary</h2>
+    <table>
+      <tr><th></th><th>Matrix $A$</th><th>Matrix $C$</th></tr>
+      <tr><td>Third column</td><td>$w = (0, 0, 1)$</td><td>$w^* = (-1, 0, 1) = -u - v$</td></tr>
+      <tr><td>What it does</td><td>differences (first output is $x_1$ itself)</td><td>differences in a circle</td></tr>
+      <tr><td>Story</td><td>savings jar: totals → daily amounts</td><td>friends at a round table</td></tr>
+      <tr><td>Columns</td><td>independent (a basis)</td><td>dependent (stuck on one sheet)</td></tr>
+      <tr><td>Which outputs can happen?</td><td>all of them</td><td>only those adding up to $0$</td></tr>
+      <tr><td>Undo button?</td><td>yes: $S$ (running totals)</td><td>no</td></tr>
+    </table>
+
+    <dl class="vocab">
+      <dt>Linear combination</dt><dd>A mix: multiply vectors by numbers and add.</dd>
+      <dt>Matrix × vector</dt><dd>Mix the matrix's columns using the vector's numbers.</dd>
+      <dt>Difference matrix $A$</dt><dd>Totals in, daily amounts out.</dd>
+      <dt>Inverse $A^{-1}$</dt><dd>The undo button. Here $A^{-1} = S$, running totals.</dd>
+      <dt>Independent</dt><dd>No vector is a mix of the others.</dd>
+      <dt>Dependent</dt><dd>One vector is a mix of the others.</dd>
+      <dt>Basis</dt><dd>Independent vectors that reach every point.</dd>
+      <dt>Subspace</dt><dd>A flat line, plane or space through the origin that mixing cannot escape.</dd>
+    </dl>
+  </div>
+  </section>
+
+  <!-- ================= EXAMPLES ================= -->
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+
+    <h2>Worked examples</h2>
+    <p>Throughout, $A = \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 0 & -1 & 1 \end{bmatrix}$ (differences), $S = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 1 & 1 \end{bmatrix}$ (running sums) and $C = \begin{bmatrix} 1 & 0 & -1 \\ -1 & 1 & 0 \\ 0 & -1 & 1 \end{bmatrix}$ (cyclic differences).</p>
+
+    <!-- E1 -->
+    <div class="worked">
+      <h3>Example 1: Compute $Ax$ both ways</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Find $A x$ for $x = (2, 5, 7)$.</p>
+      </div>
+      <div class="steps">
+        <p><b>By columns.</b></p>
+        $$
+        2 \begin{bmatrix} 1 \\ -1 \\ 0 \end{bmatrix} + 5 \begin{bmatrix} 0 \\ 1 \\ -1 \end{bmatrix} + 7 \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}
+        = \begin{bmatrix} 2 + 0 + 0 \\ -2 + 5 + 0 \\ 0 - 5 + 7 \end{bmatrix}
+        = \begin{bmatrix} 2 \\ 3 \\ 2 \end{bmatrix}
+        $$
+        <p><b>By differences</b> (what $A$ does): $(x_1,\ x_2 - x_1,\ x_3 - x_2) = (2,\ 5 - 2,\ 7 - 5) = (2, 3, 2)$ ✓.</p>
+        <p class="answer">Answer: $Ax = (2, 3, 2)$</p>
+      </div>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 2: Solve $Ax = b$ top-down</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Solve $Ax = b$ for $b = (3, 1, 2)$.</p>
+      </div>
+      <div class="steps">
+        <p><b>The equations.</b> $x_1 = 3$, &nbsp; $x_2 - x_1 = 1$, &nbsp; $x_3 - x_2 = 2$.</p>
+        $$
+        \begin{aligned}
+          x_1 &= 3 \\
+          x_2 &= 1 + x_1 = 1 + 3 = 4 &&\text{add } x_1 \text{ to both sides} \\
+          x_3 &= 2 + x_2 = 2 + 4 = 6 &&\text{add } x_2 \text{ to both sides}
+        \end{aligned}
+        $$
+        <p><b>Check.</b> $A(3, 4, 6) = (3,\ 4 - 3,\ 6 - 4) = (3, 1, 2)$ ✓.</p>
+        <p class="answer">Answer: $x = (3, 4, 6)$, the running sums of $(3, 1, 2)$.</p>
+      </div>
+    </div>
+
+    <!-- E3 -->
+    <div class="worked">
+      <h3>Example 3: Use the inverse directly</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Use $S = A^{-1}$ to solve $Ax = (2, 2, 2)$ in one step.</p>
+      </div>
+      <div class="steps">
+        <p><b>Multiply by $S$</b> (running sums):</p>
+        $$ x = S \begin{bmatrix} 2 \\ 2 \\ 2 \end{bmatrix} = \begin{bmatrix} 2 \\ 2 + 2 \\ 2 + 2 + 2 \end{bmatrix} = \begin{bmatrix} 2 \\ 4 \\ 6 \end{bmatrix} $$
+        <p><b>Check.</b> $A(2, 4, 6) = (2,\ 4 - 2,\ 6 - 4) = (2, 2, 2)$ ✓.</p>
+        <p class="answer">Answer: $x = (2, 4, 6)$</p>
+      </div>
+    </div>
+
+    <!-- E4 -->
+    <div class="worked">
+      <h3>Example 4: When can $Cx = b$ be solved?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Solve $Cx = b$ for (a) $b = (1, 2, -3)$ and (b) $b = (1, 1, 1)$, or show it is impossible.</p>
+      </div>
+      <div class="steps">
+        <p><b>The test.</b> $Cx = b$ has a solution only if $b_1 + b_2 + b_3 = 0$.</p>
+        <table>
+          <tr><th>$b$</th><th>$b_1 + b_2 + b_3$</th><th>Solvable?</th></tr>
+          <tr><td>(a) $(1, 2, -3)$</td><td>$1 + 2 - 3 = 0$</td><td>yes</td></tr>
+          <tr><td>(b) $(1, 1, 1)$</td><td>$1 + 1 + 1 = 3$</td><td>no</td></tr>
+        </table>
+
+        <h4>(a) Find the solutions</h4>
+        <p>The equations are $x_1 - x_3 = 1$, $\ x_2 - x_1 = 2$, $\ x_3 - x_2 = -3$. Remember the friends at the round table: giving everyone the same extra amount changes none of the differences. So we are free to pick any starting value for friend 1. Choose the easiest, $x_1 = 0$:</p>
+        $$
+        \begin{aligned}
+          x_1 &= 0 &&\text{our choice} \\
+          x_2 &= 2 + x_1 = 2 &&\text{from } x_2 - x_1 = 2 \\
+          x_3 &= -3 + x_2 = -1 &&\text{from } x_3 - x_2 = -3 \\
+          x_1 - x_3 &= 0 - (-1) = 1 \;✓ &&\text{first equation checks}
+        \end{aligned}
+        $$
+        <p>So $x = (0, 2, -1)$ works, and so does $(0, 2, -1) + c(1, 1, 1)$ for any $c$. For example $c = 1$ gives $(1, 3, 0)$: $1 - 0 = 1$, $3 - 1 = 2$, $0 - 3 = -3$ ✓.</p>
+        <p class="answer">(a) Infinitely many solutions: $x = (0, 2, -1) + c(1, 1, 1)$.</p>
+
+        <h4>(b) Show it is impossible</h4>
+        <p>Add the three equations: the left side is always $(x_1 - x_3) + (x_2 - x_1) + (x_3 - x_2) = 0$, but the right side is $1 + 1 + 1 = 3$. That would need $0 = 3$.</p>
+        <p class="answer">(b) No solution.</p>
+      </div>
+    </div>
+
+    <!-- E5 -->
+    <div class="worked">
+      <h3>Example 5: Independent or dependent?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>With $u = (1, -1, 0)$ and $v = (0, 1, -1)$: is (a) $w = (0, 0, 1)$ and (b) $w^* = (-1, 0, 1)$ a combination of $u$ and $v$?</p>
+      </div>
+      <div class="steps">
+        <p><b>General combination.</b> $x_1 u + x_2 v = (x_1,\ -x_1 + x_2,\ -x_2)$. Match it with the target, position by position.</p>
+
+        <h4>(a) Target $w = (0, 0, 1)$</h4>
+        $$
+        \begin{aligned}
+          x_1 &= 0 &&\text{top} \\
+          -x_1 + x_2 &= 0 \;\Rightarrow\; x_2 = 0 &&\text{middle} \\
+          -x_2 &= 1 \;\Rightarrow\; 0 = 1 \;✗ &&\text{bottom fails}
+        \end{aligned}
+        $$
+        <p class="answer">(a) No, so $u, v, w$ are independent (a basis for $\mathbb{R}^3$).</p>
+
+        <h4>(b) Target $w^* = (-1, 0, 1)$</h4>
+        $$
+        \begin{aligned}
+          x_1 &= -1 &&\text{top} \\
+          -x_1 + x_2 &= 0 \;\Rightarrow\; 1 + x_2 = 0 \;\Rightarrow\; x_2 = -1 &&\text{middle} \\
+          -x_2 &= 1 \;✓ &&\text{bottom checks}
+        \end{aligned}
+        $$
+        <p class="answer">(b) Yes: $w^* = -u - v$, so $u, v, w^*$ are dependent.</p>
+        <p><b>Shortcut.</b> $u$ and $v$ both have components that add to $0$, so every combination does too. $w$ adds to $1$ (not in the plane); $w^*$ adds to $0$ (in the plane).</p>
+      </div>
+    </div>
+
+    <!-- E6 -->
+    <div class="worked">
+      <h3>Example 6: Subspace or not?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Which of these are subspaces?</p>
+        <ol type="a">
+          <li>The line $y = 2x$ in $\mathbb{R}^2$.</li>
+          <li>The line $y = 2x + 1$ in $\mathbb{R}^2$.</li>
+          <li>The plane $b_1 + b_2 + b_3 = 0$ in $\mathbb{R}^3$.</li>
+          <li>All vectors $(x, y)$ with $x \ge 0$ and $y \ge 0$.</li>
+        </ol>
+      </div>
+      <div class="steps">
+        <p><b>Two tests.</b> (1) Does it contain the origin? (2) Do multiplying by any number and adding keep you inside?</p>
+        <table>
+          <tr><th></th><th>Contains $0$?</th><th>Stays inside?</th><th>Subspace?</th></tr>
+          <tr><td>(a) $y = 2x$</td><td>yes: $0 = 2 \cdot 0$</td><td>yes: multiples and sums of points with $y = 2x$ still have $y = 2x$</td><td><b>yes</b> (a line through $0$)</td></tr>
+          <tr><td>(b) $y = 2x + 1$</td><td>no: $0 \ne 2 \cdot 0 + 1$</td><td>—</td><td><b>no</b></td></tr>
+          <tr><td>(c) $b_1 + b_2 + b_3 = 0$</td><td>yes: $0 + 0 + 0 = 0$</td><td>yes: scaling or adding keeps the sum $0$</td><td><b>yes</b> (a plane through $0$)</td></tr>
+          <tr><td>(d) $x \ge 0,\ y \ge 0$</td><td>yes</td><td>no: $(1, 1)$ is inside, but $-1 \times (1, 1) = (-1, -1)$ is not</td><td><b>no</b></td></tr>
+        </table>
+        <p class="answer">Answer: (a) and (c) are subspaces; (b) and (d) are not.</p>
+      </div>
+    </div>
+
+    <!-- E7 -->
+    <div class="worked">
+      <h3>Example 7: Daily P&amp;L and running totals (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>(a) A trader makes $+2$, $-1$, $+3$ on three days. What is the running total after each day?</p>
+        <p>(b) Another account starts at $0$ and ends the three days at $5$, $8$, $6$. What was each day's profit or loss?</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>Think of a piggy bank. Each day you put money in (or take some out). The <b>daily amounts</b> are the changes; the <b>amount in the bank</b> each evening is the running total. Running totals are $S$; daily changes are $A$.</p>
+      </div>
+      <div class="steps">
+        <p><b>(a) Running total = $S \times$ daily P&amp;L.</b></p>
+        $$ S \begin{bmatrix} 2 \\ -1 \\ 3 \end{bmatrix} = \begin{bmatrix} 2 \\ 2 - 1 \\ 2 - 1 + 3 \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \\ 4 \end{bmatrix} $$
+        <p class="answer">(a) Running totals: $2, 1, 4$.</p>
+
+        <p><b>(b) Daily P&amp;L = $A \times$ end-of-day balances.</b></p>
+        $$ A \begin{bmatrix} 5 \\ 8 \\ 6 \end{bmatrix} = \begin{bmatrix} 5 \\ 8 - 5 \\ 6 - 8 \end{bmatrix} = \begin{bmatrix} 5 \\ 3 \\ -2 \end{bmatrix} $$
+        <p class="answer">(b) Daily P&amp;L: $+5, +3, -2$.</p>
+        <p><b>Check (b) with $S$:</b> $S(5, 3, -2) = (5,\ 8,\ 6)$ ✓. $S$ undoes $A$.</p>
+      </div>
+    </div>
+
+    <!-- E8 -->
+    <div class="worked">
+      <h3>Example 8: Building a put from a bond, a stock and a call (options)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Tomorrow the stock ends at <b>1</b> (low), <b>2</b> (middle) or <b>3</b> (high). Three assets are for sale today:</p>
+        <table>
+          <tr><th>Asset</th><th>Price today</th><th>Pays if low ($S=1$)</th><th>Pays if middle ($S=2$)</th><th>Pays if high ($S=3$)</th></tr>
+          <tr><td><b>Bond</b></td><td>$1$</td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td><b>Stock</b></td><td>$2$</td><td>$1$</td><td>$2$</td><td>$3$</td></tr>
+          <tr><td><b>Call</b>, strike 2</td><td>$0.25$</td><td>$0$</td><td>$0$</td><td>$1$</td></tr>
+        </table>
+        <p>A <b>put option with strike 2</b> gives the right to <b>sell</b> the stock for $2$. What should it cost today?</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>Same idea as the tickets in Lecture 01, now with three kinds of weather instead of two. Each asset is a ticket that pays depending on tomorrow's "weather" (low, middle or high). We want a new ticket (the put), so we build it from the three tickets we can already buy, then add up their prices.</p>
+      </div>
+      <div class="steps">
+        <p><b>Step 1. What the put pays.</b> You sell for $2$ only if the stock is worth less than $2$: payoff $= \max(2 - S,\ 0)$.</p>
+        <table>
+          <tr><th>State</th><th>Stock $S$</th><th>$2 - S$</th><th>Put pays</th></tr>
+          <tr><td>Low</td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td>Middle</td><td>$2$</td><td>$0$</td><td>$0$</td></tr>
+          <tr><td>High</td><td>$3$</td><td>$-1$</td><td>$0$ (don't use it)</td></tr>
+        </table>
+
+        <p><b>Step 2. Column picture.</b> Find $x$ bonds, $y$ stocks and $z$ calls with</p>
+        $$
+        x \underbrace{\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}}_{\text{bond}} + y \underbrace{\begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix}}_{\text{stock}} + z \underbrace{\begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}}_{\text{call}} = \underbrace{\begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}}_{\text{put}}
+        \begin{matrix} \leftarrow \text{low} \\ \leftarrow \text{middle} \\ \leftarrow \text{high} \end{matrix}
+        $$
+
+        <p><b>Step 3. One equation per state.</b></p>
+        $$
+        \begin{aligned}
+          x + y &= 1 &&\text{(low)} \\
+          x + 2y &= 0 &&\text{(middle)} \\
+          x + 3y + z &= 0 &&\text{(high)}
+        \end{aligned}
+        $$
+
+        <p><b>Step 4. Solve.</b></p>
+        $$
+        \begin{aligned}
+          (x + 2y) - (x + y) &= 0 - 1 &&\text{(middle)} - \text{(low)} \\
+          y &= -1 \\
+          x &= 1 - y = 1 - (-1) = 2 &&\text{from (low)} \\
+          z &= -x - 3y = -2 + 3 = 1 &&\text{from (high)}
+        \end{aligned}
+        $$
+
+        <p><b>Step 5. Check.</b></p>
+        <table>
+          <tr><th>State</th><th>2 bonds</th><th>$-1$ stock</th><th>1 call</th><th>Total</th><th>Put pays</th></tr>
+          <tr><td>Low</td><td>$2$</td><td>$-1$</td><td>$0$</td><td>$1$</td><td>$1$ ✓</td></tr>
+          <tr><td>Middle</td><td>$2$</td><td>$-2$</td><td>$0$</td><td>$0$</td><td>$0$ ✓</td></tr>
+          <tr><td>High</td><td>$2$</td><td>$-3$</td><td>$1$</td><td>$0$</td><td>$0$ ✓</td></tr>
+        </table>
+        <p class="answer">Recipe: buy 2 bonds, sell 1 stock ($y = -1$), buy 1 call.</p>
+
+        <p><b>Step 6. Price the put.</b></p>
+        $$ \underbrace{2 \times 1}_{\text{bonds}} + \underbrace{(-1) \times 2}_{\text{stock}} + \underbrace{1 \times 0.25}_{\text{call}} = 2 - 2 + 0.25 = 0.25 $$
+        <p class="answer">The put is worth $0.25$ today.</p>
+      </div>
+      <div class="box intuition"><span class="label">The link to this lecture</span>
+        <p>The payoffs of bond, stock and call are three <b>independent</b> vectors in $\mathbb{R}^3$, so they form a <b>basis</b>: <b>any</b> payoff over the three states can be built from them, and the payoff matrix is invertible. If the third asset were just "2 stocks" with payoff $(2, 4, 6)$, the columns would be dependent and the put could not be built.</p>
+        <p>The recipe "put $=$ 2 bonds $-$ stock $+$ call" is called <b>put–call parity</b>.</p>
+      </div>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. Compute $A(1, 1, 1)$ and $C(1, 1, 1)$. What does each result tell you?</summary>
+      <p>$A(1, 1, 1) = (1,\ 0,\ 0)$, which is not zero, as it must be for an invertible matrix. $C(1, 1, 1) = (0, 0, 0)$: a nonzero input gives output $0$, so $C$ is not invertible.</p>
+    </details>
+    <details class="proof"><summary>2. Solve $Ax = (1, 1, 1)$.</summary>
+      <p>Running sums: $x = (1,\ 1 + 1,\ 1 + 1 + 1) = (1, 2, 3)$. Check: $A(1, 2, 3) = (1,\ 2 - 1,\ 3 - 2) = (1, 1, 1)$ ✓.</p>
+    </details>
+    <details class="proof"><summary>3. Is $Cx = (2, -5, 3)$ solvable? Is $Cx = (1, 0, 0)$?</summary>
+      <p>$2 - 5 + 3 = 0$, so the first is solvable. $1 + 0 + 0 = 1 \ne 0$, so the second is not.</p>
+    </details>
+    <details class="proof"><summary>4. Are $(1, 2, 3)$, $(2, 4, 6)$, $(0, 1, 0)$ independent?</summary>
+      <p>No. $(2, 4, 6) = 2 \times (1, 2, 3)$, so the second is a combination of the first. They are dependent and fill only a plane.</p>
+    </details>
+    <details class="proof"><summary>5. Is the set of all vectors $(x, y, z)$ with $z = 1$ a subspace of $\mathbb{R}^3$?</summary>
+      <p>No. It does not contain the origin $(0, 0, 0)$, since $0 \ne 1$. (It is a flat plane, but it misses the origin.)</p>
+    </details>
+    <details class="proof"><summary>6. Using $S$, find the running totals of daily P&amp;L $(4, -2, -1)$.</summary>
+      <p>$S(4, -2, -1) = (4,\ 4 - 2,\ 4 - 2 - 1) = (4, 2, 1)$.</p>
+    </details>
+
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="01_geometry-of-linear-equations.html">← 01 The Geometry of Linear Equations</a>
+    <span class="off">Next: Elimination with Matrices</span>
+  </nav>
+  </div>
+</main>
+
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script>
+// 3D figures for section 7: columns of A (independent) vs columns of C (dependent).
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var blue = c("--def-b"), green = c("--ex-b"), orange = c("--int-b"), red = c("--warn-b"), purple = c("--thm-b"),
+      ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+
+  // Fixed range + whole-number ticks, so the numbers never jump while rotating or zooming.
+  function axis(t, lo, hi) {
+    return { title: { text: t, font: { size: 15, color: ink } }, range: [lo, hi], autorange: false,
+      tickmode: "linear", tick0: 0, dtick: 1, tickfont: { size: 12, color: soft },
+      gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 3,
+      showbackground: true, backgroundcolor: paper2, showspikes: false, linecolor: soft, showline: true };
+  }
+  function scene(xr, yr, zr, eye) {
+    var span = function (r) { return r[1] - r[0]; }, m = Math.max(span(xr), span(yr), span(zr));
+    return { xaxis: axis("x", xr[0], xr[1]), yaxis: axis("y", yr[0], yr[1]), zaxis: axis("z", zr[0], zr[1]),
+      aspectmode: "manual", aspectratio: { x: span(xr) / m * 1.3, y: span(yr) / m * 1.3, z: span(zr) / m * 1.3 },
+      dragmode: "turntable", camera: { eye: eye, up: { x: 0, y: 0, z: 1 } } };
+  }
+  var baseLayout = {
+    margin: { l: 0, r: 0, t: 0, b: 60 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true, uirevision: "keep",
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 12 }, bgcolor: "rgba(0,0,0,0)" }
+  };
+  var config = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["toImage"] };
+
+  function arrow(v, color, name, dash) {
+    var L = Math.hypot(v[0], v[1], v[2]), h = 0.35 / L;
+    var base = [v[0] * (1 - h), v[1] * (1 - h), v[2] * (1 - h)];
+    return [
+      { type: "scatter3d", mode: "lines", name: name, line: { color: color, width: dash ? 9 : 7, dash: dash ? "dash" : "solid" },
+        x: [0, base[0]], y: [0, base[1]], z: [0, base[2]], legendgroup: name },
+      { type: "cone", x: [base[0]], y: [base[1]], z: [base[2]], u: [v[0] * h], v: [v[1] * h], w: [v[2] * h],
+        anchor: "tail", sizemode: "absolute", sizeref: 0.35, showscale: false, colorscale: [[0, color], [1, color]],
+        legendgroup: name, showlegend: false, hoverinfo: "skip" }
+    ];
+  }
+  // The plane b1 + b2 + b3 = 0, i.e. z = -x - y.
+  var plane = { type: "mesh3d", name: "plane b₁ + b₂ + b₃ = 0", opacity: 0.3, color: purple, flatshading: true, hoverinfo: "name",
+    x: [-1.5, 1.5, 1.5, -1.5], y: [-1.5, -1.5, 1.5, 1.5], z: [3, 0, -3, 0], i: [0, 0], j: [1, 2], k: [2, 3] };
+  function labels(pts, txt, cols) {
+    return { type: "scatter3d", mode: "text", showlegend: false, hoverinfo: "skip",
+      x: pts.map(function (p) { return p[0]; }), y: pts.map(function (p) { return p[1]; }), z: pts.map(function (p) { return p[2]; }),
+      text: txt, textfont: { size: 14, color: cols } };
+  }
+  var origin = { type: "scatter3d", mode: "markers", showlegend: false, marker: { color: ink, size: 4 }, x: [0], y: [0], z: [0] };
+  var eye = { x: 1.9, y: 0.8, z: 1.1 };
+
+  var dataA = [plane].concat(
+    arrow([1, -1, 0], blue, "u = (1, −1, 0)"),
+    arrow([0, 1, -1], green, "v = (0, 1, −1)"),
+    arrow([0, 0, 1], orange, "w = (0, 0, 1): out of the plane"),
+    [origin, labels([[1.2, -1.2, 0.1], [0, 1.2, -1.2], [0.15, 0, 1.25]], ["u", "v", "w"], [blue, green, orange])]
+  );
+  var layA = JSON.parse(JSON.stringify(baseLayout)); layA.scene = scene([-2, 2], [-2, 2], [-3, 3], eye);
+  Plotly.newPlot("l2plotA", dataA, layA, config);
+
+  var dataC = [plane].concat(
+    arrow([1, -1, 0], blue, "u = (1, −1, 0)"),
+    arrow([0, 1, -1], green, "v = (0, 1, −1)"),
+    arrow([-1, 0, 1], red, "w* = (−1, 0, 1) = −u − v: in the plane"),
+    [origin, labels([[1.2, -1.2, 0.1], [0, 1.2, -1.2], [-1.25, 0, 1.2]], ["u", "v", "w*"], [blue, green, red])]
+  );
+  var layC = JSON.parse(JSON.stringify(baseLayout)); layC.scene = scene([-2, 2], [-2, 2], [-3, 3], eye);
+  Plotly.newPlot("l2plotC", dataC, layC, config);
+
+  // Plots drawn while their tab was hidden need a resize once the tab is shown.
+  document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      setTimeout(function () { document.querySelectorAll(".plot3d-box").forEach(function (el) { Plotly.Plots.resize(el); }); }, 0);
+    });
+  });
+});
+</script>
+</body>
+</html>
