@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elimination with Matrices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>Elimination with Matrices</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 03</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 03</p>
+  <h1>Elimination with Matrices</h1>
+  <p class="subtitle">How to actually solve equations: knock out unknowns one at a time, then solve from the bottom up.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s1">The lecture in five questions</a></li>
+        <li><a href="#s2">Warm-up: two equations</a></li>
+        <li><a href="#s3">Elimination on three equations</a></li>
+        <li><a href="#s4">Back substitution</a></li>
+        <li><a href="#s5">When elimination gets stuck</a></li>
+        <li><a href="#s6">Each step is a matrix</a></li>
+        <li><a href="#s7">Undoing a step</a></li>
+        <li><a href="#s8">Swapping rows</a></li>
+        <li><a href="#s9">Summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. The lecture in five questions</h2>
+    <table>
+      <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
+      <tr><td>1</td><td>How do we solve $Ax = b$?</td><td><b>Elimination</b>: remove unknowns one at a time. Every computer program does this.</td></tr>
+      <tr><td>2</td><td>Then what?</td><td><b>Back substitution</b>: solve the last equation first, then go upwards.</td></tr>
+      <tr><td>3</td><td>Can it go wrong?</td><td>Yes, if a $0$ lands where we need a pivot. Sometimes a row swap fixes it, sometimes nothing can.</td></tr>
+      <tr><td>4</td><td>How do matrices come in?</td><td>Each elimination step is "multiply by a simple matrix $E$".</td></tr>
+      <tr><td>5</td><td>Can a step be undone?</td><td>Yes. If a step <b>subtracts</b>, its undo <b>adds back</b>.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">2. Warm-up: two equations</h2>
+    $$
+    \begin{aligned}
+      x + y &= 3 &&\text{(equation 1)} \\
+      2x + 3y &= 8 &&\text{(equation 2)}
+    \end{aligned}
+    $$
+    <p><b>Idea:</b> make $x$ disappear from equation 2. Equation 2 has $2x$, equation 1 has $1x$. So take <b>2 times</b> equation 1 away from equation 2:</p>
+    <table>
+      <tr><th></th><th>$x$</th><th>$y$</th><th>right side</th></tr>
+      <tr><td>Equation 2</td><td>$2$</td><td>$3$</td><td>$8$</td></tr>
+      <tr><td>minus 2 × equation 1</td><td>$-2$</td><td>$-2$</td><td>$-6$</td></tr>
+      <tr><td><b>New equation 2</b></td><td><b>$0$</b></td><td><b>$1$</b></td><td><b>$2$</b></td></tr>
+    </table>
+    <p>The new equation 2 says $y = 2$. Put that into equation 1: $x + 2 = 3$, so $x = 1$.</p>
+    <p><b>Check:</b> $1 + 2 = 3$ ✓ and $2(1) + 3(2) = 8$ ✓.</p>
+
+    <div class="box intuition"><span class="label">Why subtracting equations is allowed</span>
+      <p>An equation is a balanced scale: the left side weighs the same as the right side. If you take the same amount off <b>both sides</b>, it stays balanced. "2 × equation 1" is the same amount on both sides ($2x + 2y$ and $6$), so removing it keeps equation 2 true.</p>
+    </div>
+
+    <p>That is the whole idea of elimination. The rest of the lecture does exactly this with three equations, then writes it with matrices.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">3. Elimination on three equations</h2>
+    $$
+    \begin{aligned}
+      x + 2y + z &= 2 \\
+      3x + 8y + z &= 12 \\
+      4y + z &= 2
+    \end{aligned}
+    \qquad\Longleftrightarrow\qquad
+    \underbrace{\begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}}_{A}
+    \begin{bmatrix} x \\ y \\ z \end{bmatrix}
+    = \underbrace{\begin{bmatrix} 2 \\ 12 \\ 2 \end{bmatrix}}_{b}
+    $$
+    <p>We only need the numbers, so from now on we write just the rows of $A$ with $b$ tacked on at the end. This is called the <b>augmented matrix</b> ("augmented" = something added):</p>
+    $$
+    \left[\begin{array}{ccc|c} 1 & 2 & 1 & 2 \\ 3 & 8 & 1 & 12 \\ 0 & 4 & 1 & 2 \end{array}\right]
+    $$
+
+    <div class="box definition"><span class="label">Definition: Pivot and multiplier</span>
+      <p>The <b>pivot</b> is the number we use to knock out the numbers below it. The first pivot is the top-left number, $1$.</p>
+      <p>The <b>multiplier</b> is how many times the pivot row we subtract: <b>(number to remove) ÷ (pivot)</b>.</p>
+      <p>A pivot is <b>never allowed to be 0</b>, because you cannot divide by 0.</p>
+    </div>
+
+    <h3>Step 1: clear the 3 below the first pivot</h3>
+    <p>Pivot $= 1$, number to remove $= 3$, so the multiplier is $3 \div 1 = 3$. Row 2 minus 3 × row 1:</p>
+    <table>
+      <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>right side</th></tr>
+      <tr><td>Row 2</td><td>$3$</td><td>$8$</td><td>$1$</td><td>$12$</td></tr>
+      <tr><td>minus 3 × row 1</td><td>$-3$</td><td>$-6$</td><td>$-3$</td><td>$-6$</td></tr>
+      <tr><td><b>New row 2</b></td><td><b>$0$</b></td><td><b>$2$</b></td><td><b>$-2$</b></td><td><b>$6$</b></td></tr>
+    </table>
+    <p>Row 3 already has $0$ under the first pivot, so its multiplier is $0$ and nothing changes.</p>
+    $$
+    \left[\begin{array}{ccc|c} \boxed{1} & 2 & 1 & 2 \\ \color{#b42318}{0} & 2 & -2 & 6 \\ 0 & 4 & 1 & 2 \end{array}\right]
+    $$
+    <p>$x$ is now gone from rows 2 and 3.</p>
+
+    <h3>Step 2: clear the 4 below the second pivot</h3>
+    <p>The second pivot is the $2$ in row 2. Number to remove $= 4$, so the multiplier is $4 \div 2 = 2$. Row 3 minus 2 × row 2:</p>
+    <table>
+      <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>right side</th></tr>
+      <tr><td>Row 3</td><td>$0$</td><td>$4$</td><td>$1$</td><td>$2$</td></tr>
+      <tr><td>minus 2 × row 2</td><td>$0$</td><td>$-4$</td><td>$+4$</td><td>$-12$</td></tr>
+      <tr><td><b>New row 3</b></td><td><b>$0$</b></td><td><b>$0$</b></td><td><b>$5$</b></td><td><b>$-10$</b></td></tr>
+    </table>
+    <p>(Careful: $-2 \times (-2) = +4$, so $1 + 4 = 5$.)</p>
+
+    <h3>The result: a staircase</h3>
+    $$
+    \left[\begin{array}{ccc|c} \boxed{1} & 2 & 1 & 2 \\ 0 & \boxed{2} & -2 & 6 \\ 0 & 0 & \boxed{5} & -10 \end{array}\right]
+    $$
+    <div class="box definition"><span class="label">Definition: Upper triangular U</span>
+      <p>Everything <b>below</b> the diagonal is $0$. The matrix $A$ has become</p>
+      $$ U = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix}, \qquad \text{and } b \text{ has become } c = \begin{bmatrix} 2 \\ 6 \\ -10 \end{bmatrix}. $$
+      <p>The pivots are $1$, $2$, $5$, sitting on the diagonal. The goal of elimination is always: <b>turn $A$ into $U$</b>.</p>
+    </div>
+    <p>A bonus fact for later: multiplying the pivots gives the <b>determinant</b>, $1 \times 2 \times 5 = 10$.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s4">4. Back substitution</h2>
+    <p>Write the staircase as equations again:</p>
+    $$
+    \begin{aligned}
+      x + 2y + z &= 2 \\
+      2y - 2z &= 6 \\
+      5z &= -10
+    \end{aligned}
+    $$
+    <p>The <b>last</b> equation has only one unknown, so start at the bottom and climb up:</p>
+    <table>
+      <tr><th>Step</th><th>Equation</th><th>Work</th><th>Result</th></tr>
+      <tr><td>1</td><td>$5z = -10$</td><td>divide by 5</td><td>$z = -2$</td></tr>
+      <tr><td>2</td><td>$2y - 2z = 6$</td><td>$2y - 2(-2) = 6 \Rightarrow 2y + 4 = 6 \Rightarrow 2y = 2$</td><td>$y = 1$</td></tr>
+      <tr><td>3</td><td>$x + 2y + z = 2$</td><td>$x + 2(1) + (-2) = 2 \Rightarrow x + 0 = 2$</td><td>$x = 2$</td></tr>
+    </table>
+    <p><b>Check in the original equations</b> with $(x, y, z) = (2, 1, -2)$:</p>
+    <table>
+      <tr><th>Equation</th><th>Left side</th><th>Right side</th></tr>
+      <tr><td>$x + 2y + z$</td><td>$2 + 2 - 2 = 2$</td><td>$2$ ✓</td></tr>
+      <tr><td>$3x + 8y + z$</td><td>$6 + 8 - 2 = 12$</td><td>$12$ ✓</td></tr>
+      <tr><td>$4y + z$</td><td>$4 - 2 = 2$</td><td>$2$ ✓</td></tr>
+    </table>
+    <div class="box theorem"><span class="label">The two-part recipe</span>
+      <p><b>1. Elimination</b> (top to bottom): turn $A$ into the staircase $U$, doing the same to $b$.</p>
+      <p><b>2. Back substitution</b> (bottom to top): solve the last equation, then work upwards.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s5">5. When elimination gets stuck</h2>
+    <p>Trouble happens when a <b>0</b> lands in a pivot position.</p>
+
+    <h3>Case 1: stuck, but fixable by swapping rows</h3>
+    <p>Suppose the $8$ in row 2 were a $6$. Step 1 would give:</p>
+    <table>
+      <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th></tr>
+      <tr><td>Row 2: $(3, 6, 1)$ minus 3 × row 1: $(3, 6, 3)$</td><td>$0$</td><td><b>$0$</b></td><td>$-2$</td></tr>
+      <tr><td>Row 3 (unchanged)</td><td>$0$</td><td>$4$</td><td>$1$</td></tr>
+    </table>
+    <p>There is a $0$ where the second pivot should be. But row 3 has a $4$ in that column, so <b>swap rows 2 and 3</b>. Now $4$ is the pivot and we carry on.</p>
+
+    <h3>Case 2: stuck for good</h3>
+    <p>Suppose the last $1$ in row 3 were $-4$, so row 3 is $(0, 4, -4)$. Step 2 would give:</p>
+    <table>
+      <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th></tr>
+      <tr><td>Row 3</td><td>$0$</td><td>$4$</td><td>$-4$</td></tr>
+      <tr><td>minus 2 × row 2 $(0, 2, -2)$</td><td>$0$</td><td>$-4$</td><td>$+4$</td></tr>
+      <tr><td><b>New row 3</b></td><td>$0$</td><td>$0$</td><td><b>$0$</b></td></tr>
+    </table>
+    <p>The third pivot is $0$ and there is no row below to swap with. There is no third pivot, and the matrix is <b>not invertible</b> (singular).</p>
+
+    <div class="box pitfall"><span class="label">Rule</span>
+      <table>
+        <tr><th>0 in the pivot position and…</th><th>Result</th></tr>
+        <tr><td>a nonzero number below it</td><td><b>Temporary trouble.</b> Swap rows and continue.</td></tr>
+        <tr><td>only zeros below it</td><td><b>Real failure.</b> Fewer pivots than rows; the matrix is singular.</td></tr>
+      </table>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">6. Each step is a matrix</h2>
+    <p>Now we write each elimination step as "multiply by a matrix". First, one new way to multiply.</p>
+
+    <h3>Matrix on the left = mixing rows</h3>
+    <p>In Lectures 01 and 02, matrix × column vector gave a <b>mix of the columns</b>. There is a matching rule for rows:</p>
+    <div class="box theorem"><span class="label">Row rule</span>
+      <p>When a matrix multiplies <b>from the left</b>, each row of the answer is a <b>mix of the rows</b>.</p>
+      <p>Example: the row $[1\ \ 2\ \ 7]$ times a $3 \times 3$ matrix gives $1 \times$ (row 1) $+ 2 \times$ (row 2) $+ 7 \times$ (row 3).</p>
+    </div>
+
+    <h3>The identity matrix: do nothing</h3>
+    $$ I = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+    <p>Row 1 of $I$ is $(1, 0, 0)$: "take 1 of row 1, nothing else". Row 2 takes 1 of row 2, and row 3 takes 1 of row 3. So $IA = A$. It is the "number 1" of matrices.</p>
+
+    <h3>Building the step matrices</h3>
+    <p><b>Recipe:</b> start with $I$, then put <b>minus the multiplier</b> in the spot you want to clear.</p>
+    <table>
+      <tr><th>Step</th><th>In words</th><th>Matrix</th></tr>
+      <tr><td>Step 1</td><td>row 2 minus <b>3</b> × row 1 (clears position row 2, col 1)</td><td>$E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ \color{#b42318}{-3} & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$</td></tr>
+      <tr><td>Step 2</td><td>row 3 minus <b>2</b> × row 2 (clears position row 3, col 2)</td><td>$E_{32} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & \color{#b42318}{-2} & 1 \end{bmatrix}$</td></tr>
+    </table>
+    <p>The small numbers "21" and "32" name the position being cleared (row, column). $E$ stands for <b>elimination</b> (or elementary) matrix.</p>
+
+    <div class="box example"><span class="label">Example: check what E21 does to A</span>
+      <p>Read each row of $E_{21}$ as a recipe for mixing the rows of $A$:</p>
+      <table>
+        <tr><th>Row of $E_{21}$</th><th>Recipe</th><th>Result</th></tr>
+        <tr><td>$(1, 0, 0)$</td><td>1 × row 1</td><td>$(1, 2, 1)$</td></tr>
+        <tr><td>$(-3, 1, 0)$</td><td>$-3$ × row 1 + 1 × row 2 $= (-3, -6, -3) + (3, 8, 1)$</td><td>$(0, 2, -2)$</td></tr>
+        <tr><td>$(0, 0, 1)$</td><td>1 × row 3</td><td>$(0, 4, 1)$</td></tr>
+      </table>
+      <p>Exactly step 1 of elimination ✓.</p>
+    </div>
+
+    <h3>All of elimination in one line</h3>
+    <p>First $E_{21}$, then $E_{32}$:</p>
+    $$ E_{32}\,(E_{21}\,A) = U $$
+    <p>You may regroup the brackets without changing the answer: $E_{32}(E_{21}A) = (E_{32}E_{21})A$. This is the <b>associative law</b>. So one single matrix $E = E_{32}E_{21}$ does all of elimination at once:</p>
+    $$ E = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 6 & -2 & 1 \end{bmatrix}, \qquad EA = U $$
+    <div class="box pitfall"><span class="label">Watch out: order matters</span>
+      <p>You may move the <b>brackets</b>, but you may <b>not swap the order</b> of the matrices. In general $AB \ne BA$. Section 8 shows an example.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">7. Undoing a step</h2>
+    <p>Step 1 <b>subtracted</b> 3 × row 1 from row 2. To undo it, <b>add</b> 3 × row 1 back:</p>
+    $$
+    E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+    \qquad\longrightarrow\qquad
+    E_{21}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ \color{#2e7d4f}{+3} & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+    $$
+    <div class="box example"><span class="label">Example: undo on the right side</span>
+      <p>Step 1 turned $b = (2, 12, 2)$ into $(2, 6, 2)$, because $12 - 3 \times 2 = 6$. The undo adds it back: $6 + 3 \times 2 = 12$, giving $(2, 12, 2)$ again ✓.</p>
+    </div>
+    <p>Doing the step and then the undo changes nothing: $E_{21}^{-1}E_{21} = I$. This is what <b>inverse</b> means: the undo button from Lecture 02.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">8. Swapping rows</h2>
+    <p>Section 5 sometimes needed a row swap. That is a matrix too, called a <b>permutation matrix</b> $P$.</p>
+    <p><b>Recipe:</b> swap the same rows of the identity $I$.</p>
+    $$
+    P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
+    \quad\text{(rows of } I \text{ swapped)}
+    $$
+    <table>
+      <tr><th>Put $P$…</th><th>Result for $\begin{bmatrix} a & b \\ c & d \end{bmatrix}$</th><th>Effect</th></tr>
+      <tr><td>on the <b>left</b>: $PM$</td><td>$\begin{bmatrix} c & d \\ a & b \end{bmatrix}$</td><td>swaps the <b>rows</b></td></tr>
+      <tr><td>on the <b>right</b>: $MP$</td><td>$\begin{bmatrix} b & a \\ d & c \end{bmatrix}$</td><td>swaps the <b>columns</b></td></tr>
+    </table>
+    <div class="box theorem"><span class="label">Left vs right</span>
+      <p>Matrix on the <b>left</b> → works on <b>rows</b>. Matrix on the <b>right</b> → works on <b>columns</b>. Elimination always works on rows, so its matrices go on the left.</p>
+      <p>This also shows $PM \ne MP$: order matters.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <div class="box finance"><span class="label">In finance</span>
+      <p>Whenever a quant model needs to solve equations (portfolio weights, hedge ratios, calibrating a curve to several prices), the computer uses exactly this: elimination to a staircase, then back substitution. In Python, <code>numpy.linalg.solve</code> does it for you. Example 7 in the Examples tab solves a small portfolio this way.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s9">9. Summary</h2>
+    <table>
+      <tr><th>Idea</th><th>In one line</th></tr>
+      <tr><td>Elimination</td><td>Subtract a multiple of one row from a row below, to make zeros under each pivot.</td></tr>
+      <tr><td>Pivot</td><td>The number used to clear the column below it. Never 0.</td></tr>
+      <tr><td>Multiplier</td><td>(number to remove) ÷ (pivot).</td></tr>
+      <tr><td>$U$</td><td>The staircase: zeros below the diagonal. $A \to U$, $b \to c$.</td></tr>
+      <tr><td>Back substitution</td><td>Solve the last equation first, then go up.</td></tr>
+      <tr><td>Stuck</td><td>0 in a pivot spot: swap rows if possible, otherwise the matrix is singular.</td></tr>
+      <tr><td>$E_{21}$, $E_{32}$</td><td>Step matrices: the identity with $-$multiplier in the cleared spot. $E_{32}E_{21}A = U$.</td></tr>
+      <tr><td>Inverse of a step</td><td>Same matrix with $+$multiplier: add back what was subtracted.</td></tr>
+      <tr><td>$P$</td><td>Swap rows of $I$. Left = swap rows, right = swap columns.</td></tr>
+      <tr><td>Order</td><td>Brackets can move, order cannot: $AB \ne BA$.</td></tr>
+    </table>
+  </div>
+  </section>
+
+  <!-- ================= EXAMPLES ================= -->
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+
+    <h2>Worked examples</h2>
+
+    <!-- E1 -->
+    <div class="worked">
+      <h3>Example 1: Two equations</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ x + 2y = 5, \qquad 3x + 4y = 11 $$
+      </div>
+      <div class="steps">
+        <p><b>Eliminate.</b> Pivot $= 1$, number to remove $= 3$, multiplier $= 3$. Equation 2 minus 3 × equation 1:</p>
+        <table>
+          <tr><th></th><th>$x$</th><th>$y$</th><th>right</th></tr>
+          <tr><td>Equation 2</td><td>$3$</td><td>$4$</td><td>$11$</td></tr>
+          <tr><td>minus 3 × equation 1</td><td>$-3$</td><td>$-6$</td><td>$-15$</td></tr>
+          <tr><td><b>New equation 2</b></td><td>$0$</td><td>$-2$</td><td>$-4$</td></tr>
+        </table>
+        <p><b>Back substitute.</b> $-2y = -4$, so $y = 2$. Then $x + 2(2) = 5$, so $x = 1$.</p>
+        <p><b>Check.</b> $1 + 4 = 5$ ✓, $3 + 8 = 11$ ✓.</p>
+        <p class="answer">Answer: $x = 1$, $y = 2$</p>
+      </div>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 2: Three equations, start to finish</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ \left[\begin{array}{ccc|c} 1 & 1 & 1 & 6 \\ 2 & 3 & 1 & 11 \\ 1 & 3 & 4 & 19 \end{array}\right] $$
+        <p>(That is $x + y + z = 6$, $\ 2x + 3y + z = 11$, $\ x + 3y + 4z = 19$.)</p>
+      </div>
+      <div class="steps">
+        <p><b>Step 1.</b> Pivot $1$. Row 2 minus <b>2</b> × row 1; row 3 minus <b>1</b> × row 1:</p>
+        <table>
+          <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>right</th></tr>
+          <tr><td>Row 2 $-$ 2 × row 1: $(2,3,1,11) - (2,2,2,12)$</td><td>$0$</td><td>$1$</td><td>$-1$</td><td>$-1$</td></tr>
+          <tr><td>Row 3 $-$ 1 × row 1: $(1,3,4,19) - (1,1,1,6)$</td><td>$0$</td><td>$2$</td><td>$3$</td><td>$13$</td></tr>
+        </table>
+        <p><b>Step 2.</b> Pivot $1$ (in row 2). Row 3 minus <b>2</b> × row 2:</p>
+        <table>
+          <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>right</th></tr>
+          <tr><td>$(0,2,3,13) - (0,2,-2,-2)$</td><td>$0$</td><td>$0$</td><td>$5$</td><td>$15$</td></tr>
+        </table>
+        <p><b>Staircase:</b></p>
+        $$ \left[\begin{array}{ccc|c} \boxed{1} & 1 & 1 & 6 \\ 0 & \boxed{1} & -1 & -1 \\ 0 & 0 & \boxed{5} & 15 \end{array}\right] $$
+        <p><b>Back substitution:</b></p>
+        <table>
+          <tr><th>Equation</th><th>Work</th><th>Result</th></tr>
+          <tr><td>$5z = 15$</td><td>divide by 5</td><td>$z = 3$</td></tr>
+          <tr><td>$y - z = -1$</td><td>$y - 3 = -1$</td><td>$y = 2$</td></tr>
+          <tr><td>$x + y + z = 6$</td><td>$x + 2 + 3 = 6$</td><td>$x = 1$</td></tr>
+        </table>
+        <p><b>Check.</b> $1 + 2 + 3 = 6$ ✓, $2 + 6 + 3 = 11$ ✓, $1 + 6 + 12 = 19$ ✓.</p>
+        <p class="answer">Answer: $(x, y, z) = (1, 2, 3)$. Pivots $1, 1, 5$.</p>
+      </div>
+    </div>
+
+    <!-- E3 -->
+    <div class="worked">
+      <h3>Example 3: A zero pivot fixed by a swap</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ 0x + 2y = 4, \qquad 3x + y = 5 $$
+      </div>
+      <div class="steps">
+        <p><b>Problem.</b> The first pivot position holds $0$. Below it is a $3$, so swap the two equations:</p>
+        $$ 3x + y = 5, \qquad 2y = 4 $$
+        <p>This is already a staircase. <b>Back substitute:</b> $2y = 4$ gives $y = 2$; then $3x + 2 = 5$ gives $3x = 3$, so $x = 1$.</p>
+        <p><b>Check.</b> $0 + 4 = 4$ ✓, $3 + 2 = 5$ ✓.</p>
+        <p class="answer">Answer: $x = 1$, $y = 2$ (temporary trouble, fixed by a swap)</p>
+      </div>
+    </div>
+
+    <!-- E4 -->
+    <div class="worked">
+      <h3>Example 4: Stuck for good</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ x + 2y = 3, \qquad 2x + 4y = 7 $$
+      </div>
+      <div class="steps">
+        <p><b>Eliminate.</b> Multiplier $2$. Equation 2 minus 2 × equation 1:</p>
+        <table>
+          <tr><th></th><th>$x$</th><th>$y$</th><th>right</th></tr>
+          <tr><td>Equation 2</td><td>$2$</td><td>$4$</td><td>$7$</td></tr>
+          <tr><td>minus 2 × equation 1</td><td>$-2$</td><td>$-4$</td><td>$-6$</td></tr>
+          <tr><td><b>New equation 2</b></td><td>$0$</td><td><b>$0$</b></td><td>$1$</td></tr>
+        </table>
+        <p>The second pivot is $0$ and there is no row below to swap with. The new equation reads $0 = 1$, which is impossible.</p>
+        <p class="answer">Answer: no solution. The matrix $\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$ is singular (row 2 is just 2 × row 1).</p>
+      </div>
+    </div>
+
+    <!-- E5 -->
+    <div class="worked">
+      <h3>Example 5: Build a step matrix and its undo</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>For the matrix of Example 2, write the matrix $E_{21}$ that does "row 2 minus 2 × row 1", check it, and write its inverse.</p>
+      </div>
+      <div class="steps">
+        <p><b>Build.</b> Start with $I$, put $-2$ in row 2, column 1:</p>
+        $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+        <p><b>Check row 2 of the result:</b> $-2 \times (1, 1, 1) + 1 \times (2, 3, 1) = (-2, -2, -2) + (2, 3, 1) = (0, 1, -1)$ ✓ (rows 1 and 3 stay the same).</p>
+        <p><b>Undo:</b> add 2 × row 1 back, so flip the sign:</p>
+        $$ E_{21}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ +2 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+        <p class="answer">Undo check: $(0, 1, -1) + 2 \times (1, 1, 1) = (2, 3, 1)$, the original row 2 ✓</p>
+      </div>
+    </div>
+
+    <!-- E6 -->
+    <div class="worked">
+      <h3>Example 6: Swap rows vs swap columns</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>With $P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$ and $M = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$, find $PM$ and $MP$.</p>
+      </div>
+      <div class="steps">
+        <p><b>$PM$ (left = rows).</b> Row 1 of $P$ is $(0, 1)$: take row 2 of $M$. Row 2 of $P$ is $(1, 0)$: take row 1 of $M$.</p>
+        $$ PM = \begin{bmatrix} 3 & 4 \\ 1 & 2 \end{bmatrix} $$
+        <p><b>$MP$ (right = columns).</b> Column 1 of $P$ is $(0, 1)$: take column 2 of $M$. Column 2 of $P$ is $(1, 0)$: take column 1 of $M$.</p>
+        $$ MP = \begin{bmatrix} 2 & 1 \\ 4 & 3 \end{bmatrix} $$
+        <p class="answer">$PM$ swaps the rows, $MP$ swaps the columns, and $PM \ne MP$.</p>
+      </div>
+    </div>
+
+    <!-- E7 -->
+    <div class="worked">
+      <h3>Example 7: Solving a small portfolio (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Tomorrow the market is in one of three states: <b>down</b>, <b>flat</b> or <b>up</b>. Three funds are for sale today:</p>
+        <table>
+          <tr><th>Fund</th><th>Price today</th><th>Pays if down</th><th>Pays if flat</th><th>Pays if up</th></tr>
+          <tr><td><b>Fund 1</b></td><td>$1$</td><td>$1$</td><td>$2$</td><td>$1$</td></tr>
+          <tr><td><b>Fund 2</b></td><td>$2$</td><td>$1$</td><td>$3$</td><td>$3$</td></tr>
+          <tr><td><b>Fund 3</b></td><td>$2$</td><td>$1$</td><td>$1$</td><td>$4$</td></tr>
+        </table>
+        <p>You want to receive <b>6 if down</b>, <b>11 if flat</b> and <b>19 if up</b>. How many of each fund should you buy, and what does it cost today?</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>Like the weather tickets from Lecture 01: each fund is a ticket that pays depending on tomorrow. You want a certain payout in each case, so you need the right number of each ticket. With three tickets and three cases, that is three equations, and elimination solves them.</p>
+      </div>
+      <div class="steps">
+        <p><b>Step 1. One equation per state</b> ($x$, $y$, $z$ = number of fund 1, 2, 3; use only what they <b>pay tomorrow</b>):</p>
+        $$
+        \begin{aligned}
+          x + y + z &= 6 &&\text{(down)} \\
+          2x + 3y + z &= 11 &&\text{(flat)} \\
+          x + 3y + 4z &= 19 &&\text{(up)}
+        \end{aligned}
+        $$
+        <p><b>Step 2. Solve.</b> This is exactly Example 2, so elimination and back substitution give $x = 1$, $y = 2$, $z = 3$.</p>
+        <p><b>Step 3. Check the payouts.</b></p>
+        <table>
+          <tr><th>State</th><th>1 × fund 1</th><th>2 × fund 2</th><th>3 × fund 3</th><th>Total</th><th>Wanted</th></tr>
+          <tr><td>Down</td><td>$1$</td><td>$2$</td><td>$3$</td><td>$6$</td><td>$6$ ✓</td></tr>
+          <tr><td>Flat</td><td>$2$</td><td>$6$</td><td>$3$</td><td>$11$</td><td>$11$ ✓</td></tr>
+          <tr><td>Up</td><td>$1$</td><td>$6$</td><td>$12$</td><td>$19$</td><td>$19$ ✓</td></tr>
+        </table>
+        <p class="answer">Buy 1 of fund 1, 2 of fund 2, 3 of fund 3.</p>
+        <p><b>Step 4. Cost today</b> (now use the prices): $1 \times 1 + 2 \times 2 + 3 \times 2 = 1 + 4 + 6 = 11$.</p>
+        <p class="answer">You pay 11 today to receive 6, 11 or 19 tomorrow.</p>
+      </div>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. Solve $x + y = 4$, $\ 2x + 5y = 11$ by elimination.</summary>
+      <p>Equation 2 minus 2 × equation 1: $3y = 3$, so $y = 1$. Then $x + 1 = 4$, so $x = 3$. Check: $6 + 5 = 11$ ✓.</p>
+    </details>
+    <details class="proof"><summary>2. What is the multiplier to clear the 6 below a pivot of 2?</summary>
+      <p>$6 \div 2 = 3$. Subtract 3 × the pivot row.</p>
+    </details>
+    <details class="proof"><summary>3. Back substitute: $x + y + z = 3$, $\ y + z = 2$, $\ 2z = 2$.</summary>
+      <p>$z = 1$; $y + 1 = 2$ so $y = 1$; $x + 1 + 1 = 3$ so $x = 1$.</p>
+    </details>
+    <details class="proof"><summary>4. Write the 3 × 3 matrix that does "row 3 minus 4 × row 1", and its inverse.</summary>
+      <p>$E_{31}$ = identity with $-4$ in row 3, column 1. Its inverse is the identity with $+4$ in row 3, column 1.</p>
+    </details>
+    <details class="proof"><summary>5. Does $x + 3y = 2$, $\ 2x + 6y = 4$ have a unique solution?</summary>
+      <p>No. Equation 2 minus 2 × equation 1 gives $0 = 0$: no second pivot. The matrix is singular. Here every point on the line $x + 3y = 2$ works (infinitely many solutions).</p>
+    </details>
+    <details class="proof"><summary>6. Which 3 × 3 matrix swaps rows 1 and 3?</summary>
+      <p>Swap rows 1 and 3 of the identity: $P = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \end{bmatrix}$, used on the left.</p>
+    </details>
+
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="02_overview-of-key-ideas.html">← 02 An Overview of Key Ideas</a>
+    <span class="off">Next: Multiplication and Inverse Matrices</span>
+  </nav>
+  </div>
+</main>
+</body>
+</html>
