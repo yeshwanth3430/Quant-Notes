@@ -249,7 +249,7 @@
 
     <figure class="fig plot3d">
       <div id="l6plot" class="plot3d-box" role="img" aria-label="The column space: a plane through the origin"></div>
-      <figcaption>The column space of $A$ (purple): the plane made by column 1 (blue) and column 2 (green). $(4, 5, 5)$ = col 1 + col 2 lies on it ✓. The point $(1, 0, 0)$ (red) is <b>off</b> the plane, so $Ax = (1, 0, 0)$ has no solution (Example 6). <b>Drag to rotate.</b></figcaption>
+      <figcaption>The column space of $A$ (purple): the plane made by column 1 (blue) and column 2 (green). $(4, 5, 5)$ = col 1 + col 2 lies on it ✓. The point $(1, 0, 0)$ (red) is <b>off</b> the plane, so $Ax = (1, 0, 0)$ has no solution (Example 7). <b>Drag to rotate.</b></figcaption>
     </figure>
 
     <div class="box theorem"><span class="label">Why the column space matters</span>
@@ -269,8 +269,8 @@
     <!-- ====================================================== -->
     <div class="box finance"><span class="label">In finance</span>
       <ul>
-        <li><b>Symmetric matrices everywhere:</b> put daily returns in a matrix $R$ (rows = days, columns = assets). Then $R^TR$ is symmetric. Its diagonal measures how much each asset moves; its off-diagonal measures how two assets move together. This is the idea behind the <b>covariance matrix</b> (Example 7).</li>
-        <li><b>Column space = what you can build:</b> the columns of a payoff matrix are the assets. Every payoff you can create by buying them is in the column space. If a payoff is outside it, you cannot replicate it: the market is <b>incomplete</b> (Example 8).</li>
+        <li><b>Symmetric matrices everywhere:</b> put daily returns in a matrix $R$ (rows = days, columns = assets). Then $R^TR$ is symmetric. Its diagonal measures how much each asset moves; its off-diagonal measures how two assets move together. This is the idea behind the <b>covariance matrix</b> (Example 8).</li>
+        <li><b>Column space = what you can build:</b> the columns of a payoff matrix are the assets. Every payoff you can create by buying them is in the column space. If a payoff is outside it, you cannot replicate it: the market is <b>incomplete</b> (Example 9).</li>
       </ul>
     </div>
 
@@ -298,7 +298,276 @@
 
     <!-- E1 -->
     <div class="worked">
-      <h3>Example 1: PA = LU with a 2 × 2</h3>
+      <h3>Example 1: Subspaces made by two options (Nifty CE and PE)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>At expiry, Nifty ends in one of three scenarios:</p>
+        <table>
+          <tr><th>Scenario</th><th>Low</th><th>Mid</th><th>High</th></tr>
+          <tr><td>Nifty at expiry</td><td>19,800</td><td>20,100</td><td>20,300</td></tr>
+        </table>
+        <p>Two option contracts are available (payoffs in Nifty points ÷ 100, to keep numbers small):</p>
+        <table>
+          <tr><th>Option</th><th>Payoff formula</th><th>Low</th><th>Mid</th><th>High</th><th>Payoff vector</th></tr>
+          <tr><td><b>20,000 CE</b> (call)</td><td>$\max(S - 20{,}000,\ 0)$</td><td>$0$</td><td>$1$</td><td>$3$</td><td>$x_1 = (0, 1, 3)$</td></tr>
+          <tr><td><b>20,200 PE</b> (put)</td><td>$\max(20{,}200 - S,\ 0)$</td><td>$4$</td><td>$1$</td><td>$0$</td><td>$x_2 = (4, 1, 0)$</td></tr>
+        </table>
+        <p>You may buy or sell any number of lots of each (fractions allowed; a negative number of lots means you <b>sold / wrote</b> it).</p>
+        <ol>
+          <li><b>$V_1$</b> = every payoff you can make trading <b>only the CE</b>. <b>$V_2$</b> = every payoff trading <b>only the PE</b>. What is <b>$V_1 \cap V_2$</b> (payoffs both can make)?</li>
+          <li><b>$V_3$</b> = every payoff you can make trading <b>CE and PE together</b>. Is $V_3$ the same as <b>$V_1 \cup V_2$</b> (traders who use only one of them)? Find a subspace <b>$S$</b> inside $V_3$ that contains neither "1 lot CE" nor "1 lot PE".</li>
+          <li>Which CE + PE portfolios pay <b>nothing if Nifty ends High</b>? (In maths: $V_3 \cap \{xy\text{-plane}\}$.)</li>
+        </ol>
+      </div>
+
+      <h4>Step 0: how the payoffs are worked out</h4>
+      <table>
+        <tr><th>Scenario</th><th>Nifty $S$</th><th>CE: $\max(S - 20{,}000, 0)$</th><th>÷100</th><th>PE: $\max(20{,}200 - S, 0)$</th><th>÷100</th></tr>
+        <tr><td>Low</td><td>19,800</td><td>$\max(-200, 0) = 0$</td><td>$0$</td><td>$\max(400, 0) = 400$</td><td>$4$</td></tr>
+        <tr><td>Mid</td><td>20,100</td><td>$\max(100, 0) = 100$</td><td>$1$</td><td>$\max(100, 0) = 100$</td><td>$1$</td></tr>
+        <tr><td>High</td><td>20,300</td><td>$\max(300, 0) = 300$</td><td>$3$</td><td>$\max(-100, 0) = 0$</td><td>$0$</td></tr>
+      </table>
+      <p>So the CE is the vector $x_1 = (0, 1, 3)$ and the PE is $x_2 = (4, 1, 0)$, read as (Low, Mid, High).</p>
+
+      <h4>Every word and symbol, in plain English</h4>
+      <table>
+        <tr><th>Word / symbol</th><th>Maths meaning</th><th>Options meaning</th></tr>
+        <tr><td>subspace generated by $x_1$ (span)</td><td>all multiples $c\,x_1$</td><td>every payoff from trading <b>only the CE</b> (any lots, buy or sell)</td></tr>
+        <tr><td>subspace generated by $\{x_1, x_2\}$</td><td>all mixes $a\,x_1 + b\,x_2$</td><td>every payoff from <b>CE + PE together</b></td></tr>
+        <tr><td>$\{\ \dots\ \}$</td><td>"the collection of …"</td><td>a list of possible payoffs</td></tr>
+        <tr><td>$\in$ / $\notin$</td><td>"is in" / "is not in"</td><td>"can be built" / "cannot be built"</td></tr>
+        <tr><td>$\cap$</td><td>in <b>both</b></td><td>payoffs that <b>both</b> kinds of trader can make</td></tr>
+        <tr><td>$\cup$</td><td>in <b>at least one</b></td><td>payoffs of traders who use <b>one</b> option only</td></tr>
+        <tr><td>$xy$-plane ($z = 0$)</td><td>third number is $0$</td><td>pays <b>nothing if Nifty ends High</b></td></tr>
+      </table>
+
+      <h4>Before the parts: watch the pictures form, step by step</h4>
+      <p>On the 3D graph the axes are the three scenarios: <b>$x$ = Low payoff</b>, <b>$y$ = Mid payoff</b>, <b>$z$ = High payoff</b>. Every portfolio is one point.</p>
+
+      <h4>Stage 1: one option makes a line</h4>
+      <table>
+        <tr><th>Lots of CE</th><th>Payoff (Low, Mid, High)</th><th>Where it sits on the graph</th></tr>
+        <tr><td>$1$ (buy 1)</td><td>$(0, 1, 3)$</td><td>the tip of the arrow $x_1$</td></tr>
+        <tr><td>$2$ (buy 2)</td><td>$(0, 2, 6)$</td><td>same direction, <b>twice as far</b></td></tr>
+        <tr><td>$0.5$</td><td>$(0, 0.5, 1.5)$</td><td>same direction, <b>halfway</b></td></tr>
+        <tr><td>$0$ (no trade)</td><td>$(0, 0, 0)$</td><td>the <b>origin</b></td></tr>
+        <tr><td>$-1$ (sell 1)</td><td>$(0, -1, -3)$</td><td><b>flipped</b> through the origin</td></tr>
+      </table>
+      <figure class="fig plot3d">
+        <div id="l6g1" class="plot3d-box" role="img" aria-label="Lots of CE lie on one line through the origin"></div>
+        <figcaption><b>Stage 1.</b> 2, 1, 0.5, 0 and −1 lots of the CE all line up on the dotted blue line $V_1$. More lots → further out; selling → other side of the origin; no trade → the origin. <b>Drag to rotate.</b></figcaption>
+      </figure>
+      <table>
+        <tr><th>What you do</th><th>What happens on the graph</th></tr>
+        <tr><td>buy more lots</td><td>the point slides <b>further out</b> along the line</td></tr>
+        <tr><td>buy a fraction of a lot</td><td>the point slides <b>closer</b> to the origin</td></tr>
+        <tr><td>no trade</td><td>the point is <b>at the origin</b></td></tr>
+        <tr><td>sell (write) the option</td><td>the point <b>jumps through the origin</b> to the other side</td></tr>
+      </table>
+      <p>Changing the number of lots never turns the arrow sideways, so one option can only make a line.</p>
+
+      <h4>Stage 2: two options fill a sheet</h4>
+      <p>Hold $a$ lots of CE and $b$ lots of PE. Each portfolio pays $a(0, 1, 3) + b(4, 1, 0) = (4b,\ a + b,\ 3a)$:</p>
+      <table>
+        <tr><th></th><th>$b = -1$ (sell 1 PE)</th><th>$b = 0$</th><th>$b = 1$ (buy 1 PE)</th></tr>
+        <tr><td>$a = 2$</td><td>$(-4, 1, 6)$</td><td>$(0, 2, 6)$</td><td>$(4, 3, 6)$</td></tr>
+        <tr><td>$a = 1$</td><td>$(-4, 0, 3)$</td><td>$(0, 1, 3)$</td><td>$(4, 2, 3)$</td></tr>
+        <tr><td>$a = 0$</td><td>$(-4, -1, 0)$</td><td>$(0, 0, 0)$</td><td>$(4, 1, 0)$</td></tr>
+        <tr><td>$a = -1$</td><td>$(-4, -2, -3)$</td><td>$(0, -1, -3)$</td><td>$(4, 0, -3)$</td></tr>
+      </table>
+      <figure class="fig plot3d">
+        <div id="l6g2" class="plot3d-box" role="img" aria-label="Mixes of CE and PE all lie on one plane"></div>
+        <figcaption><b>Stage 2.</b> The 12 portfolios (red dots) all lie on one flat sheet (purple). The $b = 0$ column is the CE line $V_1$ (blue); the $a = 0$ row is the PE line $V_2$ (green). Fill in every fraction and the sheet is covered: that is $V_3$. <b>Drag to rotate.</b></figcaption>
+      </figure>
+      <div class="box intuition"><span class="label">Why a sheet, not a line, not all of 3D</span>
+        <ul>
+          <li><b>Not a line:</b> CE and PE pay off in different scenarios (different directions), so mixing moves you sideways.</li>
+          <li><b>Not all of 3D:</b> both lie on the same sheet; no mix of them can lift you off it.</li>
+          <li><b>Contains the origin:</b> no trade $= (0, 0, 0)$.</li>
+        </ul>
+      </div>
+
+      <h4>Stage 3: try it yourself</h4>
+      <p>Choose lots of CE and PE. Blue arrow = your CE position, green arrow = your PE position added on, red dot = your total payoff. The red dot never leaves the purple sheet.</p>
+      <div class="mixer">
+        <label>Lots of 20,000 CE (a): <input type="range" id="l6sa" min="-1" max="2" step="0.5" value="1"> <b id="l6va">1</b></label>
+        <label>Lots of 20,200 PE (b): <input type="range" id="l6sb" min="-1" max="1" step="0.5" value="1"> <b id="l6vb">1</b></label>
+        <p id="l6out" class="mixer-out"></p>
+      </div>
+      <figure class="fig plot3d">
+        <div id="l6g3" class="plot3d-box" role="img" aria-label="Interactive: choose lots of CE and PE"></div>
+        <figcaption><b>Stage 3.</b> Try: $a = 1, b = 0$ (only CE, on the blue line); $a = 0, b = 1$ (only PE, on the green line); $a = 0, b = 0$ (origin); $a = 1, b = 1$ (a <b>strangle</b>, $(4, 2, 3)$: on neither line, still on the sheet). <b>Drag to rotate.</b></figcaption>
+      </figure>
+
+      <div class="steps">
+
+        <!-- PART 1 -->
+        <h4>Part 1a: V₁ = trade only the CE</h4>
+        <p><b>The question asks:</b> what payoffs can you make with any number of lots of the 20,000 CE, and nothing else?</p>
+        <p>From Stage 1: $c$ lots pay $(0,\ c,\ 3c)$.</p>
+        <p class="answer">$V_1$ = a line through the origin and $(0, 1, 3)$. A CE-only trader <b>always gets 0 if Nifty ends Low</b>.</p>
+
+        <h4>Part 1b: V₂ = trade only the PE</h4>
+        <table>
+          <tr><th>Lots of PE</th><th>Low</th><th>Mid</th><th>High</th></tr>
+          <tr><td>$1$</td><td>$4$</td><td>$1$</td><td>$0$</td></tr>
+          <tr><td>$2$</td><td>$8$</td><td>$2$</td><td>$0$</td></tr>
+          <tr><td>$-1$ (sell)</td><td>$-4$</td><td>$-1$</td><td>$0$</td></tr>
+          <tr><td>any $d$</td><td>$4d$</td><td>$d$</td><td>$0$</td></tr>
+        </table>
+        <p class="answer">$V_2$ = a line through the origin and $(4, 1, 0)$. A PE-only trader <b>always gets 0 if Nifty ends High</b>.</p>
+
+        <h4>Part 1c: V₁ ∩ V₂ = what both traders can make</h4>
+        <p>A payoff in both must pay <b>0 when Low</b> (CE-only rule) <b>and</b> 0 when High (PE-only rule). A PE-only payoff pays $4d$ when Low, so $4d = 0$ gives $d = 0$: no PE, hence the payoff is $(0, 0, 0)$.</p>
+        <p class="answer">$V_1 \cap V_2 = \{(0, 0, 0)\}$: the only thing both can do is "no trade".</p>
+
+        <!-- PART 2 -->
+        <h4>Part 2a: V₃ = trade CE and PE together</h4>
+        <p><b>The question asks:</b> what payoffs can you make mixing both options?</p>
+        <table>
+          <tr><th>Lots CE ($a$)</th><th>Lots PE ($b$)</th><th>Work</th><th>Payoff (Low, Mid, High)</th><th>Strategy name</th></tr>
+          <tr><td>$1$</td><td>$0$</td><td>$(0, 1, 3)$</td><td>$(0, 1, 3)$</td><td>long call</td></tr>
+          <tr><td>$0$</td><td>$1$</td><td>$(4, 1, 0)$</td><td>$(4, 1, 0)$</td><td>long put</td></tr>
+          <tr><td>$1$</td><td>$1$</td><td>$(0, 1, 3) + (4, 1, 0)$</td><td>$(4, 2, 3)$</td><td><b>long strangle</b></td></tr>
+          <tr><td>$2$</td><td>$1$</td><td>$(0, 2, 6) + (4, 1, 0)$</td><td>$(4, 3, 6)$</td><td>strangle, more upside</td></tr>
+          <tr><td>$1$</td><td>$-1$</td><td>$(0, 1, 3) + (-4, -1, 0)$</td><td>$(-4, 0, 3)$</td><td>buy call, sell put (bullish)</td></tr>
+          <tr><td>any $a$</td><td>any $b$</td><td>—</td><td>$(4b,\ a + b,\ 3a)$</td><td></td></tr>
+        </table>
+        <figure class="fig" style="max-width:360px;margin:16px auto">
+      <svg viewBox="0 0 300 260" role="img" aria-label="Walk one step along x1 then one along x2 to reach (2,5,3)">
+        <defs>
+          <marker id="l6wb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--def-b)"/></marker>
+          <marker id="l6wg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ex-b)"/></marker>
+        </defs>
+        <line class="l1 dash" x1="63.2" y1="279.2" x2="164.0" y2="44.0" style="opacity:.5"/>
+        <line class="l2 dash" x1="6.0" y1="146.0" x2="297.2" y2="213.2" style="opacity:.5"/>
+        <line class="l1" x1="110.0" y1="170.0" x2="144.6" y2="89.4" marker-end="url(#l6wb)" style="stroke-width:3.5"/>
+        <line class="l2" x1="146.0" y1="86.0" x2="245.0" y2="108.8" marker-end="url(#l6wg)" style="stroke-width:3.5"/>
+        <circle class="pt" cx="110" cy="170" r="4"/><text class="tick" x="100" y="190" text-anchor="end">origin</text>
+        <text class="lbl c1" x="118.0" y="128.0" text-anchor="end">1 lot of CE</text>
+        <text class="lbl c2" x="198.0" y="84.0" text-anchor="middle">1 lot of PE</text>
+        <circle class="hit" cx="250" cy="110" r="6"/><text class="lbl c3" x="250" y="134" text-anchor="middle">(4, 2, 3)</text>
+        <text class="tick" x="168.2" y="52.2">V₁</text><text class="tick" x="288.0" y="204.0">V₂</text>
+      </svg>
+            <figcaption>The sheet $V_3$ seen face-on. Buy 1 lot of CE (blue), then add 1 lot of PE (green), and you land on the strangle $(4, 2, 3)$. The dashed lines are the CE line $V_1$ and the PE line $V_2$.</figcaption>
+          </figure>
+        <p class="answer">$V_3$ = the plane through the origin containing both options: every CE + PE portfolio.</p>
+
+        <h4>Part 2b: is V₃ the same as V₁ ∪ V₂?</h4>
+        <p><b>The question asks:</b> $V_1 \cup V_2$ = payoffs of traders who use <b>only one</b> option. Can they make everything a mixing trader can?</p>
+        <p>Take the <b>long strangle</b>: 1 CE + 1 PE.</p>
+        <table>
+          <tr><th>Scenario</th><th>1 CE</th><th>1 PE</th><th>Strangle pays</th></tr>
+          <tr><td>Low</td><td>$0$</td><td>$4$</td><td>$4$</td></tr>
+          <tr><td>Mid</td><td>$1$</td><td>$1$</td><td>$2$</td></tr>
+          <tr><td>High</td><td>$3$</td><td>$0$</td><td>$3$</td></tr>
+        </table>
+        <table>
+          <tr><th>Can this trader make $(4, 2, 3)$?</th><th>Why</th><th>Answer</th></tr>
+          <tr><td>CE + PE trader ($V_3$)</td><td>buy 1 of each</td><td>yes</td></tr>
+          <tr><td>CE-only trader ($V_1$)</td><td>always 0 when Low, but the strangle pays 4</td><td>no</td></tr>
+          <tr><td>PE-only trader ($V_2$)</td><td>always 0 when High, but the strangle pays 3</td><td>no</td></tr>
+        </table>
+        <p class="answer">No, $V_3 \ne V_1 \cup V_2$. A strangle profits from a big move <b>either way</b>, which neither option alone can do.</p>
+        <div class="box pitfall"><span class="label">One option at a time vs mixing</span>
+          <div class="figs">
+            <figure class="fig" style="margin:0">
+      <svg viewBox="0 0 300 260" role="img" aria-label="Union of two lines is only an X">
+        <line class="l1" x1="96.0" y1="261.0" x2="204.0" y2="9.0" style="stroke-width:3"/>
+        <line class="l2" x1="-6.0" y1="99.0" x2="306.0" y2="171.0" style="stroke-width:3"/>
+        <circle class="pt" cx="150" cy="135" r="4"/>
+        <text class="lbl c1" x="156.8" y="17.799999999999997">V₁</text><text class="lbl c2" x="275.20000000000005" y="188.2">V₂</text>
+        <circle cx="220.0" cy="105.0" r="6" style="fill:none;stroke:var(--warn-b);stroke-width:2"/><text class="lbl c3" x="220.0" y="91.0" text-anchor="middle">(4, 2, 3) ✗</text>
+      </svg>
+              <figcaption><b>$V_1 \cup V_2$:</b> trade only CE <b>or</b> only PE, never both. You only get two crossing lines (an "X"). $(4, 2, 3)$ is not on it.</figcaption>
+            </figure>
+            <figure class="fig" style="margin:0">
+      <svg viewBox="0 0 300 260" role="img" aria-label="All mixes of x1 and x2 cover the whole sheet">
+        <defs><clipPath id="l6clip2"><rect x="0" y="0" width="300" height="260"/></clipPath></defs><rect x="0" y="0" width="300" height="260" style="fill:var(--thm-bg)"/>
+        <g clip-path="url(#l6clip2)">
+        <line class="l2" x1="-182.0" y1="243.0" x2="338.0" y2="363.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l1" x1="-148.0" y1="297.0" x2="32.0" y2="-123.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l2" x1="-164.0" y1="201.0" x2="356.0" y2="321.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l1" x1="-96.0" y1="309.0" x2="84.0" y2="-111.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l2" x1="-146.0" y1="159.0" x2="374.0" y2="279.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l1" x1="-44.0" y1="321.0" x2="136.0" y2="-99.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l2" x1="-128.0" y1="117.0" x2="392.0" y2="237.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l1" x1="8.0" y1="333.0" x2="188.0" y2="-87.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l2" x1="-110.0" y1="75.0" x2="410.0" y2="195.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l1" x1="60.0" y1="345.0" x2="240.0" y2="-75.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l2" x1="-92.0" y1="33.0" x2="428.0" y2="153.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l1" x1="112.0" y1="357.0" x2="292.0" y2="-63.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l2" x1="-74.0" y1="-9.0" x2="446.0" y2="111.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l1" x1="164.0" y1="369.0" x2="344.0" y2="-51.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l2" x1="-56.0" y1="-51.0" x2="464.0" y2="69.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l1" x1="216.0" y1="381.0" x2="396.0" y2="-39.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l2" x1="-38.0" y1="-93.0" x2="482.0" y2="27.0" style="stroke-width:1;opacity:.45"/>
+        <line class="l1" x1="268.0" y1="393.0" x2="448.0" y2="-27.0" style="stroke-width:1;opacity:.45"/>
+        </g>
+        <line class="l1" x1="96.0" y1="261.0" x2="204.0" y2="9.0" style="stroke-width:3"/>
+        <line class="l2" x1="-6.0" y1="99.0" x2="306.0" y2="171.0" style="stroke-width:3"/>
+        <circle class="hit" cx="220.0" cy="105.0" r="5"/><text class="lbl c3" x="228.0" y="99.0">(4, 2, 3)</text>
+        <circle class="hit" cx="238.0" cy="63.0" r="5"/><text class="lbl c3" x="246.0" y="57.0">(4, 3, 6)</text>
+        <circle class="hit" cx="116.0" cy="81.0" r="5"/><text class="lbl c3" x="108.0" y="77.0" text-anchor="end">(−4, 0, 3)</text>
+        <circle class="pt" cx="150" cy="135" r="4"/>
+      </svg>
+              <figcaption><b>$V_3$:</b> mix CE <b>and</b> PE. Every crossing of the grid is a mix, and the gaps are filled by fractional mixes. The whole sheet is covered, including $(4, 2, 3)$.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <h4>Part 2c: S = a subspace inside V₃ without "1 CE" or "1 PE"</h4>
+        <p><b>The question asks:</b> find a set of portfolios, closed under buying/selling any amount, that sits inside $V_3$ but never equals exactly 1 CE or exactly 1 PE.</p>
+        <p><b>Idea:</b> trade only in <b>strangle lots</b> (1 CE glued to 1 PE). $t$ strangles pay $t(4, 2, 3) = (4t,\ 2t,\ 3t)$:</p>
+        <table>
+          <tr><th>Check</th><th>Reason</th><th>OK?</th></tr>
+          <tr><td>$S$ is a subspace</td><td>buying or selling strangles still gives "some number of strangles"; 0 strangles is allowed</td><td>✓</td></tr>
+          <tr><td>$S$ is inside $V_3$</td><td>a strangle is a mix of CE and PE</td><td>✓</td></tr>
+          <tr><td>1 CE $= (0, 1, 3)$ is not in $S$</td><td>CE pays 0 when Low; strangles pay $4t$ when Low, which is 0 only for $t = 0$ (no trade)</td><td>✓</td></tr>
+          <tr><td>1 PE $= (4, 1, 0)$ is not in $S$</td><td>PE pays 0 when High; strangles pay $3t$ when High, which is 0 only for $t = 0$</td><td>✓</td></tr>
+        </table>
+        <p class="answer">$S$ = all "strangle-only" portfolios: the line through $(4, 2, 3)$.</p>
+        <figure class="fig plot3d">
+          <div id="l6ex1a" class="plot3d-box" role="img" aria-label="CE line, PE line, their plane and the strangle line"></div>
+          <figcaption><b>Parts 1–2.</b> CE line $V_1$ (blue) and PE line $V_2$ (green) meet only at the origin. Together they make the plane $V_3$ (purple). The strangle line $S$ (orange) lies on the plane but misses both single options. <b>Drag to rotate.</b></figcaption>
+        </figure>
+
+        <!-- PART 3 -->
+        <h4>Part 3: portfolios that pay nothing if Nifty ends High</h4>
+        <p><b>The question asks:</b> which CE + PE portfolios have High payoff $= 0$? (The $xy$-plane is "third number = 0".)</p>
+        <p>When High, each CE pays $3$ and each PE pays $0$. So $a$ CE + $b$ PE pays $3a$ when High:</p>
+        <table>
+          <tr><th>Lots CE</th><th>Lots PE</th><th>Payoff</th><th>High payoff $3a$</th><th>Zero when High?</th></tr>
+          <tr><td>$1$</td><td>$0$</td><td>$(0, 1, 3)$</td><td>$3$</td><td>no</td></tr>
+          <tr><td>$1$</td><td>$1$</td><td>$(4, 2, 3)$</td><td>$3$</td><td>no</td></tr>
+          <tr><td>$0$</td><td>$1$</td><td>$(4, 1, 0)$</td><td>$0$</td><td>yes</td></tr>
+          <tr><td>$0$</td><td>$2$</td><td>$(8, 2, 0)$</td><td>$0$</td><td>yes</td></tr>
+          <tr><td>$0$</td><td>$-1$</td><td>$(-4, -1, 0)$</td><td>$0$</td><td>yes</td></tr>
+        </table>
+        <p>High payoff is 0 exactly when you hold <b>no CE</b>. That leaves "PE only", which is $V_2$.</p>
+        <p class="answer">$V_3 \cap \{xy\text{-plane}\} = V_2$: to get nothing if Nifty ends High, trade only the PE.</p>
+        <figure class="fig plot3d">
+          <div id="l6ex1b" class="plot3d-box" role="img" aria-label="Plane V3 meets the floor along the PE line"></div>
+          <figcaption><b>Part 3.</b> The purple plane $V_3$ meets the grey floor (High payoff $= 0$) along the green PE line $V_2$. <b>Drag to rotate.</b></figcaption>
+        </figure>
+      </div>
+
+      <div class="box theorem"><span class="label">All answers in one table</span>
+        <table>
+          <tr><th>Question</th><th>Maths answer</th><th>Options answer</th></tr>
+          <tr><td>$V_1$</td><td>line of all $(0, c, 3c)$</td><td>CE-only portfolios (0 when Low)</td></tr>
+          <tr><td>$V_2$</td><td>line of all $(4d, d, 0)$</td><td>PE-only portfolios (0 when High)</td></tr>
+          <tr><td>$V_1 \cap V_2$</td><td>$\{(0, 0, 0)\}$</td><td>only "no trade"</td></tr>
+          <tr><td>$V_3$</td><td>plane of all $(4b, a + b, 3a)$</td><td>all CE + PE portfolios</td></tr>
+          <tr><td>$V_3 = V_1 \cup V_2$?</td><td>no: $(4, 2, 3)$ is on neither line</td><td>no: a strangle needs both options</td></tr>
+          <tr><td>$S$</td><td>line of all $(4t, 2t, 3t)$</td><td>strangle-only portfolios</td></tr>
+          <tr><td>$V_3 \cap xy$-plane</td><td>$V_2$</td><td>nothing when High ⇒ PE only</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 2: PA = LU with a 2 × 2</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Factor $A = \begin{bmatrix} 0 & 2 \\ 3 & 4 \end{bmatrix}$ as $PA = LU$.</p>
       </div>
@@ -311,9 +580,9 @@
       </div>
     </div>
 
-    <!-- E2 -->
+    <!-- E3 -->
     <div class="worked">
-      <h3>Example 2: Transpose</h3>
+      <h3>Example 3: Transpose</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Find the transpose of $A = \begin{bmatrix} 1 & 0 & 5 \\ 2 & 7 & 3 \end{bmatrix}$. What is the entry in row 3, column 2 of $A^T$?</p>
       </div>
@@ -325,9 +594,9 @@
       </div>
     </div>
 
-    <!-- E3 -->
+    <!-- E4 -->
     <div class="worked">
-      <h3>Example 3: Symmetric or not?</h3>
+      <h3>Example 4: Symmetric or not?</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Which are symmetric? (a) $\begin{bmatrix} 2 & 5 \\ 5 & 1 \end{bmatrix}$ &nbsp; (b) $\begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix}$ &nbsp; (c) $\begin{bmatrix} 4 & 0 & 6 \\ 0 & 1 & 2 \\ 6 & 2 & 9 \end{bmatrix}$</p>
       </div>
@@ -343,9 +612,9 @@
       </div>
     </div>
 
-    <!-- E4 -->
+    <!-- E5 -->
     <div class="worked">
-      <h3>Example 4: Compute RᵀR</h3>
+      <h3>Example 5: Compute RᵀR</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>For $R = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 1 & 0 \end{bmatrix}$, compute $R^TR$ and check it is symmetric.</p>
       </div>
@@ -362,9 +631,9 @@
       </div>
     </div>
 
-    <!-- E5 -->
+    <!-- E6 -->
     <div class="worked">
-      <h3>Example 5: Subspace or not?</h3>
+      <h3>Example 6: Subspace or not?</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Which are subspaces of $\mathbb{R}^2$? (a) the line $y = 3x$ &nbsp; (b) the line $y = 3x + 1$ &nbsp; (c) the quarter plane $x \ge 0, y \ge 0$ &nbsp; (d) just $(0, 0)$</p>
       </div>
@@ -380,9 +649,9 @@
       </div>
     </div>
 
-    <!-- E6 -->
+    <!-- E7 -->
     <div class="worked">
-      <h3>Example 6: Is b in the column space?</h3>
+      <h3>Example 7: Is b in the column space?</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>$A = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix}$. Is (a) $b = (4, 5, 5)$ and (b) $b = (1, 0, 0)$ in $C(A)$?</p>
       </div>
@@ -411,9 +680,9 @@
       </div>
     </div>
 
-    <!-- E7 -->
+    <!-- E8 -->
     <div class="worked">
-      <h3>Example 7: Returns matrix → a symmetric "co-movement" matrix (finance)</h3>
+      <h3>Example 8: Returns matrix → a symmetric "co-movement" matrix (finance)</h3>
       <div class="box finance"><span class="label">Problem</span>
         <p>Two stocks, three days. Daily returns (in %):</p>
         <table>
@@ -428,7 +697,7 @@
         <p>Each stock's column is its "diary" of daily moves. Dotting a diary with itself measures <b>how much that stock moves</b>. Dotting two different diaries measures <b>how much they move together</b>. Stock A with B and B with A give the same answer, so the table is a mirror image.</p>
       </div>
       <div class="steps">
-        <p>$R = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 1 & 0 \end{bmatrix}$, the same as Example 4, so</p>
+        <p>$R = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 1 & 0 \end{bmatrix}$, the same as Example 5, so</p>
         $$ R^TR = \begin{bmatrix} 2 & 2 \\ 2 & 5 \end{bmatrix} $$
         <table>
           <tr><th>Entry</th><th>Work</th><th>Meaning</th></tr>
@@ -440,9 +709,9 @@
       </div>
     </div>
 
-    <!-- E8 -->
+    <!-- E9 -->
     <div class="worked">
-      <h3>Example 8: Can the market build this payoff? (finance)</h3>
+      <h3>Example 9: Can the market build this payoff? (finance)</h3>
       <div class="box finance"><span class="label">Problem</span>
         <p>Tomorrow the stock ends at <b>1</b> (low), <b>2</b> (middle) or <b>3</b> (high). Only two assets exist:</p>
         <table>
@@ -484,7 +753,7 @@
     <details class="proof"><summary>5. What is the column space of $\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$?</summary>
       <p>Column 2 $= 2 \times$ column 1, so all combinations are multiples of $(1, 2)$: the line through $(1, 2)$.</p>
     </details>
-    <details class="proof"><summary>6. Is $(2, 4, 6)$ in the column space of the market in Example 8?</summary>
+    <details class="proof"><summary>6. Is $(2, 4, 6)$ in the column space of the market in Example 9?</summary>
       <p>Middle − low: $y = 2$. Low: $x + 2 = 2$, so $x = 0$. High: $0 + 6 = 6$ ✓. Yes: 2 stocks.</p>
     </details>
 
@@ -554,6 +823,81 @@ window.addEventListener("load", function () {
      { type: "scatter3d", mode: "markers", showlegend: false, marker: { color: ink, size: 4 }, x: [0], y: [0], z: [0] }]
   );
   Plotly.newPlot("l6plot", data, layout, config);
+
+  // Example 1 (Examples tab): CE x1 = (0,1,3), PE x2 = (4,1,0). Axes: x = Low, y = Mid, z = High.
+  var orange = c("--int-b"), grey = c("--ink-soft");
+  function line(v, t0, t1, color, name, dash) {
+    return { type: "scatter3d", mode: "lines", name: name, line: { color: color, width: 5, dash: dash || "solid" },
+      x: [v[0] * t0, v[0] * t1], y: [v[1] * t0, v[1] * t1], z: [v[2] * t0, v[2] * t1] };
+  }
+  function tag(p, txt, color) {
+    return { type: "scatter3d", mode: "text", showlegend: false, hoverinfo: "skip", x: [p[0]], y: [p[1]], z: [p[2]],
+      text: [txt], textfont: { size: 13, color: color } };
+  }
+  function dots(pts, color, name, labels) {
+    return { type: "scatter3d", mode: labels ? "markers+text" : "markers", name: name, marker: { color: color, size: 6 },
+      x: pts.map(function (p) { return p[0]; }), y: pts.map(function (p) { return p[1]; }), z: pts.map(function (p) { return p[2]; }),
+      text: labels, textposition: "middle right", textfont: { size: 12, color: color } };
+  }
+  function axisT(t, lo, hi) { var ax = axis(t, lo, hi); ax.title.text = t; return ax; }
+  function sceneE(eye) {
+    var sc = scene([-5, 6], [-3, 4], [-4, 7], eye);
+    sc.xaxis.title.text = "Low"; sc.yaxis.title.text = "Mid"; sc.zaxis.title.text = "High";
+    return sc;
+  }
+  var origin = { type: "scatter3d", mode: "markers", showlegend: false, marker: { color: ink, size: 4 }, x: [0], y: [0], z: [0] };
+  // plane = a*CE + b*PE, a in [-1.3, 2.2], b in [-1.2, 1.3]
+  var planeV3 = { type: "mesh3d", name: "V₃: every CE + PE portfolio", opacity: 0.25, color: purple, flatshading: true, hoverinfo: "name",
+    x: [-4.8, -4.8, 5.2, 5.2], y: [-2.5, 1.0, 3.5, 0], z: [-3.9, 6.6, 6.6, -3.9], i: [0, 0], j: [1, 2], k: [2, 3] };
+  var lineCE = line([0, 1, 3], -1.3, 2.2, blue, "V₁: CE only", "dot"), linePE = line([4, 1, 0], -1.2, 1.3, green, "V₂: PE only", "dot");
+  function lay(eye) { var L = JSON.parse(JSON.stringify(layout)); L.scene = sceneE(eye); return L; }
+  var eyeE = { x: 1.6, y: -1.5, z: 0.8 };
+
+  // Parts 1–2
+  Plotly.newPlot("l6ex1a", [planeV3, lineCE, linePE, line([4, 2, 3], -1, 1.2, orange, "S: strangles only")]
+    .concat(arrow([0, 1, 3], blue, "1 CE = (0, 1, 3)"), arrow([4, 1, 0], green, "1 PE = (4, 1, 0)"),
+    [dots([[4, 2, 3]], orange, "strangle = (4, 2, 3)"), origin, tag([0.4, 1.2, 3.5], "CE", blue), tag([4.4, 1.2, 0.4], "PE", green), tag([4.4, 2.3, 3.5], "strangle", orange)]),
+    lay(eyeE), config);
+
+  // Part 3
+  var floor = { type: "mesh3d", name: "floor: High payoff = 0", opacity: 0.25, color: grey, flatshading: true, hoverinfo: "name",
+    x: [-5, 6, 6, -5], y: [-3, -3, 4, 4], z: [0, 0, 0, 0], i: [0, 0], j: [1, 2], k: [2, 3] };
+  Plotly.newPlot("l6ex1b", [planeV3, floor, line([4, 1, 0], -1.2, 1.4, green, "V₃ ∩ floor = V₂ (PE only)")]
+    .concat(arrow([4, 1, 0], green, "1 PE = (4, 1, 0)"), [origin, tag([4.4, 1.2, 0.5], "PE", green)]),
+    lay({ x: 1.9, y: 0.6, z: 0.9 }), config);
+
+  // Stage 1: lots of CE on one line
+  Plotly.newPlot("l6g1", [lineCE, dots([[0, 2, 6], [0, 1, 3], [0, 0.5, 1.5], [0, 0, 0], [0, -1, -3]], red, "CE-only portfolios",
+    ["2 CE", "1 CE", "0.5 CE", "no trade", "−1 CE (sold)"])].concat(arrow([0, 1, 3], blue, "1 lot CE")), lay(eyeE), config);
+
+  // Stage 2: grid of mixes on the plane
+  var grid = [];
+  [2, 1, 0, -1].forEach(function (a) { [-1, 0, 1].forEach(function (b) { grid.push([4 * b, a + b, 3 * a]); }); });
+  Plotly.newPlot("l6g2", [planeV3, lineCE, linePE, dots(grid, red, "12 CE + PE portfolios")], lay(eyeE), config);
+
+  // Stage 3: interactive mixer
+  function mixTraces(a, b) {
+    var A = [0, a, 3 * a], P = [4 * b, a + b, 3 * a];
+    return [
+      { type: "scatter3d", mode: "lines+markers", name: "a lots CE", line: { color: blue, width: 8 }, marker: { size: 3, color: blue }, x: [0, A[0]], y: [0, A[1]], z: [0, A[2]] },
+      { type: "scatter3d", mode: "lines+markers", name: "+ b lots PE", line: { color: green, width: 8 }, marker: { size: 3, color: green }, x: [A[0], P[0]], y: [A[1], P[1]], z: [A[2], P[2]] },
+      { type: "scatter3d", mode: "markers+text", name: "your payoff", marker: { color: red, size: 8 }, x: [P[0]], y: [P[1]], z: [P[2]],
+        text: ["(" + P.map(function (v) { return +v.toFixed(1); }).join(", ") + ")"], textposition: "top center", textfont: { size: 14, color: red } }
+    ];
+  }
+  var lay3 = lay(eyeE), base3 = [planeV3, lineCE, linePE, origin];
+  var sa = document.getElementById("l6sa"), sb = document.getElementById("l6sb");
+  function redraw() {
+    var a = +sa.value, b = +sb.value, P = [4 * b, a + b, 3 * a];
+    document.getElementById("l6va").textContent = a; document.getElementById("l6vb").textContent = b;
+    var where = (a === 0 && b === 0) ? "the origin (no trade)" : (b === 0 ? "on the CE line V₁" : (a === 0 ? "on the PE line V₂" : "on neither line, but on the sheet V₃"));
+    var f1 = function (v) { return +v.toFixed(1); };
+    document.getElementById("l6out").innerHTML = "<b>" + a + "</b> × CE (0, 1, 3) + <b>" + b + "</b> × PE (4, 1, 0) = <b>(" +
+      P.map(f1).join(", ") + ")</b>: pays " + f1(P[0]) + " if Low, " + f1(P[1]) + " if Mid, " + f1(P[2]) + " if High. Point is " + where + ".";
+    Plotly.react("l6g3", base3.concat(mixTraces(a, b)), lay3, config);
+  }
+  sa.addEventListener("input", redraw); sb.addEventListener("input", redraw);
+  redraw();
 
   document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {
     b.addEventListener("click", function () {
