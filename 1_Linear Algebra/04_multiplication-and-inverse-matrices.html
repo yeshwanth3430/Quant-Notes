@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multiplication and Inverses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>Multiplication and Inverse Matrices</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 04</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 04</p>
+  <h1>Multiplication and Inverse Matrices</h1>
+  <p class="subtitle">Four ways to multiply two matrices (all giving the same answer), and how to find the "undo" matrix.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s1">The lecture in five questions</a></li>
+        <li><a href="#s2">When can two matrices be multiplied?</a></li>
+        <li><a href="#s3">Four ways to multiply</a></li>
+        <li><a href="#s4">Multiplying by blocks</a></li>
+        <li><a href="#s5">What an inverse is</a></li>
+        <li><a href="#s6">When there is no inverse</a></li>
+        <li><a href="#s7">Finding the inverse: Gauss–Jordan</a></li>
+        <li><a href="#s8">Summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. The lecture in five questions</h2>
+    <table>
+      <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
+      <tr><td>1</td><td>When can we multiply $A$ times $B$?</td><td>When the <b>columns of $A$</b> match the <b>rows of $B$</b> in number.</td></tr>
+      <tr><td>2</td><td>How do we multiply?</td><td>Four ways (entry, columns, rows, column × row). They always give the <b>same answer</b>.</td></tr>
+      <tr><td>3</td><td>What is an inverse?</td><td>The matrix that undoes $A$: $A^{-1}A = I$.</td></tr>
+      <tr><td>4</td><td>When is there no inverse?</td><td>When some nonzero $x$ gives $Ax = 0$ (the columns lie on one line).</td></tr>
+      <tr><td>5</td><td>How do we find it?</td><td><b>Gauss–Jordan</b>: do elimination on $[\,A \mid I\,]$ until the left side becomes $I$.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">2. When can two matrices be multiplied?</h2>
+    <div class="box theorem"><span class="label">Shape rule</span>
+      $$ \underbrace{A}_{m \times n}\ \underbrace{B}_{n \times p} = \underbrace{C}_{m \times p} $$
+      <p>The two <b>inside</b> numbers must match ($n$ and $n$). The answer takes the two <b>outside</b> numbers ($m$ rows, $p$ columns).</p>
+    </div>
+    <table>
+      <tr><th>$A$</th><th>$B$</th><th>Inside numbers</th><th>Allowed?</th><th>Size of $AB$</th></tr>
+      <tr><td>$2 \times 3$</td><td>$3 \times 4$</td><td>$3$ and $3$</td><td>yes</td><td>$2 \times 4$</td></tr>
+      <tr><td>$3 \times 1$ (a column)</td><td>$1 \times 2$ (a row)</td><td>$1$ and $1$</td><td>yes</td><td>$3 \times 2$</td></tr>
+      <tr><td>$2 \times 2$</td><td>$3 \times 2$</td><td>$2$ and $3$</td><td><b>no</b></td><td>—</td></tr>
+    </table>
+    <p>Why: each row of $A$ gets matched up, number by number, with each column of $B$. So a row of $A$ must be exactly as long as a column of $B$.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">3. Four ways to multiply</h2>
+    <p>We use one small example throughout and get the <b>same answer four times</b>:</p>
+    $$
+    A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}, \qquad
+    B = \begin{bmatrix} 5 & 6 \\ 7 & 8 \end{bmatrix}, \qquad
+    AB = \;?
+    $$
+
+    <h3>Way 1: one entry at a time (row · column)</h3>
+    <div class="box definition"><span class="label">Rule</span>
+      <p>The entry in <b>row $i$, column $j$</b> of $AB$ = <b>row $i$ of $A$</b> dotted with <b>column $j$ of $B$</b>: multiply matching numbers and add.</p>
+      $$ c_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \dots + a_{in}b_{nj} = \sum_{k=1}^{n} a_{ik}\,b_{kj} $$
+    </div>
+    <table>
+      <tr><th>Entry</th><th>Row of $A$ · column of $B$</th><th>Work</th><th>Value</th></tr>
+      <tr><td>$c_{11}$</td><td>$(1, 2) \cdot (5, 7)$</td><td>$1 \times 5 + 2 \times 7$</td><td>$19$</td></tr>
+      <tr><td>$c_{12}$</td><td>$(1, 2) \cdot (6, 8)$</td><td>$1 \times 6 + 2 \times 8$</td><td>$22$</td></tr>
+      <tr><td>$c_{21}$</td><td>$(3, 4) \cdot (5, 7)$</td><td>$3 \times 5 + 4 \times 7$</td><td>$43$</td></tr>
+      <tr><td>$c_{22}$</td><td>$(3, 4) \cdot (6, 8)$</td><td>$3 \times 6 + 4 \times 8$</td><td>$50$</td></tr>
+    </table>
+    $$ AB = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix} $$
+
+    <h3>Way 2: a column at a time</h3>
+    <div class="box definition"><span class="label">Rule</span>
+      <p><b>Column $j$ of $AB$</b> = $A$ times <b>column $j$ of $B$</b>. So every column of $AB$ is a <b>mix of the columns of $A$</b>.</p>
+    </div>
+    <table>
+      <tr><th>Column of $B$</th><th>Mix of $A$'s columns $(1, 3)$ and $(2, 4)$</th><th>Column of $AB$</th></tr>
+      <tr><td>$(5, 7)$</td><td>$5 \times (1, 3) + 7 \times (2, 4) = (5, 15) + (14, 28)$</td><td>$(19, 43)$</td></tr>
+      <tr><td>$(6, 8)$</td><td>$6 \times (1, 3) + 8 \times (2, 4) = (6, 18) + (16, 32)$</td><td>$(22, 50)$</td></tr>
+    </table>
+    <p>Same answer ✓.</p>
+
+    <h3>Way 3: a row at a time</h3>
+    <div class="box definition"><span class="label">Rule</span>
+      <p><b>Row $i$ of $AB$</b> = <b>row $i$ of $A$</b> times $B$. So every row of $AB$ is a <b>mix of the rows of $B$</b> (as in Lecture 03).</p>
+    </div>
+    <table>
+      <tr><th>Row of $A$</th><th>Mix of $B$'s rows $(5, 6)$ and $(7, 8)$</th><th>Row of $AB$</th></tr>
+      <tr><td>$(1, 2)$</td><td>$1 \times (5, 6) + 2 \times (7, 8) = (5, 6) + (14, 16)$</td><td>$(19, 22)$</td></tr>
+      <tr><td>$(3, 4)$</td><td>$3 \times (5, 6) + 4 \times (7, 8) = (15, 18) + (28, 32)$</td><td>$(43, 50)$</td></tr>
+    </table>
+    <p>Same answer ✓.</p>
+
+    <h3>Way 4: column × row, then add</h3>
+    <p>First, what is a <b>column times a row</b>? A $3 \times 1$ times a $1 \times 2$ gives a full $3 \times 2$ matrix. Every entry is (number from the column) × (number from the row):</p>
+    $$
+    \begin{bmatrix} 2 \\ 3 \\ 4 \end{bmatrix} \begin{bmatrix} 1 & 6 \end{bmatrix}
+    = \begin{bmatrix} 2 \times 1 & 2 \times 6 \\ 3 \times 1 & 3 \times 6 \\ 4 \times 1 & 4 \times 6 \end{bmatrix}
+    = \begin{bmatrix} 2 & 12 \\ 3 & 18 \\ 4 & 24 \end{bmatrix}
+    $$
+    <div class="box intuition"><span class="label">A very special matrix</span>
+      <p>Every <b>column</b> is a multiple of $(2, 3, 4)$ and every <b>row</b> is a multiple of $(1, 6)$. All its columns point along one line, and all its rows point along one line. Strang calls this a "minimal" matrix: one column times one row.</p>
+    </div>
+
+    <div class="box definition"><span class="label">Rule</span>
+      <p>$AB$ = (column 1 of $A$)(row 1 of $B$) + (column 2 of $A$)(row 2 of $B$) + …</p>
+    </div>
+    <p>For our example:</p>
+    $$
+    \underbrace{\begin{bmatrix} 1 \\ 3 \end{bmatrix} \begin{bmatrix} 5 & 6 \end{bmatrix}}_{\text{col 1 × row 1}}
+    + \underbrace{\begin{bmatrix} 2 \\ 4 \end{bmatrix} \begin{bmatrix} 7 & 8 \end{bmatrix}}_{\text{col 2 × row 2}}
+    = \begin{bmatrix} 5 & 6 \\ 15 & 18 \end{bmatrix} + \begin{bmatrix} 14 & 16 \\ 28 & 32 \end{bmatrix}
+    = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}
+    $$
+    <p>Same answer again ✓.</p>
+
+    <table>
+      <tr><th>Way</th><th>Think of it as</th><th>Tells you</th></tr>
+      <tr><td>1. Entry</td><td>row · column = one number</td><td>how to compute one entry</td></tr>
+      <tr><td>2. Columns</td><td>$A$ × each column of $B$</td><td>columns of $AB$ are mixes of the columns of $A$</td></tr>
+      <tr><td>3. Rows</td><td>each row of $A$ × $B$</td><td>rows of $AB$ are mixes of the rows of $B$</td></tr>
+      <tr><td>4. Column × row</td><td>sum of (column of $A$)(row of $B$)</td><td>$AB$ is a sum of simple "one column × one row" pieces</td></tr>
+    </table>
+    <p>All four do exactly the same multiplications, just grouped differently. That is why they always agree.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s4">4. Multiplying by blocks</h2>
+    <p>You can cut big matrices into smaller blocks and multiply the blocks as if they were numbers:</p>
+    $$
+    \begin{bmatrix} A_1 & A_2 \\ A_3 & A_4 \end{bmatrix}
+    \begin{bmatrix} B_1 & B_2 \\ B_3 & B_4 \end{bmatrix}
+    = \begin{bmatrix} A_1B_1 + A_2B_3 & A_1B_2 + A_2B_4 \\ A_3B_1 + A_4B_3 & A_3B_2 + A_4B_4 \end{bmatrix}
+    $$
+    <p>It is the same pattern as Way 1 (block row × block column), with small matrices in place of numbers. For example, a $20 \times 20$ matrix can be treated as a $2 \times 2$ grid of $10 \times 10$ blocks. The only rule is that the block sizes must fit together.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s5">5. What an inverse is</h2>
+    <div class="box definition"><span class="label">Definition: Inverse</span>
+      <p>For a square matrix $A$, the <b>inverse</b> $A^{-1}$ (if it exists) is the matrix with</p>
+      $$ A^{-1}A = I \qquad \text{and} \qquad AA^{-1} = I. $$
+      <p>It is the <b>undo button</b>: if $A$ turns $x$ into $b$, then $A^{-1}$ turns $b$ back into $x$.</p>
+    </div>
+    <ul>
+      <li>A matrix that has an inverse is called <b>invertible</b> or <b>non-singular</b>.</li>
+      <li>One without is called <b>singular</b>.</li>
+      <li>For square matrices, an inverse that works on the left also works on the right.</li>
+    </ul>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">6. When there is no inverse</h2>
+    $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 6 \end{bmatrix} $$
+    <p>This matrix has <b>no inverse</b>. Here are two ways to see it.</p>
+
+    <h3>Reason 1: the columns lie on one line</h3>
+    <p>Column 2 $= (3, 6) = 3 \times (1, 2) =$ 3 × column 1. Both columns point the same way. By Way 2, every column of $A$ × (anything) is a mix of these columns, so it stays on that line. The identity needs the column $(1, 0)$, which is <b>not</b> on the line through $(1, 2)$. So $A \times$ (anything) can never equal $I$.</p>
+
+    <h3>Reason 2: a nonzero input gives output zero (the key reason)</h3>
+    <p>Take $x = (3, -1)$:</p>
+    $$ A\begin{bmatrix} 3 \\ -1 \end{bmatrix} = 3\begin{bmatrix} 1 \\ 2 \end{bmatrix} - 1\begin{bmatrix} 3 \\ 6 \end{bmatrix} = \begin{bmatrix} 3 - 3 \\ 6 - 6 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
+    <p>So $A$ sends $(3, -1)$ to zero, and it also sends $(0, 0)$ to zero. Seeing the output $0$, no undo button can know which input to return. (Same as matrix $C$ in Lecture 02.)</p>
+    <div class="box theorem"><span class="label">Key test</span>
+      <p>If $Ax = 0$ for some <b>nonzero</b> $x$, then $A$ has <b>no inverse</b>.</p>
+      <p>Why: if $A^{-1}$ existed, multiply both sides of $Ax = 0$ by it: $A^{-1}Ax = A^{-1}0$, so $x = 0$. But $x$ was not zero, a contradiction.</p>
+    </div>
+
+    <div class="box pitfall"><span class="label">Quick 2 × 2 check</span>
+      <p>For $\begin{bmatrix} a & b \\ c & d \end{bmatrix}$, compute $ad - bc$ (the determinant, coming later). If it is $0$, there is no inverse. Here $1 \times 6 - 3 \times 2 = 0$.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">7. Finding the inverse: Gauss–Jordan</h2>
+    $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix} $$
+    <p>Its columns $(1, 2)$ and $(3, 7)$ point in different directions, so an inverse should exist. Call the unknown inverse $\begin{bmatrix} p & r \\ q & s \end{bmatrix}$.</p>
+
+    <h3>The idea: two systems at once</h3>
+    <p>$AA^{-1} = I$ column by column (Way 2) means:</p>
+    <table>
+      <tr><th>Column of $A^{-1}$</th><th>Must satisfy</th></tr>
+      <tr><td>column 1, $(p, q)$</td><td>$A\begin{bmatrix} p \\ q \end{bmatrix} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ (column 1 of $I$)</td></tr>
+      <tr><td>column 2, $(r, s)$</td><td>$A\begin{bmatrix} r \\ s \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$ (column 2 of $I$)</td></tr>
+    </table>
+    <p>That is two systems with the same $A$. <b>Gauss–Jordan</b> solves both together: stick <b>both</b> right-hand sides onto $A$, which means sticking on the whole identity, and do elimination.</p>
+    <div class="box theorem"><span class="label">Gauss–Jordan recipe</span>
+      $$ \big[\ A \ \big|\ I\ \big] \quad \xrightarrow{\text{elimination}} \quad \big[\ I \ \big|\ A^{-1}\ \big] $$
+      <p>Keep eliminating (downwards like Gauss, then <b>upwards</b> too, like Jordan) until the left half is $I$. The right half is then $A^{-1}$.</p>
+    </div>
+
+    <h3>Step by step</h3>
+    <p><b>Start:</b></p>
+    $$ \left[\begin{array}{cc|cc} 1 & 3 & 1 & 0 \\ 2 & 7 & 0 & 1 \end{array}\right] $$
+    <p><b>Step 1 (downwards):</b> clear the $2$ below the pivot. Row 2 minus 2 × row 1:</p>
+    <table>
+      <tr><th></th><th colspan="2">left ($A$)</th><th colspan="2">right ($I$)</th></tr>
+      <tr><td>Row 2</td><td>$2$</td><td>$7$</td><td>$0$</td><td>$1$</td></tr>
+      <tr><td>minus 2 × row 1</td><td>$-2$</td><td>$-6$</td><td>$-2$</td><td>$0$</td></tr>
+      <tr><td><b>New row 2</b></td><td>$0$</td><td>$1$</td><td>$-2$</td><td>$1$</td></tr>
+    </table>
+    $$ \left[\begin{array}{cc|cc} 1 & 3 & 1 & 0 \\ 0 & 1 & -2 & 1 \end{array}\right] $$
+    <p>Gauss would stop here (a staircase). Jordan keeps going.</p>
+    <p><b>Step 2 (upwards):</b> clear the $3$ <b>above</b> the second pivot. Row 1 minus 3 × row 2:</p>
+    <table>
+      <tr><th></th><th colspan="2">left</th><th colspan="2">right</th></tr>
+      <tr><td>Row 1</td><td>$1$</td><td>$3$</td><td>$1$</td><td>$0$</td></tr>
+      <tr><td>minus 3 × row 2</td><td>$0$</td><td>$-3$</td><td>$+6$</td><td>$-3$</td></tr>
+      <tr><td><b>New row 1</b></td><td>$1$</td><td>$0$</td><td>$7$</td><td>$-3$</td></tr>
+    </table>
+    $$ \left[\begin{array}{cc|cc} 1 & 0 & 7 & -3 \\ 0 & 1 & -2 & 1 \end{array}\right] \qquad\Longrightarrow\qquad A^{-1} = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix} $$
+    <p>(If a pivot were not $1$, a last step would divide that row by its pivot.)</p>
+
+    <h3>Check: $A^{-1}A = I$</h3>
+    <table>
+      <tr><th>Entry</th><th>Row of $A^{-1}$ · column of $A$</th><th>Value</th></tr>
+      <tr><td>(1, 1)</td><td>$7 \times 1 + (-3) \times 2 = 7 - 6$</td><td>$1$</td></tr>
+      <tr><td>(1, 2)</td><td>$7 \times 3 + (-3) \times 7 = 21 - 21$</td><td>$0$</td></tr>
+      <tr><td>(2, 1)</td><td>$-2 \times 1 + 1 \times 2 = -2 + 2$</td><td>$0$</td></tr>
+      <tr><td>(2, 2)</td><td>$-2 \times 3 + 1 \times 7 = -6 + 7$</td><td>$1$</td></tr>
+    </table>
+    <p>We get $I$ ✓.</p>
+
+    <div class="box intuition"><span class="label">Why the inverse appears on the right</span>
+      <p>All the elimination steps together form one matrix $E$ (Lecture 03). It turned $A$ into $I$, so $EA = I$, which means $E = A^{-1}$. The same steps were done to the right half, which started as $I$, so the right half became $EI = E = A^{-1}$.</p>
+    </div>
+
+    <h3>Using the inverse to solve $Ax = b$</h3>
+    <p>Once you have $A^{-1}$, then $x = A^{-1}b$ for <b>any</b> $b$. For $b = (5, 12)$:</p>
+    $$ x = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}\begin{bmatrix} 5 \\ 12 \end{bmatrix} = \begin{bmatrix} 35 - 36 \\ -10 + 12 \end{bmatrix} = \begin{bmatrix} -1 \\ 2 \end{bmatrix} $$
+    <p>Check: $A(-1, 2) = (-1 + 6,\ -2 + 14) = (5, 12)$ ✓.</p>
+
+    <div class="box pitfall"><span class="label">Shortcut for 2 × 2 only</span>
+      $$ \begin{bmatrix} a & b \\ c & d \end{bmatrix}^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix} $$
+      <p>Swap $a$ and $d$, flip the signs of $b$ and $c$, divide by $ad - bc$. For our $A$: $ad - bc = 7 - 6 = 1$, giving $\begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}$ ✓. If $ad - bc = 0$, you cannot divide, so there is no inverse.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <div class="box finance"><span class="label">In finance</span>
+      <ul>
+        <li><b>Multiplication:</b> (holdings of each trader) × (what each asset pays in each scenario) = what each trader receives in each scenario, all in one matrix product. Example 8 works it out.</li>
+        <li><b>Inverse:</b> to build any wanted payoff from some assets, solve $Ax = b$. With $A^{-1}$ computed once, every new payoff is just $x = A^{-1}b$. Example 9 prices two options this way.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">8. Summary</h2>
+    <table>
+      <tr><th>Idea</th><th>In one line</th></tr>
+      <tr><td>Shape rule</td><td>$(m \times n)(n \times p) = m \times p$. Inside numbers must match.</td></tr>
+      <tr><td>Way 1: entry</td><td>$c_{ij}$ = row $i$ of $A$ · column $j$ of $B$.</td></tr>
+      <tr><td>Way 2: columns</td><td>Columns of $AB$ are mixes of the columns of $A$.</td></tr>
+      <tr><td>Way 3: rows</td><td>Rows of $AB$ are mixes of the rows of $B$.</td></tr>
+      <tr><td>Way 4: column × row</td><td>$AB$ = sum of (column of $A$)(row of $B$).</td></tr>
+      <tr><td>Blocks</td><td>Multiply blocks like numbers, if the sizes fit.</td></tr>
+      <tr><td>Inverse</td><td>$A^{-1}A = I = AA^{-1}$: the undo button.</td></tr>
+      <tr><td>No inverse</td><td>Some nonzero $x$ has $Ax = 0$ (columns on one line); for 2 × 2, $ad - bc = 0$.</td></tr>
+      <tr><td>Gauss–Jordan</td><td>Eliminate $[\,A \mid I\,]$ down and up until it becomes $[\,I \mid A^{-1}\,]$.</td></tr>
+    </table>
+  </div>
+  </section>
+
+  <!-- ================= EXAMPLES ================= -->
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+
+    <h2>Worked examples</h2>
+
+    <!-- E1 -->
+    <div class="worked">
+      <h3>Example 1: Multiply, three ways</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ A = \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}, \qquad B = \begin{bmatrix} 1 & 4 \\ 2 & 1 \end{bmatrix}. \quad \text{Find } AB. $$
+      </div>
+      <div class="steps">
+        <p><b>Way 1 (entries).</b></p>
+        <table>
+          <tr><th>Entry</th><th>Work</th><th>Value</th></tr>
+          <tr><td>$c_{11}$</td><td>$(2, 1) \cdot (1, 2) = 2 + 2$</td><td>$4$</td></tr>
+          <tr><td>$c_{12}$</td><td>$(2, 1) \cdot (4, 1) = 8 + 1$</td><td>$9$</td></tr>
+          <tr><td>$c_{21}$</td><td>$(0, 3) \cdot (1, 2) = 0 + 6$</td><td>$6$</td></tr>
+          <tr><td>$c_{22}$</td><td>$(0, 3) \cdot (4, 1) = 0 + 3$</td><td>$3$</td></tr>
+        </table>
+        <p><b>Way 2 (columns).</b> Column 1: $1 \times (2, 0) + 2 \times (1, 3) = (4, 6)$. Column 2: $4 \times (2, 0) + 1 \times (1, 3) = (9, 3)$ ✓.</p>
+        <p><b>Way 3 (rows).</b> Row 1: $2 \times (1, 4) + 1 \times (2, 1) = (4, 9)$. Row 2: $0 \times (1, 4) + 3 \times (2, 1) = (6, 3)$ ✓.</p>
+        <p class="answer">Answer: $AB = \begin{bmatrix} 4 & 9 \\ 6 & 3 \end{bmatrix}$</p>
+      </div>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 2: Which products are allowed?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>$A$ is $2 \times 3$, $B$ is $3 \times 4$, $C$ is $4 \times 2$. Which of $AB$, $BA$, $BC$, $CA$ exist, and what size are they?</p>
+      </div>
+      <div class="steps">
+        <table>
+          <tr><th>Product</th><th>Shapes</th><th>Inside numbers match?</th><th>Result</th></tr>
+          <tr><td>$AB$</td><td>$(2 \times 3)(3 \times 4)$</td><td>$3 = 3$ ✓</td><td>$2 \times 4$</td></tr>
+          <tr><td>$BA$</td><td>$(3 \times 4)(2 \times 3)$</td><td>$4 \ne 2$ ✗</td><td>not allowed</td></tr>
+          <tr><td>$BC$</td><td>$(3 \times 4)(4 \times 2)$</td><td>$4 = 4$ ✓</td><td>$3 \times 2$</td></tr>
+          <tr><td>$CA$</td><td>$(4 \times 2)(2 \times 3)$</td><td>$2 = 2$ ✓</td><td>$4 \times 3$</td></tr>
+        </table>
+        <p class="answer">$AB$, $BC$ and $CA$ exist; $BA$ does not.</p>
+      </div>
+    </div>
+
+    <!-- E3 -->
+    <div class="worked">
+      <h3>Example 3: Column times row</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ \begin{bmatrix} 1 \\ 2 \end{bmatrix}\begin{bmatrix} 3 & 4 \end{bmatrix} = \;? $$
+      </div>
+      <div class="steps">
+        <p>Each entry is (column number) × (row number):</p>
+        $$ \begin{bmatrix} 1 \times 3 & 1 \times 4 \\ 2 \times 3 & 2 \times 4 \end{bmatrix} = \begin{bmatrix} 3 & 4 \\ 6 & 8 \end{bmatrix} $$
+        <p>Every row is a multiple of $(3, 4)$: row 2 $= 2 \times$ row 1. Every column is a multiple of $(1, 2)$: column 2 $= \tfrac43 \times$ column 1.</p>
+        <p class="answer">Answer: $\begin{bmatrix} 3 & 4 \\ 6 & 8 \end{bmatrix}$, a "one column × one row" matrix (no inverse: $3 \times 8 - 4 \times 6 = 0$).</p>
+      </div>
+    </div>
+
+    <!-- E4 -->
+    <div class="worked">
+      <h3>Example 4: Is AB the same as BA?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ A = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}, \qquad B = \begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix} $$
+      </div>
+      <div class="steps">
+        <p><b>$AB$</b> (rows of $A$ mix rows of $B$): row 1 $= 1 \times (1, 0) + 1 \times (1, 1) = (2, 1)$; row 2 $= 0 \times (1, 0) + 1 \times (1, 1) = (1, 1)$.</p>
+        <p><b>$BA$</b> (rows of $B$ mix rows of $A$): row 1 $= 1 \times (1, 1) + 0 \times (0, 1) = (1, 1)$; row 2 $= 1 \times (1, 1) + 1 \times (0, 1) = (1, 2)$.</p>
+        $$ AB = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix} \ne BA = \begin{bmatrix} 1 & 1 \\ 1 & 2 \end{bmatrix} $$
+        <p class="answer">No. Order matters.</p>
+      </div>
+    </div>
+
+    <!-- E5 -->
+    <div class="worked">
+      <h3>Example 5: Show a matrix has no inverse</h3>
+      <div class="box example"><span class="label">Problem</span>
+        $$ A = \begin{bmatrix} 2 & 4 \\ 1 & 2 \end{bmatrix} $$
+      </div>
+      <div class="steps">
+        <p><b>Look at the columns.</b> Column 2 $= (4, 2) = 2 \times (2, 1) = 2 \times$ column 1. They lie on one line.</p>
+        <p><b>Find a nonzero $x$ with $Ax = 0$.</b> "2 of column 1 minus 1 of column 2" should cancel, so try $x = (2, -1)$:</p>
+        $$ 2\begin{bmatrix} 2 \\ 1 \end{bmatrix} - 1\begin{bmatrix} 4 \\ 2 \end{bmatrix} = \begin{bmatrix} 4 - 4 \\ 2 - 2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
+        <p><b>Quick check:</b> $ad - bc = 2 \times 2 - 4 \times 1 = 0$.</p>
+        <p class="answer">No inverse: $A(2, -1) = 0$ with $(2, -1) \ne 0$.</p>
+      </div>
+    </div>
+
+    <!-- E6 -->
+    <div class="worked">
+      <h3>Example 6: Gauss–Jordan</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Find the inverse of $A = \begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$.</p>
+      </div>
+      <div class="steps">
+        <p><b>Start with $[\,A \mid I\,]$:</b></p>
+        $$ \left[\begin{array}{cc|cc} 1 & 2 & 1 & 0 \\ 3 & 7 & 0 & 1 \end{array}\right] $$
+        <p><b>Down:</b> row 2 minus 3 × row 1:</p>
+        <table>
+          <tr><th></th><th colspan="2">left</th><th colspan="2">right</th></tr>
+          <tr><td>Row 2</td><td>$3$</td><td>$7$</td><td>$0$</td><td>$1$</td></tr>
+          <tr><td>minus 3 × row 1</td><td>$-3$</td><td>$-6$</td><td>$-3$</td><td>$0$</td></tr>
+          <tr><td><b>New row 2</b></td><td>$0$</td><td>$1$</td><td>$-3$</td><td>$1$</td></tr>
+        </table>
+        <p><b>Up:</b> row 1 minus 2 × row 2:</p>
+        <table>
+          <tr><th></th><th colspan="2">left</th><th colspan="2">right</th></tr>
+          <tr><td>Row 1</td><td>$1$</td><td>$2$</td><td>$1$</td><td>$0$</td></tr>
+          <tr><td>minus 2 × row 2</td><td>$0$</td><td>$-2$</td><td>$+6$</td><td>$-2$</td></tr>
+          <tr><td><b>New row 1</b></td><td>$1$</td><td>$0$</td><td>$7$</td><td>$-2$</td></tr>
+        </table>
+        $$ \left[\begin{array}{cc|cc} 1 & 0 & 7 & -2 \\ 0 & 1 & -3 & 1 \end{array}\right] $$
+        <p><b>Check $AA^{-1}$:</b> $(1 \times 7 + 2 \times (-3),\ 1 \times (-2) + 2 \times 1) = (1, 0)$ and $(3 \times 7 + 7 \times (-3),\ 3 \times (-2) + 7 \times 1) = (0, 1)$ ✓.</p>
+        <p class="answer">Answer: $A^{-1} = \begin{bmatrix} 7 & -2 \\ -3 & 1 \end{bmatrix}$</p>
+      </div>
+    </div>
+
+    <!-- E7 -->
+    <div class="worked">
+      <h3>Example 7: Solve with the inverse</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Use the inverse from Example 6 to solve $x_1 + 2x_2 = 4$, $\ 3x_1 + 7x_2 = 13$.</p>
+      </div>
+      <div class="steps">
+        $$ x = A^{-1}b = \begin{bmatrix} 7 & -2 \\ -3 & 1 \end{bmatrix}\begin{bmatrix} 4 \\ 13 \end{bmatrix} = \begin{bmatrix} 28 - 26 \\ -12 + 13 \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \end{bmatrix} $$
+        <p><b>Check:</b> $2 + 2 = 4$ ✓, $\ 6 + 7 = 13$ ✓.</p>
+        <p class="answer">Answer: $x_1 = 2$, $x_2 = 1$</p>
+      </div>
+    </div>
+
+    <!-- E8 -->
+    <div class="worked">
+      <h3>Example 8: Two traders, two scenarios (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Tomorrow the market goes <b>up</b> or <b>down</b>. What each asset pays:</p>
+        <table>
+          <tr><th>Asset</th><th>Pays if up</th><th>Pays if down</th></tr>
+          <tr><td>Bond</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td>Stock</td><td>$3$</td><td>$1$</td></tr>
+        </table>
+        <p>Trader A holds 2 bonds and 1 stock. Trader B holds 1 bond and 3 stocks. What does each trader receive in each scenario?</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>Each trader has a basket of tickets. In each scenario, a trader receives (how many of each ticket) × (what that ticket pays), added up. Doing this for every trader and every scenario at once is exactly a matrix product.</p>
+      </div>
+      <div class="steps">
+        <p><b>Set up.</b> Holdings $H$ (rows = traders, columns = assets) and payoffs $P$ (rows = assets, columns = scenarios):</p>
+        $$ H = \begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix} \begin{matrix} \leftarrow \text{A} \\ \leftarrow \text{B} \end{matrix}, \qquad P = \begin{bmatrix} 1 & 1 \\ 3 & 1 \end{bmatrix} \begin{matrix} \leftarrow \text{bond} \\ \leftarrow \text{stock} \end{matrix} $$
+        <p><b>Multiply by rows</b> (each trader's row mixes the asset rows of $P$):</p>
+        <table>
+          <tr><th>Trader</th><th>Mix</th><th>(up, down)</th></tr>
+          <tr><td>A</td><td>$2 \times (1, 1) + 1 \times (3, 1) = (2, 2) + (3, 1)$</td><td>$(5, 3)$</td></tr>
+          <tr><td>B</td><td>$1 \times (1, 1) + 3 \times (3, 1) = (1, 1) + (9, 3)$</td><td>$(10, 4)$</td></tr>
+        </table>
+        $$ HP = \begin{bmatrix} 5 & 3 \\ 10 & 4 \end{bmatrix} $$
+        <p class="answer">Trader A receives 5 (up) or 3 (down). Trader B receives 10 (up) or 4 (down).</p>
+      </div>
+    </div>
+
+    <!-- E9 -->
+    <div class="worked">
+      <h3>Example 9: One inverse, many options (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Same market. Today a bond costs $1$ and a stock costs $2$:</p>
+        <table>
+          <tr><th>Asset</th><th>Price today</th><th>Pays if up</th><th>Pays if down</th></tr>
+          <tr><td>Bond</td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td>Stock</td><td>$2$</td><td>$3$</td><td>$1$</td></tr>
+        </table>
+        <p>Price two options: (a) a <b>call</b> with strike 2, and (b) a <b>put</b> with strike 2.</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>To price any new ticket, build it from bonds and stocks, then add up their prices. Building it means solving $Mx = \text{payoff}$. If we compute $M^{-1}$ <b>once</b>, every new ticket takes just one multiplication.</p>
+      </div>
+      <div class="steps">
+        <p><b>Step 1. The asset matrix</b> (columns = bond, stock; rows = up, down) and its inverse with the 2 × 2 shortcut:</p>
+        $$ M = \begin{bmatrix} 1 & 3 \\ 1 & 1 \end{bmatrix}, \quad ad - bc = 1 - 3 = -2, \quad M^{-1} = \frac{1}{-2}\begin{bmatrix} 1 & -3 \\ -1 & 1 \end{bmatrix} = \begin{bmatrix} -0.5 & 1.5 \\ 0.5 & -0.5 \end{bmatrix} $$
+        <p><b>Step 2. What the options pay.</b> The stock is $3$ (up) or $1$ (down).</p>
+        <table>
+          <tr><th>Option</th><th>Up ($S = 3$)</th><th>Down ($S = 1$)</th><th>Payoff</th></tr>
+          <tr><td>Call, strike 2: $\max(S - 2, 0)$</td><td>$1$</td><td>$0$</td><td>$(1, 0)$</td></tr>
+          <tr><td>Put, strike 2: $\max(2 - S, 0)$</td><td>$0$</td><td>$1$</td><td>$(0, 1)$</td></tr>
+        </table>
+        <p><b>Step 3. Recipes</b> $x = M^{-1} \times$ payoff (bonds, stocks):</p>
+        <table>
+          <tr><th>Option</th><th>$M^{-1} \times$ payoff</th><th>Recipe</th><th>Check (up, down)</th></tr>
+          <tr><td>Call $(1, 0)$</td><td>$(-0.5,\ 0.5)$</td><td>borrow 0.5, buy 0.5 stock</td><td>$(-0.5 + 1.5,\ -0.5 + 0.5) = (1, 0)$ ✓</td></tr>
+          <tr><td>Put $(0, 1)$</td><td>$(1.5,\ -0.5)$</td><td>1.5 bonds, sell 0.5 stock</td><td>$(1.5 - 1.5,\ 1.5 - 0.5) = (0, 1)$ ✓</td></tr>
+        </table>
+        <p><b>Step 4. Prices</b> (bond $1$, stock $2$):</p>
+        <table>
+          <tr><th>Option</th><th>Cost of recipe</th><th>Price</th></tr>
+          <tr><td>Call</td><td>$-0.5 \times 1 + 0.5 \times 2$</td><td>$0.5$</td></tr>
+          <tr><td>Put</td><td>$1.5 \times 1 - 0.5 \times 2$</td><td>$0.5$</td></tr>
+        </table>
+        <p class="answer">Call = 0.5 and put = 0.5, both from the same $M^{-1}$.</p>
+      </div>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. Compute $\begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}\begin{bmatrix} 3 & 1 \\ 4 & 2 \end{bmatrix}$.</summary>
+      <p>Row 1: $1 \times (3, 1) + 0 \times (4, 2) = (3, 1)$. Row 2: $2 \times (3, 1) + 1 \times (4, 2) = (10, 4)$. Answer $\begin{bmatrix} 3 & 1 \\ 10 & 4 \end{bmatrix}$.</p>
+    </details>
+    <details class="proof"><summary>2. What size is $AB$ if $A$ is $3 \times 5$ and $B$ is $5 \times 2$?</summary>
+      <p>$3 \times 2$ (outside numbers).</p>
+    </details>
+    <details class="proof"><summary>3. Compute $\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}\begin{bmatrix} 2 & 5 \end{bmatrix}$.</summary>
+      <p>$\begin{bmatrix} 2 & 5 \\ 2 & 5 \\ 2 & 5 \end{bmatrix}$: every row is $(2, 5)$.</p>
+    </details>
+    <details class="proof"><summary>4. Does $\begin{bmatrix} 3 & 6 \\ 1 & 2 \end{bmatrix}$ have an inverse? Give a reason.</summary>
+      <p>No. Column 2 $= 2 \times$ column 1, so $x = (2, -1)$ gives $Ax = (6 - 6, 2 - 2) = 0$. Also $3 \times 2 - 6 \times 1 = 0$.</p>
+    </details>
+    <details class="proof"><summary>5. Find the inverse of $\begin{bmatrix} 1 & 1 \\ 2 & 3 \end{bmatrix}$ by Gauss–Jordan.</summary>
+      <p>Row 2 − 2 × row 1: $[0\ 1 \mid -2\ 1]$. Row 1 − row 2: $[1\ 0 \mid 3\ {-1}]$. So $A^{-1} = \begin{bmatrix} 3 & -1 \\ -2 & 1 \end{bmatrix}$. Check: $(1)(3) + (1)(-2) = 1$, $(1)(-1) + (1)(1) = 0$ ✓.</p>
+    </details>
+    <details class="proof"><summary>6. Use the 2 × 2 shortcut to invert $\begin{bmatrix} 4 & 3 \\ 1 & 1 \end{bmatrix}$.</summary>
+      <p>$ad - bc = 4 - 3 = 1$. Swap $4$ and $1$, flip signs of $3$ and $1$: $\begin{bmatrix} 1 & -3 \\ -1 & 4 \end{bmatrix}$.</p>
+    </details>
+
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="03_elimination-with-matrices.html">← 03 Elimination with Matrices</a>
+    <a href="05_factorization-into-a-lu.html">Next: 05 Factorization into A = LU →</a>
+  </nav>
+  </div>
+</main>
+</body>
+</html>

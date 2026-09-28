@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transposes and Vector Spaces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>Transposes, Permutations, Vector Spaces</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 06</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 06</p>
+  <h1>Transposes, Permutations, Vector Spaces</h1>
+  <p class="subtitle">Finishing elimination (PA = LU), symmetric matrices, and the start of "real" linear algebra: spaces of vectors.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s1">The lecture in five questions</a></li>
+        <li><a href="#s2">Row swaps: PA = LU</a></li>
+        <li><a href="#s3">Transpose, symmetric matrices</a></li>
+        <li><a href="#s4">RᵀR is always symmetric</a></li>
+        <li><a href="#s5">Vector spaces</a></li>
+        <li><a href="#s6">Subspaces</a></li>
+        <li><a href="#s7">The column space</a></li>
+        <li><a href="#s8">Summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. The lecture in five questions</h2>
+    <table>
+      <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
+      <tr><td>1</td><td>What if elimination needs row swaps?</td><td>Swap first, then factor: <b>$PA = LU$</b>.</td></tr>
+      <tr><td>2</td><td>What is a symmetric matrix?</td><td>One that stays the same when transposed: $A^T = A$.</td></tr>
+      <tr><td>3</td><td>Where do symmetric matrices come from?</td><td>$R^TR$ is <b>always</b> symmetric, for any $R$.</td></tr>
+      <tr><td>4</td><td>What is a vector space?</td><td>A collection of vectors you <b>cannot escape</b> by adding or multiplying by numbers.</td></tr>
+      <tr><td>5</td><td>What is the column space?</td><td>All mixes of a matrix's columns. It is a subspace.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">2. Row swaps: PA = LU</h2>
+    <p>Lecture 05 gave $A = LU$ when <b>no</b> row swaps are needed. If a $0$ lands in a pivot spot, we must swap rows. The fix: do all the swaps <b>first</b> (with a permutation matrix $P$), then factor as usual.</p>
+    <div class="box theorem"><span class="label">Elimination with row swaps</span>
+      $$ PA = LU $$
+      <p>$P$ puts the rows of $A$ in a good order. Then elimination runs with no trouble, and $L$ and $U$ come out exactly as in Lecture 05. Every invertible $A$ can be written this way. (Most need no swaps, so $P = I$.)</p>
+    </div>
+
+    <div class="box example"><span class="label">Example: one swap, then LU</span>
+      $$ A = \begin{bmatrix} 0 & 1 & 1 \\ 1 & 2 & 1 \\ 2 & 7 & 9 \end{bmatrix} $$
+      <p><b>Problem:</b> the first pivot spot holds $0$. Row 2 has a $1$ there, so swap rows 1 and 2:</p>
+      $$ P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad PA = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 2 & 7 & 9 \end{bmatrix} $$
+      <p><b>Now eliminate $PA$</b> (Part 1 of Lecture 05: find $U$, write down the multipliers):</p>
+      <table>
+        <tr><th>Step</th><th>Work</th><th>Multiplier</th></tr>
+        <tr><td>(row 2, col 1)</td><td>already $0$</td><td>$0$</td></tr>
+        <tr><td>(row 3, col 1): row 3 − 2 × row 1</td><td>$(2, 7, 9) - (2, 4, 2) = (0, 3, 7)$</td><td>$2$</td></tr>
+        <tr><td>(row 3, col 2): row 3 − 3 × row 2</td><td>$(0, 3, 7) - (0, 3, 3) = (0, 0, 4)$</td><td>$3$</td></tr>
+      </table>
+      $$ L = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 2 & 3 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 4 \end{bmatrix} $$
+      <p><b>Check row 3 of $LU$:</b> $2 \times (1, 2, 1) + 3 \times (0, 1, 1) + 1 \times (0, 0, 4) = (2,\ 4 + 3,\ 2 + 3 + 4) = (2, 7, 9)$ ✓, row 3 of $PA$.</p>
+    </div>
+
+    <div class="box intuition"><span class="label">Real computers swap even more</span>
+      <p>MATLAB and Python don't only swap when a pivot is exactly $0$. They also swap when a pivot is <b>very small</b>, because dividing by tiny numbers causes big rounding errors. So in practice $P$ is often not $I$. The algebra is the same.</p>
+    </div>
+
+    <h3>Permutation matrices: a quick recap</h3>
+    <table>
+      <tr><th>Fact</th><th>Meaning</th></tr>
+      <tr><td>$P$ = rows of $I$ reordered</td><td>Swap the rows of $I$ the way you want to swap the rows of $A$.</td></tr>
+      <tr><td>There are $n!$ of them</td><td>$3! = 6$, $\ 4! = 24$, $\ 5! = 120$.</td></tr>
+      <tr><td>$P^{-1} = P^T$</td><td>Equivalently $P^TP = I$: transposing a permutation undoes it.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">3. Transpose, symmetric matrices</h2>
+    <div class="box definition"><span class="label">Definition: Transpose</span>
+      <p>Flip the matrix across its main diagonal: <b>rows become columns</b>. The entry in row $i$, column $j$ of $A^T$ is the entry in row $j$, column $i$ of $A$:</p>
+      $$ (A^T)_{ij} = A_{ji} $$
+    </div>
+    $$
+    R = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix} \ (3 \times 2)
+    \quad\Longrightarrow\quad
+    R^T = \begin{bmatrix} 1 & 2 & 4 \\ 3 & 3 & 1 \end{bmatrix} \ (2 \times 3)
+    $$
+    <p>Column 1 of $R$, $(1, 2, 4)$, became row 1 of $R^T$. A tall matrix lies down on its side.</p>
+
+    <div class="box definition"><span class="label">Definition: Symmetric</span>
+      <p>A matrix is <b>symmetric</b> if transposing does not change it: $A^T = A$. The entry at (row $i$, col $j$) equals the entry at (row $j$, col $i$). It is a mirror image across the diagonal.</p>
+      $$ S = \begin{bmatrix} 3 & \color{#2e7d4f}{1} & \color{#2f5d8a}{7} \\ \color{#2e7d4f}{1} & 2 & \color{#b42318}{9} \\ \color{#2f5d8a}{7} & \color{#b42318}{9} & 4 \end{bmatrix} $$
+      <p>Matching colours are mirror pairs. The diagonal ($3, 2, 4$) can be anything.</p>
+    </div>
+    <table>
+      <tr><th>Matrix</th><th>$A^T$ gives</th><th>Special property</th></tr>
+      <tr><td>Symmetric</td><td>the <b>same</b> matrix</td><td>$A^T = A$ (easy to spot: mirror across the diagonal)</td></tr>
+      <tr><td>Permutation</td><td>the <b>inverse</b></td><td>$P^T = P^{-1}$</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s4">4. RᵀR is always symmetric</h2>
+    <p>$R$ above is rectangular and nowhere near symmetric. But multiply it by its transpose:</p>
+    $$ R^TR = \begin{bmatrix} 1 & 2 & 4 \\ 3 & 3 & 1 \end{bmatrix}\begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix} $$
+    <p>Each entry is (row of $R^T$) · (column of $R$), which is (column of $R$) · (column of $R$):</p>
+    <table>
+      <tr><th>Entry</th><th>Which columns of $R$</th><th>Work</th><th>Value</th></tr>
+      <tr><td>(1, 1)</td><td>col 1 · col 1</td><td>$1 \cdot 1 + 2 \cdot 2 + 4 \cdot 4$</td><td>$21$</td></tr>
+      <tr><td>(1, 2)</td><td>col 1 · col 2</td><td>$1 \cdot 3 + 2 \cdot 3 + 4 \cdot 1$</td><td>$13$</td></tr>
+      <tr><td>(2, 1)</td><td>col 2 · col 1</td><td>$3 \cdot 1 + 3 \cdot 2 + 1 \cdot 4$</td><td>$13$</td></tr>
+      <tr><td>(2, 2)</td><td>col 2 · col 2</td><td>$3 \cdot 3 + 3 \cdot 3 + 1 \cdot 1$</td><td>$19$</td></tr>
+    </table>
+    $$ R^TR = \begin{bmatrix} 21 & \color{#2e7d4f}{13} \\ \color{#2e7d4f}{13} & 19 \end{bmatrix} \quad \text{symmetric ✓} $$
+    <p>The two 13s match because (col 1 · col 2) and (col 2 · col 1) are the same dot product, just in the other order.</p>
+
+    <div class="box theorem"><span class="label">Proof in two lines</span>
+      <p>Transpose $R^TR$ and use the "reverse the order" rule:</p>
+      $$ (R^TR)^T = R^T\,(R^T)^T = R^T R $$
+      <p>Transposing twice gives back $R$. So $R^TR$ equals its own transpose: it is symmetric.</p>
+    </div>
+    <p>The same goes for $RR^T$ (here $3 \times 3$): $\begin{bmatrix} 10 & 11 & 7 \\ 11 & 13 & 11 \\ 7 & 11 & 17 \end{bmatrix}$, also a mirror image.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s5">5. Vector spaces</h2>
+    <p>Now the big step: from single vectors to <b>spaces</b> of vectors.</p>
+    <div class="box definition"><span class="label">Definition: Vector space</span>
+      <p>A <b>vector space</b> is a collection of vectors where you can always:</p>
+      <ol>
+        <li><b>add</b> any two of them, and</li>
+        <li><b>multiply</b> any of them by any number,</li>
+      </ol>
+      <p>and the answer is <b>still in the collection</b>. In short: you cannot escape it by taking linear combinations. (There are also 8 simple rules, like $v + w = w + v$, which normal vectors always follow.)</p>
+    </div>
+
+    <h3>The main examples</h3>
+    <table>
+      <tr><th>Space</th><th>Contains</th><th>Picture</th><th>Example vectors</th></tr>
+      <tr><td>$\mathbb{R}^2$</td><td>all vectors with 2 real components</td><td>the whole flat $xy$-plane</td><td>$(3, 2)$, $(0, 0)$, $(\pi, e)$</td></tr>
+      <tr><td>$\mathbb{R}^3$</td><td>all vectors with 3 real components</td><td>all of 3D space</td><td>$(3, 2, 0)$</td></tr>
+      <tr><td>$\mathbb{R}^n$</td><td>all vectors with $n$ real components</td><td>$n$-dimensional space</td><td>$(v_1, \dots, v_n)$</td></tr>
+    </table>
+    <div class="box pitfall"><span class="label">Watch out</span>
+      <p>$(3, 2, 0)$ is in $\mathbb{R}^3$, not $\mathbb{R}^2$. It has <b>three</b> components; one just happens to be $0$.</p>
+    </div>
+
+    <div class="box theorem"><span class="label">Every vector space contains zero</span>
+      <p>Take any vector $v$ in the space. Multiplying by $0$ is allowed, so $0 \times v = 0$ must be in the space. (Or add $v$ and $-v$.) A space with the origin removed is <b>not</b> a vector space.</p>
+    </div>
+
+    <h3>Something that is NOT a vector space</h3>
+    <p>Take only the top-right quarter of the plane: vectors with both components $\ge 0$.</p>
+    <table>
+      <tr><th>Test</th><th>Example</th><th>Stays inside?</th></tr>
+      <tr><td>Add two of them</td><td>$(3, 2) + (5, 6) = (8, 8)$</td><td>yes ✓</td></tr>
+      <tr><td>Multiply by a number</td><td>$-5 \times (3, 2) = (-15, -10)$</td><td><b>no</b> ✗ (it lands in the bottom-left)</td></tr>
+    </table>
+    <p>Multiplying by a negative number escapes, so the quarter plane is <b>not closed</b> and not a vector space.</p>
+
+    <figure class="fig" style="max-width:360px;margin:20px auto">
+      <svg viewBox="0 0 300 260" role="img" aria-label="Quarter plane is not a vector space">
+        <defs><marker id="l6m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--def-b)"/></marker>
+        <marker id="l6m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--warn-b)"/></marker></defs>
+        <rect x="150" y="10" width="140" height="120" style="fill:var(--ex-bg);stroke:none"/>
+        <line class="axis" x1="10" y1="130" x2="290" y2="130"/>
+        <line class="axis" x1="150" y1="10" x2="150" y2="250"/>
+        <text class="lbl c2" x="200" y="30">quarter plane</text>
+        <line class="l1" x1="150" y1="130" x2="207" y2="93" marker-end="url(#l6m1)"/>
+        <text class="lbl c1" x="212" y="92">(3, 2)</text>
+        <line class="l3" x1="150" y1="130" x2="40" y2="203" marker-end="url(#l6m3)"/>
+        <text class="lbl c3" x="20" y="226">−5 × (3, 2) escapes ✗</text>
+      </svg>
+      <figcaption>Adding stays inside the green quarter, but multiplying by $-5$ jumps out. Not a vector space.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">6. Subspaces</h2>
+    <div class="box definition"><span class="label">Definition: Subspace</span>
+      <p>A <b>subspace</b> is a vector space that sits <b>inside</b> a bigger one. It must pass the same test: adding or multiplying by any number never leads outside it.</p>
+    </div>
+
+    <h3>A line through the origin is a subspace</h3>
+    <p>Put one vector $v$ in. Then all its multiples ($2v$, $\tfrac12 v$, $-v$, $0v$, …) must come in too. That fills a whole <b>line</b> through the origin. Adding two points on that line stays on the line ✓.</p>
+    <p>A line that <b>misses the origin</b> is <b>not</b> a subspace: $0 \times v = 0$ would be off the line.</p>
+
+    <figure class="fig" style="max-width:360px;margin:20px auto">
+      <svg viewBox="0 0 300 240" role="img" aria-label="A line through the origin is a subspace; a shifted line is not">
+        <line class="axis" x1="10" y1="140" x2="290" y2="140"/>
+        <line class="axis" x1="140" y1="10" x2="140" y2="230"/>
+        <line class="l2" x1="40" y1="215" x2="260" y2="50"/>
+        <text class="lbl c2" x="175" y="205">through 0: subspace ✓</text>
+        <line class="l3 dash" x1="20" y1="165" x2="220" y2="15"/>
+        <text class="lbl c3" x="14" y="30">misses 0: not ✗</text>
+        <circle class="pt" cx="140" cy="140" r="4"/>
+      </svg>
+      <figcaption>Every subspace must go through the origin.</figcaption>
+    </figure>
+
+    <h3>All subspaces of R² and R³</h3>
+    <table>
+      <tr><th>Subspaces of $\mathbb{R}^2$</th><th>Subspaces of $\mathbb{R}^3$</th></tr>
+      <tr><td>all of $\mathbb{R}^2$</td><td>all of $\mathbb{R}^3$</td></tr>
+      <tr><td>any line through the origin</td><td>any plane through the origin</td></tr>
+      <tr><td>just the zero vector $\{0\}$</td><td>any line through the origin</td></tr>
+      <tr><td></td><td>just the zero vector $\{0\}$</td></tr>
+    </table>
+    <ul>
+      <li><b>The zero vector alone</b> is a subspace: $0 + 0 = 0$ and $17 \times 0 = 0$, so you never leave it.</li>
+      <li><b>A line in $\mathbb{R}^2$ is not $\mathbb{R}^1$.</b> It looks like a line, but its vectors have 2 components.</li>
+    </ul>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">7. The column space</h2>
+    <p>The most important way to get a subspace out of a matrix: take its columns and <b>all their combinations</b>.</p>
+    $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix}, \qquad \text{column 1} = \begin{bmatrix} 1 \\ 2 \\ 4 \end{bmatrix}, \quad \text{column 2} = \begin{bmatrix} 3 \\ 3 \\ 1 \end{bmatrix} $$
+    <div class="box definition"><span class="label">Definition: Column space C(A)</span>
+      <p>The <b>column space</b> of $A$, written $C(A)$, is the set of <b>all linear combinations of the columns</b> of $A$:</p>
+      $$ C(A) = \{\, x_1(\text{col } 1) + x_2(\text{col } 2) \ :\ \text{any numbers } x_1, x_2 \,\} $$
+      <p>It is automatically a subspace, because a mix of mixes is still a mix.</p>
+    </div>
+
+    <h3>Some vectors in C(A)</h3>
+    <table>
+      <tr><th>$x_1$</th><th>$x_2$</th><th>$x_1(1, 2, 4) + x_2(3, 3, 1)$</th></tr>
+      <tr><td>$1$</td><td>$0$</td><td>$(1, 2, 4)$</td></tr>
+      <tr><td>$0$</td><td>$1$</td><td>$(3, 3, 1)$</td></tr>
+      <tr><td>$1$</td><td>$1$</td><td>$(4, 5, 5)$</td></tr>
+      <tr><td>$0$</td><td>$0$</td><td>$(0, 0, 0)$</td></tr>
+      <tr><td>$2$</td><td>$-1$</td><td>$(2 - 3,\ 4 - 3,\ 8 - 1) = (-1, 1, 7)$</td></tr>
+    </table>
+
+    <h3>What shape is it?</h3>
+    <p>The two columns point in <b>different directions</b> (neither is a multiple of the other). All their combinations fill a <b>plane through the origin</b> inside $\mathbb{R}^3$. It is not all of $\mathbb{R}^3$: two vectors can only make a flat sheet.</p>
+
+    <figure class="fig plot3d">
+      <div id="l6plot" class="plot3d-box" role="img" aria-label="The column space: a plane through the origin"></div>
+      <figcaption>The column space of $A$ (purple): the plane made by column 1 (blue) and column 2 (green). $(4, 5, 5)$ = col 1 + col 2 lies on it ✓. The point $(1, 0, 0)$ (red) is <b>off</b> the plane, so $Ax = (1, 0, 0)$ has no solution (Example 6). <b>Drag to rotate.</b></figcaption>
+    </figure>
+
+    <div class="box theorem"><span class="label">Why the column space matters</span>
+      <p>$Ax$ is always a mix of the columns of $A$. So</p>
+      $$ Ax = b \text{ has a solution} \iff b \text{ is in the column space } C(A). $$
+      <p>This links solving equations to the geometry of subspaces. It is the starting point of the next lecture.</p>
+    </div>
+
+    <table>
+      <tr><th>If the columns…</th><th>their column space is</th></tr>
+      <tr><td>point in different directions (2 columns in $\mathbb{R}^3$)</td><td>a plane</td></tr>
+      <tr><td>lie on the same line</td><td>only a line</td></tr>
+      <tr><td>are 3 independent columns in $\mathbb{R}^3$</td><td>all of $\mathbb{R}^3$</td></tr>
+    </table>
+    <p>Bigger example: 5 vectors with 10 components each give a subspace of $\mathbb{R}^{10}$. It is at most 5-dimensional (less if some vectors are mixes of others), and never $\mathbb{R}^5$, because the vectors have 10 components.</p>
+
+    <!-- ====================================================== -->
+    <div class="box finance"><span class="label">In finance</span>
+      <ul>
+        <li><b>Symmetric matrices everywhere:</b> put daily returns in a matrix $R$ (rows = days, columns = assets). Then $R^TR$ is symmetric. Its diagonal measures how much each asset moves; its off-diagonal measures how two assets move together. This is the idea behind the <b>covariance matrix</b> (Example 7).</li>
+        <li><b>Column space = what you can build:</b> the columns of a payoff matrix are the assets. Every payoff you can create by buying them is in the column space. If a payoff is outside it, you cannot replicate it: the market is <b>incomplete</b> (Example 8).</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">8. Summary</h2>
+    <table>
+      <tr><th>Idea</th><th>In one line</th></tr>
+      <tr><td>$PA = LU$</td><td>With row swaps: reorder rows with $P$ first, then $L$ and $U$ as usual.</td></tr>
+      <tr><td>Permutations</td><td>Rows of $I$ reordered; $n!$ of them; $P^{-1} = P^T$.</td></tr>
+      <tr><td>Transpose</td><td>Rows ↔ columns: $(A^T)_{ij} = A_{ji}$.</td></tr>
+      <tr><td>Symmetric</td><td>$A^T = A$: mirror image across the diagonal.</td></tr>
+      <tr><td>$R^TR$</td><td>Always symmetric, for any rectangular $R$.</td></tr>
+      <tr><td>Vector space</td><td>Closed under adding and multiplying by numbers; always contains $0$.</td></tr>
+      <tr><td>Subspace</td><td>A vector space inside a bigger one: a line or plane through $0$, $\{0\}$, or the whole space.</td></tr>
+      <tr><td>Column space $C(A)$</td><td>All combinations of the columns. $Ax = b$ is solvable exactly when $b$ is in $C(A)$.</td></tr>
+    </table>
+  </div>
+  </section>
+
+  <!-- ================= EXAMPLES ================= -->
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+
+    <h2>Worked examples</h2>
+
+    <!-- E1 -->
+    <div class="worked">
+      <h3>Example 1: PA = LU with a 2 × 2</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Factor $A = \begin{bmatrix} 0 & 2 \\ 3 & 4 \end{bmatrix}$ as $PA = LU$.</p>
+      </div>
+      <div class="steps">
+        <p><b>Problem:</b> the first pivot spot is $0$. Row 2 has a $3$ there, so swap the rows:</p>
+        $$ P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad PA = \begin{bmatrix} 3 & 4 \\ 0 & 2 \end{bmatrix} $$
+        <p><b>Eliminate $PA$:</b> it is already a staircase (the spot below the pivot is $0$), so the multiplier is $0$.</p>
+        $$ L = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 3 & 4 \\ 0 & 2 \end{bmatrix} $$
+        <p class="answer">$PA = LU$ with $L = I$ and $U = PA$.</p>
+      </div>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 2: Transpose</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Find the transpose of $A = \begin{bmatrix} 1 & 0 & 5 \\ 2 & 7 & 3 \end{bmatrix}$. What is the entry in row 3, column 2 of $A^T$?</p>
+      </div>
+      <div class="steps">
+        <p><b>Rows become columns:</b> row 1 $(1, 0, 5)$ becomes column 1; row 2 $(2, 7, 3)$ becomes column 2.</p>
+        $$ A^T = \begin{bmatrix} 1 & 2 \\ 0 & 7 \\ 5 & 3 \end{bmatrix} \quad (2 \times 3 \to 3 \times 2) $$
+        <p><b>Entry (3, 2) of $A^T$</b> $=$ entry (2, 3) of $A = 3$ ✓.</p>
+        <p class="answer">$A^T$ as above; $(A^T)_{32} = 3$.</p>
+      </div>
+    </div>
+
+    <!-- E3 -->
+    <div class="worked">
+      <h3>Example 3: Symmetric or not?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Which are symmetric? (a) $\begin{bmatrix} 2 & 5 \\ 5 & 1 \end{bmatrix}$ &nbsp; (b) $\begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix}$ &nbsp; (c) $\begin{bmatrix} 4 & 0 & 6 \\ 0 & 1 & 2 \\ 6 & 2 & 9 \end{bmatrix}$</p>
+      </div>
+      <div class="steps">
+        <p><b>Test:</b> compare each entry above the diagonal with its mirror below.</p>
+        <table>
+          <tr><th>Matrix</th><th>Mirror pairs</th><th>Symmetric?</th></tr>
+          <tr><td>(a)</td><td>$5$ and $5$</td><td>yes</td></tr>
+          <tr><td>(b)</td><td>$2$ and $3$</td><td>no</td></tr>
+          <tr><td>(c)</td><td>$0 = 0$, $\ 6 = 6$, $\ 2 = 2$</td><td>yes</td></tr>
+        </table>
+        <p class="answer">(a) and (c) are symmetric.</p>
+      </div>
+    </div>
+
+    <!-- E4 -->
+    <div class="worked">
+      <h3>Example 4: Compute RᵀR</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>For $R = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 1 & 0 \end{bmatrix}$, compute $R^TR$ and check it is symmetric.</p>
+      </div>
+      <div class="steps">
+        <p>Columns of $R$: col 1 $= (1, 0, 1)$, col 2 $= (2, 1, 0)$. Each entry is a dot product of two columns:</p>
+        <table>
+          <tr><th>Entry</th><th>Work</th><th>Value</th></tr>
+          <tr><td>(1, 1) col 1 · col 1</td><td>$1 + 0 + 1$</td><td>$2$</td></tr>
+          <tr><td>(1, 2) col 1 · col 2</td><td>$2 + 0 + 0$</td><td>$2$</td></tr>
+          <tr><td>(2, 1) col 2 · col 1</td><td>$2 + 0 + 0$</td><td>$2$</td></tr>
+          <tr><td>(2, 2) col 2 · col 2</td><td>$4 + 1 + 0$</td><td>$5$</td></tr>
+        </table>
+        <p class="answer">$R^TR = \begin{bmatrix} 2 & 2 \\ 2 & 5 \end{bmatrix}$, symmetric ✓</p>
+      </div>
+    </div>
+
+    <!-- E5 -->
+    <div class="worked">
+      <h3>Example 5: Subspace or not?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Which are subspaces of $\mathbb{R}^2$? (a) the line $y = 3x$ &nbsp; (b) the line $y = 3x + 1$ &nbsp; (c) the quarter plane $x \ge 0, y \ge 0$ &nbsp; (d) just $(0, 0)$</p>
+      </div>
+      <div class="steps">
+        <table>
+          <tr><th></th><th>Contains $(0, 0)$?</th><th>Adding and multiplying stay inside?</th><th>Subspace?</th></tr>
+          <tr><td>(a)</td><td>yes</td><td>yes: multiples/sums of points with $y = 3x$ still have $y = 3x$</td><td><b>yes</b></td></tr>
+          <tr><td>(b)</td><td>no ($0 \ne 1$)</td><td>—</td><td><b>no</b></td></tr>
+          <tr><td>(c)</td><td>yes</td><td>no: $-1 \times (1, 1) = (-1, -1)$ escapes</td><td><b>no</b></td></tr>
+          <tr><td>(d)</td><td>yes</td><td>yes: $0 + 0 = 0$, $c \times 0 = 0$</td><td><b>yes</b></td></tr>
+        </table>
+        <p class="answer">(a) and (d) are subspaces.</p>
+      </div>
+    </div>
+
+    <!-- E6 -->
+    <div class="worked">
+      <h3>Example 6: Is b in the column space?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>$A = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix}$. Is (a) $b = (4, 5, 5)$ and (b) $b = (1, 0, 0)$ in $C(A)$?</p>
+      </div>
+      <div class="steps">
+        <p><b>Question:</b> can we find $x_1, x_2$ with $x_1(1, 2, 4) + x_2(3, 3, 1) = b$? That is three equations:</p>
+        $$ x_1 + 3x_2 = b_1, \qquad 2x_1 + 3x_2 = b_2, \qquad 4x_1 + x_2 = b_3 $$
+        <p>Use the first two to find $x_1, x_2$, then <b>check</b> the third.</p>
+
+        <h4>(a) $b = (4, 5, 5)$</h4>
+        <table>
+          <tr><th>Step</th><th>Work</th><th>Result</th></tr>
+          <tr><td>eq 2 − eq 1</td><td>$(2x_1 + 3x_2) - (x_1 + 3x_2) = 5 - 4$</td><td>$x_1 = 1$</td></tr>
+          <tr><td>eq 1</td><td>$1 + 3x_2 = 4$</td><td>$x_2 = 1$</td></tr>
+          <tr><td>check eq 3</td><td>$4(1) + 1 = 5$</td><td>$5 = 5$ ✓</td></tr>
+        </table>
+        <p class="answer">(a) Yes: $b$ = col 1 + col 2.</p>
+
+        <h4>(b) $b = (1, 0, 0)$</h4>
+        <table>
+          <tr><th>Step</th><th>Work</th><th>Result</th></tr>
+          <tr><td>eq 2 − eq 1</td><td>$x_1 = 0 - 1$</td><td>$x_1 = -1$</td></tr>
+          <tr><td>eq 1</td><td>$-1 + 3x_2 = 1 \Rightarrow 3x_2 = 2$</td><td>$x_2 = \tfrac23$</td></tr>
+          <tr><td>check eq 3</td><td>$4(-1) + \tfrac23 = -\tfrac{10}{3}$</td><td>$-\tfrac{10}{3} \ne 0$ ✗</td></tr>
+        </table>
+        <p class="answer">(b) No: $(1, 0, 0)$ is off the plane, so $Ax = (1, 0, 0)$ has no solution.</p>
+      </div>
+    </div>
+
+    <!-- E7 -->
+    <div class="worked">
+      <h3>Example 7: Returns matrix → a symmetric "co-movement" matrix (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Two stocks, three days. Daily returns (in %):</p>
+        <table>
+          <tr><th>Day</th><th>Stock A</th><th>Stock B</th></tr>
+          <tr><td>1</td><td>$1$</td><td>$2$</td></tr>
+          <tr><td>2</td><td>$0$</td><td>$1$</td></tr>
+          <tr><td>3</td><td>$1$</td><td>$0$</td></tr>
+        </table>
+        <p>Put them in $R$ (rows = days, columns = stocks) and compute $R^TR$. What do its entries mean?</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>Each stock's column is its "diary" of daily moves. Dotting a diary with itself measures <b>how much that stock moves</b>. Dotting two different diaries measures <b>how much they move together</b>. Stock A with B and B with A give the same answer, so the table is a mirror image.</p>
+      </div>
+      <div class="steps">
+        <p>$R = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 1 & 0 \end{bmatrix}$, the same as Example 4, so</p>
+        $$ R^TR = \begin{bmatrix} 2 & 2 \\ 2 & 5 \end{bmatrix} $$
+        <table>
+          <tr><th>Entry</th><th>Work</th><th>Meaning</th></tr>
+          <tr><td>(A, A) $= 2$</td><td>$1^2 + 0^2 + 1^2$</td><td>how much A moves</td></tr>
+          <tr><td>(B, B) $= 5$</td><td>$2^2 + 1^2 + 0^2$</td><td>how much B moves (more than A)</td></tr>
+          <tr><td>(A, B) $=$ (B, A) $= 2$</td><td>$1 \cdot 2 + 0 \cdot 1 + 1 \cdot 0$</td><td>how much they move together</td></tr>
+        </table>
+        <p class="answer">$R^TR$ is symmetric. With averages subtracted and scaled, this becomes the covariance matrix used in portfolio risk.</p>
+      </div>
+    </div>
+
+    <!-- E8 -->
+    <div class="worked">
+      <h3>Example 8: Can the market build this payoff? (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Tomorrow the stock ends at <b>1</b> (low), <b>2</b> (middle) or <b>3</b> (high). Only two assets exist:</p>
+        <table>
+          <tr><th>Asset</th><th>Pays if low</th><th>Pays if middle</th><th>Pays if high</th></tr>
+          <tr><td>Bond</td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td>Stock</td><td>$1$</td><td>$2$</td><td>$3$</td></tr>
+        </table>
+        <p>Can you build (a) the payoff $(3, 5, 7)$, and (b) a call option with strike 2, paying $(0, 0, 1)$?</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>Two kinds of ticket, three kinds of weather. Mixing two tickets can only reach a flat sheet (a plane) of payoffs inside 3D. Some payoffs are on the sheet, some are not.</p>
+      </div>
+      <div class="steps">
+        <p><b>Question:</b> is the payoff in the column space of $\begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix}$? Solve $x(1, 1, 1) + y(1, 2, 3) =$ payoff, using the first two rows, then check the third.</p>
+        <h4>(a) $(3, 5, 7)$</h4>
+        <p>Middle − low: $y = 5 - 3 = 2$. Low: $x + 2 = 3$, so $x = 1$. Check high: $1 + 3(2) = 7$ ✓.</p>
+        <p class="answer">(a) Yes: 1 bond + 2 stocks.</p>
+        <h4>(b) Call $(0, 0, 1)$</h4>
+        <p>Middle − low: $y = 0$. Low: $x + 0 = 0$, so $x = 0$. Check high: $0 + 0 = 0 \ne 1$ ✗.</p>
+        <p class="answer">(b) No: the call is outside the column space. This market is <b>incomplete</b>; you would need a third asset to build it.</p>
+      </div>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. Transpose $\begin{bmatrix} 2 & 4 \\ 6 & 8 \\ 1 & 3 \end{bmatrix}$.</summary>
+      <p>$\begin{bmatrix} 2 & 6 & 1 \\ 4 & 8 & 3 \end{bmatrix}$.</p>
+    </details>
+    <details class="proof"><summary>2. Fill in to make it symmetric: $\begin{bmatrix} 1 & 4 & ? \\ ? & 2 & 5 \\ 8 & ? & 3 \end{bmatrix}$.</summary>
+      <p>Mirror pairs: (1,3) = 8, (2,1) = 4, (3,2) = 5. $\begin{bmatrix} 1 & 4 & 8 \\ 4 & 2 & 5 \\ 8 & 5 & 3 \end{bmatrix}$.</p>
+    </details>
+    <details class="proof"><summary>3. Is the set of vectors $(x, y)$ with $x + y = 0$ a subspace of $\mathbb{R}^2$?</summary>
+      <p>Yes. It is the line $y = -x$ through the origin; sums and multiples keep $x + y = 0$.</p>
+    </details>
+    <details class="proof"><summary>4. Is the set of vectors $(x, y)$ with $x + y = 2$ a subspace?</summary>
+      <p>No. $(0, 0)$ is not in it ($0 \ne 2$).</p>
+    </details>
+    <details class="proof"><summary>5. What is the column space of $\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$?</summary>
+      <p>Column 2 $= 2 \times$ column 1, so all combinations are multiples of $(1, 2)$: the line through $(1, 2)$.</p>
+    </details>
+    <details class="proof"><summary>6. Is $(2, 4, 6)$ in the column space of the market in Example 8?</summary>
+      <p>Middle − low: $y = 2$. Low: $x + 2 = 2$, so $x = 0$. High: $0 + 6 = 6$ ✓. Yes: 2 stocks.</p>
+    </details>
+
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="05_factorization-into-a-lu.html">← 05 Factorization into A = LU</a>
+    <span class="off">Next: Column Space and Nullspace</span>
+  </nav>
+  </div>
+</main>
+
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script>
+// 3D figure for section 7: the column space of A is a plane through the origin.
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var blue = c("--def-b"), green = c("--ex-b"), red = c("--warn-b"), purple = c("--thm-b"),
+      ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+
+  // Fixed range + fixed ticks, so the numbers never jump while rotating or zooming.
+  function axis(t, lo, hi) {
+    return { title: { text: t, font: { size: 15, color: ink } }, range: [lo, hi], autorange: false,
+      tickmode: "linear", tick0: 0, dtick: 2, tickfont: { size: 12, color: soft },
+      gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 3,
+      showbackground: true, backgroundcolor: paper2, showspikes: false, linecolor: soft, showline: true };
+  }
+  function scene(xr, yr, zr, eye) {
+    var span = function (r) { return r[1] - r[0]; }, m = Math.max(span(xr), span(yr), span(zr));
+    return { xaxis: axis("x", xr[0], xr[1]), yaxis: axis("y", yr[0], yr[1]), zaxis: axis("z", zr[0], zr[1]),
+      aspectmode: "manual", aspectratio: { x: span(xr) / m * 1.3, y: span(yr) / m * 1.3, z: span(zr) / m * 1.3 },
+      dragmode: "turntable", camera: { eye: eye, up: { x: 0, y: 0, z: 1 } } };
+  }
+  var layout = {
+    margin: { l: 0, r: 0, t: 0, b: 60 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true, uirevision: "keep",
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 12 }, bgcolor: "rgba(0,0,0,0)" },
+    scene: scene([-3, 7], [-3, 8], [-3, 8], { x: 1.2, y: -1.9, z: 0.8 })
+  };
+  var config = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["toImage"] };
+
+  function arrow(v, color, name) {
+    var L = Math.hypot(v[0], v[1], v[2]), h = 0.6 / L;
+    var base = [v[0] * (1 - h), v[1] * (1 - h), v[2] * (1 - h)];
+    return [
+      { type: "scatter3d", mode: "lines", name: name, line: { color: color, width: 7 },
+        x: [0, base[0]], y: [0, base[1]], z: [0, base[2]], legendgroup: name },
+      { type: "cone", x: [base[0]], y: [base[1]], z: [base[2]], u: [v[0] * h], v: [v[1] * h], w: [v[2] * h],
+        anchor: "tail", sizemode: "absolute", sizeref: 0.6, showscale: false, colorscale: [[0, color], [1, color]],
+        legendgroup: name, showlegend: false, hoverinfo: "skip" }
+    ];
+  }
+  // Plane = s*(1,2,4) + t*(3,3,1) for s,t in [-0.5, 1.5].
+  var plane = { type: "mesh3d", name: "column space C(A): a plane", opacity: 0.3, color: purple, flatshading: true, hoverinfo: "name",
+    x: [-2, 0, 6, 4], y: [-2.5, 1.5, 7.5, 3.5], z: [-2.5, 5.5, 7.5, -0.5], i: [0, 0], j: [1, 2], k: [2, 3] };
+  var data = [plane].concat(
+    arrow([1, 2, 4], blue, "col 1 = (1, 2, 4)"),
+    arrow([3, 3, 1], green, "col 2 = (3, 3, 1)"),
+    [{ type: "scatter3d", mode: "lines", name: "col 1 + col 2", showlegend: false, line: { color: ink, width: 4, dash: "dash" },
+       x: [1, 4], y: [2, 5], z: [4, 5] },
+     { type: "scatter3d", mode: "markers+text", name: "(4, 5, 5) on the plane ✓", marker: { color: ink, size: 6 },
+       x: [4], y: [5], z: [5], text: ["(4, 5, 5) ✓"], textposition: "middle right", textfont: { color: ink, size: 13 } },
+     { type: "scatter3d", mode: "markers+text", name: "(1, 0, 0) off the plane ✗", marker: { color: red, size: 6 },
+       x: [1], y: [0], z: [0], text: ["(1, 0, 0) ✗"], textposition: "bottom center", textfont: { color: red, size: 13 } },
+     { type: "scatter3d", mode: "markers", showlegend: false, marker: { color: ink, size: 4 }, x: [0], y: [0], z: [0] }]
+  );
+  Plotly.newPlot("l6plot", data, layout, config);
+
+  document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      setTimeout(function () { document.querySelectorAll(".plot3d-box").forEach(function (el) { Plotly.Plots.resize(el); }); }, 0);
+    });
+  });
+});
+</script>
+</body>
+</html>
