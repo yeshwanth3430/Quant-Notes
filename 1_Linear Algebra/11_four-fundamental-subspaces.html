@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Four Fundamental Subspaces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+<style>
+  .plot2d-box { width: 100%; height: 420px; }
+  .bigpic { width: 100%; max-width: 860px; height: auto; display: block; margin: 0 auto; }
+  .bigpic text { font-family: var(--sans); fill: var(--ink); }
+  .bigpic .box-n { fill: color-mix(in srgb, var(--def-b) 12%, transparent); stroke: var(--def-b); stroke-width: 2; }
+  .bigpic .box-m { fill: color-mix(in srgb, var(--ex-b) 12%, transparent); stroke: var(--ex-b); stroke-width: 2; }
+  .bigpic .sub { stroke: var(--ink-soft); stroke-width: 1.5; }
+  .bigpic .row { fill: color-mix(in srgb, var(--accent) 22%, transparent); }
+  .bigpic .nul { fill: color-mix(in srgb, var(--warn-b) 20%, transparent); }
+  .bigpic .col { fill: color-mix(in srgb, var(--accent) 22%, transparent); }
+  .bigpic .lnul { fill: color-mix(in srgb, var(--thm-b) 22%, transparent); }
+  .bigpic .arr { stroke: var(--ink); stroke-width: 2; fill: none; }
+  .bigpic .small { font-size: 13px; fill: var(--ink-soft); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>The Four Fundamental Subspaces</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 11</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 11</p>
+  <h1>The Four Fundamental Subspaces</h1>
+  <p class="subtitle">Every matrix carries four spaces: the column space, the nullspace, the row space and the left nullspace. Where they live, their dimensions ($r$, $n - r$, $r$, $m - r$), and how one elimination gives a basis for each.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
+        <li><a href="#s1">Fixing the error from last lecture</a></li>
+        <li><a href="#s2">The four subspaces</a></li>
+        <li><a href="#s3">Where they live and their dimensions</a></li>
+        <li><a href="#s4">Column space: basis</a></li>
+        <li><a href="#s5">Row space: basis from R</a></li>
+        <li><a href="#s6">Nullspace: basis</a></li>
+        <li><a href="#s7">Left nullspace: basis from E</a></li>
+        <li><a href="#s8">The big picture</a></li>
+        <li><a href="#s9">A new vector space: matrices</a></li>
+        <li><a href="#s10">The four subspaces in a market</a></li>
+        <li><a href="#s11">Summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained from the very beginning. Each section repeats the words it uses.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Matrix</b> $A$, $m \times n$</td><td>a table with $m$ rows and $n$ columns</td><td>$\begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix}$ is $2 \times 3$</td><td>rows = Nifty scenarios, columns = products</td></tr>
+      <tr><td><b>Row</b> / <b>column</b></td><td>a line read across / a line read down</td><td>row 1 $= (1,2,3)$, column 1 $= (1,4)$</td><td>one scenario / one product</td></tr>
+      <tr><td><b>Vector</b></td><td>a list of numbers</td><td>$(2, 1)$</td><td>a payoff list, or a list of lots</td></tr>
+      <tr><td><b>Combination</b></td><td>multiply each vector by a number and add</td><td>$2(1,0) + 3(0,1) = (2,3)$</td><td>a recipe</td></tr>
+      <tr><td><b>Space</b> / <b>subspace</b></td><td>a collection closed under adding and scaling / one sitting inside a bigger one (always holds 0)</td><td>a line through 0 inside $\mathbb{R}^2$</td><td>a room / a smaller room inside</td></tr>
+      <tr><td><b>$\mathbb{R}^n$</b>, <b>$\mathbb{R}^m$</b></td><td>all lists of $n$ numbers / of $m$ numbers</td><td>$\mathbb{R}^3$ = all $(x,y,z)$</td><td>"lots space" (one number per product) / "scenario space" (one number per scenario)</td></tr>
+      <tr><td><b>Column space</b> $C(A)$</td><td>all combinations of the columns</td><td>columns $(1,0),(0,1)$: all of $\mathbb{R}^2$</td><td>every payoff you can build</td></tr>
+      <tr><td><b>Nullspace</b> $N(A)$</td><td>all $x$ with $Ax = 0$</td><td>for $\begin{bmatrix} 1 & 1 \end{bmatrix}$: all $c(1,-1)$</td><td>every zero-payoff position</td></tr>
+      <tr><td><b>Row space</b> $C(A^T)$</td><td>all combinations of the rows</td><td>rows $(1,2),(2,4)$: the line through $(1,2)$</td><td>every mix of scenario-rows (where fair prices live)</td></tr>
+      <tr><td><b>Left nullspace</b> $N(A^T)$</td><td>all $y$ with $A^Ty = 0$, i.e. $y^TA = 0$: row combinations that give the zero row</td><td>rows $(1,2),(2,4)$: $y = (2,-1)$ since $2(1,2) - (2,4) = 0$</td><td>scenario weights under which every product "cancels"</td></tr>
+      <tr><td><b>Transpose</b> $A^T$</td><td>flip: rows become columns</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}^T = \begin{bmatrix} 1 & 3 \\ 2 & 4 \end{bmatrix}$</td><td>read the table sideways</td></tr>
+      <tr><td><b>$y^T$</b></td><td>the column $y$ laid down as a row</td><td>$(1, -1)$ written across</td><td>the same list, just lying down</td></tr>
+      <tr><td><b>Basis</b></td><td>independent vectors that span the space</td><td>$(1,0),(0,1)$ for $\mathbb{R}^2$</td><td>just enough ingredients</td></tr>
+      <tr><td><b>Dimension</b></td><td>number of vectors in any basis</td><td>dim $\mathbb{R}^3 = 3$</td><td>how many independent directions</td></tr>
+      <tr><td><b>Independent</b></td><td>only the zero combination gives 0</td><td>$(1,0),(0,1)$</td><td>no copies</td></tr>
+      <tr><td><b>Pivot</b> (leader)</td><td>first non-zero number of a row after elimination</td><td>the $1$ in $(0,1,1,0)$</td><td>the leader of its column</td></tr>
+      <tr><td><b>Pivot / free column</b></td><td>with / without a pivot</td><td>in $R = \begin{bmatrix} 1 & 0 & 1 \end{bmatrix}$ col 1 pivot, col 3 free</td><td>original / copy product</td></tr>
+      <tr><td><b>Rank</b> $r$</td><td>number of pivots</td><td>$\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$: $r = 1$</td><td>number of truly different products</td></tr>
+      <tr><td><b>Row operation</b></td><td>subtract a multiple of one row from another, multiply a row by a non-zero number, or swap rows</td><td>row 2 − row 1</td><td>re-mixing equations; the information doesn't change</td></tr>
+      <tr><td><b>$R$</b> (reduced row echelon form)</td><td>the tidiest form: pivots 1, zeros above and below them, zero rows at the bottom</td><td>$\begin{bmatrix} 1 & 0 & 1 & 1 \\ 0 & 1 & 1 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}$</td><td>a fully tidied table</td></tr>
+      <tr><td><b>Identity</b> $I$</td><td>1s on the diagonal, 0s elsewhere</td><td>$\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$</td><td>"do nothing"</td></tr>
+      <tr><td><b>Gauss–Jordan</b> $[A \mid I] \to [R \mid E]$</td><td>tidy $A$ to $R$ while doing the same moves to $I$; what $I$ becomes is $E$</td><td>square invertible $A$: $E = A^{-1}$</td><td>a diary of every row move</td></tr>
+      <tr><td><b>$E$</b></td><td>the one matrix that does all the row moves: $EA = R$</td><td>see section 7</td><td>the recipe for each new row from old rows</td></tr>
+      <tr><td><b>Special solution</b></td><td>solution of $Ax = 0$: one free variable 1, other free ones 0</td><td>$(-1,-1,1,0)$</td><td>a basic zero-payoff trade</td></tr>
+      <tr><td><b>Matrix space</b> $M$</td><td>all $3 \times 3$ matrices, treated as "vectors"</td><td>add them, scale them</td><td>a bigger kind of room</td></tr>
+      <tr><td><b>Upper triangular</b> / <b>symmetric</b> / <b>diagonal</b></td><td>zeros below the diagonal / equal to its own transpose / zeros off the diagonal</td><td>$\begin{bmatrix} 1 & 2 \\ 0 & 3 \end{bmatrix}$ / $\begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$ / $\begin{bmatrix} 1 & 0 \\ 0 & 3 \end{bmatrix}$</td><td>three shapes of tables</td></tr>
+      <tr><td><b>Intersection</b> $\cap$</td><td>what two spaces have in common</td><td>symmetric ∩ upper triangular = diagonal</td><td>the overlap of two circles</td></tr>
+      <tr><td><b>State price</b> $q_i$</td><td>today's price of "1 unit paid only if scenario $i$ happens"</td><td>$q = (30, 40, 30)$</td><td>a lottery ticket for one Nifty level</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. Fixing the error from last lecture</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Independent = only the zero combination gives 0. Basis of $\mathbb{R}^3$ = 3 independent vectors. Invertible = square with a pivot in every row and column. Row space = all combinations of the rows.</p>
+    </div>
+    <p>In the lecture before, Strang wanted a third vector to join $(1,1,2)$ and $(2,2,5)$ as a basis for $\mathbb{R}^3$, and picked $(3,3,8)$. (Our <a href="10_independence-basis-dimension.html#s7">Lecture 10 notes</a> already caught this.) A student saw the mistake instantly, by looking at the <b>rows</b>:</p>
+    $$ A = \begin{bmatrix} 1 & 2 & 3 \\ 1 & 2 & 3 \\ 2 & 5 & 8 \end{bmatrix} \quad \begin{matrix} \leftarrow \text{row 1} \\ \leftarrow \text{row 2 = row 1!} \\ \phantom{x} \end{matrix} $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we see</span> Row 1 and row 2 are the same: $(1, 2, 3)$.</p>
+        <p class="k"><span class="kl">So</span> Row 1 − row 2 = zero row. Elimination produces a zero row, so there are at most 2 pivots. Rank $\le 2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Why it matters for columns</span> This lecture proves: <b>number of independent rows = number of independent columns = $r$</b>. Rank 2 means only 2 of the 3 columns are independent.</p>
+        <p class="k"><span class="kl">What we have now</span> The columns $(1,1,2), (2,2,5), (3,3,8)$ are dependent. Not a basis.</p>
+      </li>
+    </ol>
+    <div class="box intuition"><span class="label">The lesson</span>
+      <p>The rows tell you about the columns. Sometimes dependence is hard to see in the columns and obvious in the rows (or the other way round).</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">2. The four subspaces</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Transpose $A^T$ = rows become columns. Column space = combinations of columns. Nullspace = solutions of "matrix times vector = 0".</p>
+    </div>
+    <table>
+      <tr><th>#</th><th>Name</th><th>Symbol</th><th>What is in it</th><th>New?</th></tr>
+      <tr><td>1</td><td>Column space</td><td>$C(A)$</td><td>all combinations of the <b>columns</b> of $A$</td><td>seen (Lecture 07)</td></tr>
+      <tr><td>2</td><td>Nullspace</td><td>$N(A)$</td><td>all $x$ with $Ax = 0$</td><td>seen (Lecture 07–08)</td></tr>
+      <tr><td>3</td><td>Row space</td><td>$C(A^T)$</td><td>all combinations of the <b>rows</b> of $A$</td><td><b>new</b></td></tr>
+      <tr><td>4</td><td>Left nullspace</td><td>$N(A^T)$</td><td>all $y$ with $A^Ty = 0$</td><td><b>new</b></td></tr>
+    </table>
+    <p><b>Why write the row space as $C(A^T)$?</b> We like vectors standing up as columns. Transposing turns the rows of $A$ into the columns of $A^T$. So "combinations of the rows of $A$" = "combinations of the columns of $A^T$" = $C(A^T)$. No new maths, just the rows standing up.</p>
+    <p><b>Why "left" nullspace?</b> Transpose both sides of $A^Ty = 0$:</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">Start</span> $A^Ty = 0$ (a column of zeros).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Transpose</span> The transpose of a product flips the order: $(A^Ty)^T = y^T(A^T)^T$. And flipping twice gives back the original: $(A^T)^T = A$.</p>
+        <p class="k"><span class="kl">What we have now</span> $y^TA = 0^T$ (a row of zeros).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">In words</span> The row $y^T$ multiplies $A$ from the <b>left</b>. $y^TA$ = $y_1$(row 1) + $y_2$(row 2) + … So $y$ is a recipe of <b>rows</b> that gives the <b>zero row</b>.</p>
+      </li>
+    </ol>
+    <div class="box theorem"><span class="label">Mirror image</span>
+      <p>Nullspace: combinations of <b>columns</b> giving the zero column. Left nullspace: combinations of <b>rows</b> giving the zero row.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">3. Where they live and their dimensions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$\mathbb{R}^n$ = lists of $n$ numbers. $m$ = number of rows. $n$ = number of columns. Dimension = number of vectors in a basis. Rank $r$ = number of pivots.</p>
+    </div>
+    <p><b>Where each one lives</b>: count how many numbers its vectors have.</p>
+    <table>
+      <tr><th>Space</th><th>Its vectors are…</th><th>Length</th><th>Lives in</th></tr>
+      <tr><td>$C(A)$</td><td>columns of $A$ and their combinations</td><td>a column has $m$ entries (one per row)</td><td>$\mathbb{R}^m$</td></tr>
+      <tr><td>$N(A)$</td><td>$x$ in $Ax$: one number per column</td><td>$n$</td><td>$\mathbb{R}^n$</td></tr>
+      <tr><td>$C(A^T)$</td><td>rows of $A$: one number per column</td><td>$n$</td><td>$\mathbb{R}^n$</td></tr>
+      <tr><td>$N(A^T)$</td><td>$y$: one number per row</td><td>$m$</td><td>$\mathbb{R}^m$</td></tr>
+    </table>
+    <div class="box theorem"><span class="label">The dimensions (the short answer)</span>
+      <table>
+        <tr><th>Space</th><th>Dimension</th><th>Counts</th></tr>
+        <tr><td>row space $C(A^T)$</td><td>$r$</td><td>pivot rows</td></tr>
+        <tr><td>nullspace $N(A)$</td><td>$n - r$</td><td>free columns</td></tr>
+        <tr><td>column space $C(A)$</td><td>$r$</td><td>pivot columns</td></tr>
+        <tr><td>left nullspace $N(A^T)$</td><td>$m - r$</td><td>zero rows of $R$</td></tr>
+      </table>
+      <p>In $\mathbb{R}^n$: $r + (n - r) = n$. In $\mathbb{R}^m$: $r + (m - r) = m$.</p>
+      <p><b>The wonderful fact:</b> the row space and the column space have the <b>same</b> dimension $r$.</p>
+    </div>
+    <p><b>Why $m - r$ for the left nullspace?</b> $A^T$ is just another matrix, of size $n \times m$. It has $m$ columns and the same rank $r$ (row rank = column rank). Its nullspace has dimension "columns − rank" $= m - r$, exactly like $N(A)$ has $n - r$.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s4">4. Column space: basis</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Pivot columns = columns that get a leader during elimination. "Original $A$" = the matrix before any row moves.</p>
+    </div>
+    <p>We use one matrix for the whole lecture:</p>
+    $$ A = \begin{bmatrix} 1 & 2 & 3 & 1 \\ 1 & 1 & 2 & 1 \\ 1 & 2 & 3 & 1 \end{bmatrix} \qquad m = 3,\ n = 4 $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Leader $1$ in row 1. Clear column 1.</p>
+        <p class="k"><span class="kl">How</span> Row 2 − row 1: $(1-1,\ 1-2,\ 2-3,\ 1-1) = (0, -1, -1, 0)$. Row 3 − row 1: $(1-1,\ 2-2,\ 3-3,\ 1-1) = (0, 0, 0, 0)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Leaders in columns 1 and 2 (the $-1$). Rank $r = 2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Basis</span> Columns 1 and 2 of the <b>original</b> $A$: $(1,1,1)$ and $(2,1,2)$.</p>
+        <p class="k"><span class="kl">Dimension</span> $2 = r$.</p>
+      </li>
+    </ol>
+    <div class="box pitfall"><span class="label">Row operations change the column space</span>
+      <p>After elimination the third entry of every column is 0. But $(1,1,1)$ is in $C(A)$ and has third entry 1. So $C(R) \ne C(A)$. Use the <b>original</b> columns; elimination only tells you <b>which</b> ones.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s5">5. Row space: basis from R</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Row space = all combinations of the rows. $R$ = the tidiest form (pivots 1, zeros above and below). Row operation = subtract a multiple of a row, or multiply a row by a non-zero number.</p>
+    </div>
+    <p>Keep going from section 4 all the way to $R$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Make the second leader a $1$: multiply row 2 by $-1$.</p>
+        <p class="k"><span class="kl">How</span> $-1 \times (0, -1, -1, 0) = (0, 1, 1, 0)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Clear the $2$ above it (row 1, column 2): row 1 − 2 × row 2.</p>
+        <p class="k"><span class="kl">How</span> $2 \times (0,1,1,0) = (0,2,2,0)$. Then $(1-0,\ 2-2,\ 3-2,\ 1-0) = (1, 0, 1, 1)$.</p>
+        <p class="k"><span class="kl">What we have now</span></p>
+        $$ R = \begin{bmatrix} 1 & 0 & 1 & 1 \\ 0 & 1 & 1 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix} = \begin{bmatrix} I & F \\ 0 & 0 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">Key claim</span> $A$ and $R$ have the <b>same row space</b>.</p>
+        <p class="k"><span class="kl">Why</span> Every row move makes a new row out of old rows (like "row 2 − row 1"). So every row of $R$ is a combination of rows of $A$. And every move can be undone, so every row of $A$ is a combination of rows of $R$. Each set builds the other: same space.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Basis</span> The first $r$ rows of $R$: $(1, 0, 1, 1)$ and $(0, 1, 1, 0)$.</p>
+        <p class="k"><span class="kl">Why independent</span> Look at the first two entries: $(1, 0)$ and $(0, 1)$. That identity part means $a(1,0,\dots) + b(0,1,\dots)$ starts with $(a, b)$, which is zero only when $a = b = 0$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check: rebuild A's rows</span> Row 1 of $A$: $1(1,0,1,1) + 2(0,1,1,0) = (1,\ 2,\ 1+2,\ 1) = (1,2,3,1)$ ✓. Row 2: $1(1,0,1,1) + 1(0,1,1,0) = (1,1,2,1)$ ✓. Row 3 = row 1 ✓.</p>
+        <p class="k"><span class="kl">Trick</span> The coefficients are just the first two entries of each row of $A$, because of the identity part.</p>
+      </li>
+    </ol>
+    <div class="box theorem"><span class="label">Row space</span>
+      <p>Basis = the first $r$ rows of $R$ (not of $A$). Dimension $= r$. This is the <b>cleanest</b> basis: it starts with the identity.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">6. Nullspace: basis</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Free variable = unknown of a column with no pivot. Special solution = one free variable 1, the others 0, solve for the pivots.</p>
+    </div>
+    <p>From $R$: pivots in columns 1, 2; free: $x_3, x_4$. $Rx = 0$ says $x_1 + x_3 + x_4 = 0$ and $x_2 + x_3 = 0$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">First</span> $x_3 = 1, x_4 = 0$: $x_2 + 1 = 0$, so $x_2 = -1$. $x_1 + 1 + 0 = 0$, so $x_1 = -1$. $s_1 = (-1, -1, 1, 0)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Second</span> $x_3 = 0, x_4 = 1$: $x_2 + 0 = 0$, so $x_2 = 0$. $x_1 + 0 + 1 = 0$, so $x_1 = -1$. $s_2 = (-1, 0, 0, 1)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check in A</span> $s_1$: $-$col 1 $-$ col 2 $+$ col 3 $= (-1-2+3,\ -1-1+2,\ -1-2+3) = (0,0,0)$ ✓. $s_2$: $-$col 1 + col 4 $= (-1+1, -1+1, -1+1) = (0,0,0)$ ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> Basis $s_1, s_2$. Dimension $2 = n - r = 4 - 2$.</p>
+      </li>
+    </ol>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">7. Left nullspace: basis from E</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Left nullspace = recipes $y$ of rows that give the zero row. Gauss–Jordan = do every row move to $A$ and to $I$ side by side. $E$ = what $I$ turns into; it records the moves, so $EA = R$.</p>
+    </div>
+    <p>$R$ shows the row space and nullspace directly, but not the left nullspace. For that we need the <b>record of the moves</b>. Put $I$ next to $A$ and do every move to both:</p>
+    $$ [\,A \mid I\,] \longrightarrow [\,R \mid E\,] \qquad\Rightarrow\qquad EA = R $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">Start</span> $I = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Move 1</span> Row 2 − row 1: $(0-1,\ 1-0,\ 0-0) = (-1, 1, 0)$.</p>
+        <p class="k"><span class="kl">Move 2</span> Row 3 − row 1: $(0-1,\ 0-0,\ 1-0) = (-1, 0, 1)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Move 3</span> Row 2 × $(-1)$: $(1, -1, 0)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Move 4</span> Row 1 − 2 × row 2: $(1 - 2,\ 0 - (-2),\ 0 - 0) = (-1, 2, 0)$.</p>
+        <p class="k"><span class="kl">What we have now</span></p>
+        $$ E = \begin{bmatrix} -1 & 2 & 0 \\ 1 & -1 & 0 \\ -1 & 0 & 1 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check EA = R</span> Each row of $E$ is a recipe of rows of $A$.</p>
+        <table>
+          <tr><th>Row of $E$</th><th>Recipe</th><th>Result</th><th>Row of $R$</th></tr>
+          <tr><td>$(-1, 2, 0)$</td><td>$-(1,2,3,1) + 2(1,1,2,1)$</td><td>$(-1+2,\ -2+2,\ -3+4,\ -1+2) = (1,0,1,1)$</td><td>✓</td></tr>
+          <tr><td>$(1, -1, 0)$</td><td>$(1,2,3,1) - (1,1,2,1)$</td><td>$(0, 1, 1, 0)$</td><td>✓</td></tr>
+          <tr><td>$(-1, 0, 1)$</td><td>$-(1,2,3,1) + (1,2,3,1)$</td><td>$(0,0,0,0)$</td><td>✓ zero row</td></tr>
+        </table>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Read the answer</span> The last row of $E$ produced the <b>zero row</b>. So $y = (-1, 0, 1)$ is in the left nullspace: $-$row 1 + row 3 = 0.</p>
+        <p class="k"><span class="kl">Check $A^Ty = 0$</span> $y$ dotted with each column of $A$: col 1 $(1,1,1)$: $-1 + 0 + 1 = 0$. col 2 $(2,1,2)$: $-2 + 0 + 2 = 0$. col 3 $(3,2,3)$: $-3+0+3 = 0$. col 4 $(1,1,1)$: $0$ ✓.</p>
+        <p class="k"><span class="kl">Dimension</span> $m - r = 3 - 2 = 1$. One vector is a basis.</p>
+      </li>
+    </ol>
+    <div class="box theorem"><span class="label">Left nullspace</span>
+      <p>Basis = the last $m - r$ rows of $E$ (the rows of $E$ that produce the zero rows of $R$). Dimension $= m - r$.</p>
+      <p><b>Square invertible case:</b> $R = I$, so $EA = I$ and $E = A^{-1}$. That was Gauss–Jordan in Lecture 04. No zero rows, so the left nullspace is $\{0\}$.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">8. The big picture</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$\mathbb{R}^n$ = lots space (inputs $x$). $\mathbb{R}^m$ = scenario space (outputs $Ax$). $A$ takes an $x$ from the left side to $Ax$ on the right side.</p>
+    </div>
+    <figure class="fig">
+      <svg class="bigpic" viewBox="0 0 860 380" role="img" aria-label="Big picture: R^n with row space and nullspace, R^m with column space and left nullspace">
+        <defs>
+          <marker id="l11arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <rect class="box-n" x="20" y="40" width="330" height="310" rx="14"/>
+        <text x="185" y="30" text-anchor="middle" font-weight="700">ℝⁿ (one number per product/column)</text>
+        <rect class="row" x="50" y="70" width="270" height="120" rx="10"/>
+        <text x="185" y="115" text-anchor="middle" font-weight="600">row space C(Aᵀ)</text>
+        <text x="185" y="140" text-anchor="middle" class="small">dimension r</text>
+        <text x="185" y="162" text-anchor="middle" class="small">basis: first r rows of R</text>
+        <line class="sub" x1="50" y1="205" x2="320" y2="205"/>
+        <rect class="nul" x="50" y="220" width="270" height="110" rx="10"/>
+        <text x="185" y="260" text-anchor="middle" font-weight="600">nullspace N(A)</text>
+        <text x="185" y="285" text-anchor="middle" class="small">dimension n − r</text>
+        <text x="185" y="307" text-anchor="middle" class="small">basis: special solutions</text>
+
+        <rect class="box-m" x="510" y="40" width="330" height="310" rx="14"/>
+        <text x="675" y="30" text-anchor="middle" font-weight="700">ℝᵐ (one number per scenario/row)</text>
+        <rect class="col" x="540" y="70" width="270" height="120" rx="10"/>
+        <text x="675" y="115" text-anchor="middle" font-weight="600">column space C(A)</text>
+        <text x="675" y="140" text-anchor="middle" class="small">dimension r</text>
+        <text x="675" y="162" text-anchor="middle" class="small">basis: pivot columns of A</text>
+        <line class="sub" x1="540" y1="205" x2="810" y2="205"/>
+        <rect class="lnul" x="540" y="220" width="270" height="110" rx="10"/>
+        <text x="675" y="260" text-anchor="middle" font-weight="600">left nullspace N(Aᵀ)</text>
+        <text x="675" y="285" text-anchor="middle" class="small">dimension m − r</text>
+        <text x="675" y="307" text-anchor="middle" class="small">basis: last m − r rows of E</text>
+
+        <g style="color: var(--ink)">
+          <path class="arr" d="M325,130 C400,110 460,110 535,130" marker-end="url(#l11arr)"/>
+          <text x="430" y="105" text-anchor="middle" font-weight="600">x ↦ Ax</text>
+          <path class="arr" d="M325,262 C420,262 470,215 662,207" marker-end="url(#l11arr)"/>
+          <text x="440" y="285" text-anchor="middle" class="small">x in N(A): Ax = 0</text>
+          <circle cx="675" cy="205" r="6" fill="var(--ink)"/>
+          <text x="690" y="200" class="small" font-weight="700">0</text>
+        </g>
+      </svg>
+      <figcaption>Left: vectors with $n$ entries. Right: vectors with $m$ entries. On each side the two dimensions add up: $r + (n - r) = n$ and $r + (m - r) = m$. (Lecture 14 shows the two pieces on each side are perpendicular.)</figcaption>
+    </figure>
+    <table>
+      <tr><th></th><th>Row space</th><th>Nullspace</th><th>Column space</th><th>Left nullspace</th></tr>
+      <tr><td>Symbol</td><td>$C(A^T)$</td><td>$N(A)$</td><td>$C(A)$</td><td>$N(A^T)$</td></tr>
+      <tr><td>Lives in</td><td>$\mathbb{R}^n$</td><td>$\mathbb{R}^n$</td><td>$\mathbb{R}^m$</td><td>$\mathbb{R}^m$</td></tr>
+      <tr><td>Dimension</td><td>$r$</td><td>$n - r$</td><td>$r$</td><td>$m - r$</td></tr>
+      <tr><td>Basis</td><td>first $r$ rows of $R$</td><td>special solutions</td><td>pivot columns of $A$</td><td>last $m - r$ rows of $E$</td></tr>
+      <tr><td>Example above</td><td>$(1,0,1,1), (0,1,1,0)$</td><td>$(-1,-1,1,0), (-1,0,0,1)$</td><td>$(1,1,1), (2,1,2)$</td><td>$(-1,0,1)$</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s9">9. A new vector space: matrices</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Vector space = anything you can add and multiply by numbers, with the usual rules (there is a zero, adding zero changes nothing, etc.). Upper triangular = zeros below the diagonal. Symmetric = $A^T = A$. Diagonal = zeros off the diagonal. Intersection = what two spaces share.</p>
+    </div>
+    <p>Let $M$ = <b>all $3 \times 3$ matrices</b>. Treat each matrix as a "vector": we can add two matrices and multiply one by 7. The zero matrix plays the zero vector. (We ignore that matrices can also be multiplied together; a vector space doesn't need that.)</p>
+    <table>
+      <tr><th>Subspace of $M$</th><th>Example</th><th>Closed? (add two, scale one: still the same kind?)</th></tr>
+      <tr><td>upper triangular $U$</td><td>$\begin{bmatrix} 1 & 2 & 3 \\ 0 & 4 & 5 \\ 0 & 0 & 6 \end{bmatrix}$</td><td>yes: $0 + 0 = 0$ and $7 \times 0 = 0$ below the diagonal</td></tr>
+      <tr><td>symmetric $S$</td><td>$\begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 5 \\ 3 & 5 & 6 \end{bmatrix}$</td><td>yes: mirror pairs stay equal after adding / scaling</td></tr>
+      <tr><td>diagonal $D = U \cap S$</td><td>$\begin{bmatrix} 1 & 0 & 0 \\ 0 & 3 & 0 \\ 0 & 0 & 7 \end{bmatrix}$</td><td>yes</td></tr>
+    </table>
+    <p><b>Why $U \cap S = D$:</b> symmetric and zeros below the diagonal ⇒ the mirror entries above must be zero too ⇒ only the diagonal is left.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find a basis for $D$ (diagonal matrices).</p>
+        <p class="k"><span class="kl">How</span> Take $E_{11}$ = a 1 in position (1,1), zeros elsewhere; $E_{22}$ and $E_{33}$ the same for positions (2,2) and (3,3).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Span</span> Any diagonal matrix with diagonal $a, b, c$ equals $aE_{11} + bE_{22} + cE_{33}$.</p>
+        <p class="k"><span class="kl">Independent</span> $aE_{11} + bE_{22} + cE_{33}$ has diagonal $(a, b, c)$; it is the zero matrix only if $a = b = c = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> Basis of 3 matrices: $\dim D = 3$.</p>
+      </li>
+    </ol>
+    <p>Preview of next lecture: $\dim M = 9$ (one free entry per position), $\dim U = 6$ (the 6 entries on or above the diagonal are free), $\dim S = 6$ (choose the diagonal and the 3 entries above it; the ones below are copies).</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s10">10. The four subspaces in a market</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$A$: rows = $m$ Nifty scenarios, columns = $n$ products, entries = payoffs. $x$ = lots of each product. $b$ = a target payoff. State price $q_i$ = today's price of "1 unit paid only in scenario $i$". Price vector $p$ = today's price of each product.</p>
+    </div>
+    <table>
+      <tr><th>Space</th><th>Lives in</th><th>Market meaning</th></tr>
+      <tr><td>column space $C(A)$</td><td>scenario space $\mathbb{R}^m$</td><td>every payoff you can <b>build</b></td></tr>
+      <tr><td>nullspace $N(A)$</td><td>lots space $\mathbb{R}^n$</td><td>every <b>zero-payoff</b> position (redundant products); each must cost 0</td></tr>
+      <tr><td>row space $C(A^T)$</td><td>lots space $\mathbb{R}^n$</td><td>where <b>fair price vectors</b> live: $p = A^Tq$, i.e. price of product $j$ = $\sum_i q_i \times$ (payoff of $j$ in scenario $i$)</td></tr>
+      <tr><td>left nullspace $N(A^T)$</td><td>scenario space $\mathbb{R}^m$</td><td>the <b>tests</b> a payoff must pass to be buildable ($b$ buildable ⇔ $y \cdot b = 0$ for every $y$ here), and the <b>freedom in state prices</b> when the market is incomplete</td></tr>
+    </table>
+    <div class="box finance"><span class="label">Connections to earlier lectures</span>
+      <ul>
+        <li>Lecture 09's solvability condition $b_1 + b_2 - b_3 = 0$ is exactly $y \cdot b = 0$ with $y = (1, 1, -1)$ in the left nullspace of that matrix (row 1 + row 2 − row 3 = zero row).</li>
+        <li>Lecture 08's arbitrage check ("a zero-payoff trade must cost 0") is exactly "the price vector must be in the row space". Example 1 shows both at once.</li>
+        <li>Complete market ($r = m$): left nullspace $= \{0\}$, every payoff buildable, state prices <b>unique</b>. Incomplete ($r &lt; m$): some payoffs impossible, state prices <b>not unique</b>.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s11">11. Summary</h2>
+    <table>
+      <tr><th>Idea</th><th>In one line</th></tr>
+      <tr><td>Four subspaces</td><td>$C(A)$, $N(A)$, $C(A^T)$, $N(A^T)$.</td></tr>
+      <tr><td>Homes</td><td>$C(A^T), N(A) \subset \mathbb{R}^n$; $C(A), N(A^T) \subset \mathbb{R}^m$.</td></tr>
+      <tr><td>Dimensions</td><td>$r$, $n - r$, $r$, $m - r$.</td></tr>
+      <tr><td>Row rank = column rank</td><td>row space and column space both have dimension $r$.</td></tr>
+      <tr><td>Row operations</td><td>keep the row space and nullspace; change the column space.</td></tr>
+      <tr><td>Left nullspace</td><td>$y^TA = 0$; basis from the last $m - r$ rows of $E$ in $[A \mid I] \to [R \mid E]$.</td></tr>
+      <tr><td>Matrix spaces</td><td>matrices are vectors too; $\dim(\text{diagonal } 3\times3) = 3$.</td></tr>
+    </table>
+    <dl class="vocab">
+      <dt>Row space $C(A^T)$</dt><dd>all combinations of the rows.</dd>
+      <dt>Left nullspace $N(A^T)$</dt><dd>all $y$ with $A^Ty = 0$ (row recipes giving the zero row).</dd>
+      <dt>$E$</dt><dd>the matrix of all row moves: $EA = R$.</dd>
+      <dt>Matrix space</dt><dd>a vector space whose "vectors" are matrices.</dd>
+    </dl>
+  </div>
+  </section>
+
+  <!-- ================= EXAMPLES ================= -->
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+
+    <h2>Worked examples</h2>
+
+    <!-- E1 -->
+    <div class="worked">
+      <h3>Example 1: All four subspaces of a Nifty market (finance, 3D)</h3>
+      <div class="box finance"><span class="label">Story</span>
+        <p>Same market as Lectures 08 and 09. Nifty expires at <b>19,900</b>, <b>20,000</b> or <b>20,100</b>. A desk has four products and wants to know: which payoffs can we build, which trades are copies, which prices are fair, and what test must a client's payoff pass?</p>
+      </div>
+      <div class="box finance"><span class="label">Problem</span>
+        <table>
+          <tr><th>Product</th><th>19,900</th><th>20,000</th><th>20,100</th><th>Price today</th></tr>
+          <tr><td><b>1.</b> 19,800 CE</td><td>$1$</td><td>$2$</td><td>$3$</td><td>$205$</td></tr>
+          <tr><td><b>2.</b> 20,200 PE</td><td>$3$</td><td>$2$</td><td>$1$</td><td>$195$</td></tr>
+          <tr><td><b>3.</b> Bond</td><td>$1$</td><td>$1$</td><td>$1$</td><td>$99$</td></tr>
+          <tr><td><b>4.</b> Future @ 20,000</td><td>$-1$</td><td>$0$</td><td>$1$</td><td>$0$</td></tr>
+        </table>
+        <p>(Payoffs in points ÷ 100.) Find a basis and the dimension of all four subspaces of $A$, and say what each means for the desk. Then test whether the prices are fair.</p>
+      </div>
+      <div class="box intuition"><span class="label">Which part of the maths means what</span>
+        <table>
+          <tr><th>Maths</th><th>Market</th></tr>
+          <tr><td>$m = 3$ rows</td><td>3 Nifty levels (scenario space $\mathbb{R}^3$)</td></tr>
+          <tr><td>$n = 4$ columns</td><td>4 products (lots space $\mathbb{R}^4$)</td></tr>
+          <tr><td>$C(A)$</td><td>payoffs the desk can build</td></tr>
+          <tr><td>$N(A)$</td><td>lots that pay 0 everywhere</td></tr>
+          <tr><td>$C(A^T)$</td><td>price vectors of the form "state prices × payoffs"</td></tr>
+          <tr><td>$N(A^T)$</td><td>scenario weights that kill every product: the test a payoff must pass</td></tr>
+        </table>
+      </div>
+      $$ A = \begin{bmatrix} 1 & 3 & 1 & -1 \\ 2 & 2 & 1 & 0 \\ 3 & 1 & 1 & 1 \end{bmatrix} \begin{matrix} \leftarrow 19{,}900 \\ \leftarrow 20{,}000 \\ \leftarrow 20{,}100 \end{matrix} $$
+      <h4>Step A: Gauss–Jordan on [A | I]</h4>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Leader $1$ (row 1, column 1). Row 2 − 2 × row 1 and row 3 − 3 × row 1, on $A$ <b>and</b> on $I$.</p>
+          <p class="k"><span class="kl">How, on A</span> Row 2: $(2-2,\ 2-6,\ 1-2,\ 0+2) = (0, -4, -1, 2)$. Row 3: $(3-3,\ 1-9,\ 1-3,\ 1+3) = (0, -8, -2, 4)$.</p>
+          <p class="k"><span class="kl">How, on I</span> Row 2: $(0,1,0) - 2(1,0,0) = (-2, 1, 0)$. Row 3: $(0,0,1) - 3(1,0,0) = (-3, 0, 1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Leader $-4$ (row 2, column 2). Clear the $-8$: $-8 \div -4 = 2$, so row 3 − 2 × row 2.</p>
+          <p class="k"><span class="kl">How, on A</span> $(0,\ -8+8,\ -2+2,\ 4-4) = (0,0,0,0)$.</p>
+          <p class="k"><span class="kl">How, on I</span> $(-3, 0, 1) - 2(-2, 1, 0) = (-3+4,\ 0-2,\ 1-0) = (1, -2, 1)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Rank $r = 2$ (leaders in columns 1, 2). Row 3 of $A$ is gone: a zero row.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Tidy to $R$. Row 2 ÷ $(-4)$: $(0, 1, \tfrac14, -\tfrac12)$. Then row 1 − 3 × row 2: $(1,\ 3-3,\ 1-\tfrac34,\ -1+\tfrac32) = (1, 0, \tfrac14, \tfrac12)$.</p>
+          $$ R = \begin{bmatrix} 1 & 0 & \tfrac14 & \tfrac12 \\ 0 & 1 & \tfrac14 & -\tfrac12 \\ 0 & 0 & 0 & 0 \end{bmatrix} $$
+        </li>
+      </ol>
+      <h4>Step B: the four subspaces, one by one</h4>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">Column space</span> Pivot columns of $A$: CE $(1,2,3)$ and PE $(3,2,1)$. Dimension $r = 2$, a plane inside $\mathbb{R}^3$.</p>
+          <p class="k"><span class="kl">Market</span> Only 2 truly different payoff shapes. The desk can build only payoffs on this plane (straight lines in Nifty).</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Nullspace</span> Free: bond, future. Special solutions from $R$: bond $= 1$ gives $(-\tfrac14, -\tfrac14, 1, 0)$; future $= 1$ gives $(-\tfrac12, \tfrac12, 0, 1)$. Dimension $n - r = 2$.</p>
+          <p class="k"><span class="kl">Whole lots</span> ×(−4): $(1, 1, -4, 0)$ = "CE + PE − 4 bonds". ×(−2): $(1, -1, 0, -2)$ = "CE − PE − 2 futures".</p>
+          <p class="k"><span class="kl">Check</span> CE + PE $= (1+3, 2+2, 3+1) = (4,4,4) = 4 \times$ bond ✓. CE − PE $= (-2, 0, 2) = 2 \times$ future ✓.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Row space</span> First 2 rows of $R$: $(1, 0, \tfrac14, \tfrac12)$ and $(0, 1, \tfrac14, -\tfrac12)$. Dimension $r = 2$, a plane inside $\mathbb{R}^4$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Left nullspace</span> Last row of $E$: $y = (1, -2, 1)$. Dimension $m - r = 3 - 2 = 1$.</p>
+          <p class="k"><span class="kl">Check $y^TA = 0$</span> CE: $1 - 4 + 3 = 0$. PE: $3 - 4 + 1 = 0$. Bond: $1 - 2 + 1 = 0$. Future: $-1 - 0 + 1 = 0$ ✓.</p>
+          <p class="k"><span class="kl">Market</span> "Payoff at 19,900 − 2 × payoff at 20,000 + payoff at 20,100" is the <b>curvature</b> (a butterfly's view). Every product here has zero curvature. So a payoff $b$ is buildable only if $b_1 - 2b_2 + b_3 = 0$: exactly Lecture 09's test.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Dimensions add up</span> In $\mathbb{R}^4$: $2 + 2 = 4$ ✓. In $\mathbb{R}^3$: $2 + 1 = 3$ ✓.</p>
+        </li>
+      </ol>
+      <h4>Step C: are today's prices fair? (row space test)</h4>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Try to write $p = (205, 195, 99, 0)$ as $a \times$ (row 1 of $R$) $+ b \times$ (row 2 of $R$).</p>
+          <p class="k"><span class="kl">Why</span> Fair prices come from state prices: $p = A^Tq$, a combination of the rows of $A$. So $p$ must be in the row space.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">How</span> The identity part forces $a = 205$ (entry 1) and $b = 195$ (entry 2).</p>
+          <p class="k"><span class="kl">Entry 3 (bond)</span> Should be $\tfrac14(205) + \tfrac14(195) = \tfrac{400}{4} = 100$. Market says 99 ✗.</p>
+          <p class="k"><span class="kl">Entry 4 (future)</span> Should be $\tfrac12(205) - \tfrac12(195) = \tfrac{10}{2} = 5$. Market says 0 ✗.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What it means</span> $p$ is <b>not</b> in the row space, so no state prices explain it. Two leaks, one per nullspace direction: CE + PE − 4 bonds costs $205 + 195 - 396 = 4$ (should be 0); CE − PE − 2 futures costs $205 - 195 - 0 = 10$ (should be 0). Both are arbitrages.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">A fair market</span> Pick state prices $q = (30, 40, 30)$. Then $p = A^Tq$: CE $= 1(30) + 2(40) + 3(30) = 30 + 80 + 90 = 200$; PE $= 90 + 80 + 30 = 200$; bond $= 30 + 40 + 30 = 100$; future $= -30 + 0 + 30 = 0$. Check: CE + PE − 4 bonds $= 400 - 400 = 0$ ✓; CE − PE − 2 futures $= 0$ ✓.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">State prices not unique</span> Add any multiple of $y = (1,-2,1)$: $q = (31, 38, 31)$ gives CE $= 31 + 76 + 93 = 200$, PE $= 93 + 76 + 31 = 200$, bond $= 100$, future $= 0$. Same prices. The left nullspace is exactly this freedom: the market can't tell $q$ and $q + ty$ apart, because it is <b>incomplete</b>.</p>
+        </li>
+      </ol>
+      <p class="answer">$\dim C(A) = 2$, $\dim N(A) = 2$, $\dim C(A^T) = 2$, $\dim N(A^T) = 1$. Buildable payoffs = zero-curvature ones; two copy trades; the quoted prices fail the row-space test (arbitrage of 4 and 10); state prices, when they exist, are not unique.</p>
+      <figure class="fig plot3d">
+        <div id="l11scen" class="plot3d-box" role="img" aria-label="Scenario space: column space plane and left nullspace line"></div>
+        <figcaption>Scenario space $\mathbb{R}^3$ (payoff at 19,900 / 20,000 / 20,100). <b>Blue sheet:</b> the column space, all buildable payoffs (dimension 2), with the four product arrows lying in it. <b>Red line:</b> the left nullspace, the direction $(1, -2, 1)$ (dimension 1). It sticks straight out of the sheet: $2 + 1 = 3$. <b>Drag to rotate.</b></figcaption>
+      </figure>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 2: A complete two-level market (finance, 2D)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Nifty ends at <b>19,900</b> or <b>20,100</b>. Products: 20,000 PE $(1, 0)$ price 45, 20,000 CE $(0, 1)$ price 55, bond $(1, 1)$ price 99. Find the four subspaces and test the prices.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$m = 2$ scenarios, $n = 3$ products. Complete market = rank equals the number of scenarios. State prices $q = (q_1, q_2)$ = price today of "1 unit only at 19,900" and "1 unit only at 20,100".</p>
+      </div>
+      $$ A = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \end{bmatrix} \begin{matrix} \leftarrow 19{,}900 \\ \leftarrow 20{,}100 \end{matrix} $$
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we see</span> $A$ is already $R$: leaders $1, 1$ in columns 1, 2. Rank $r = 2 = m$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Column space</span> PE, CE: dimension 2 = all of $\mathbb{R}^2$. Every payoff can be built: <b>complete</b>.</p>
+          <p class="k"><span class="kl">Left nullspace</span> $m - r = 0$: only $\{0\}$. No test on $b$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Nullspace</span> Free: bond. Bond $= 1$: $x_1 + 1 = 0$, $x_2 + 1 = 0$, so $(-1, -1, 1)$: bond − PE − CE pays 0. Dimension $3 - 2 = 1$.</p>
+          <p class="k"><span class="kl">Row space</span> $(1, 0, 1)$ and $(0, 1, 1)$. Dimension 2.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">State prices</span> PE pays only at 19,900, so $q_1 = 45$. CE pays only at 20,100, so $q_2 = 55$. <b>Unique</b> (no left nullspace to add).</p>
+          <p class="k"><span class="kl">Fair bond price</span> $q_1 + q_2 = 45 + 55 = 100$. Market: 99 ✗.</p>
+          <p class="k"><span class="kl">Trade</span> Buy the bond (pay 99), sell PE + CE (receive 100). Keep 1 now; tomorrow the bond's 1 unit pays whichever option finishes in the money.</p>
+        </li>
+      </ol>
+      <p class="answer">Complete market: $C(A) = \mathbb{R}^2$, $N(A^T) = \{0\}$, state prices unique $(45, 55)$, bond should be 100.</p>
+      <figure class="fig plot3d">
+        <div id="l11two" class="plot2d-box" role="img" aria-label="Two-scenario space with PE, CE and bond vectors"></div>
+        <figcaption>Scenario space $\mathbb{R}^2$. PE and CE point in two different directions, so their combinations fill the whole plane (column space $= \mathbb{R}^2$). The bond is PE + CE. Nothing is left over for a left nullspace.</figcaption>
+      </figure>
+    </div>
+
+    <!-- E3 -->
+    <div class="worked">
+      <h3>Example 3: The corrected Lecture 10 matrix</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>$A = \begin{bmatrix} 1 & 2 & 3 \\ 1 & 2 & 3 \\ 2 & 5 & 8 \end{bmatrix}$ (columns $(1,1,2), (2,2,5), (3,3,8)$). Find all four subspaces.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">Clear column 1</span> Row 2 − row 1 $= (0,0,0)$. Row 3 − 2 × row 1 $= (2-2,\ 5-4,\ 8-6) = (0, 1, 2)$. On $I$: row 2 becomes $(-1, 1, 0)$, row 3 becomes $(-2, 0, 1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Swap</span> Row 2 has 0 in the leader spot, row 3 has 1: swap rows 2 and 3 (on $I$'s side too).</p>
+          <p class="k"><span class="kl">What we have now</span> Rows $(1,2,3), (0,1,2), (0,0,0)$. $E$ so far: $(1,0,0), (-2,0,1), (-1,1,0)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Tidy</span> Row 1 − 2 × row 2: $(1,\ 2-2,\ 3-4) = (1, 0, -1)$. On $E$: $(1,0,0) - 2(-2,0,1) = (5, 0, -2)$.</p>
+          <p class="k"><span class="kl">What we have now</span> $R = \begin{bmatrix} 1 & 0 & -1 \\ 0 & 1 & 2 \\ 0 & 0 & 0 \end{bmatrix}$, rank 2.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Four answers</span> $C(A)$: $(1,1,2), (2,2,5)$. $C(A^T)$: $(1,0,-1), (0,1,2)$. $N(A)$: $x_3 = 1$: $x_2 = -2$, $x_1 = 1$: $(1, -2, 1)$. $N(A^T)$: last row of $E$, $(-1, 1, 0)$.</p>
+          <p class="k"><span class="kl">Check</span> $N(A)$: col 1 − 2 col 2 + col 3 $= (1-4+3,\ 1-4+3,\ 2-10+8) = 0$ ✓. $N(A^T)$: −row 1 + row 2 $= 0$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">Dimensions $2, 1, 2, 1$. The nullspace vector says $(3,3,8) = -(1,1,2) + 2(2,2,5)$: the three columns are dependent.</p>
+    </div>
+
+    <!-- E4 -->
+    <div class="worked">
+      <h3>Example 4: A rank-1 matrix</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>$A = \begin{bmatrix} 1 & 2 \\ 3 & 6 \end{bmatrix}$. Find all four subspaces.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">Eliminate</span> Row 2 − 3 × row 1 $= (3-3,\ 6-6) = (0, 0)$. On $I$: $(0,1) - 3(1,0) = (-3, 1)$. Rank 1.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Four answers</span> $C(A)$: line through $(1, 3)$. $C(A^T)$: line through $(1, 2)$. $N(A)$: $x_1 + 2x_2 = 0$, $x_2 = 1$ gives $(-2, 1)$. $N(A^T)$: $(-3, 1)$.</p>
+          <p class="k"><span class="kl">Check</span> $A(-2,1) = (-2+2,\ -6+6) = 0$ ✓. $-3$ row 1 + row 2 $= (-3+3,\ -6+6) = 0$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">All four are lines (dimension 1): $r = 1$, $n - r = 1$, $m - r = 1$.</p>
+    </div>
+
+    <!-- E5 -->
+    <div class="worked">
+      <h3>Example 5: Dimensions from the size and rank alone</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Fill in the four dimensions.</p>
+      </div>
+      <table>
+        <tr><th>Size $m \times n$</th><th>Rank $r$</th><th>$C(A^T)$: $r$</th><th>$N(A)$: $n - r$</th><th>$C(A)$: $r$</th><th>$N(A^T)$: $m - r$</th></tr>
+        <tr><td>$3 \times 5$</td><td>3</td><td>3</td><td>2</td><td>3</td><td>0</td></tr>
+        <tr><td>$5 \times 3$</td><td>3</td><td>3</td><td>0</td><td>3</td><td>2</td></tr>
+        <tr><td>$4 \times 4$</td><td>4</td><td>4</td><td>0</td><td>4</td><td>0</td></tr>
+        <tr><td>$6 \times 8$</td><td>2</td><td>2</td><td>6</td><td>2</td><td>4</td></tr>
+      </table>
+    </div>
+
+    <!-- E6 -->
+    <div class="worked">
+      <h3>Example 6: Is it a subspace of the 2×2 matrices?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>In the space of all $2 \times 2$ matrices: (a) matrices with trace (sum of diagonal) 0; (b) invertible matrices.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">(a)</span> Add two trace-0 matrices: traces add, $0 + 0 = 0$ ✓. Scale by 7: $7 \times 0 = 0$ ✓. Zero matrix has trace 0 ✓. <b>Subspace.</b> Basis $\begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}, \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}, \begin{bmatrix} 0 & 0 \\ 1 & 0 \end{bmatrix}$: dimension 3.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">(b)</span> The zero matrix is not invertible, so it's missing. <b>Not a subspace.</b> (Also $I + (-I) = 0$.)</p>
+        </li>
+      </ol>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. $A$ is $7 \times 3$ with rank 3. Dimensions of the four subspaces?</summary>
+      <p>Row space 3, nullspace 0, column space 3, left nullspace 4.</p>
+    </details>
+    <details class="proof"><summary>2. Why do row operations not change the row space?</summary>
+      <p>Each new row is a combination of old rows, and each step can be undone, so each set of rows builds the other.</p>
+    </details>
+    <details class="proof"><summary>3. Find the left nullspace of $\begin{bmatrix} 1 & 1 \\ 2 & 2 \\ 3 & 3 \end{bmatrix}$.</summary>
+      <p>Rank 1, so dimension $3 - 1 = 2$. Row 2 − 2 row 1 = 0 gives $(-2, 1, 0)$; row 3 − 3 row 1 = 0 gives $(-3, 0, 1)$.</p>
+    </details>
+    <details class="proof"><summary>4. Can the row space and column space be the same space?</summary>
+      <p>Only if $m = n$ (they must live in the same $\mathbb{R}^n$). Example: any symmetric matrix, since then $A^T = A$.</p>
+    </details>
+    <details class="proof"><summary>5. Market: 4 scenarios, 3 products, rank 3. Complete? Are state prices unique?</summary>
+      <p>Not complete ($r = 3 &lt; 4$). Left nullspace has dimension 1, so state prices (if any) are not unique.</p>
+    </details>
+    <details class="proof"><summary>6. What is the dimension of all symmetric $2 \times 2$ matrices?</summary>
+      <p>3: $\begin{bmatrix} a & b \\ b & c \end{bmatrix}$ has three free numbers $a, b, c$.</p>
+    </details>
+
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="10_independence-basis-dimension.html">← 10 Independence, Basis and Dimension</a>
+    <span class="off">Next: Matrix Spaces; Rank 1; Small World Graphs</span>
+  </nav>
+  </div>
+</main>
+
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script>
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var green = c("--ex-b"), red = c("--warn-b"), purple = c("--thm-b"), blue = c("--accent"), ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+  var cfg = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["toImage"] };
+
+  // ---------- 3D: scenario space of Example 1 ----------
+  function ax3(t) {
+    return { title: { text: t, font: { size: 13, color: ink } }, range: [-4, 4], autorange: false, tickmode: "linear", tick0: 0, dtick: 1,
+      tickfont: { size: 10, color: soft }, gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 3,
+      showbackground: true, backgroundcolor: paper2, showspikes: false };
+  }
+  function vec3(v, color, name, pos) {
+    return { type: "scatter3d", mode: "lines+markers+text", name: name, x: [0, v[0]], y: [0, v[1]], z: [0, v[2]],
+      line: { color: color, width: 7 }, marker: { size: [0, 5], color: color },
+      text: ["", name], textposition: pos || "top center", textfont: { color: color, size: 13 }, hoverinfo: "name" };
+  }
+  if (document.getElementById("l11scen")) {
+    // plane b1 - 2 b2 + b3 = 0 spanned by u = (1,1,1), v = (-1,0,1)
+    var xs = [], ys = [], zs = [];
+    [[-2.5, -1.5], [2.5, -1.5], [2.5, 1.5], [-2.5, 1.5]].forEach(function (st) {
+      xs.push(st[0] - st[1]); ys.push(st[0]); zs.push(st[0] + st[1]);
+    });
+    var plane = { type: "mesh3d", x: xs, y: ys, z: zs, i: [0, 0], j: [1, 2], k: [2, 3], color: blue, opacity: 0.25, hoverinfo: "skip" };
+    var line = { type: "scatter3d", mode: "lines+text", x: [-1.6, 1.6], y: [3.2, -3.2], z: [-1.6, 1.6], line: { color: red, width: 6 },
+      text: ["", "N(Aᵀ): (1, −2, 1)"], textposition: "bottom center", textfont: { color: red, size: 13 }, hoverinfo: "skip" };
+    Plotly.newPlot("l11scen", [plane, line,
+      vec3([1, 2, 3], green, "CE"), vec3([3, 2, 1], purple, "PE", "middle right"),
+      vec3([1, 1, 1], blue, "bond", "middle left"), vec3([-1, 0, 1], soft, "future", "top left")],
+      { margin: { l: 0, r: 0, t: 0, b: 0 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: false,
+        scene: { xaxis: ax3("19,900"), yaxis: ax3("20,000"), zaxis: ax3("20,100"), aspectmode: "cube", dragmode: "turntable",
+          camera: { eye: { x: 1.8, y: -0.4, z: 1.2 }, up: { x: 0, y: 0, z: 1 } } } }, cfg);
+  }
+
+  // ---------- 2D: two-level market ----------
+  if (document.getElementById("l11two")) {
+    function ax2(t) {
+      return { title: { text: t, font: { color: ink, size: 13 } }, range: [-0.5, 1.8], autorange: false, tickmode: "linear", dtick: 1,
+        tickfont: { color: soft, size: 11 }, gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 2, fixedrange: true };
+    }
+    function arrow(to, color, label) {
+      return [{ x: to[0], y: to[1], ax: 0, ay: 0, xref: "x", yref: "y", axref: "x", ayref: "y", showarrow: true, arrowhead: 3, arrowsize: 1.3, arrowwidth: 3, arrowcolor: color, text: "" },
+        { x: to[0], y: to[1], xref: "x", yref: "y", showarrow: false, text: label, font: { color: color, size: 14 }, xanchor: "left", yanchor: "bottom", xshift: 4 }];
+    }
+    var shade = { type: "scatter", mode: "lines", x: [-0.5, 1.8, 1.8, -0.5, -0.5], y: [-0.5, -0.5, 1.8, 1.8, -0.5], fill: "toself", fillcolor: "rgba(47,93,138,0.08)", line: { width: 0 }, hoverinfo: "skip", showlegend: false };
+    Plotly.newPlot("l11two", [shade], { margin: { l: 55, r: 20, t: 10, b: 50 }, paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: paper2,
+      xaxis: Object.assign(ax2("payoff at 19,900"), { scaleanchor: "y", scaleratio: 1 }), yaxis: ax2("payoff at 20,100"), showlegend: false,
+      annotations: [].concat(arrow([1, 0], blue, "PE (1, 0)"), arrow([0, 1], green, "CE (0, 1)"), arrow([1, 1], purple, "bond = PE + CE"),
+        [{ x: 1.45, y: 1.65, xref: "x", yref: "y", showarrow: false, text: "column space = whole plane", font: { color: soft, size: 13 } }]) }, cfg);
+  }
+
+  document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      setTimeout(function () { ["l11scen", "l11two"].forEach(function (id) {
+        var el = document.getElementById(id); if (el && el.data) Plotly.Plots.resize(el); }); }, 0);
+    });
+  });
+});
+</script>
+</body>
+</html>

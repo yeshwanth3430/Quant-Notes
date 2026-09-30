@@ -33,6 +33,7 @@
 
     <nav class="contents"><span class="label">Contents</span>
       <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
         <li><a href="#s1">The lecture in four questions</a></li>
         <li><a href="#s2">Mixing vectors</a></li>
         <li><a href="#s3">A matrix is a machine</a></li>
@@ -45,7 +46,51 @@
     </nav>
 
     <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained from the very beginning, with a tiny example and an everyday picture. Each section repeats the words it uses.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Number</b> (scalar)</td><td>one ordinary number, used to stretch or shrink a vector</td><td>$2$, $-1$, $0.25$</td><td>"how many spoons" of an ingredient</td></tr>
+      <tr><td><b>Vector</b></td><td>a list of numbers written in a column</td><td>$u = (1, -1, 0)$</td><td>an arrow; or what one product pays in each scenario</td></tr>
+      <tr><td><b>Position</b> (entry)</td><td>one slot in the list: top, middle, bottom</td><td>the middle entry of $(1, -1, 0)$ is $-1$</td><td>one box in a row of boxes</td></tr>
+      <tr><td><b>Zero vector</b> / <b>origin</b></td><td>the vector with every number 0; the point where all axes meet</td><td>$(0, 0, 0)$</td><td>home; a trade that pays nothing anywhere</td></tr>
+      <tr><td><b>Multiply a vector by a number</b></td><td>multiply every entry by that number</td><td>$2 \times (1, -1, 0) = (2, -2, 0)$</td><td>walk twice as far along the arrow</td></tr>
+      <tr><td><b>Add vectors</b></td><td>add matching positions</td><td>$(1, 2) + (3, 4) = (4, 6)$</td><td>walk one arrow, then the next</td></tr>
+      <tr><td><b>Linear combination</b> (mix)</td><td>multiply each vector by a number, then add</td><td>$2u + 3v + 1w$</td><td>a recipe: 2 spoons of this + 3 spoons of that</td></tr>
+      <tr><td><b>Line</b></td><td>all stretches of one arrow (forwards and backwards)</td><td>all $c \cdot u$</td><td>a long straight stick</td></tr>
+      <tr><td><b>Plane</b></td><td>a flat sheet going on forever</td><td>all $c \cdot u + d \cdot v$</td><td>a sheet of paper that never ends</td></tr>
+      <tr><td><b>3D space</b>, $\mathbb{R}^3$</td><td>all lists of 3 numbers</td><td>$(5, 7, 6)$ is in $\mathbb{R}^3$</td><td>the whole room: left-right, front-back, up-down</td></tr>
+      <tr><td><b>$\mathbb{R}^2$</b></td><td>all lists of 2 numbers</td><td>$(3, -1)$</td><td>a flat floor</td></tr>
+      <tr><td><b>Matrix</b></td><td>a table of numbers in rows and columns</td><td>$A$ below, 3 rows and 3 columns</td><td>a spreadsheet</td></tr>
+      <tr><td><b>Column</b> / <b>row</b></td><td>a stack going down / a line going across</td><td>column 1 of $A$ is $u$</td><td>a spreadsheet column / a spreadsheet row</td></tr>
+      <tr><td><b>Matrix times vector</b>, $Ax$</td><td>mix the columns of $A$ using the numbers in $x$</td><td>$A(1, 4, 9) = 1u + 4v + 9w$</td><td>feed $x$ into a machine, read what comes out</td></tr>
+      <tr><td><b>Input</b> / <b>output</b></td><td>what goes into the machine / what comes out</td><td>in $(1, 4, 9)$, out $(1, 3, 5)$</td><td>coins in, snack out</td></tr>
+      <tr><td><b>Difference</b></td><td>"this one minus the one before"</td><td>$9 - 4 = 5$</td><td>how much you added to a jar today</td></tr>
+      <tr><td><b>Difference matrix</b> $A$</td><td>the machine that turns totals into differences</td><td>$(1, 4, 9) \to (1, 3, 5)$</td><td>totals in, daily amounts out</td></tr>
+      <tr><td><b>Running total</b></td><td>keep adding as you go</td><td>$1,\ 1 + 3 = 4,\ 4 + 5 = 9$</td><td>the amount in the jar each evening</td></tr>
+      <tr><td><b>Sum matrix</b> $S$</td><td>the machine that makes running totals</td><td>$(1, 3, 5) \to (1, 4, 9)$</td><td>daily amounts in, totals out</td></tr>
+      <tr><td><b>Solve</b> $Ax = b$</td><td>find the input $x$ that gives the output $b$</td><td>$b = (1, 3, 5)$ gives $x = (1, 4, 9)$</td><td>"what did I put in to get this?"</td></tr>
+      <tr><td><b>Inverse</b> $A^{-1}$</td><td>the machine that undoes $A$</td><td>here $A^{-1} = S$</td><td>the undo button</td></tr>
+      <tr><td><b>Invertible</b></td><td>has an inverse: every output comes from exactly one input</td><td>$A$ is invertible, $C$ is not</td><td>a door you can walk back through</td></tr>
+      <tr><td><b>Cyclic difference matrix</b> $C$</td><td>differences taken round a circle</td><td>$C(5, 7, 6) = (-1, 2, -1)$</td><td>friends at a round table comparing coins</td></tr>
+      <tr><td><b>No solution</b> / <b>many solutions</b></td><td>no input gives $b$ / lots of inputs give $b$</td><td>$Cx = (1, 1, 1)$ / $Cx = (0, 0, 0)$</td><td>an impossible order / many ways to fill an order</td></tr>
+      <tr><td><b>Independent</b></td><td>no vector is a mix of the others</td><td>$u, v, w$</td><td>every ingredient brings a new taste</td></tr>
+      <tr><td><b>Dependent</b></td><td>one vector is a mix of the others</td><td>$w^* = -u - v$</td><td>one ingredient can be copied from the others</td></tr>
+      <tr><td><b>Basis</b> (of $\mathbb{R}^3$)</td><td>3 independent vectors whose mixes reach every point</td><td>$u, v, w$</td><td>just enough ingredients: nothing missing, nothing extra</td></tr>
+      <tr><td><b>Subspace</b></td><td>a flat line, sheet or space through the origin that mixing cannot escape</td><td>all mixes of $u$ and $v$</td><td>a smaller room inside the house, with its own door at home</td></tr>
+      <tr><td><b>Derivative</b> / <b>integral</b></td><td>calculus versions of differences / running totals</td><td>speed from distance / distance from speed</td><td>the car's speedometer / its trip meter</td></tr>
+      <tr><td><b>P&amp;L</b></td><td>profit and loss: money made (+) or lost (−)</td><td>$+2$, $-1$, $+3$ over three days</td><td>your trading account's daily change</td></tr>
+      <tr><td><b>Payoff</b></td><td>what a product pays you tomorrow, in each scenario</td><td>a bond pays $(1, 1, 1)$</td><td>the prize printed on a ticket</td></tr>
+      <tr><td><b>Bond</b> / <b>stock</b></td><td>pays a fixed 1 / pays whatever the share price is</td><td>bond $(1, 1, 1)$, stock $(1, 2, 3)$</td><td>a fixed deposit / owning a piece of a company</td></tr>
+      <tr><td><b>Call</b> (CE) / <b>put</b> (PE)</td><td>the right to <b>buy</b> / <b>sell</b> at a fixed price, the strike</td><td>a Nifty 20,000 CE / 20,000 PE</td><td>a coupon to buy cheap / insurance to sell high</td></tr>
+      <tr><td><b>Strike</b></td><td>the fixed price written on an option</td><td>strike 2</td><td>the price printed on the coupon</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
     <h2 id="s1">1. The lecture in four questions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Vector = a list of numbers. Mix (linear combination) = multiply each vector by a number, then add. Matrix = a table of numbers; it acts like a machine: a vector goes in, a vector comes out. Inverse = the machine that undoes it (the undo button). Column = a stack of numbers going down inside a matrix.</p>
+    </div>
     <table>
       <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
       <tr><td>1</td><td>What can we do with vectors?</td><td><b>Mix</b> them: multiply by numbers and add.</td></tr>
@@ -56,6 +101,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s2">2. Mixing vectors</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Vector = a list of numbers, top to bottom. Position = one slot in that list (top, middle, bottom). Number (scalar) = an ordinary number that stretches a vector. Multiply a vector by a number = multiply every position by it. Add vectors = add matching positions. Mix (linear combination) = do both. Line = all stretches of one arrow. Plane = a flat sheet. 3D space = every list of 3 numbers.</p>
+    </div>
     <p>A vector is a list of numbers. The lecture uses these three:</p>
     $$
     u = \begin{bmatrix} 1 \\ -1 \\ 0 \end{bmatrix}, \qquad
@@ -67,14 +115,41 @@
     </div>
 
     <div class="box example"><span class="label">Example: mix 2 of u, 3 of v and 1 of w</span>
-      <p>Work position by position, top to bottom:</p>
-      <table>
-        <tr><th>Position</th><th>$2u$</th><th>$3v$</th><th>$1w$</th><th>Add</th></tr>
-        <tr><td>top</td><td>$2 \times 1 = 2$</td><td>$3 \times 0 = 0$</td><td>$1 \times 0 = 0$</td><td>$2$</td></tr>
-        <tr><td>middle</td><td>$2 \times (-1) = -2$</td><td>$3 \times 1 = 3$</td><td>$1 \times 0 = 0$</td><td>$1$</td></tr>
-        <tr><td>bottom</td><td>$2 \times 0 = 0$</td><td>$3 \times (-1) = -3$</td><td>$1 \times 1 = 1$</td><td>$-2$</td></tr>
-      </table>
-      <p>So $2u + 3v + 1w = (2, 1, -2)$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Make 2 copies of $u = (1, -1, 0)$.</p>
+          <p class="k"><span class="kl">Why</span> The recipe says "2 of $u$". Multiplying a vector by 2 means multiplying every position by 2.</p>
+          <p class="k"><span class="kl">How</span> Top: $2 \times 1 = 2$. Middle: $2 \times (-1) = -2$. Bottom: $2 \times 0 = 0$.</p>
+          <p class="k"><span class="kl">What we have now</span> $2u = (2, -2, 0)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Make 3 copies of $v = (0, 1, -1)$.</p>
+          <p class="k"><span class="kl">Why</span> The recipe says "3 of $v$".</p>
+          <p class="k"><span class="kl">How</span> Top: $3 \times 0 = 0$. Middle: $3 \times 1 = 3$. Bottom: $3 \times (-1) = -3$.</p>
+          <p class="k"><span class="kl">What we have now</span> $3v = (0, 3, -3)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Make 1 copy of $w = (0, 0, 1)$.</p>
+          <p class="k"><span class="kl">Why</span> The recipe says "1 of $w$". One copy is just $w$ itself.</p>
+          <p class="k"><span class="kl">How</span> Top: $1 \times 0 = 0$. Middle: $1 \times 0 = 0$. Bottom: $1 \times 1 = 1$.</p>
+          <p class="k"><span class="kl">What we have now</span> $1w = (0, 0, 1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Add the three pieces, one position at a time.</p>
+          <p class="k"><span class="kl">Why</span> Adding vectors means adding matching positions: tops with tops, middles with middles, bottoms with bottoms.</p>
+          <p class="k"><span class="kl">How</span> Top: $2 + 0 = 2$, then $2 + 0 = 2$. Middle: $-2 + 3 = 1$, then $1 + 0 = 1$. Bottom: $0 + (-3) = -3$, then $-3 + 1 = -2$.</p>
+          <table>
+            <tr><th>Position</th><th>$2u$</th><th>$3v$</th><th>$1w$</th><th>Add</th></tr>
+            <tr><td>top</td><td>$2 \times 1 = 2$</td><td>$3 \times 0 = 0$</td><td>$1 \times 0 = 0$</td><td>$2$</td></tr>
+            <tr><td>middle</td><td>$2 \times (-1) = -2$</td><td>$3 \times 1 = 3$</td><td>$1 \times 0 = 0$</td><td>$1$</td></tr>
+            <tr><td>bottom</td><td>$2 \times 0 = 0$</td><td>$3 \times (-1) = -3$</td><td>$1 \times 1 = 1$</td><td>$-2$</td></tr>
+          </table>
+          <p class="k"><span class="kl">What we have now</span> $2u + 3v + 1w = (2, 1, -2)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> Read across each row of the three vectors placed side by side, multiply by the amounts $(2, 3, 1)$ and add. Top row $(1, 0, 0)$: $1 \times 2 + 0 \times 3 + 0 \times 1 = 2$ ✓. Middle row $(-1, 1, 0)$: $-1 \times 2 + 1 \times 3 + 0 = -2 + 3 = 1$ ✓. Bottom row $(0, -1, 1)$: $0 + (-1) \times 3 + 1 \times 1 = -3 + 1 = -2$ ✓.</p>
+        </li>
+      </ol>
     </div>
 
     <h3>What do <b>all</b> the mixes fill?</h3>
@@ -88,6 +163,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s3">3. A matrix is a machine</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Matrix = a table of numbers. Column = a stack going down; row = a line going across. Matrix times vector ($Ax$) = mix the columns of $A$ using the numbers in $x$ as the amounts. Input = what goes in ($x$); output = what comes out ($Ax$). Difference = "this one minus the one before". Difference matrix = the machine that outputs differences.</p>
+    </div>
     <p>Put the three vectors side by side as the <b>columns</b> of a matrix:</p>
     $$
     A = \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 0 & -1 & 1 \end{bmatrix}
@@ -97,13 +175,40 @@
     $$ Ax = x_1 u + x_2 v + x_3 w $$
 
     <div class="box example"><span class="label">Example: feed in x = (1, 4, 9)</span>
-      <table>
-        <tr><th>Position</th><th>$1u$</th><th>$4v$</th><th>$9w$</th><th>Add</th></tr>
-        <tr><td>top</td><td>$1$</td><td>$0$</td><td>$0$</td><td>$1$</td></tr>
-        <tr><td>middle</td><td>$-1$</td><td>$4$</td><td>$0$</td><td>$3$</td></tr>
-        <tr><td>bottom</td><td>$0$</td><td>$-4$</td><td>$9$</td><td>$5$</td></tr>
-      </table>
-      <p>In: $(1, 4, 9)$. &nbsp; Out: $(1, 3, 5)$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Take 1 copy of column 1, $u = (1, -1, 0)$.</p>
+          <p class="k"><span class="kl">Why</span> The first number of $x$ is $1$, so it says how much of column 1 to use.</p>
+          <p class="k"><span class="kl">How</span> $1 \times 1 = 1$, $1 \times (-1) = -1$, $1 \times 0 = 0$.</p>
+          <p class="k"><span class="kl">What we have now</span> $1u = (1, -1, 0)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Take 4 copies of column 2, $v = (0, 1, -1)$.</p>
+          <p class="k"><span class="kl">Why</span> The second number of $x$ is $4$.</p>
+          <p class="k"><span class="kl">How</span> $4 \times 0 = 0$, $4 \times 1 = 4$, $4 \times (-1) = -4$.</p>
+          <p class="k"><span class="kl">What we have now</span> $4v = (0, 4, -4)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Take 9 copies of column 3, $w = (0, 0, 1)$.</p>
+          <p class="k"><span class="kl">Why</span> The third number of $x$ is $9$.</p>
+          <p class="k"><span class="kl">How</span> $9 \times 0 = 0$, $9 \times 0 = 0$, $9 \times 1 = 9$.</p>
+          <p class="k"><span class="kl">What we have now</span> $9w = (0, 0, 9)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Add the three pieces, position by position.</p>
+          <p class="k"><span class="kl">How</span> Top: $1 + 0 + 0 = 1$. Middle: $-1 + 4 = 3$, then $3 + 0 = 3$. Bottom: $0 + (-4) = -4$, then $-4 + 9 = 5$.</p>
+          <table>
+            <tr><th>Position</th><th>$1u$</th><th>$4v$</th><th>$9w$</th><th>Add</th></tr>
+            <tr><td>top</td><td>$1$</td><td>$0$</td><td>$0$</td><td>$1$</td></tr>
+            <tr><td>middle</td><td>$-1$</td><td>$4$</td><td>$0$</td><td>$3$</td></tr>
+            <tr><td>bottom</td><td>$0$</td><td>$-4$</td><td>$9$</td><td>$5$</td></tr>
+          </table>
+          <p class="k"><span class="kl">What we have now</span> In: $(1, 4, 9)$. &nbsp; Out: $(1, 3, 5)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check, row by row of A</span> Row 1 $(1, 0, 0)$: $1 \times 1 + 0 \times 4 + 0 \times 9 = 1$ ✓. Row 2 $(-1, 1, 0)$: $-1 \times 1 + 1 \times 4 + 0 = -1 + 4 = 3$ ✓. Row 3 $(0, -1, 1)$: $0 + (-1) \times 4 + 1 \times 9 = -4 + 9 = 5$ ✓.</p>
+        </li>
+      </ol>
     </div>
 
     <h3>What is this machine doing?</h3>
@@ -129,14 +234,39 @@
 
     <!-- ====================================================== -->
     <h2 id="s4">4. Running the machine backwards</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Output $b$ = what came out of the machine. Solve $Ax = b$ = find the input $x$ that gives that output. Running total = keep adding as you go. Sum matrix $S$ = the machine that makes running totals. Inverse $A^{-1}$ = the machine that undoes $A$. Derivative / integral = the calculus versions of differences / running totals.</p>
+    </div>
     <p>Now reverse the question: you know the <b>daily amounts</b> $(1, 3, 5)$. What were the <b>totals</b>? Just keep adding:</p>
-    <table>
-      <tr><th>Day</th><th>Added that day</th><th>Running total</th></tr>
-      <tr><td>1</td><td>$1$</td><td>$1$</td></tr>
-      <tr><td>2</td><td>$3$</td><td>$1 + 3 = 4$</td></tr>
-      <tr><td>3</td><td>$5$</td><td>$1 + 3 + 5 = 9$</td></tr>
-    </table>
-    <p>We are back at $(1, 4, 9)$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find the total after day 1.</p>
+        <p class="k"><span class="kl">Why</span> The jar started empty, so the day-1 total is just what was added on day 1.</p>
+        <p class="k"><span class="kl">How</span> $0 + 1 = 1$.</p>
+        <p class="k"><span class="kl">What we have now</span> Total after day 1 $= 1$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find the total after day 2.</p>
+        <p class="k"><span class="kl">Why</span> Yesterday's total plus what was added today.</p>
+        <p class="k"><span class="kl">How</span> $1 + 3 = 4$.</p>
+        <p class="k"><span class="kl">What we have now</span> Total after day 2 $= 4$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find the total after day 3.</p>
+        <p class="k"><span class="kl">Why</span> Again: yesterday's total plus today's amount.</p>
+        <p class="k"><span class="kl">How</span> $4 + 5 = 9$.</p>
+        <p class="k"><span class="kl">What we have now</span> Totals $(1, 4, 9)$.</p>
+        <table>
+          <tr><th>Day</th><th>Added that day</th><th>Running total</th></tr>
+          <tr><td>1</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td>2</td><td>$3$</td><td>$1 + 3 = 4$</td></tr>
+          <tr><td>3</td><td>$5$</td><td>$1 + 3 + 5 = 9$</td></tr>
+        </table>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check in A</span> $A$ takes differences: first entry $1$; $4 - 1 = 3$; $9 - 4 = 5$. Out comes $(1, 3, 5)$ ✓. We are back at $(1, 4, 9)$ from $(1, 3, 5)$.</p>
+      </li>
+    </ol>
 
     <h3>The same thing with letters</h3>
     <p>If the output is $b = (b_1, b_2, b_3)$, the three equations are:</p>
@@ -148,13 +278,28 @@
     \end{aligned}
     $$
     <p>Solve from the top, one line at a time:</p>
-    $$
-    \begin{aligned}
-      x_1 &= b_1 &&\text{read it off the first line} \\
-      x_2 &= b_2 + x_1 = b_1 + b_2 &&\text{add } x_1 \text{ to both sides of line 2} \\
-      x_3 &= b_3 + x_2 = b_1 + b_2 + b_3 &&\text{add } x_2 \text{ to both sides of line 3}
-    \end{aligned}
-    $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Read $x_1$ off line 1.</p>
+        <p class="k"><span class="kl">Why</span> Line 1 already says $x_1 = b_1$. Nothing else is in it.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_1 = b_1$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Get $x_2$ alone in line 2: $x_2 - x_1 = b_2$.</p>
+        <p class="k"><span class="kl">Why</span> The $-x_1$ is in the way. Adding $x_1$ cancels it, since $-x_1 + x_1 = 0$. Whatever we add on the left we must add on the right, so the "$=$" stays true.</p>
+        <p class="k"><span class="kl">How</span> Add $x_1$ to both sides: $x_2 = b_2 + x_1$. Now put in $x_1 = b_1$ from step 1: $x_2 = b_2 + b_1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_2 = b_1 + b_2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Get $x_3$ alone in line 3: $x_3 - x_2 = b_3$.</p>
+        <p class="k"><span class="kl">Why</span> Same trick: add $x_2$ to both sides to cancel the $-x_2$.</p>
+        <p class="k"><span class="kl">How</span> $x_3 = b_3 + x_2$. Put in $x_2 = b_1 + b_2$ from step 2: $x_3 = b_3 + b_1 + b_2$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_3 = b_1 + b_2 + b_3$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check, line by line</span> Line 1: $x_1 = b_1$ ✓. Line 2: $x_2 - x_1 = (b_1 + b_2) - b_1 = b_2$ ✓. Line 3: $x_3 - x_2 = (b_1 + b_2 + b_3) - (b_1 + b_2) = b_3$ ✓.</p>
+      </li>
+    </ol>
     <p>Each answer is a <b>running total</b>. The "adding up" machine is the matrix</p>
     $$ S = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 1 & 1 \end{bmatrix}, \qquad S \begin{bmatrix} b_1 \\ b_2 \\ b_3 \end{bmatrix} = \begin{bmatrix} b_1 \\ b_1 + b_2 \\ b_1 + b_2 + b_3 \end{bmatrix} $$
 
@@ -190,6 +335,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s5">5. A machine that cannot be undone</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Column = a stack of numbers going down in a matrix. Cyclic difference matrix $C$ = differences taken round a circle (the first one compares with the last). Inverse = undo button. No solution = no input gives that output. Many solutions = lots of inputs give the same output. Zero vector = all entries 0.</p>
+    </div>
     <p>Change only the third column, from $w = (0, 0, 1)$ to $w^* = (-1, 0, 1)$:</p>
     $$
     C = \begin{bmatrix} 1 & 0 & -1 \\ -1 & 1 & 0 \\ 0 & -1 & 1 \end{bmatrix},
@@ -212,13 +360,51 @@
 
     <h3>Problem 1: you cannot work out how much they have</h3>
     <p>Give everyone $10$ more, so they have $15, 17, 16$:</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Friend 1 compares with friend 3.</p>
+        <p class="k"><span class="kl">Why</span> Row 1 of $C$ is $(1, 0, -1)$: "$x_1$ minus $x_3$".</p>
+        <p class="k"><span class="kl">How</span> $15 - 16 = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> First answer $-1$, same as before.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Friend 2 compares with friend 1.</p>
+        <p class="k"><span class="kl">Why</span> Row 2 of $C$ is $(-1, 1, 0)$: "$x_2$ minus $x_1$".</p>
+        <p class="k"><span class="kl">How</span> $17 - 15 = 2$.</p>
+        <p class="k"><span class="kl">What we have now</span> Second answer $2$, same as before.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Friend 3 compares with friend 2.</p>
+        <p class="k"><span class="kl">Why</span> Row 3 of $C$ is $(0, -1, 1)$: "$x_3$ minus $x_2$".</p>
+        <p class="k"><span class="kl">How</span> $16 - 17 = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $C(15, 17, 16) = (-1, 2, -1)$, exactly what $C(5, 7, 6)$ gave.</p>
+      </li>
+    </ol>
     $$ C \begin{bmatrix} 15 \\ 17 \\ 16 \end{bmatrix} = \begin{bmatrix} 15 - 16 \\ 17 - 15 \\ 16 - 17 \end{bmatrix} = \begin{bmatrix} -1 \\ 2 \\ -1 \end{bmatrix} $$
-    <p>Exactly the <b>same</b> answers. Hearing $(-1, 2, -1)$, you cannot tell whether they have $(5, 7, 6)$ or $(15, 17, 16)$ or anything else shifted up or down. The same happens with everyone equal:</p>
+    <p>Exactly the <b>same</b> answers. Hearing $(-1, 2, -1)$, you cannot tell whether they have $(5, 7, 6)$ or $(15, 17, 16)$ or anything else shifted up or down. The same happens with everyone equal: for $(1, 1, 1)$ the three differences are $1 - 1 = 0$, $1 - 1 = 0$, $1 - 1 = 0$.</p>
     $$ C \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix} = C \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix} $$
     <p>Two different inputs give the same output, so <b>no undo button can exist</b>. $C$ has no inverse.</p>
 
     <h3>Problem 2: some outputs are impossible</h3>
-    <p>Add the three answers: $-1 + 2 + (-1) = 0$. That is not luck. Add the three outputs in general:</p>
+    <p>Add the three answers: $-1 + 2 = 1$, then $1 + (-1) = 0$. That is not luck. Add the three outputs in general:</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Write the sum of the three outputs: $(x_1 - x_3) + (x_2 - x_1) + (x_3 - x_2)$.</p>
+        <p class="k"><span class="kl">Why</span> We want to know what the three answers always add up to, whatever the coins are.</p>
+        <p class="k"><span class="kl">How</span> Collect the $x_1$'s: $+x_1$ (first bracket) and $-x_1$ (second bracket) give $x_1 - x_1 = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_1$ is gone.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Collect the $x_2$'s.</p>
+        <p class="k"><span class="kl">How</span> $+x_2$ (second bracket) and $-x_2$ (third bracket): $x_2 - x_2 = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_2$ is gone too.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Collect the $x_3$'s.</p>
+        <p class="k"><span class="kl">How</span> $-x_3$ (first bracket) and $+x_3$ (third bracket): $-x_3 + x_3 = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> Everything cancels: the sum is $0 + 0 + 0 = 0$.</p>
+      </li>
+    </ol>
     $$
     (x_1 - x_3) + (x_2 - x_1) + (x_3 - x_2) = 0
     $$
@@ -234,13 +420,39 @@
 
     <!-- ====================================================== -->
     <h2 id="s6">6. Why: one column is a mix of the others</h2>
-    <p>The real cause is in the columns. Is $w^*$ a mix of $u$ and $v$? Try $-1$ of $u$ and $-1$ of $v$:</p>
-    <table>
-      <tr><th>Position</th><th>$-1 \times u$</th><th>$-1 \times v$</th><th>Add</th><th>$w^*$</th></tr>
-      <tr><td>top</td><td>$-1$</td><td>$0$</td><td>$-1$</td><td>$-1$ ✓</td></tr>
-      <tr><td>middle</td><td>$1$</td><td>$-1$</td><td>$0$</td><td>$0$ ✓</td></tr>
-      <tr><td>bottom</td><td>$0$</td><td>$1$</td><td>$1$</td><td>$1$ ✓</td></tr>
-    </table>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Mix = multiply vectors by numbers, then add. Plane (flat sheet) = all mixes of two arrows pointing different ways. Independent = no vector is a mix of the others (each brings a new direction). Dependent = one vector is a mix of the others. Basis of 3D space = 3 independent vectors whose mixes reach every point. Inverse = undo button.</p>
+    </div>
+    <p>The real cause is in the columns. Is $w^*$ a mix of $u$ and $v$? Look for amounts $a$ and $b$ with $a\,u + b\,v = w^* = (-1, 0, 1)$:</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look at the <b>top</b> position.</p>
+        <p class="k"><span class="kl">Why</span> $u$ has a $1$ on top and $v$ has a $0$ on top, so only $a$ matters there. One unknown: easy.</p>
+        <p class="k"><span class="kl">How</span> Top: $a \times 1 + b \times 0 = -1$, so $a + 0 = -1$, so $a = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $a = -1$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look at the <b>bottom</b> position.</p>
+        <p class="k"><span class="kl">Why</span> $u$ has a $0$ at the bottom and $v$ has $-1$, so only $b$ matters there.</p>
+        <p class="k"><span class="kl">How</span> Bottom: $a \times 0 + b \times (-1) = 1$, so $-b = 1$, so $b = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $b = -1$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Test the <b>middle</b> position with $a = -1$, $b = -1$.</p>
+        <p class="k"><span class="kl">Why</span> We used top and bottom to find $a$ and $b$. The middle is the real test: it must also come out right.</p>
+        <p class="k"><span class="kl">How</span> Middle: $a \times (-1) + b \times 1 = (-1)(-1) + (-1)(1) = 1 - 1 = 0$. And $w^*$ has $0$ in the middle ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> $w^* = -u - v$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check, every position</span> $-1 \times u = (-1, 1, 0)$ and $-1 \times v = (0, -1, 1)$. Add:</p>
+        <table>
+          <tr><th>Position</th><th>$-1 \times u$</th><th>$-1 \times v$</th><th>Add</th><th>$w^*$</th></tr>
+          <tr><td>top</td><td>$-1$</td><td>$0$</td><td>$-1$</td><td>$-1$ ✓</td></tr>
+          <tr><td>middle</td><td>$1$</td><td>$-1$</td><td>$0$</td><td>$0$ ✓</td></tr>
+          <tr><td>bottom</td><td>$0$</td><td>$1$</td><td>$1$</td><td>$1$ ✓</td></tr>
+        </table>
+      </li>
+    </ol>
     <p>So $w^* = -u - v$. The third column of $C$ is made from the first two, so it adds <b>no new direction</b>. All three columns lie on the <b>same flat sheet</b>, and mixing them can never leave that sheet. That is why most outputs are unreachable.</p>
     <p>The original $w = (0, 0, 1)$ is <b>not</b> a mix of $u$ and $v$ (see Example 5 in the Examples tab). It points off the sheet, which is why $A$ reaches everything.</p>
 
@@ -273,6 +485,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s7">7. Subspaces</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Origin = the point $(0, 0, 0)$ where all axes meet; also called the zero vector. Mix = multiply by numbers and add. Line / plane = a straight stick / a flat sheet, going on forever. "Through the origin" = it passes through $(0, 0, 0)$. Subspace = a collection you can't escape by mixing.</p>
+    </div>
     <div class="box definition"><span class="label">Definition: Subspace</span>
       <p>A <b>subspace</b> is a collection of vectors that you <b>cannot escape by mixing</b>. Multiply any of them by any number, or add any two, and you are still inside. It must contain the zero vector.</p>
     </div>
@@ -302,6 +517,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s8">8. Summary</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$A$ = difference matrix (totals in, daily amounts out). $S$ = sum matrix (running totals), the inverse of $A$. $C$ = cyclic difference matrix (round-table differences), no inverse. Independent = no vector is a mix of the others. Dependent = one is. Basis = independent vectors that reach every point.</p>
+    </div>
     <table>
       <tr><th></th><th>Matrix $A$</th><th>Matrix $C$</th></tr>
       <tr><td>Third column</td><td>$w = (0, 0, 1)$</td><td>$w^* = (-1, 0, 1) = -u - v$</td></tr>
@@ -338,14 +556,50 @@
       <div class="box example"><span class="label">Problem</span>
         <p>Find $A x$ for $x = (2, 5, 7)$.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$A$ = the difference matrix; its columns are $u = (1, -1, 0)$, $v = (0, 1, -1)$, $w = (0, 0, 1)$. $Ax$ = mix the columns of $A$ using the numbers of $x$ as amounts. Difference = "this one minus the one before". Row = a line of numbers going across.</p>
+      </div>
       <div class="steps">
         <p><b>By columns.</b></p>
-        $$
-        2 \begin{bmatrix} 1 \\ -1 \\ 0 \end{bmatrix} + 5 \begin{bmatrix} 0 \\ 1 \\ -1 \end{bmatrix} + 7 \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}
-        = \begin{bmatrix} 2 + 0 + 0 \\ -2 + 5 + 0 \\ 0 - 5 + 7 \end{bmatrix}
-        = \begin{bmatrix} 2 \\ 3 \\ 2 \end{bmatrix}
-        $$
-        <p><b>By differences</b> (what $A$ does): $(x_1,\ x_2 - x_1,\ x_3 - x_2) = (2,\ 5 - 2,\ 7 - 5) = (2, 3, 2)$ ✓.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take 2 of column 1: $2 \times (1, -1, 0)$.</p>
+            <p class="k"><span class="kl">Why</span> The first number of $x$ is $2$.</p>
+            <p class="k"><span class="kl">How</span> $2 \times 1 = 2$, $2 \times (-1) = -2$, $2 \times 0 = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(2, -2, 0)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take 5 of column 2: $5 \times (0, 1, -1)$.</p>
+            <p class="k"><span class="kl">Why</span> The second number of $x$ is $5$.</p>
+            <p class="k"><span class="kl">How</span> $5 \times 0 = 0$, $5 \times 1 = 5$, $5 \times (-1) = -5$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(0, 5, -5)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take 7 of column 3: $7 \times (0, 0, 1)$.</p>
+            <p class="k"><span class="kl">Why</span> The third number of $x$ is $7$.</p>
+            <p class="k"><span class="kl">How</span> $7 \times 0 = 0$, $7 \times 0 = 0$, $7 \times 1 = 7$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(0, 0, 7)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add the three pieces, position by position.</p>
+            <p class="k"><span class="kl">How</span> Top: $2 + 0 + 0 = 2$. Middle: $-2 + 5 = 3$, then $3 + 0 = 3$. Bottom: $0 + (-5) = -5$, then $-5 + 7 = 2$.</p>
+            $$
+            2 \begin{bmatrix} 1 \\ -1 \\ 0 \end{bmatrix} + 5 \begin{bmatrix} 0 \\ 1 \\ -1 \end{bmatrix} + 7 \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}
+            = \begin{bmatrix} 2 + 0 + 0 \\ -2 + 5 + 0 \\ 0 - 5 + 7 \end{bmatrix}
+            = \begin{bmatrix} 2 \\ 3 \\ 2 \end{bmatrix}
+            $$
+            <p class="k"><span class="kl">What we have now</span> $Ax = (2, 3, 2)$.</p>
+          </li>
+        </ol>
+        <p><b>By differences</b> (what $A$ does), as a check:</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use the rule $Ax = (x_1,\ x_2 - x_1,\ x_3 - x_2)$.</p>
+            <p class="k"><span class="kl">Why</span> This is what each row of $A$ does: row 1 $(1, 0, 0)$ keeps $x_1$; row 2 $(-1, 1, 0)$ gives $x_2 - x_1$; row 3 $(0, -1, 1)$ gives $x_3 - x_2$.</p>
+            <p class="k"><span class="kl">How</span> Row 1: $2$. Row 2: $5 - 2 = 3$. Row 3: $7 - 5 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(2, 3, 2)$, the same as by columns ✓.</p>
+          </li>
+        </ol>
         <p class="answer">Answer: $Ax = (2, 3, 2)$</p>
       </div>
     </div>
@@ -356,8 +610,33 @@
       <div class="box example"><span class="label">Problem</span>
         <p>Solve $Ax = b$ for $b = (3, 1, 2)$.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Solve $Ax = b$ = find the input $x$ that the difference machine $A$ turns into $b$. Equation = a sentence "left side $=$ right side". Running sum (running total) = keep adding as you go. Check = put the answer back into the original equations.</p>
+      </div>
       <div class="steps">
         <p><b>The equations.</b> $x_1 = 3$, &nbsp; $x_2 - x_1 = 1$, &nbsp; $x_3 - x_2 = 2$.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Read $x_1$ off equation 1.</p>
+            <p class="k"><span class="kl">Why</span> Equation 1 already says $x_1 = 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = 3$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Solve equation 2, $x_2 - x_1 = 1$, for $x_2$.</p>
+            <p class="k"><span class="kl">Why</span> Adding $x_1$ to both sides cancels the $-x_1$ and keeps the "$=$" true.</p>
+            <p class="k"><span class="kl">How</span> $x_2 = 1 + x_1$. Put in $x_1 = 3$: $x_2 = 1 + 3 = 4$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_2 = 4$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Solve equation 3, $x_3 - x_2 = 2$, for $x_3$.</p>
+            <p class="k"><span class="kl">Why</span> Same trick: add $x_2$ to both sides.</p>
+            <p class="k"><span class="kl">How</span> $x_3 = 2 + x_2$. Put in $x_2 = 4$: $x_3 = 2 + 4 = 6$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = (3, 4, 6)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check, row by row</span> Equation 1: $x_1 = 3$ ✓. Equation 2: $x_2 - x_1 = 4 - 3 = 1$ ✓. Equation 3: $x_3 - x_2 = 6 - 4 = 2$ ✓. So $A(3, 4, 6) = (3, 1, 2)$ ✓.</p>
+          </li>
+        </ol>
         $$
         \begin{aligned}
           x_1 &= 3 \\
@@ -365,7 +644,6 @@
           x_3 &= 2 + x_2 = 2 + 4 = 6 &&\text{add } x_2 \text{ to both sides}
         \end{aligned}
         $$
-        <p><b>Check.</b> $A(3, 4, 6) = (3,\ 4 - 3,\ 6 - 4) = (3, 1, 2)$ ✓.</p>
         <p class="answer">Answer: $x = (3, 4, 6)$, the running sums of $(3, 1, 2)$.</p>
       </div>
     </div>
@@ -376,10 +654,33 @@
       <div class="box example"><span class="label">Problem</span>
         <p>Use $S = A^{-1}$ to solve $Ax = (2, 2, 2)$ in one step.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Inverse $A^{-1}$ = the undo machine for $A$. Here it is $S$, the running-sum matrix: row 1 $(1, 0, 0)$ keeps the first number, row 2 $(1, 1, 0)$ adds the first two, row 3 $(1, 1, 1)$ adds all three. If $Ax = b$, then $x = Sb$.</p>
+      </div>
       <div class="steps">
         <p><b>Multiply by $S$</b> (running sums):</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 1 of $S$ times $(2, 2, 2)$.</p>
+            <p class="k"><span class="kl">Why</span> Row 1 of $S$ is $(1, 0, 0)$: it keeps only the first number.</p>
+            <p class="k"><span class="kl">How</span> $1 \times 2 + 0 \times 2 + 0 \times 2 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 2 of $S$ times $(2, 2, 2)$.</p>
+            <p class="k"><span class="kl">Why</span> Row 2 is $(1, 1, 0)$: add the first two numbers.</p>
+            <p class="k"><span class="kl">How</span> $2 + 2 = 4$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_2 = 4$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 3 of $S$ times $(2, 2, 2)$.</p>
+            <p class="k"><span class="kl">Why</span> Row 3 is $(1, 1, 1)$: add all three.</p>
+            <p class="k"><span class="kl">How</span> $2 + 2 = 4$, then $4 + 2 = 6$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = (2, 4, 6)$.</p>
+          </li>
+        </ol>
         $$ x = S \begin{bmatrix} 2 \\ 2 \\ 2 \end{bmatrix} = \begin{bmatrix} 2 \\ 2 + 2 \\ 2 + 2 + 2 \end{bmatrix} = \begin{bmatrix} 2 \\ 4 \\ 6 \end{bmatrix} $$
-        <p><b>Check.</b> $A(2, 4, 6) = (2,\ 4 - 2,\ 6 - 4) = (2, 2, 2)$ ✓.</p>
+        <p><b>Check in $A$, row by row.</b> Row 1: $2$ ✓. Row 2: $4 - 2 = 2$ ✓. Row 3: $6 - 4 = 2$ ✓. So $A(2, 4, 6) = (2, 2, 2)$ ✓.</p>
         <p class="answer">Answer: $x = (2, 4, 6)$</p>
       </div>
     </div>
@@ -390,8 +691,24 @@
       <div class="box example"><span class="label">Problem</span>
         <p>Solve $Cx = b$ for (a) $b = (1, 2, -3)$ and (b) $b = (1, 1, 1)$, or show it is impossible.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$C$ = cyclic difference matrix: $Cx = (x_1 - x_3,\ x_2 - x_1,\ x_3 - x_2)$, differences round a circle. Solvable = at least one $x$ works. Infinitely many solutions = endless $x$'s work. $c$ = any number you like. No solution = no $x$ can work.</p>
+      </div>
       <div class="steps">
-        <p><b>The test.</b> $Cx = b$ has a solution only if $b_1 + b_2 + b_3 = 0$.</p>
+        <p><b>The test.</b> $Cx = b$ has a solution only if $b_1 + b_2 + b_3 = 0$ (the three outputs of $C$ always add to $0$, section 5).</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add the three numbers of (a) $b = (1, 2, -3)$.</p>
+            <p class="k"><span class="kl">Why</span> If they don't add to $0$, $C$ can never produce them.</p>
+            <p class="k"><span class="kl">How</span> $1 + 2 = 3$, then $3 + (-3) = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> Sum $0$: (a) passes the test.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add the three numbers of (b) $b = (1, 1, 1)$.</p>
+            <p class="k"><span class="kl">How</span> $1 + 1 = 2$, then $2 + 1 = 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> Sum $3 \ne 0$: (b) fails.</p>
+          </li>
+        </ol>
         <table>
           <tr><th>$b$</th><th>$b_1 + b_2 + b_3$</th><th>Solvable?</th></tr>
           <tr><td>(a) $(1, 2, -3)$</td><td>$1 + 2 - 3 = 0$</td><td>yes</td></tr>
@@ -399,7 +716,34 @@
         </table>
 
         <h4>(a) Find the solutions</h4>
-        <p>The equations are $x_1 - x_3 = 1$, $\ x_2 - x_1 = 2$, $\ x_3 - x_2 = -3$. Remember the friends at the round table: giving everyone the same extra amount changes none of the differences. So we are free to pick any starting value for friend 1. Choose the easiest, $x_1 = 0$:</p>
+        <p>The equations are $x_1 - x_3 = 1$, $\ x_2 - x_1 = 2$, $\ x_3 - x_2 = -3$. Remember the friends at the round table: giving everyone the same extra amount changes none of the differences.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Choose $x_1 = 0$.</p>
+            <p class="k"><span class="kl">Why</span> Only differences are known, so we are free to pick any starting value for friend 1. $0$ is the easiest.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = 0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use equation 2, $x_2 - x_1 = 2$, to get $x_2$.</p>
+            <p class="k"><span class="kl">Why</span> It links $x_2$ to $x_1$, which we now know.</p>
+            <p class="k"><span class="kl">How</span> Add $x_1$ to both sides: $x_2 = 2 + x_1 = 2 + 0 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_2 = 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use equation 3, $x_3 - x_2 = -3$, to get $x_3$.</p>
+            <p class="k"><span class="kl">How</span> Add $x_2$ to both sides: $x_3 = -3 + x_2 = -3 + 2 = -1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = (0, 2, -1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check, all three equations</span> Equation 1: $x_1 - x_3 = 0 - (-1) = 0 + 1 = 1$ ✓. Equation 2: $x_2 - x_1 = 2 - 0 = 2$ ✓. Equation 3: $x_3 - x_2 = -1 - 2 = -3$ ✓.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add the same amount $c$ to everyone: $x = (0, 2, -1) + c(1, 1, 1)$.</p>
+            <p class="k"><span class="kl">Why</span> Adding $c$ to both numbers in a difference leaves the difference the same.</p>
+            <p class="k"><span class="kl">How</span> Try $c = 1$: $(0 + 1,\ 2 + 1,\ -1 + 1) = (1, 3, 0)$. Equation 1: $1 - 0 = 1$ ✓. Equation 2: $3 - 1 = 2$ ✓. Equation 3: $0 - 3 = -3$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> Endless solutions, one for every $c$.</p>
+          </li>
+        </ol>
         $$
         \begin{aligned}
           x_1 &= 0 &&\text{our choice} \\
@@ -408,11 +752,22 @@
           x_1 - x_3 &= 0 - (-1) = 1 \;✓ &&\text{first equation checks}
         \end{aligned}
         $$
-        <p>So $x = (0, 2, -1)$ works, and so does $(0, 2, -1) + c(1, 1, 1)$ for any $c$. For example $c = 1$ gives $(1, 3, 0)$: $1 - 0 = 1$, $3 - 1 = 2$, $0 - 3 = -3$ ✓.</p>
         <p class="answer">(a) Infinitely many solutions: $x = (0, 2, -1) + c(1, 1, 1)$.</p>
 
         <h4>(b) Show it is impossible</h4>
-        <p>Add the three equations: the left side is always $(x_1 - x_3) + (x_2 - x_1) + (x_3 - x_2) = 0$, but the right side is $1 + 1 + 1 = 3$. That would need $0 = 3$.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add the three left sides: $(x_1 - x_3) + (x_2 - x_1) + (x_3 - x_2)$.</p>
+            <p class="k"><span class="kl">Why</span> If all three equations were true, their sums would have to be equal too.</p>
+            <p class="k"><span class="kl">How</span> $x_1 - x_1 = 0$, $x_2 - x_2 = 0$, $-x_3 + x_3 = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> Left sides add to $0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add the three right sides.</p>
+            <p class="k"><span class="kl">How</span> $1 + 1 = 2$, then $2 + 1 = 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> That would need $0 = 3$, which is false for every $x$. No solution.</p>
+          </li>
+        </ol>
         <p class="answer">(b) No solution.</p>
       </div>
     </div>
@@ -423,10 +778,30 @@
       <div class="box example"><span class="label">Problem</span>
         <p>With $u = (1, -1, 0)$ and $v = (0, 1, -1)$: is (a) $w = (0, 0, 1)$ and (b) $w^* = (-1, 0, 1)$ a combination of $u$ and $v$?</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Combination (mix) = $x_1 u + x_2 v$: multiply by numbers $x_1, x_2$ and add. Independent = no vector is a mix of the others. Dependent = one vector is a mix of the others. Basis for $\mathbb{R}^3$ = 3 independent vectors reaching every point of 3D space. Plane = flat sheet.</p>
+      </div>
       <div class="steps">
         <p><b>General combination.</b> $x_1 u + x_2 v = (x_1,\ -x_1 + x_2,\ -x_2)$. Match it with the target, position by position.</p>
 
         <h4>(a) Target $w = (0, 0, 1)$</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Match the top: $x_1 = 0$.</p>
+            <p class="k"><span class="kl">Why</span> The top of the mix is $x_1$, the top of $w$ is $0$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = 0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Match the middle: $-x_1 + x_2 = 0$.</p>
+            <p class="k"><span class="kl">How</span> Put in $x_1 = 0$: $-0 + x_2 = 0$, so $x_2 = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_2 = 0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Match the bottom: $-x_2 = 1$.</p>
+            <p class="k"><span class="kl">How</span> Put in $x_2 = 0$: $-0 = 1$, i.e. $0 = 1$ ✗.</p>
+            <p class="k"><span class="kl">What we have now</span> False. The only amounts the top and middle allow break the bottom, so no mix of $u$ and $v$ equals $w$.</p>
+          </li>
+        </ol>
         $$
         \begin{aligned}
           x_1 &= 0 &&\text{top} \\
@@ -437,6 +812,25 @@
         <p class="answer">(a) No, so $u, v, w$ are independent (a basis for $\mathbb{R}^3$).</p>
 
         <h4>(b) Target $w^* = (-1, 0, 1)$</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Match the top: $x_1 = -1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = -1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Match the middle: $-x_1 + x_2 = 0$.</p>
+            <p class="k"><span class="kl">How</span> $-x_1 = -(-1) = 1$, so $1 + x_2 = 0$. Take 1 from both sides: $x_2 = -1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_2 = -1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Match the bottom: $-x_2 = 1$.</p>
+            <p class="k"><span class="kl">How</span> $-x_2 = -(-1) = 1$. And the target bottom is $1$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> All three positions work: $w^* = -u - v$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check, every position</span> $-u - v = (-1 - 0,\ 1 - 1,\ 0 - (-1)) = (-1, 0, 1) = w^*$ ✓.</p>
+          </li>
+        </ol>
         $$
         \begin{aligned}
           x_1 &= -1 &&\text{top} \\
@@ -445,7 +839,7 @@
         \end{aligned}
         $$
         <p class="answer">(b) Yes: $w^* = -u - v$, so $u, v, w^*$ are dependent.</p>
-        <p><b>Shortcut.</b> $u$ and $v$ both have components that add to $0$, so every combination does too. $w$ adds to $1$ (not in the plane); $w^*$ adds to $0$ (in the plane).</p>
+        <p><b>Shortcut.</b> Add up the numbers in each vector. $u$: $1 + (-1) + 0 = 0$. $v$: $0 + 1 + (-1) = 0$. So every combination of $u$ and $v$ also adds to $0$. $w$: $0 + 0 + 1 = 1$ (not in the plane). $w^*$: $-1 + 0 + 1 = 0$ (in the plane).</p>
       </div>
     </div>
 
@@ -461,8 +855,32 @@
           <li>All vectors $(x, y)$ with $x \ge 0$ and $y \ge 0$.</li>
         </ol>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Subspace = a collection of vectors you cannot escape by multiplying by numbers or adding; it must hold the origin. Origin = the zero vector, $(0, 0)$ or $(0, 0, 0)$. $\mathbb{R}^2$ = all pairs of numbers (a flat floor). $\mathbb{R}^3$ = all triples (the whole room). $\ge$ = "greater than or equal to".</p>
+      </div>
       <div class="steps">
         <p><b>Two tests.</b> (1) Does it contain the origin? (2) Do multiplying by any number and adding keep you inside?</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">(a) Origin?</span> Put $x = 0$: $y = 2 \times 0 = 0$. So $(0, 0)$ is on the line ✓.</p>
+            <p class="k"><span class="kl">Stays inside?</span> Take $(1, 2)$ and $(3, 6)$ (both have $y = 2x$). Add: $(4, 8)$, and $2 \times 4 = 8$ ✓. Times $-5$: $(-5, -10)$, and $2 \times (-5) = -10$ ✓. Always: if $y = 2x$ then $cy = 2(cx)$.</p>
+            <p class="k"><span class="kl">What we have now</span> <b>Subspace</b> (a line through $0$).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">(b) Origin?</span> Put $x = 0$: $y = 2 \times 0 + 1 = 0 + 1 = 1$, not $0$. So $(0, 0)$ is not on it ✗.</p>
+            <p class="k"><span class="kl">What we have now</span> <b>Not a subspace</b>. No need for test 2.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">(c) Origin?</span> $0 + 0 + 0 = 0$ ✓.</p>
+            <p class="k"><span class="kl">Stays inside?</span> Take $(1, 2, -3)$ (sum $0$). Times $2$: $(2, 4, -6)$, sum $2 + 4 - 6 = 0$ ✓. Add $(1, -1, 0)$ (sum $0$): $(2, 1, -3)$, sum $2 + 1 - 3 = 0$ ✓. Scaling multiplies the sum by the same number, and $c \times 0 = 0$; adding adds the sums, and $0 + 0 = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> <b>Subspace</b> (a plane through $0$).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">(d) Origin?</span> $0 \ge 0$ and $0 \ge 0$ ✓.</p>
+            <p class="k"><span class="kl">Stays inside?</span> $(1, 1)$ is inside. Multiply by $-1$: $(-1, -1)$. But $-1 \ge 0$ is false ✗.</p>
+            <p class="k"><span class="kl">What we have now</span> <b>Not a subspace</b>: multiplying by a negative number escapes.</p>
+          </li>
+        </ol>
         <table>
           <tr><th></th><th>Contains $0$?</th><th>Stays inside?</th><th>Subspace?</th></tr>
           <tr><td>(a) $y = 2x$</td><td>yes: $0 = 2 \cdot 0$</td><td>yes: multiples and sums of points with $y = 2x$ still have $y = 2x$</td><td><b>yes</b> (a line through $0$)</td></tr>
@@ -481,18 +899,64 @@
         <p>(a) A trader makes $+2$, $-1$, $+3$ on three days. What is the running total after each day?</p>
         <p>(b) Another account starts at $0$ and ends the three days at $5$, $8$, $6$. What was each day's profit or loss?</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>P&amp;L = profit and loss: money made ($+$) or lost ($-$) on a day. Running total = the account balance after adding each day's P&amp;L. Balance = how much is in the account at the end of a day. $S$ = sum matrix (daily P&amp;L in, balances out). $A$ = difference matrix (balances in, daily P&amp;L out).</p>
+      </div>
       <div class="box intuition"><span class="label">Story first</span>
         <p>Think of a piggy bank. Each day you put money in (or take some out). The <b>daily amounts</b> are the changes; the <b>amount in the bank</b> each evening is the running total. Running totals are $S$; daily changes are $A$.</p>
       </div>
       <div class="steps">
         <p><b>(a) Running total = $S \times$ daily P&amp;L.</b></p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Balance after day 1.</p>
+            <p class="k"><span class="kl">Why</span> Starting from $0$, day 1 adds $+2$.</p>
+            <p class="k"><span class="kl">How</span> $0 + 2 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Balance after day 2.</p>
+            <p class="k"><span class="kl">Why</span> Yesterday's balance plus today's P&amp;L of $-1$.</p>
+            <p class="k"><span class="kl">How</span> $2 + (-1) = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Balance after day 3.</p>
+            <p class="k"><span class="kl">How</span> $1 + 3 = 4$.</p>
+            <p class="k"><span class="kl">What we have now</span> Running totals $(2, 1, 4)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check with A</span> Differences of $(2, 1, 4)$: first $2$ ✓; $1 - 2 = -1$ ✓; $4 - 1 = 3$ ✓. Back to the daily P&amp;L $(2, -1, 3)$.</p>
+          </li>
+        </ol>
         $$ S \begin{bmatrix} 2 \\ -1 \\ 3 \end{bmatrix} = \begin{bmatrix} 2 \\ 2 - 1 \\ 2 - 1 + 3 \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \\ 4 \end{bmatrix} $$
         <p class="answer">(a) Running totals: $2, 1, 4$.</p>
 
         <p><b>(b) Daily P&amp;L = $A \times$ end-of-day balances.</b></p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Day 1 P&amp;L.</p>
+            <p class="k"><span class="kl">Why</span> The account started at $0$, so day 1's P&amp;L is day 1's balance minus $0$.</p>
+            <p class="k"><span class="kl">How</span> $5 - 0 = 5$.</p>
+            <p class="k"><span class="kl">What we have now</span> $+5$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Day 2 P&amp;L.</p>
+            <p class="k"><span class="kl">Why</span> Today's balance minus yesterday's.</p>
+            <p class="k"><span class="kl">How</span> $8 - 5 = 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> $+3$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Day 3 P&amp;L.</p>
+            <p class="k"><span class="kl">How</span> $6 - 8 = -2$.</p>
+            <p class="k"><span class="kl">What we have now</span> Daily P&amp;L $(5, 3, -2)$: a loss of 2 on day 3.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check with S</span> Running totals of $(5, 3, -2)$: $5$; $5 + 3 = 8$; $8 + (-2) = 6$. That is $(5, 8, 6)$, the original balances ✓. $S$ undoes $A$.</p>
+          </li>
+        </ol>
         $$ A \begin{bmatrix} 5 \\ 8 \\ 6 \end{bmatrix} = \begin{bmatrix} 5 \\ 8 - 5 \\ 6 - 8 \end{bmatrix} = \begin{bmatrix} 5 \\ 3 \\ -2 \end{bmatrix} $$
         <p class="answer">(b) Daily P&amp;L: $+5, +3, -2$.</p>
-        <p><b>Check (b) with $S$:</b> $S(5, 3, -2) = (5,\ 8,\ 6)$ ✓. $S$ undoes $A$.</p>
       </div>
     </div>
 
@@ -509,17 +973,39 @@
         </table>
         <p>A <b>put option with strike 2</b> gives the right to <b>sell</b> the stock for $2$. What should it cost today?</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Payoff = what an asset pays tomorrow, in each state (low, middle, high). Bond = pays $1$ whatever happens. Stock = pays whatever the share price $S$ is. Call (like a Nifty CE) = the right to <b>buy</b> at the strike; pays $\max(S - 2, 0)$. Put (like a Nifty PE) = the right to <b>sell</b> at the strike; pays $\max(2 - S, 0)$. Strike = the fixed price on the option, here $2$. $\max(a, 0)$ = "$a$ if it is positive, otherwise $0$". Negative amount ($y = -1$) = sell instead of buy. Here $S$ means the share price, not the sum matrix.</p>
+      </div>
       <div class="box intuition"><span class="label">Story first</span>
         <p>Same idea as the tickets in Lecture 01, now with three kinds of weather instead of two. Each asset is a ticket that pays depending on tomorrow's "weather" (low, middle or high). We want a new ticket (the put), so we build it from the three tickets we can already buy, then add up their prices.</p>
       </div>
       <div class="steps">
         <p><b>Step 1. What the put pays.</b> You sell for $2$ only if the stock is worth less than $2$: payoff $= \max(2 - S,\ 0)$.</p>
-        <table>
-          <tr><th>State</th><th>Stock $S$</th><th>$2 - S$</th><th>Put pays</th></tr>
-          <tr><td>Low</td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
-          <tr><td>Middle</td><td>$2$</td><td>$0$</td><td>$0$</td></tr>
-          <tr><td>High</td><td>$3$</td><td>$-1$</td><td>$0$ (don't use it)</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put payoff in the low state, $S = 1$.</p>
+            <p class="k"><span class="kl">Why</span> You may sell a thing worth $1$ for $2$: you gain the gap.</p>
+            <p class="k"><span class="kl">How</span> $2 - 1 = 1$, and $\max(1, 0) = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> Low: put pays $1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Middle state, $S = 2$.</p>
+            <p class="k"><span class="kl">How</span> $2 - 2 = 0$, and $\max(0, 0) = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> Middle: put pays $0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> High state, $S = 3$.</p>
+            <p class="k"><span class="kl">Why</span> Selling a thing worth $3$ for only $2$ would lose money, so you simply don't use the put.</p>
+            <p class="k"><span class="kl">How</span> $2 - 3 = -1$, and $\max(-1, 0) = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> Put payoff vector $(1, 0, 0)$.</p>
+            <table>
+              <tr><th>State</th><th>Stock $S$</th><th>$2 - S$</th><th>Put pays</th></tr>
+              <tr><td>Low</td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+              <tr><td>Middle</td><td>$2$</td><td>$0$</td><td>$0$</td></tr>
+              <tr><td>High</td><td>$3$</td><td>$-1$</td><td>$0$ (don't use it)</td></tr>
+            </table>
+          </li>
+        </ol>
 
         <p><b>Step 2. Column picture.</b> Find $x$ bonds, $y$ stocks and $z$ calls with</p>
         $$
@@ -527,7 +1013,7 @@
         \begin{matrix} \leftarrow \text{low} \\ \leftarrow \text{middle} \\ \leftarrow \text{high} \end{matrix}
         $$
 
-        <p><b>Step 3. One equation per state.</b></p>
+        <p><b>Step 3. One equation per state.</b> Read across each row: (amount of bonds × bond pays) + (stocks × stock pays) + (calls × call pays) = put pays.</p>
         $$
         \begin{aligned}
           x + y &= 1 &&\text{(low)} \\
@@ -537,6 +1023,25 @@
         $$
 
         <p><b>Step 4. Solve.</b></p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take the low equation away from the middle equation.</p>
+            <p class="k"><span class="kl">Why</span> Both have exactly one $x$. Subtracting makes $x$ disappear, leaving only $y$.</p>
+            <p class="k"><span class="kl">How</span> Left sides: $(x + 2y) - (x + y) = x - x + 2y - y = 0 + y = y$. Right sides: $0 - 1 = -1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $y = -1$: <b>sell</b> 1 stock.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use the low equation, $x + y = 1$, to get $x$.</p>
+            <p class="k"><span class="kl">Why</span> It has only $x$ and $y$, and we now know $y$.</p>
+            <p class="k"><span class="kl">How</span> Take $y$ from both sides: $x = 1 - y$. Put in $y = -1$: $x = 1 - (-1) = 1 + 1 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = 2$: buy 2 bonds.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use the high equation, $x + 3y + z = 0$, to get $z$.</p>
+            <p class="k"><span class="kl">How</span> Put in $x = 2$ and $y = -1$: $3y = 3 \times (-1) = -3$, so $2 + (-3) + z = 0$. $2 - 3 = -1$, so $-1 + z = 0$. Add $1$ to both sides: $z = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $z = 1$: buy 1 call.</p>
+          </li>
+        </ol>
         $$
         \begin{aligned}
           (x + 2y) - (x + y) &= 0 - 1 &&\text{(middle)} - \text{(low)} \\
@@ -546,7 +1051,18 @@
         \end{aligned}
         $$
 
-        <p><b>Step 5. Check.</b></p>
+        <p><b>Step 5. Check in the original three equations, state by state.</b></p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">Low</span> $x + y = 2 + (-1) = 1$ ✓ (put pays $1$).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Middle</span> $x + 2y = 2 + 2 \times (-1) = 2 - 2 = 0$ ✓ (put pays $0$).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">High</span> $x + 3y + z = 2 + 3 \times (-1) + 1 = 2 - 3 + 1 = 0$ ✓ (put pays $0$).</p>
+          </li>
+        </ol>
         <table>
           <tr><th>State</th><th>2 bonds</th><th>$-1$ stock</th><th>1 call</th><th>Total</th><th>Put pays</th></tr>
           <tr><td>Low</td><td>$2$</td><td>$-1$</td><td>$0$</td><td>$1$</td><td>$1$ ✓</td></tr>
@@ -556,6 +1072,15 @@
         <p class="answer">Recipe: buy 2 bonds, sell 1 stock ($y = -1$), buy 1 call.</p>
 
         <p><b>Step 6. Price the put.</b></p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add up today's cost of the recipe.</p>
+            <p class="k"><span class="kl">Why</span> The recipe pays exactly what the put pays in every state, so it must cost the same today. Otherwise one could buy the cheap one, sell the dear one, and pocket free money.</p>
+            <p class="k"><span class="kl">How</span> Bonds: $2 \times 1 = 2$. Stock: $(-1) \times 2 = -2$ (selling brings money in). Call: $1 \times 0.25 = 0.25$. Total: $2 - 2 = 0$, then $0 + 0.25 = 0.25$.</p>
+            <p class="k"><span class="kl">What we have now</span> Put price $= 0.25$.</p>
+            <p class="k"><span class="kl">In market words</span> Same as a Nifty PE priced from a CE, the index and cash: PE = cash − index + CE.</p>
+          </li>
+        </ol>
         $$ \underbrace{2 \times 1}_{\text{bonds}} + \underbrace{(-1) \times 2}_{\text{stock}} + \underbrace{1 \times 0.25}_{\text{call}} = 2 - 2 + 0.25 = 0.25 $$
         <p class="answer">The put is worth $0.25$ today.</p>
       </div>
@@ -569,24 +1094,59 @@
     <h2>Practice problems</h2>
     <p>Answers are hidden. Click a problem to check your work.</p>
     <details class="proof"><summary>1. Compute $A(1, 1, 1)$ and $C(1, 1, 1)$. What does each result tell you?</summary>
-      <p>$A(1, 1, 1) = (1,\ 0,\ 0)$, which is not zero, as it must be for an invertible matrix. $C(1, 1, 1) = (0, 0, 0)$: a nonzero input gives output $0$, so $C$ is not invertible.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">A, row by row</span> Row 1 keeps $x_1$: $1$. Row 2: $1 - 1 = 0$. Row 3: $1 - 1 = 0$. So $A(1, 1, 1) = (1, 0, 0)$.</p>
+          <p class="k"><span class="kl">What it means</span> Not zero, as it must be for an invertible matrix.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">C, row by row</span> Row 1: $1 - 1 = 0$. Row 2: $1 - 1 = 0$. Row 3: $1 - 1 = 0$. So $C(1, 1, 1) = (0, 0, 0)$.</p>
+          <p class="k"><span class="kl">What it means</span> A nonzero input gives output $0$ (just like input $0$ does), so $C$ is not invertible.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>2. Solve $Ax = (1, 1, 1)$.</summary>
-      <p>Running sums: $x = (1,\ 1 + 1,\ 1 + 1 + 1) = (1, 2, 3)$. Check: $A(1, 2, 3) = (1,\ 2 - 1,\ 3 - 2) = (1, 1, 1)$ ✓.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Take running sums of $(1, 1, 1)$, since $S = A^{-1}$ undoes $A$.</p>
+          <p class="k"><span class="kl">How</span> $x_1 = 1$. $x_2 = 1 + 1 = 2$. $x_3 = 2 + 1 = 3$.</p>
+          <p class="k"><span class="kl">What we have now</span> $x = (1, 2, 3)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check in A</span> Row 1: $1$ ✓. Row 2: $2 - 1 = 1$ ✓. Row 3: $3 - 2 = 1$ ✓.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>3. Is $Cx = (2, -5, 3)$ solvable? Is $Cx = (1, 0, 0)$?</summary>
-      <p>$2 - 5 + 3 = 0$, so the first is solvable. $1 + 0 + 0 = 1 \ne 0$, so the second is not.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">First</span> $2 + (-5) = -3$, then $-3 + 3 = 0$. Sum $0$: solvable.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Second</span> $1 + 0 + 0 = 1 \ne 0$: not solvable.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>4. Are $(1, 2, 3)$, $(2, 4, 6)$, $(0, 1, 0)$ independent?</summary>
-      <p>No. $(2, 4, 6) = 2 \times (1, 2, 3)$, so the second is a combination of the first. They are dependent and fill only a plane.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Compare the first two. $2 \times (1, 2, 3) = (2 \times 1, 2 \times 2, 2 \times 3) = (2, 4, 6)$.</p>
+          <p class="k"><span class="kl">What we have now</span> The second is a combination of the first. They are dependent and fill only a plane.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>5. Is the set of all vectors $(x, y, z)$ with $z = 1$ a subspace of $\mathbb{R}^3$?</summary>
-      <p>No. It does not contain the origin $(0, 0, 0)$, since $0 \ne 1$. (It is a flat plane, but it misses the origin.)</p>
+      <p>No. It does not contain the origin $(0, 0, 0)$, since that has $z = 0$ and $0 \ne 1$. (It is a flat plane, but it misses the origin.)</p>
     </details>
     <details class="proof"><summary>6. Using $S$, find the running totals of daily P&amp;L $(4, -2, -1)$.</summary>
-      <p>$S(4, -2, -1) = (4,\ 4 - 2,\ 4 - 2 - 1) = (4, 2, 1)$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">How</span> Day 1: $4$. Day 2: $4 + (-2) = 2$. Day 3: $2 + (-1) = 1$.</p>
+          <p class="k"><span class="kl">What we have now</span> $S(4, -2, -1) = (4, 2, 1)$.</p>
+          <p class="k"><span class="kl">Check with A</span> $4$ ✓; $2 - 4 = -2$ ✓; $1 - 2 = -1$ ✓.</p>
+        </li>
+      </ol>
     </details>
-
   </div>
   </section>
 

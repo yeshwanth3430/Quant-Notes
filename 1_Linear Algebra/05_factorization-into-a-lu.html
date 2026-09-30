@@ -11,6 +11,9 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <link rel="stylesheet" href="../assets/notebook.css">
 <script src="../assets/notebook.js"></script>
+<style>
+  .plot2d-box { width: 100%; height: 420px; }
+</style>
 </head>
 <body>
 <header class="topbar">
@@ -33,6 +36,7 @@
 
     <nav class="contents"><span class="label">Contents</span>
       <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
         <li><a href="#s1">The lecture in five questions</a></li>
         <li><a href="#s2">Inverse of a product</a></li>
         <li><a href="#s3">Transpose, and its inverse</a></li>
@@ -46,7 +50,50 @@
     </nav>
 
     <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained from the very beginning, with a tiny example and an everyday picture. Each section repeats the words it uses.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Matrix</b></td><td>a table of numbers in rows and columns</td><td>$\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}$: 2 rows, 2 columns</td><td>a spreadsheet; rows = Nifty scenarios, columns = products</td></tr>
+      <tr><td><b>Row</b> / <b>column</b></td><td>a line of numbers going across / going down</td><td>row 2 of the matrix above is $(8, 7)$; column 1 is $(2, 8)$</td><td>a row of seats in a cinema / a column of seats</td></tr>
+      <tr><td><b>Entry</b> (spot)</td><td>one number in a matrix, named by its row then its column</td><td>entry (2, 1) of the matrix above is $8$</td><td>seat "row 2, seat 1"</td></tr>
+      <tr><td><b>Vector</b></td><td>a list of numbers (one column)</td><td>$b = (2, 12, 2)$</td><td>what a client wants paid at each Nifty level</td></tr>
+      <tr><td><b>Square matrix</b></td><td>same number of rows and columns ($n \times n$)</td><td>$3 \times 3$</td><td>a square chessboard</td></tr>
+      <tr><td><b>Diagonal</b></td><td>the entries from top-left to bottom-right: (1,1), (2,2), (3,3)…</td><td>diagonal of $\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}$ is $2, 7$</td><td>the line a bishop walks corner to corner</td></tr>
+      <tr><td><b>Identity</b> $I$</td><td>1s on the diagonal, 0s everywhere else; it changes nothing</td><td>$\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$</td><td>multiplying by 1; a "do nothing" button</td></tr>
+      <tr><td><b>Matrix product</b> $AB$</td><td>each row of $A$ says how much of each row of $B$ to add up</td><td>row $(3, 1)$ of $A$ means $3 \times$ (row 1 of $B$) $+ 1 \times$ (row 2 of $B$)</td><td>a recipe: 3 spoons of this + 1 spoon of that</td></tr>
+      <tr><td><b>Elimination</b></td><td>subtract a multiple of one row from a lower row to make zeros under the diagonal</td><td>row 2 − 4 × row 1 turns $(8, 7)$ into $(0, 3)$</td><td>clearing a staircase step by step</td></tr>
+      <tr><td><b>Pivot</b> (leader)</td><td>the number on the diagonal used to clear the numbers under it</td><td>the $2$ in row 1 of $\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}$</td><td>the team captain of its column</td></tr>
+      <tr><td><b>Multiplier</b> $\ell$</td><td>(number to remove) ÷ (pivot): how many copies of the pivot row we subtract</td><td>$8 \div 2 = 4$</td><td>"how many 2-rupee coins make 8 rupees?" 4</td></tr>
+      <tr><td><b>Elimination matrix</b> $E_{21}$</td><td>identity with <b>minus</b> the multiplier in spot (2, 1); it does one subtraction step</td><td>$\begin{bmatrix} 1 & 0 \\ -4 & 1 \end{bmatrix}$</td><td>one move written as a machine</td></tr>
+      <tr><td><b>Upper triangular</b> $U$</td><td>all zeros <b>below</b> the diagonal; the pivots sit on the diagonal</td><td>$\begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}$</td><td>a staircase going down to the right</td></tr>
+      <tr><td><b>Lower triangular</b> $L$</td><td>all zeros <b>above</b> the diagonal; here 1s on the diagonal and the multipliers below</td><td>$\begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}$</td><td>a notebook of what we subtracted</td></tr>
+      <tr><td><b>Diagonal matrix</b> $D$</td><td>numbers only on the diagonal, zeros everywhere else</td><td>$\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}$</td><td>a list of scale factors, one per row</td></tr>
+      <tr><td><b>Factorization</b></td><td>writing one thing as a product of simpler pieces</td><td>$12 = 3 \times 4$; $A = LU$</td><td>taking a toy apart into its pieces</td></tr>
+      <tr><td><b>$A = LU$</b></td><td>$A$ equals (lower triangular $L$) times (upper triangular $U$)</td><td>$\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}\begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}$</td><td>full bag = receipt × leftover bag</td></tr>
+      <tr><td><b>$A = LDU$</b></td><td>same, but the pivots are pulled out of $U$ into $D$, so $U$ gets 1s on its diagonal</td><td>$D = \begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}$</td><td>separating "how big" from "which direction"</td></tr>
+      <tr><td><b>Inverse</b> $A^{-1}$</td><td>the matrix that undoes $A$: $AA^{-1} = I$</td><td>inverse of "subtract 4 × row 1" is "add 4 × row 1"</td><td>the undo button</td></tr>
+      <tr><td><b>Reverse order rule</b></td><td>to undo several steps, undo the last one first</td><td>$(AB)^{-1} = B^{-1}A^{-1}$</td><td>take off shoes before socks</td></tr>
+      <tr><td><b>Associative law</b></td><td>in a long product you may move the brackets (not the order)</td><td>$(AB)C = A(BC)$</td><td>$(2 \times 3) \times 4 = 2 \times (3 \times 4)$</td></tr>
+      <tr><td><b>Transpose</b> $A^T$</td><td>rows become columns: row 1 of $A$ becomes column 1 of $A^T$</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}^T = \begin{bmatrix} 1 & 3 \\ 2 & 4 \end{bmatrix}$</td><td>flipping a table over its diagonal</td></tr>
+      <tr><td><b>Symmetric</b></td><td>a matrix equal to its own transpose</td><td>$\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$</td><td>a mirror image of itself</td></tr>
+      <tr><td><b>Unknown</b> $x$</td><td>the vector we are looking for in $Ax = b$</td><td>$x = (2, 1, -2)$</td><td>how many lots of each product to buy</td></tr>
+      <tr><td><b>Right-hand side</b> $b$</td><td>the known numbers each equation must equal</td><td>$b = (2, 12, 2)$</td><td>the payoff a client asks for</td></tr>
+      <tr><td><b>Middle stop</b> $c$</td><td>the in-between vector with $Lc = b$ and $Ux = c$</td><td>$c = (2, 6, -10)$</td><td>a train change at a junction station</td></tr>
+      <tr><td><b>Forward substitution</b></td><td>solve $Lc = b$ from the <b>top</b> row down, one unknown per row</td><td>$c_1 = 2$, then $c_2$, then $c_3$</td><td>reading a page top to bottom</td></tr>
+      <tr><td><b>Back substitution</b></td><td>solve $Ux = c$ from the <b>bottom</b> row up, one unknown per row</td><td>$z$ first, then $y$, then $x$</td><td>climbing down a ladder from the top rung you can see</td></tr>
+      <tr><td><b>Operation</b> (cost)</td><td>one multiply-and-subtract; we count them to measure work</td><td>$7 - 4 \times 1$ is one operation</td><td>one stroke of work on a calculator</td></tr>
+      <tr><td><b>Permutation matrix</b> $P$</td><td>the identity with its rows reordered; it swaps rows</td><td>$\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$ swaps rows 1 and 2</td><td>reshuffling a queue</td></tr>
+      <tr><td><b>Row swap</b> (exchange)</td><td>trade places of two rows, used when a 0 sits in a pivot spot</td><td>row 2 ↔ row 3</td><td>two people in a queue trade places</td></tr>
+      <tr><td><b>Factorial</b> $n!$</td><td>$n \times (n-1) \times \dots \times 1$: the number of ways to order $n$ things</td><td>$3! = 3 \times 2 \times 1 = 6$</td><td>ways to line up 3 kids for a photo</td></tr>
+      <tr><td><b>Cycle</b></td><td>a permutation that moves every row one place round</td><td>row 2 → top, row 3 → middle, row 1 → bottom</td><td>kids moving one chair round a circle</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
     <h2 id="s1">1. The lecture in five questions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Inverse $A^{-1}$ = the matrix that undoes $A$. Transpose $A^T$ = rows turned into columns. $L$ = lower triangular (zeros above the diagonal) holding the multipliers. $U$ = upper triangular (zeros below the diagonal), the staircase left after elimination. Operation = one multiply-and-subtract. Permutation matrix = the identity with its rows reordered; it swaps rows.</p>
+    </div>
     <table>
       <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
       <tr><td>1</td><td>What is the inverse of $AB$?</td><td>$B^{-1}A^{-1}$: the inverses in <b>reverse order</b>.</td></tr>
@@ -58,6 +105,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s2">2. Inverse of a product</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Product $AB$ = do $B$ first, then $A$ (when they act on a vector $x$: $ABx$ means $B$ acts, then $A$). Inverse $A^{-1}$ = the undo matrix: $AA^{-1} = I$. Identity $I$ = the "do nothing" matrix (1s on the diagonal, 0s elsewhere). Associative law = in a long product you may move the brackets, but never change the order.</p>
+    </div>
     <div class="box theorem"><span class="label">Rule</span>
       $$ (AB)^{-1} = B^{-1}A^{-1} $$
       <p>Undo the steps in <b>reverse order</b>.</p>
@@ -65,23 +115,72 @@
     <div class="box intuition"><span class="label">Story: socks and shoes</span>
       <p>Getting dressed: first socks ($B$), then shoes ($A$). To undo it you take off the <b>shoes first</b> ($A^{-1}$), then the socks ($B^{-1}$). The last thing done is the first thing undone.</p>
     </div>
-    <p><b>Why it works:</b> multiply and let the middle cancel:</p>
+    <p><b>Why it works:</b> multiply and let the middle cancel.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Multiply $AB$ by our guess $B^{-1}A^{-1}$.</p>
+        <p class="k"><span class="kl">Why</span> If the answer is $I$, the guess really is the undo of $AB$.</p>
+        <p class="k"><span class="kl">How</span> Write it out: $(AB)(B^{-1}A^{-1})$. Move the brackets (associative law): $A\,(BB^{-1})\,A^{-1}$.</p>
+        <p class="k"><span class="kl">What we have now</span> $B$ and its undo $B^{-1}$ sit side by side in the middle.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Cancel the middle: $BB^{-1} = I$.</p>
+        <p class="k"><span class="kl">How</span> $A\,(BB^{-1})\,A^{-1} = A\,I\,A^{-1}$.</p>
+        <p class="k"><span class="kl">What we have now</span> $A\,I\,A^{-1}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Drop the $I$: doing nothing changes nothing.</p>
+        <p class="k"><span class="kl">How</span> $A\,I = A$, so $A\,I\,A^{-1} = AA^{-1}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Cancel again: $AA^{-1} = I$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(AB)(B^{-1}A^{-1}) = I$. So $B^{-1}A^{-1}$ is the inverse of $AB$.</p>
+      </li>
+    </ol>
     $$ (AB)(B^{-1}A^{-1}) = A\,(BB^{-1})\,A^{-1} = A\,I\,A^{-1} = AA^{-1} = I $$
-    <p>We may move the brackets (associative law), so $BB^{-1} = I$ disappears first, then $AA^{-1} = I$.</p>
 
     <div class="box example"><span class="label">Example: check with numbers</span>
       $$ A = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix},\ A^{-1} = \begin{bmatrix} 1 & -1 \\ 0 & 1 \end{bmatrix}; \qquad B = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix},\ B^{-1} = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix} $$
-      <table>
-        <tr><th>Product</th><th>Row 1</th><th>Row 2</th><th>Result</th></tr>
-        <tr><td>$AB$</td><td>$1 \times (1, 0) + 1 \times (2, 1) = (3, 1)$</td><td>$0 \times (1, 0) + 1 \times (2, 1) = (2, 1)$</td><td>$\begin{bmatrix} 3 & 1 \\ 2 & 1 \end{bmatrix}$</td></tr>
-        <tr><td>$B^{-1}A^{-1}$ ✓</td><td>$1 \times (1, -1) + 0 = (1, -1)$</td><td>$-2 \times (1, -1) + 1 \times (0, 1) = (-2, 3)$</td><td>$\begin{bmatrix} 1 & -1 \\ -2 & 3 \end{bmatrix}$</td></tr>
-        <tr><td>$A^{-1}B^{-1}$ ✗</td><td>$1 \times (1, 0) - 1 \times (-2, 1) = (3, -1)$</td><td>$0 + 1 \times (-2, 1) = (-2, 1)$</td><td>$\begin{bmatrix} 3 & -1 \\ -2 & 1 \end{bmatrix}$</td></tr>
-      </table>
-      <p>Check $(AB)(B^{-1}A^{-1})$: row 1 $= 3 \times (1, -1) + 1 \times (-2, 3) = (1, 0)$, row 2 $= 2 \times (1, -1) + 1 \times (-2, 3) = (0, 1)$. That is $I$ ✓. The wrong order gives a different matrix.</p>
+      <p>Rule for multiplying: each row of the left matrix tells how much of each row of the right matrix to add up.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Find $AB$, one row at a time.</p>
+          <p class="k"><span class="kl">Row 1</span> Row 1 of $A$ is $(1, 1)$: take $1 \times (1, 0)$ plus $1 \times (2, 1)$. That is $(1 + 2,\ 0 + 1) = (3, 1)$.</p>
+          <p class="k"><span class="kl">Row 2</span> Row 2 of $A$ is $(0, 1)$: take $0 \times (1, 0)$ plus $1 \times (2, 1)$. That is $(0 + 2,\ 0 + 1) = (2, 1)$.</p>
+          <p class="k"><span class="kl">What we have now</span> $AB = \begin{bmatrix} 3 & 1 \\ 2 & 1 \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Find $B^{-1}A^{-1}$ (the reverse order).</p>
+          <p class="k"><span class="kl">Row 1</span> Row 1 of $B^{-1}$ is $(1, 0)$: $1 \times (1, -1) + 0 \times (0, 1) = (1, -1)$.</p>
+          <p class="k"><span class="kl">Row 2</span> Row 2 of $B^{-1}$ is $(-2, 1)$: $-2 \times (1, -1) = (-2, 2)$. Add $1 \times (0, 1)$: $(-2 + 0,\ 2 + 1) = (-2, 3)$.</p>
+          <p class="k"><span class="kl">What we have now</span> $B^{-1}A^{-1} = \begin{bmatrix} 1 & -1 \\ -2 & 3 \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> For comparison, find the wrong order $A^{-1}B^{-1}$.</p>
+          <p class="k"><span class="kl">Row 1</span> Row 1 of $A^{-1}$ is $(1, -1)$: $1 \times (1, 0) = (1, 0)$; minus $1 \times (-2, 1)$ adds $(2, -1)$; total $(1 + 2,\ 0 - 1) = (3, -1)$.</p>
+          <p class="k"><span class="kl">Row 2</span> Row 2 of $A^{-1}$ is $(0, 1)$: $0 + 1 \times (-2, 1) = (-2, 1)$.</p>
+          <p class="k"><span class="kl">What we have now</span> The three products side by side:</p>
+          <table>
+            <tr><th>Product</th><th>Row 1</th><th>Row 2</th><th>Result</th></tr>
+            <tr><td>$AB$</td><td>$1 \times (1, 0) + 1 \times (2, 1) = (3, 1)$</td><td>$0 \times (1, 0) + 1 \times (2, 1) = (2, 1)$</td><td>$\begin{bmatrix} 3 & 1 \\ 2 & 1 \end{bmatrix}$</td></tr>
+            <tr><td>$B^{-1}A^{-1}$ ✓</td><td>$1 \times (1, -1) + 0 = (1, -1)$</td><td>$-2 \times (1, -1) + 1 \times (0, 1) = (-2, 3)$</td><td>$\begin{bmatrix} 1 & -1 \\ -2 & 3 \end{bmatrix}$</td></tr>
+            <tr><td>$A^{-1}B^{-1}$ ✗</td><td>$1 \times (1, 0) - 1 \times (-2, 1) = (3, -1)$</td><td>$0 + 1 \times (-2, 1) = (-2, 1)$</td><td>$\begin{bmatrix} 3 & -1 \\ -2 & 1 \end{bmatrix}$</td></tr>
+          </table>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> $(AB)(B^{-1}A^{-1})$, row 1: $3 \times (1, -1) = (3, -3)$; plus $1 \times (-2, 3)$: $(3 - 2,\ -3 + 3) = (1, 0)$ ✓.</p>
+          <p class="k"><span class="kl">Check</span> Row 2: $2 \times (1, -1) = (2, -2)$; plus $1 \times (-2, 3)$: $(2 - 2,\ -2 + 3) = (0, 1)$ ✓. That is $I$.</p>
+          <p class="k"><span class="kl">Wrong order</span> $(AB)(A^{-1}B^{-1})$, row 1: $3 \times (3, -1) = (9, -3)$; plus $1 \times (-2, 1)$: $(7, -2)$. Not $(1, 0)$ ✗.</p>
+          <p class="k"><span class="kl">What we have now</span> Only the reverse order $B^{-1}A^{-1}$ undoes $AB$.</p>
+        </li>
+      </ol>
     </div>
 
     <!-- ====================================================== -->
     <h2 id="s3">3. Transpose, and its inverse</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Transpose $A^T$ = rows turned into columns (row 1 of $A$ becomes column 1 of $A^T$). Inverse $A^{-1}$ = the undo matrix, $AA^{-1} = I$. Identity $I$ = 1s on the diagonal, 0s elsewhere. Reverse order = in a product, the last factor comes first after flipping.</p>
+    </div>
     <div class="box definition"><span class="label">Definition: Transpose</span>
       <p>The <b>transpose</b> $A^T$ turns rows into columns: row 1 of $A$ becomes column 1 of $A^T$, and so on.</p>
       $$ A = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix} \quad\Longrightarrow\quad A^T = \begin{bmatrix} 1 & 4 \\ 2 & 5 \\ 3 & 6 \end{bmatrix} $$
@@ -91,28 +190,91 @@
       <p><b>Transpose of a product</b> also reverses the order: $(AB)^T = B^TA^T$.</p>
       <p><b>Inverse of a transpose</b> = transpose of the inverse: $(A^T)^{-1} = (A^{-1})^T$. You can transpose and invert in either order.</p>
     </div>
-    <p><b>Why:</b> start from $AA^{-1} = I$ and transpose both sides. The right side stays $I$. The left side reverses: $(A^{-1})^TA^T = I$. So $(A^{-1})^T$ is what undoes $A^T$.</p>
+    <p><b>Why the second rule holds:</b></p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Start from a fact we know: $AA^{-1} = I$.</p>
+        <p class="k"><span class="kl">Why</span> This is what "inverse" means: $A^{-1}$ undoes $A$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Transpose both sides.</p>
+        <p class="k"><span class="kl">Why</span> If two matrices are equal, their transposes are equal too.</p>
+        <p class="k"><span class="kl">How</span> $(AA^{-1})^T = I^T$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Right side</span> $I^T = I$: the identity's rows and columns are the same.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Left side</span> Transpose of a product reverses the order: $(AA^{-1})^T = (A^{-1})^TA^T$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(A^{-1})^TA^T = I$. So $(A^{-1})^T$ is exactly what undoes $A^T$: $(A^T)^{-1} = (A^{-1})^T$.</p>
+      </li>
+    </ol>
     <div class="box example"><span class="label">Example</span>
       <p>From Lecture 04: $A = \begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix}$ has $A^{-1} = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}$.</p>
-      <p>Then $A^T = \begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$, and its inverse should be $(A^{-1})^T = \begin{bmatrix} 7 & -2 \\ -3 & 1 \end{bmatrix}$.</p>
-      <p>That is exactly the inverse found for $\begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$ in Lecture 04, Example 6 ✓.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Transpose $A$: rows become columns.</p>
+          <p class="k"><span class="kl">How</span> Row 1 $(1, 3)$ becomes column 1. Row 2 $(2, 7)$ becomes column 2.</p>
+          <p class="k"><span class="kl">What we have now</span> $A^T = \begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Transpose $A^{-1}$ the same way.</p>
+          <p class="k"><span class="kl">How</span> Row 1 $(7, -3)$ becomes column 1. Row 2 $(-2, 1)$ becomes column 2.</p>
+          <p class="k"><span class="kl">What we have now</span> The rule says $(A^T)^{-1} = (A^{-1})^T = \begin{bmatrix} 7 & -2 \\ -3 & 1 \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> $A^T$ times our answer, row 1: $1 \times (7, -2) = (7, -2)$; plus $2 \times (-3, 1) = (-6, 2)$; total $(7 - 6,\ -2 + 2) = (1, 0)$ ✓.</p>
+          <p class="k"><span class="kl">Check</span> Row 2: $3 \times (7, -2) = (21, -6)$; plus $7 \times (-3, 1) = (-21, 7)$; total $(21 - 21,\ -6 + 7) = (0, 1)$ ✓.</p>
+          <p class="k"><span class="kl">What we have now</span> That is exactly the inverse found for $\begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$ in Lecture 04, Example 7 ✓.</p>
+        </li>
+      </ol>
     </div>
 
     <!-- ====================================================== -->
     <h2 id="s4">4. A = LU for a 2 × 2</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Pivot = the diagonal number used to clear the numbers under it. Multiplier = (number to remove) ÷ (pivot). Elimination matrix $E_{21}$ = identity with minus the multiplier in spot (row 2, column 1); it does "row 2 − multiplier × row 1". Its inverse $E_{21}^{-1}$ = the same with a plus sign; it adds the row back. $U$ = upper triangular (zeros below the diagonal). $L$ = lower triangular (zeros above the diagonal, 1s on it). $D$ = diagonal matrix (numbers only on the diagonal).</p>
+    </div>
     <p>So far elimination has been written as $EA = U$ (step matrices on the left of $A$). Now we move them to the other side, to get $A$ <b>alone</b>.</p>
     $$ A = \begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix} $$
-    <p><b>Elimination.</b> Pivot $2$, number to remove $8$, multiplier $8 \div 2 = 4$. Row 2 minus 4 × row 1:</p>
-    <table>
-      <tr><th></th><th>col 1</th><th>col 2</th></tr>
-      <tr><td>Row 2</td><td>$8$</td><td>$7$</td></tr>
-      <tr><td>minus 4 × row 1</td><td>$-8$</td><td>$-4$</td></tr>
-      <tr><td><b>New row 2</b></td><td>$0$</td><td>$3$</td></tr>
-    </table>
-    $$ \underbrace{\begin{bmatrix} 1 & 0 \\ -4 & 1 \end{bmatrix}}_{E_{21}} \underbrace{\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}}_{A} = \underbrace{\begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}}_{U} $$
-    <p><b>Move $E_{21}$ across.</b> Multiply both sides by $E_{21}^{-1}$ (the undo: flip the sign, $+4$):</p>
-    $$ \underbrace{\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}}_{A} = \underbrace{\begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}}_{L = E_{21}^{-1}} \underbrace{\begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}}_{U} $$
-    <p><b>Check $LU$</b> (rows of $L$ mix rows of $U$): row 1 $= 1 \times (2, 1) = (2, 1)$ ✓, row 2 $= 4 \times (2, 1) + 1 \times (0, 3) = (8, 7)$ ✓.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Pick the pivot: the $2$ in row 1, column 1. Under it sits an $8$ that must become $0$.</p>
+        <p class="k"><span class="kl">Why</span> A zero under the pivot leaves row 2 with only one unknown: the staircase shape $U$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find the multiplier.</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many 2's make 8?" $8 \div 2 = 4$. So we subtract <b>4 copies of row 1</b>.</p>
+        <p class="k"><span class="kl">What we have now</span> Multiplier $\ell_{21} = 4$. Remember it: it goes into $L$ later.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 2 minus 4 × row 1.</p>
+        <p class="k"><span class="kl">How</span> 4 copies of row 1: $4 \times (2, 1) = (8, 4)$. Then subtract box by box: $8 - 8 = 0$ and $7 - 4 = 3$.</p>
+        <table>
+          <tr><th></th><th>col 1</th><th>col 2</th></tr>
+          <tr><td>Row 2</td><td>$8$</td><td>$7$</td></tr>
+          <tr><td>minus 4 × row 1</td><td>$-8$</td><td>$-4$</td></tr>
+          <tr><td><b>New row 2</b></td><td>$0$</td><td>$3$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> $U = \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}$. Pivots $2$ and $3$ on the diagonal.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Write that step as a matrix $E_{21}$.</p>
+        <p class="k"><span class="kl">How</span> Start from the identity and put $-4$ in spot (2, 1): row 2 of $E_{21}$ is $(-4, 1)$, which means "$-4 \times$ row 1 $+ 1 \times$ row 2".</p>
+        $$ \underbrace{\begin{bmatrix} 1 & 0 \\ -4 & 1 \end{bmatrix}}_{E_{21}} \underbrace{\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}}_{A} = \underbrace{\begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}}_{U} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Move $E_{21}$ across to the other side.</p>
+        <p class="k"><span class="kl">Why</span> We want $A$ alone on one side, written from simple pieces.</p>
+        <p class="k"><span class="kl">How</span> The undo of "subtract 4 × row 1" is "add 4 × row 1", so $E_{21}^{-1}$ has $+4$ in spot (2, 1). Multiply both sides on the left by it: $E_{21}^{-1}E_{21}A = E_{21}^{-1}U$. On the left, $E_{21}^{-1}E_{21} = I$, leaving $A$.</p>
+        $$ \underbrace{\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}}_{A} = \underbrace{\begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}}_{L = E_{21}^{-1}} \underbrace{\begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}}_{U} $$
+        <p class="k"><span class="kl">What we have now</span> $A = LU$, and $L$ holds the multiplier $4$ with a plus sign.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Rows of $L$ mix rows of $U$. Row 1 of $L$ is $(1, 0)$: $1 \times (2, 1) + 0 \times (0, 3) = (2, 1)$ ✓.</p>
+        <p class="k"><span class="kl">Check</span> Row 2 of $L$ is $(4, 1)$: $4 \times (2, 1) = (8, 4)$. Add $1 \times (0, 3)$: $(8 + 0,\ 4 + 3) = (8, 7)$ ✓.</p>
+      </li>
+    </ol>
 
     <div class="box definition"><span class="label">Definition: L and U</span>
       <table>
@@ -122,17 +284,65 @@
       </table>
     </div>
 
+    <h3>Meet each factor on its own</h3>
+    <div class="box definition"><span class="label">L alone</span>
+      <p>$L = \begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}$. <b>Lower</b> triangular: the only non-zero numbers are on the diagonal or below it. The diagonal is all 1s. Below the diagonal sit the multipliers, each in the spot it cleared: $4$ in spot (2, 1) because we did "row 2 − 4 × row 1". In words: <b>$L$ is the notebook of what we subtracted.</b></p>
+    </div>
+    <div class="box definition"><span class="label">U alone</span>
+      <p>$U = \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}$. <b>Upper</b> triangular: zeros below the diagonal. It is simply the matrix left over when elimination finishes. The diagonal holds the pivots $2$ and $3$. In words: <b>$U$ is the staircase left behind.</b></p>
+    </div>
+    <div class="box definition"><span class="label">D alone</span>
+      <p>$D = \begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}$. <b>Diagonal</b>: numbers only on the diagonal, zeros everywhere else. It holds just the pivots. Multiplying by $D$ stretches row 1 by $2$ and row 2 by $3$, nothing else. In words: <b>$D$ is the list of pivot sizes.</b></p>
+    </div>
+
     <h3>Splitting out the pivots: A = LDU</h3>
     <p>$U$ has pivots on its diagonal while $L$ has 1s. To balance them, pull the pivots out into a <b>diagonal matrix</b> $D$: divide each row of $U$ by its pivot.</p>
-    $$ \begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix} = \underbrace{\begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}}_{L} \underbrace{\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}}_{D \text{ (pivots)}} \underbrace{\begin{bmatrix} 1 & \tfrac12 \\ 0 & 1 \end{bmatrix}}_{\text{new } U} $$
-    <p>Row 1 of $U$, $(2, 1)$, divided by $2$ gives $(1, \tfrac12)$. Row 2, $(0, 3)$, divided by $3$ gives $(0, 1)$. Now both outer matrices have 1s on the diagonal.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Read the pivots off the diagonal of $U = \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}$: they are $2$ and $3$.</p>
+        <p class="k"><span class="kl">What we have now</span> $D = \begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Divide row 1 of $U$ by its pivot $2$.</p>
+        <p class="k"><span class="kl">Why</span> So that the new $U$ has a $1$ on the diagonal, like $L$.</p>
+        <p class="k"><span class="kl">How</span> $(2, 1) \div 2 = (2 \div 2,\ 1 \div 2) = (1, \tfrac12)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Divide row 2 of $U$ by its pivot $3$.</p>
+        <p class="k"><span class="kl">How</span> $(0, 3) \div 3 = (0 \div 3,\ 3 \div 3) = (0, 1)$.</p>
+        <p class="k"><span class="kl">What we have now</span> New $U = \begin{bmatrix} 1 & \tfrac12 \\ 0 & 1 \end{bmatrix}$. Both outer matrices have 1s on the diagonal.</p>
+        $$ \begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix} = \underbrace{\begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}}_{L} \underbrace{\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}}_{D \text{ (pivots)}} \underbrace{\begin{bmatrix} 1 & \tfrac12 \\ 0 & 1 \end{bmatrix}}_{\text{new } U} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> $D$ times new $U$, row 1: $2 \times (1, \tfrac12) = (2, 1)$ ✓. Row 2: $3 \times (0, 1) = (0, 3)$ ✓. That is the old $U$ again, so $LDU = LU = A$.</p>
+      </li>
+    </ol>
 
     <!-- ====================================================== -->
     <h2 id="s5">5. A = LU for a 3 × 3</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$E_{21}$, $E_{31}$, $E_{32}$ = elimination matrices; $E_{ij}$ makes a zero in spot (row $i$, column $j$). Multiplier = (number to remove) ÷ (pivot). $U$ = upper triangular: what is left after elimination. $L$ = lower triangular: 1s on the diagonal, multipliers below. Inverse = undo. Reverse order = undo the last step first. $b$ = right-hand side (known), $x$ = unknown, $c$ = middle stop. Forward substitution = solve from the top row down. Back substitution = solve from the bottom row up.</p>
+    </div>
     <p>With three rows there are up to three steps: clear (row 2, col 1), then (row 3, col 1), then (row 3, col 2):</p>
     $$ E_{32}\,E_{31}\,E_{21}\,A = U $$
     <p>Move them across one at a time. Their inverses come out in <b>reverse order</b> (socks and shoes):</p>
-    $$ A = \underbrace{E_{21}^{-1}\,E_{31}^{-1}\,E_{32}^{-1}}_{L}\,U $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Remove the outermost step $E_{32}$ first.</p>
+        <p class="k"><span class="kl">Why</span> It is the one furthest left, the last thing done to $A$.</p>
+        <p class="k"><span class="kl">How</span> Multiply both sides on the left by $E_{32}^{-1}$: $E_{31}E_{21}A = E_{32}^{-1}U$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Now remove $E_{31}$.</p>
+        <p class="k"><span class="kl">How</span> Multiply both sides on the left by $E_{31}^{-1}$: $E_{21}A = E_{31}^{-1}E_{32}^{-1}U$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Finally remove $E_{21}$.</p>
+        <p class="k"><span class="kl">How</span> Multiply both sides on the left by $E_{21}^{-1}$: $A = E_{21}^{-1}E_{31}^{-1}E_{32}^{-1}U$.</p>
+        <p class="k"><span class="kl">What we have now</span> The three inverses together make $L$:</p>
+        $$ A = \underbrace{E_{21}^{-1}\,E_{31}^{-1}\,E_{32}^{-1}}_{L}\,U $$
+      </li>
+    </ol>
 
     <h3>Worked example: the matrix from Lecture 03</h3>
     $$ A = \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix} $$
@@ -141,32 +351,43 @@
     <!-- ---------------- PART 1: U ---------------- -->
     <h3>Part 1: How we get U</h3>
     <p><b>$U$ is just the result of elimination.</b> Do the normal elimination steps on $A$ and whatever is left at the end is $U$.</p>
-
-    <h4>U, step 1: make a 0 in row 2, column 1</h4>
-    <p>Pivot $1$, number to remove $3$, so subtract <b>3 × row 1</b> from row 2:</p>
-    <table>
-      <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th></tr>
-      <tr><td>Row 2</td><td>$3$</td><td>$8$</td><td>$1$</td></tr>
-      <tr><td>minus 3 × row 1 $(1, 2, 1)$</td><td>$-3$</td><td>$-6$</td><td>$-3$</td></tr>
-      <tr><td><b>New row 2</b></td><td>$0$</td><td>$2$</td><td>$-2$</td></tr>
-    </table>
-    $$ \begin{bmatrix} 1 & 2 & 1 \\ \color{#b42318}{0} & 2 & -2 \\ 0 & 4 & 1 \end{bmatrix} $$
-
-    <h4>U, step 2: make a 0 in row 3, column 1</h4>
-    <p>It is already $0$. Nothing to do (we subtract <b>0 × row 1</b>).</p>
-
-    <h4>U, step 3: make a 0 in row 3, column 2</h4>
-    <p>Pivot $2$ (in row 2), number to remove $4$, so subtract <b>2 × row 2</b> from row 3:</p>
-    <table>
-      <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th></tr>
-      <tr><td>Row 3</td><td>$0$</td><td>$4$</td><td>$1$</td></tr>
-      <tr><td>minus 2 × row 2 $(0, 2, -2)$</td><td>$0$</td><td>$-4$</td><td>$+4$</td></tr>
-      <tr><td><b>New row 3</b></td><td>$0$</td><td>$0$</td><td>$5$</td></tr>
-    </table>
-
-    <h4>Result</h4>
-    $$ U = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix} $$
-    <p>Zeros below the diagonal: the staircase. <b>That is all $U$ is.</b></p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>U, step 1:</b> make a 0 in row 2, column 1.</p>
+        <p class="k"><span class="kl">Why this amount</span> Pivot = the $1$ in row 1, column 1. Number to remove = $3$. "How many 1's make 3?" $3 \div 1 = 3$. So subtract <b>3 × row 1</b>.</p>
+        <p class="k"><span class="kl">How</span> 3 copies of row 1: $3 \times (1, 2, 1) = (3, 6, 3)$. Subtract box by box: $3 - 3 = 0$, $8 - 6 = 2$, $1 - 3 = -2$.</p>
+        <table>
+          <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th></tr>
+          <tr><td>Row 2</td><td>$3$</td><td>$8$</td><td>$1$</td></tr>
+          <tr><td>minus 3 × row 1 $(1, 2, 1)$</td><td>$-3$</td><td>$-6$</td><td>$-3$</td></tr>
+          <tr><td><b>New row 2</b></td><td>$0$</td><td>$2$</td><td>$-2$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Multiplier $\ell_{21} = 3$ written in our notebook. The matrix is:</p>
+        $$ \begin{bmatrix} 1 & 2 & 1 \\ \color{#b42318}{0} & 2 & -2 \\ 0 & 4 & 1 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>U, step 2:</b> make a 0 in row 3, column 1.</p>
+        <p class="k"><span class="kl">What we see</span> It is already $0$.</p>
+        <p class="k"><span class="kl">Why this amount</span> $0 \div 1 = 0$. We subtract <b>0 × row 1</b>, which changes nothing.</p>
+        <p class="k"><span class="kl">What we have now</span> Multiplier $\ell_{31} = 0$ in the notebook. Column 1 is clean: $(1, 0, 0)$ going down.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>U, step 3:</b> make a 0 in row 3, column 2.</p>
+        <p class="k"><span class="kl">Why this amount</span> Pivot = the $2$ in row 2, column 2. Number to remove = $4$. "How many 2's make 4?" $4 \div 2 = 2$. So subtract <b>2 × row 2</b>.</p>
+        <p class="k"><span class="kl">How</span> 2 copies of the new row 2: $2 \times (0, 2, -2) = (0, 4, -4)$. Subtract box by box: $0 - 0 = 0$, $4 - 4 = 0$, $1 - (-4) = 1 + 4 = 5$.</p>
+        <table>
+          <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th></tr>
+          <tr><td>Row 3</td><td>$0$</td><td>$4$</td><td>$1$</td></tr>
+          <tr><td>minus 2 × row 2 $(0, 2, -2)$</td><td>$0$</td><td>$-4$</td><td>$+4$</td></tr>
+          <tr><td><b>New row 3</b></td><td>$0$</td><td>$0$</td><td>$5$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Multiplier $\ell_{32} = 2$ in the notebook.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Result</span> Zeros below the diagonal: the staircase. <b>That is all $U$ is.</b> Pivots $1, 2, 5$ on its diagonal.</p>
+        $$ U = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix} $$
+      </li>
+    </ol>
 
     <!-- ---------------- PART 2: L ---------------- -->
     <h3>Part 2: How we get L</h3>
@@ -176,41 +397,68 @@
       <p>While doing Part 1, we wrote down <b>how many times we subtracted</b> at each step (3, then 0, then 2). <b>$L$ is just that notebook</b>, written as a matrix.</p>
     </div>
 
-    <h4>L, step 1: list what we subtracted</h4>
-    <p>Go back through Part 1 and read off the numbers in bold:</p>
-    <table>
-      <tr><th>Step in Part 1</th><th>What we did</th><th>The number (multiplier)</th><th>Which spot we made 0</th></tr>
-      <tr><td>U, step 1</td><td>row 2 minus <b>3</b> × row 1</td><td><b>3</b></td><td>row 2, column 1</td></tr>
-      <tr><td>U, step 2</td><td>row 3 minus <b>0</b> × row 1</td><td><b>0</b></td><td>row 3, column 1</td></tr>
-      <tr><td>U, step 3</td><td>row 3 minus <b>2</b> × row 2</td><td><b>2</b></td><td>row 3, column 2</td></tr>
-    </table>
-
-    <h4>L, step 2: start with an empty L</h4>
-    <p>Put <b>1</b> on the diagonal and <b>0</b> above it. The three spots below the diagonal are empty for now:</p>
-    $$ L = \begin{bmatrix} 1 & 0 & 0 \\ \_ & 1 & 0 \\ \_ & \_ & 1 \end{bmatrix} $$
-
-    <h4>L, step 3: put each number into its spot</h4>
-    <table>
-      <tr><th>Number</th><th>Goes in</th><th>$L$ after this</th></tr>
-      <tr><td>$3$</td><td>row 2, column 1</td><td>$\begin{bmatrix} 1 & 0 & 0 \\ \color{#2e7d4f}{3} & 1 & 0 \\ \_ & \_ & 1 \end{bmatrix}$</td></tr>
-      <tr><td>$0$</td><td>row 3, column 1</td><td>$\begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ \color{#2e7d4f}{0} & \_ & 1 \end{bmatrix}$</td></tr>
-      <tr><td>$2$</td><td>row 3, column 2</td><td>$\begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & \color{#2e7d4f}{2} & 1 \end{bmatrix}$</td></tr>
-    </table>
-
-    <h4>Result</h4>
-    $$ L = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix} $$
-    <p>No new calculation at all: just copy the numbers from Part 1 into their spots.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>L, step 1:</b> list what we subtracted.</p>
+        <p class="k"><span class="kl">How</span> Go back through Part 1 and read off the multipliers:</p>
+        <table>
+          <tr><th>Step in Part 1</th><th>What we did</th><th>The number (multiplier)</th><th>Which spot we made 0</th></tr>
+          <tr><td>U, step 1</td><td>row 2 minus <b>3</b> × row 1</td><td><b>3</b></td><td>row 2, column 1</td></tr>
+          <tr><td>U, step 2</td><td>row 3 minus <b>0</b> × row 1</td><td><b>0</b></td><td>row 3, column 1</td></tr>
+          <tr><td>U, step 3</td><td>row 3 minus <b>2</b> × row 2</td><td><b>2</b></td><td>row 3, column 2</td></tr>
+        </table>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>L, step 2:</b> start with an empty $L$.</p>
+        <p class="k"><span class="kl">How</span> Put <b>1</b> on the diagonal and <b>0</b> above it. The three spots below the diagonal are empty for now:</p>
+        $$ L = \begin{bmatrix} 1 & 0 & 0 \\ \_ & 1 & 0 \\ \_ & \_ & 1 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>L, step 3:</b> put each number into the spot it cleared.</p>
+        <p class="k"><span class="kl">Why</span> The spot tells which row was changed (row number) and which pivot row was used (column number).</p>
+        <table>
+          <tr><th>Number</th><th>Goes in</th><th>$L$ after this</th></tr>
+          <tr><td>$3$</td><td>row 2, column 1</td><td>$\begin{bmatrix} 1 & 0 & 0 \\ \color{#2e7d4f}{3} & 1 & 0 \\ \_ & \_ & 1 \end{bmatrix}$</td></tr>
+          <tr><td>$0$</td><td>row 3, column 1</td><td>$\begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ \color{#2e7d4f}{0} & \_ & 1 \end{bmatrix}$</td></tr>
+          <tr><td>$2$</td><td>row 3, column 2</td><td>$\begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & \color{#2e7d4f}{2} & 1 \end{bmatrix}$</td></tr>
+        </table>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Result</span> No new calculation at all: just copy the numbers from Part 1 into their spots.</p>
+        $$ L = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix} $$
+      </li>
+    </ol>
 
     <h4>What L is for: it rebuilds A from U</h4>
-    <p>In Part 1 we <b>took away</b> some rows. $L$ tells us how to <b>put them back</b> and get $A$ again. Read each row of $L$ as a recipe using the rows of $U$:</p>
-    <table>
-      <tr><th>Row of $L$</th><th>Recipe (rows of $U$)</th><th>Work</th><th>Gives row of $A$</th></tr>
-      <tr><td>$(1, 0, 0)$</td><td>1 × $U$ row 1</td><td>$(1, 2, 1)$</td><td>$(1, 2, 1)$ ✓</td></tr>
-      <tr><td>$(3, 1, 0)$</td><td>3 × $U$ row 1 + 1 × $U$ row 2</td><td>$(3, 6, 3) + (0, 2, -2)$</td><td>$(3, 8, 1)$ ✓</td></tr>
-      <tr><td>$(0, 2, 1)$</td><td>2 × $U$ row 2 + 1 × $U$ row 3</td><td>$(0, 4, -4) + (0, 0, 5)$</td><td>$(0, 4, 1)$ ✓</td></tr>
-    </table>
-    <p>For example, row 2: in Part 1 we did "row 2 <b>minus 3</b> × row 1". To undo it, do "<b>plus 3</b> × row 1", and that 3 is exactly what $L$ stores. So $L \times U$ gives back $A$:</p>
-    $$ \underbrace{\begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}}_{A} = \underbrace{\begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix}}_{L} \underbrace{\begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix}}_{U} $$
+    <p>In Part 1 we <b>took away</b> some rows. $L$ tells us how to <b>put them back</b> and get $A$ again. Read each row of $L$ as a recipe using the rows of $U$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 1 of $L$ is $(1, 0, 0)$: take 1 × $U$ row 1.</p>
+        <p class="k"><span class="kl">How</span> $1 \times (1, 2, 1) = (1, 2, 1)$.</p>
+        <p class="k"><span class="kl">Check</span> Row 1 of $A$ is $(1, 2, 1)$ ✓. (Row 1 was never changed.)</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 2 of $L$ is $(3, 1, 0)$: take 3 × $U$ row 1 + 1 × $U$ row 2.</p>
+        <p class="k"><span class="kl">Why</span> In Part 1 we did "row 2 <b>minus 3</b> × row 1". To undo it, do "<b>plus 3</b> × row 1", and that 3 is exactly what $L$ stores.</p>
+        <p class="k"><span class="kl">How</span> $3 \times (1, 2, 1) = (3, 6, 3)$. Add $(0, 2, -2)$: $3 + 0 = 3$, $6 + 2 = 8$, $3 - 2 = 1$.</p>
+        <p class="k"><span class="kl">Check</span> $(3, 8, 1)$ = row 2 of $A$ ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 3 of $L$ is $(0, 2, 1)$: take 2 × $U$ row 2 + 1 × $U$ row 3.</p>
+        <p class="k"><span class="kl">How</span> $2 \times (0, 2, -2) = (0, 4, -4)$. Add $(0, 0, 5)$: $0 + 0 = 0$, $4 + 0 = 4$, $-4 + 5 = 1$.</p>
+        <p class="k"><span class="kl">Check</span> $(0, 4, 1)$ = row 3 of $A$ ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we have now</span> All three rows rebuilt:</p>
+        <table>
+          <tr><th>Row of $L$</th><th>Recipe (rows of $U$)</th><th>Work</th><th>Gives row of $A$</th></tr>
+          <tr><td>$(1, 0, 0)$</td><td>1 × $U$ row 1</td><td>$(1, 2, 1)$</td><td>$(1, 2, 1)$ ✓</td></tr>
+          <tr><td>$(3, 1, 0)$</td><td>3 × $U$ row 1 + 1 × $U$ row 2</td><td>$(3, 6, 3) + (0, 2, -2)$</td><td>$(3, 8, 1)$ ✓</td></tr>
+          <tr><td>$(0, 2, 1)$</td><td>2 × $U$ row 2 + 1 × $U$ row 3</td><td>$(0, 4, -4) + (0, 0, 5)$</td><td>$(0, 4, 1)$ ✓</td></tr>
+        </table>
+        $$ \underbrace{\begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}}_{A} = \underbrace{\begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix}}_{L} \underbrace{\begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix}}_{U} $$
+      </li>
+    </ol>
 
     <div class="box intuition"><span class="label">Story: a shopping receipt</span>
       <p>You start with a full bag of groceries ($A$). You take some items out ($U$ is what is left). The receipt of what you took out is $L$. With the leftover bag <b>and</b> the receipt, you can always rebuild the full bag. That is $A = LU$.</p>
@@ -262,14 +510,30 @@
       0c_1 + 2c_2 + 1c_3 &= 2 &&\text{(row 3)}
     \end{aligned}
     $$
-    <p>$L$ has zeros <b>above</b> its diagonal, so row 1 has only $c_1$. Start at the top:</p>
-    <table>
-      <tr><th>Row</th><th>Equation (zeros dropped)</th><th>Work</th><th>Result</th></tr>
-      <tr><td>1</td><td>$c_1 = 2$</td><td>read it off</td><td>$c_1 = 2$</td></tr>
-      <tr><td>2</td><td>$3c_1 + c_2 = 12$</td><td>put $c_1 = 2$: $6 + c_2 = 12$, subtract 6</td><td>$c_2 = 6$</td></tr>
-      <tr><td>3</td><td>$2c_2 + c_3 = 2$</td><td>put $c_2 = 6$: $12 + c_3 = 2$, subtract 12</td><td>$c_3 = -10$</td></tr>
-    </table>
-    <p>So $c = (2, 6, -10)$.</p>
+    <p>$L$ has zeros <b>above</b> its diagonal, so row 1 has only $c_1$. Start at the top (forward substitution):</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 1: $c_1 = 2$.</p>
+        <p class="k"><span class="kl">Why</span> The zeros drop $c_2$ and $c_3$, so row 1 has only one unknown. Read it off.</p>
+        <p class="k"><span class="kl">What we have now</span> $c_1 = 2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 2: $3c_1 + c_2 = 12$.</p>
+        <p class="k"><span class="kl">How</span> Put in $c_1 = 2$: $3 \times 2 = 6$, so $6 + c_2 = 12$. Take 6 from both sides: $c_2 = 12 - 6 = 6$.</p>
+        <p class="k"><span class="kl">What we have now</span> $c_2 = 6$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 3: $2c_2 + c_3 = 2$.</p>
+        <p class="k"><span class="kl">How</span> Put in $c_2 = 6$: $2 \times 6 = 12$, so $12 + c_3 = 2$. Take 12 from both sides: $c_3 = 2 - 12 = -10$.</p>
+        <p class="k"><span class="kl">What we have now</span> $c = (2, 6, -10)$.</p>
+        <table>
+          <tr><th>Row</th><th>Equation (zeros dropped)</th><th>Work</th><th>Result</th></tr>
+          <tr><td>1</td><td>$c_1 = 2$</td><td>read it off</td><td>$c_1 = 2$</td></tr>
+          <tr><td>2</td><td>$3c_1 + c_2 = 12$</td><td>put $c_1 = 2$: $6 + c_2 = 12$, subtract 6</td><td>$c_2 = 6$</td></tr>
+          <tr><td>3</td><td>$2c_2 + c_3 = 2$</td><td>put $c_2 = 6$: $12 + c_3 = 2$, subtract 12</td><td>$c_3 = -10$</td></tr>
+        </table>
+      </li>
+    </ol>
 
     <div class="box intuition"><span class="label">Why c is the same as in Lecture 03</span>
       <p>In Lecture 03, elimination turned $b = (2, 12, 2)$ into $(2, 6, -10)$. Step 1 gives exactly the same numbers, because it does the <b>same subtractions</b>:</p>
@@ -291,22 +555,48 @@
       5z &= -10 &&\text{(row 3)}
     \end{aligned}
     $$
-    <p>$U$ has zeros <b>below</b> its diagonal, so the last row has only $z$. Start at the bottom:</p>
-    <table>
-      <tr><th>Row</th><th>Equation</th><th>Work</th><th>Result</th></tr>
-      <tr><td>3</td><td>$5z = -10$</td><td>divide by 5</td><td>$z = -2$</td></tr>
-      <tr><td>2</td><td>$2y - 2z = 6$</td><td>put $z = -2$: $2y + 4 = 6$, so $2y = 2$</td><td>$y = 1$</td></tr>
-      <tr><td>1</td><td>$x + 2y + z = 2$</td><td>put $y = 1$, $z = -2$: $x + 2 - 2 = 2$</td><td>$x = 2$</td></tr>
-    </table>
-    <p>So $x = (2, 1, -2)$, the same answer as Lecture 03.</p>
+    <p>$U$ has zeros <b>below</b> its diagonal, so the last row has only $z$. Start at the bottom (back substitution):</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 3: $5z = -10$.</p>
+        <p class="k"><span class="kl">Why</span> Only one unknown, $z$, in this row.</p>
+        <p class="k"><span class="kl">How</span> Divide both sides by 5: $z = -10 \div 5 = -2$.</p>
+        <p class="k"><span class="kl">What we have now</span> $z = -2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 2: $2y - 2z = 6$.</p>
+        <p class="k"><span class="kl">How</span> Put in $z = -2$: $-2 \times (-2) = +4$, so $2y + 4 = 6$. Take 4 from both sides: $2y = 6 - 4 = 2$. Divide by 2: $y = 1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $y = 1$, $z = -2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 1: $x + 2y + z = 2$.</p>
+        <p class="k"><span class="kl">How</span> Put in $y = 1$: $2 \times 1 = 2$. Put in $z = -2$. So $x + 2 - 2 = 2$. Since $2 - 2 = 0$: $x + 0 = 2$, so $x = 2$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x = (2, 1, -2)$, the same answer as Lecture 03.</p>
+        <table>
+          <tr><th>Row</th><th>Equation</th><th>Work</th><th>Result</th></tr>
+          <tr><td>3</td><td>$5z = -10$</td><td>divide by 5</td><td>$z = -2$</td></tr>
+          <tr><td>2</td><td>$2y - 2z = 6$</td><td>put $z = -2$: $2y + 4 = 6$, so $2y = 2$</td><td>$y = 1$</td></tr>
+          <tr><td>1</td><td>$x + 2y + z = 2$</td><td>put $y = 1$, $z = -2$: $x + 2 - 2 = 2$</td><td>$x = 2$</td></tr>
+        </table>
+      </li>
+    </ol>
 
     <h4>Check in the original A</h4>
-    <table>
-      <tr><th>Row of $A$</th><th>Row · $(2, 1, -2)$</th><th>Should be</th></tr>
-      <tr><td>$(1, 2, 1)$</td><td>$2 + 2 - 2 = 2$</td><td>$2$ ✓</td></tr>
-      <tr><td>$(3, 8, 1)$</td><td>$6 + 8 - 2 = 12$</td><td>$12$ ✓</td></tr>
-      <tr><td>$(0, 4, 1)$</td><td>$0 + 4 - 2 = 2$</td><td>$2$ ✓</td></tr>
-    </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Multiply each row of $A$ by $(2, 1, -2)$, number by number, and add.</p>
+        <p class="k"><span class="kl">Why</span> If $x$ is right, each row must give the matching number of $b = (2, 12, 2)$.</p>
+        <p class="k"><span class="kl">Row 1</span> $(1, 2, 1)$: $1 \times 2 = 2$, $2 \times 1 = 2$, $1 \times (-2) = -2$. Add: $2 + 2 - 2 = 2$ ✓.</p>
+        <p class="k"><span class="kl">Row 2</span> $(3, 8, 1)$: $3 \times 2 = 6$, $8 \times 1 = 8$, $1 \times (-2) = -2$. Add: $6 + 8 - 2 = 12$ ✓.</p>
+        <p class="k"><span class="kl">Row 3</span> $(0, 4, 1)$: $0 \times 2 = 0$, $4 \times 1 = 4$, $1 \times (-2) = -2$. Add: $0 + 4 - 2 = 2$ ✓.</p>
+        <table>
+          <tr><th>Row of $A$</th><th>Row · $(2, 1, -2)$</th><th>Should be</th></tr>
+          <tr><td>$(1, 2, 1)$</td><td>$2 + 2 - 2 = 2$</td><td>$2$ ✓</td></tr>
+          <tr><td>$(3, 8, 1)$</td><td>$6 + 8 - 2 = 12$</td><td>$12$ ✓</td></tr>
+          <tr><td>$(0, 4, 1)$</td><td>$0 + 4 - 2 = 2$</td><td>$2$ ✓</td></tr>
+        </table>
+      </li>
+    </ol>
 
     <div class="box theorem"><span class="label">Why this is useful</span>
       <p>If tomorrow you get a <b>new</b> $b$ with the same $A$, you do <b>not</b> redo elimination. Keep $L$ and $U$, and just repeat step 1 and step 2 with the new $b$. That is the cheap part ($\approx n^2$ work, section 7).</p>
@@ -314,6 +604,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s6">6. Why L is so easy</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$E$ = the product of all elimination matrices; it goes <b>forward</b>: $EA = U$. $L$ = the lower triangular matrix that goes <b>backward</b>: $A = LU$. Multiplier = (number to remove) ÷ (pivot). $U$ = the upper triangular staircase. "Tangled" = a number in $E$ that mixes two multipliers together (like $10 = 5 \times 2$).</p>
+    </div>
     <p>We can store the elimination steps in two ways:</p>
     <table>
       <tr><th></th><th>Formula</th><th>Direction</th></tr>
@@ -325,56 +618,137 @@
     <h3>The example</h3>
     $$ A = \begin{bmatrix} 1 & 1 & 1 \\ 2 & 3 & 3 \\ 0 & 5 & 6 \end{bmatrix} $$
     <p><b>Elimination on A:</b></p>
-    <table>
-      <tr><th>Step</th><th>Work</th><th>Multiplier</th></tr>
-      <tr><td>row 2 − 2 × row 1</td><td>$(2, 3, 3) - (2, 2, 2) = (0, 1, 1)$</td><td>$2$</td></tr>
-      <tr><td>row 3 − 0 × row 1</td><td>row 3 already has $0$ in column 1: nothing to do</td><td>$0$</td></tr>
-      <tr><td>row 3 − 5 × (new row 2)</td><td>$(0, 5, 6) - (0, 5, 5) = (0, 0, 1)$</td><td>$5$</td></tr>
-    </table>
-    $$ U = \begin{bmatrix} 1 & 1 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}, \qquad \text{multipliers } 2,\ 0,\ 5 $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Make a 0 in row 2, column 1.</p>
+        <p class="k"><span class="kl">Why this amount</span> Pivot $1$, number to remove $2$: $2 \div 1 = 2$. Subtract 2 × row 1.</p>
+        <p class="k"><span class="kl">How</span> $2 \times (1, 1, 1) = (2, 2, 2)$. Then $(2 - 2,\ 3 - 2,\ 3 - 2) = (0, 1, 1)$.</p>
+        <p class="k"><span class="kl">What we have now</span> New row 2 $= (0, 1, 1)$. Multiplier $2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Make a 0 in row 3, column 1.</p>
+        <p class="k"><span class="kl">What we see</span> Row 3 already has $0$ in column 1. $0 \div 1 = 0$: nothing to do.</p>
+        <p class="k"><span class="kl">What we have now</span> Multiplier $0$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Make a 0 in row 3, column 2.</p>
+        <p class="k"><span class="kl">Why this amount</span> Pivot = the $1$ in new row 2, column 2. Number to remove = $5$. $5 \div 1 = 5$. Subtract 5 × (new row 2).</p>
+        <p class="k"><span class="kl">How</span> $5 \times (0, 1, 1) = (0, 5, 5)$. Then $(0 - 0,\ 5 - 5,\ 6 - 5) = (0, 0, 1)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Multiplier $5$. All three steps together:</p>
+        <table>
+          <tr><th>Step</th><th>Work</th><th>Multiplier</th></tr>
+          <tr><td>row 2 − 2 × row 1</td><td>$(2, 3, 3) - (2, 2, 2) = (0, 1, 1)$</td><td>$2$</td></tr>
+          <tr><td>row 3 − 0 × row 1</td><td>row 3 already has $0$ in column 1: nothing to do</td><td>$0$</td></tr>
+          <tr><td>row 3 − 5 × (new row 2)</td><td>$(0, 5, 6) - (0, 5, 5) = (0, 0, 1)$</td><td>$5$</td></tr>
+        </table>
+        $$ U = \begin{bmatrix} 1 & 1 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}, \qquad \text{multipliers } 2,\ 0,\ 5 $$
+      </li>
+    </ol>
 
     <h3>Way 1: build E (forward)</h3>
-    <p>The two step matrices (identity with <b>minus</b> the multiplier in the cleared spot):</p>
-    $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad E_{32} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & -5 & 1 \end{bmatrix} $$
-    <p>$E = E_{32}E_{21}$. Rows of $E_{32}$ mix the rows of $E_{21}$:</p>
-    <table>
-      <tr><th>Row of $E_{32}$</th><th>Recipe (rows of $E_{21}$)</th><th>Work</th><th>Row of $E$</th></tr>
-      <tr><td>$(1, 0, 0)$</td><td>1 × row 1</td><td>$(1, 0, 0)$</td><td>$(1, 0, 0)$</td></tr>
-      <tr><td>$(0, 1, 0)$</td><td>1 × row 2</td><td>$(-2, 1, 0)$</td><td>$(-2, 1, 0)$</td></tr>
-      <tr><td>$(0, -5, 1)$</td><td>$-5$ × row 2 + 1 × row 3</td><td>$(10, -5, 0) + (0, 0, 1)$</td><td>$(\color{#b42318}{10}, -5, 1)$</td></tr>
-    </table>
-    $$ E = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ \color{#b42318}{10} & -5 & 1 \end{bmatrix} $$
-    <p><b>Check row 3 of $EA$:</b> $10 \times (1, 1, 1) - 5 \times (2, 3, 3) + 1 \times (0, 5, 6) = (10 - 10 + 0,\ 10 - 15 + 5,\ 10 - 15 + 6) = (0, 0, 1)$ ✓, the last row of $U$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Write the two step matrices.</p>
+        <p class="k"><span class="kl">How</span> Identity with <b>minus</b> the multiplier in the cleared spot: $-2$ in spot (2, 1) and $-5$ in spot (3, 2).</p>
+        $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad E_{32} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & -5 & 1 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Multiply $E = E_{32}E_{21}$, one row at a time.</p>
+        <p class="k"><span class="kl">Why</span> $E_{21}$ acts first, then $E_{32}$, so $E_{32}$ stands on the left. Rows of $E_{32}$ mix the rows of $E_{21}$.</p>
+        <p class="k"><span class="kl">Rows 1 and 2</span> $(1, 0, 0)$ takes row 1 of $E_{21}$: $(1, 0, 0)$. $(0, 1, 0)$ takes row 2 of $E_{21}$: $(-2, 1, 0)$.</p>
+        <p class="k"><span class="kl">Row 3</span> $(0, -5, 1)$ means $-5 \times$ row 2 $+ 1 \times$ row 3. First $-5 \times (-2, 1, 0) = (10, -5, 0)$. Then add $(0, 0, 1)$: $(10 + 0,\ -5 + 0,\ 0 + 1) = (10, -5, 1)$.</p>
+        <table>
+          <tr><th>Row of $E_{32}$</th><th>Recipe (rows of $E_{21}$)</th><th>Work</th><th>Row of $E$</th></tr>
+          <tr><td>$(1, 0, 0)$</td><td>1 × row 1</td><td>$(1, 0, 0)$</td><td>$(1, 0, 0)$</td></tr>
+          <tr><td>$(0, 1, 0)$</td><td>1 × row 2</td><td>$(-2, 1, 0)$</td><td>$(-2, 1, 0)$</td></tr>
+          <tr><td>$(0, -5, 1)$</td><td>$-5$ × row 2 + 1 × row 3</td><td>$(10, -5, 0) + (0, 0, 1)$</td><td>$(\color{#b42318}{10}, -5, 1)$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> A surprise $10$ sits in the corner:</p>
+        $$ E = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ \color{#b42318}{10} & -5 & 1 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Row 3 of $EA$ should be the last row of $U$, $(0, 0, 1)$.</p>
+        <p class="k"><span class="kl">How</span> $10 \times (1, 1, 1) = (10, 10, 10)$. $-5 \times (2, 3, 3) = (-10, -15, -15)$. $1 \times (0, 5, 6) = (0, 5, 6)$.</p>
+        <p class="k"><span class="kl">Add</span> First: $10 - 10 + 0 = 0$. Second: $10 - 15 + 5 = 0$. Third: $10 - 15 + 6 = 1$. So $(0, 0, 1)$ ✓.</p>
+      </li>
+    </ol>
 
     <h3>Where does the 10 come from?</h3>
     <p>Follow <b>row 3</b> through the two steps, writing everything in terms of the <b>original</b> rows of $A$:</p>
-    <table>
-      <tr><th>Moment</th><th>New row 3 in terms of the original rows</th></tr>
-      <tr><td>Step 1 changes row 2</td><td>new row 2 $=$ row 2 $- 2 \times$ row 1</td></tr>
-      <tr><td>Step 2 changes row 3</td><td>new row 3 $=$ row 3 $- 5 \times$ (new row 2)</td></tr>
-      <tr><td>Put in the new row 2</td><td>$=$ row 3 $- 5 \times$ (row 2 $- 2 \times$ row 1)</td></tr>
-      <tr><td>Multiply out</td><td>$=$ row 3 $- 5 \times$ row 2 $+ \color{#b42318}{10} \times$ row 1</td></tr>
-    </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Step 1 changes row 2.</p>
+        <p class="k"><span class="kl">How</span> New row 2 $=$ row 2 $- 2 \times$ row 1.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Step 2 changes row 3.</p>
+        <p class="k"><span class="kl">How</span> New row 3 $=$ row 3 $- 5 \times$ (new row 2).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put in what "new row 2" really is.</p>
+        <p class="k"><span class="kl">How</span> New row 3 $=$ row 3 $- 5 \times$ (row 2 $- 2 \times$ row 1).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Open the bracket.</p>
+        <p class="k"><span class="kl">How</span> $-5 \times$ row 2 stays. $-5 \times (-2 \times$ row 1$)$: minus times minus is plus, and $5 \times 2 = 10$, so $+10 \times$ row 1.</p>
+        <p class="k"><span class="kl">What we have now</span> New row 3 $=$ row 3 $- 5 \times$ row 2 $+ \color{#b42318}{10} \times$ row 1.</p>
+        <table>
+          <tr><th>Moment</th><th>New row 3 in terms of the original rows</th></tr>
+          <tr><td>Step 1 changes row 2</td><td>new row 2 $=$ row 2 $- 2 \times$ row 1</td></tr>
+          <tr><td>Step 2 changes row 3</td><td>new row 3 $=$ row 3 $- 5 \times$ (new row 2)</td></tr>
+          <tr><td>Put in the new row 2</td><td>$=$ row 3 $- 5 \times$ (row 2 $- 2 \times$ row 1)</td></tr>
+          <tr><td>Multiply out</td><td>$=$ row 3 $- 5 \times$ row 2 $+ \color{#b42318}{10} \times$ row 1</td></tr>
+        </table>
+      </li>
+    </ol>
     <p>That is exactly row 3 of $E$: $(\color{#b42318}{10}, -5, 1)$. The "new row 2" secretly contained $-2 \times$ row 1, so subtracting 5 of it <b>adds</b> $5 \times 2 = 10$ of row 1. The steps got tangled together.</p>
 
     <h3>Way 2: build L (backward)</h3>
-    <p>Now go the other way: <b>rebuild $A$ from the rows of $U$</b>. Each step subtracted a multiple of a pivot row, so to rebuild we <b>add it back</b>:</p>
-    <table>
-      <tr><th>Row of $A$</th><th>In words</th><th>Recipe from rows of $U$</th><th>Row of $L$</th></tr>
-      <tr><td>row 1</td><td>row 1 never changed</td><td>1 × ($U$ row 1)</td><td>$(1, 0, 0)$</td></tr>
-      <tr><td>row 2</td><td>we subtracted 2 × row 1, so add it back</td><td>$\color{#2e7d4f}{2}$ × ($U$ row 1) + 1 × ($U$ row 2)</td><td>$(2, 1, 0)$</td></tr>
-      <tr><td>row 3</td><td>we subtracted 5 × row 2, so add it back</td><td>$\color{#2e7d4f}{5}$ × ($U$ row 2) + 1 × ($U$ row 3)</td><td>$(0, 5, 1)$</td></tr>
-    </table>
-    $$ L = \begin{bmatrix} 1 & 0 & 0 \\ \color{#2e7d4f}{2} & 1 & 0 \\ 0 & \color{#2e7d4f}{5} & 1 \end{bmatrix} $$
+    <p>Now go the other way: <b>rebuild $A$ from the rows of $U$</b>. Each step subtracted a multiple of a pivot row, so to rebuild we <b>add it back</b>.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Rebuild row 1 of $A$.</p>
+        <p class="k"><span class="kl">Why</span> Row 1 never changed, so it is just $U$ row 1.</p>
+        <p class="k"><span class="kl">What we have now</span> Row 1 of $L$ = $(1, 0, 0)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Rebuild row 2 of $A$.</p>
+        <p class="k"><span class="kl">Why</span> We subtracted 2 × row 1, so add it back: $\color{#2e7d4f}{2}$ × ($U$ row 1) + 1 × ($U$ row 2).</p>
+        <p class="k"><span class="kl">What we have now</span> Row 2 of $L$ = $(2, 1, 0)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Rebuild row 3 of $A$.</p>
+        <p class="k"><span class="kl">Why</span> We subtracted 5 × (finished) row 2, so add it back: $\color{#2e7d4f}{5}$ × ($U$ row 2) + 1 × ($U$ row 3). Row 1 is not needed: row 3 of $A$ had a $0$ there already.</p>
+        <p class="k"><span class="kl">What we have now</span> Row 3 of $L$ = $(0, 5, 1)$.</p>
+        <table>
+          <tr><th>Row of $A$</th><th>In words</th><th>Recipe from rows of $U$</th><th>Row of $L$</th></tr>
+          <tr><td>row 1</td><td>row 1 never changed</td><td>1 × ($U$ row 1)</td><td>$(1, 0, 0)$</td></tr>
+          <tr><td>row 2</td><td>we subtracted 2 × row 1, so add it back</td><td>$\color{#2e7d4f}{2}$ × ($U$ row 1) + 1 × ($U$ row 2)</td><td>$(2, 1, 0)$</td></tr>
+          <tr><td>row 3</td><td>we subtracted 5 × row 2, so add it back</td><td>$\color{#2e7d4f}{5}$ × ($U$ row 2) + 1 × ($U$ row 3)</td><td>$(0, 5, 1)$</td></tr>
+        </table>
+        $$ L = \begin{bmatrix} 1 & 0 & 0 \\ \color{#2e7d4f}{2} & 1 & 0 \\ 0 & \color{#2e7d4f}{5} & 1 \end{bmatrix} $$
+      </li>
+    </ol>
     <p>No 10 appears. Rows of $U$ are the <b>finished</b> rows, and each row of $A$ is just "its own $U$ row plus the multiplier times the pivot row that was taken away". Nothing is hidden inside anything, so nothing tangles.</p>
 
     <p><b>Check $LU = A$</b> (rows of $L$ mix rows of $U$):</p>
-    <table>
-      <tr><th>Row of $L$</th><th>Mix of rows of $U$</th><th>Result</th><th>Row of $A$</th></tr>
-      <tr><td>$(1, 0, 0)$</td><td>$(1, 1, 1)$</td><td>$(1, 1, 1)$</td><td>✓</td></tr>
-      <tr><td>$(2, 1, 0)$</td><td>$2 \times (1, 1, 1) + (0, 1, 1) = (2, 2, 2) + (0, 1, 1)$</td><td>$(2, 3, 3)$</td><td>✓</td></tr>
-      <tr><td>$(0, 5, 1)$</td><td>$5 \times (0, 1, 1) + (0, 0, 1) = (0, 5, 5) + (0, 0, 1)$</td><td>$(0, 5, 6)$</td><td>✓</td></tr>
-    </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">Row 1</span> $(1, 0, 0)$ takes $U$ row 1: $(1, 1, 1)$. Row 1 of $A$ ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Row 2</span> $(2, 1, 0)$: $2 \times (1, 1, 1) = (2, 2, 2)$. Add $(0, 1, 1)$: $(2 + 0,\ 2 + 1,\ 2 + 1) = (2, 3, 3)$. Row 2 of $A$ ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Row 3</span> $(0, 5, 1)$: $5 \times (0, 1, 1) = (0, 5, 5)$. Add $(0, 0, 1)$: $(0 + 0,\ 5 + 0,\ 5 + 1) = (0, 5, 6)$. Row 3 of $A$ ✓.</p>
+        <table>
+          <tr><th>Row of $L$</th><th>Mix of rows of $U$</th><th>Result</th><th>Row of $A$</th></tr>
+          <tr><td>$(1, 0, 0)$</td><td>$(1, 1, 1)$</td><td>$(1, 1, 1)$</td><td>✓</td></tr>
+          <tr><td>$(2, 1, 0)$</td><td>$2 \times (1, 1, 1) + (0, 1, 1) = (2, 2, 2) + (0, 1, 1)$</td><td>$(2, 3, 3)$</td><td>✓</td></tr>
+          <tr><td>$(0, 5, 1)$</td><td>$5 \times (0, 1, 1) + (0, 0, 1) = (0, 5, 5) + (0, 0, 1)$</td><td>$(0, 5, 6)$</td><td>✓</td></tr>
+        </table>
+      </li>
+    </ol>
 
     <h3>Side by side</h3>
     <table>
@@ -393,23 +767,53 @@
 
     <!-- ====================================================== -->
     <h2 id="s7">7. How much work is elimination?</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Operation = one multiply-and-subtract (like $7 - 4 \times 1$). $n \times n$ = a square matrix with $n$ rows and $n$ columns. $n^2 = n \times n$; $n^3 = n \times n \times n$. Stage = clearing one column below its pivot. Right-hand side $b$ = the known numbers; each new $b$ needs its own forward and back substitution.</p>
+    </div>
     <p>Count one "operation" as <b>one multiply-and-subtract</b>. Take an $n \times n$ matrix with no zeros.</p>
-    <table>
-      <tr><th>Stage</th><th>What changes</th><th>Cost (about)</th></tr>
-      <tr><td>Clear column 1</td><td>all rows below row 1: roughly the whole $n \times n$ block</td><td>$n^2$</td></tr>
-      <tr><td>Clear column 2</td><td>the remaining $(n-1) \times (n-1)$ block</td><td>$(n-1)^2$</td></tr>
-      <tr><td>Clear column 3</td><td>the remaining $(n-2) \times (n-2)$ block</td><td>$(n-2)^2$</td></tr>
-      <tr><td>…</td><td>…</td><td>…</td></tr>
-      <tr><td>Last</td><td>$1 \times 1$</td><td>$1$</td></tr>
-    </table>
-    $$ \text{Total} \approx n^2 + (n-1)^2 + \dots + 2^2 + 1^2 \approx \tfrac13 n^3 $$
-    <p>Why a third: $n$ stages, each up to $n^2$, would give $n^3$, but the blocks keep shrinking. It is like the calculus fact $\int_0^n x^2\,dx = \tfrac13 n^3$.</p>
-    <table>
-      <tr><th>$n$</th><th>Exact sum $1^2 + \dots + n^2$</th><th>$\tfrac13 n^3$</th></tr>
-      <tr><td>$10$</td><td>$385$</td><td>$\approx 333$</td></tr>
-      <tr><td>$100$</td><td>$338{,}350$</td><td>$\approx 333{,}333$</td></tr>
-      <tr><td>$1000$</td><td>$333{,}833{,}500$</td><td>$\approx 333{,}333{,}333$</td></tr>
-    </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Count stage 1: clear column 1.</p>
+        <p class="k"><span class="kl">How</span> There are $n - 1$ rows below row 1, and each has about $n$ numbers to change. That is $(n - 1) \times n$, roughly $n^2$.</p>
+        <p class="k"><span class="kl">What we have now</span> Cost $\approx n^2$. A smaller $(n - 1) \times (n - 1)$ block is left to clean.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Count stage 2: clear column 2.</p>
+        <p class="k"><span class="kl">Why smaller</span> Row 1 and column 1 are finished, so we only work in the $(n - 1) \times (n - 1)$ block.</p>
+        <p class="k"><span class="kl">What we have now</span> Cost $\approx (n - 1)^2$. Then stage 3 costs $(n - 2)^2$, and so on, down to $1$.</p>
+        <table>
+          <tr><th>Stage</th><th>What changes</th><th>Cost (about)</th></tr>
+          <tr><td>Clear column 1</td><td>all rows below row 1: roughly the whole $n \times n$ block</td><td>$n^2$</td></tr>
+          <tr><td>Clear column 2</td><td>the remaining $(n-1) \times (n-1)$ block</td><td>$(n-1)^2$</td></tr>
+          <tr><td>Clear column 3</td><td>the remaining $(n-2) \times (n-2)$ block</td><td>$(n-2)^2$</td></tr>
+          <tr><td>…</td><td>…</td><td>…</td></tr>
+          <tr><td>Last</td><td>$1 \times 1$</td><td>$1$</td></tr>
+        </table>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add all stages.</p>
+        $$ \text{Total} \approx n^2 + (n-1)^2 + \dots + 2^2 + 1^2 \approx \tfrac13 n^3 $$
+        <p class="k"><span class="kl">Why a third</span> $n$ stages, each up to $n^2$, would give $n^3$, but the blocks keep shrinking. It is like the calculus fact $\int_0^n x^2\,dx = \tfrac13 n^3$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Try $n = 10$ exactly: $1 + 4 = 5$, $5 + 9 = 14$, $14 + 16 = 30$, $30 + 25 = 55$, $55 + 36 = 91$, $91 + 49 = 140$, $140 + 64 = 204$, $204 + 81 = 285$, $285 + 100 = 385$.</p>
+        <p class="k"><span class="kl">Compare</span> $\tfrac13 \times 10^3 = 1000 \div 3 \approx 333$. Close, and it gets closer as $n$ grows:</p>
+        <table>
+          <tr><th>$n$</th><th>Exact sum $1^2 + \dots + n^2$</th><th>$\tfrac13 n^3$</th></tr>
+          <tr><td>$10$</td><td>$385$</td><td>$\approx 333$</td></tr>
+          <tr><td>$100$</td><td>$338{,}350$</td><td>$\approx 333{,}333$</td></tr>
+          <tr><td>$1000$</td><td>$333{,}833{,}500$</td><td>$\approx 333{,}333{,}333$</td></tr>
+        </table>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Count the work for one right-hand side $b$.</p>
+        <p class="k"><span class="kl">How</span> Forward substitution: row $k$ of $L$ uses $k - 1$ numbers already found, so about $1 + 2 + \dots + n \approx \tfrac12 n^2$. Back substitution with $U$: the same, about $\tfrac12 n^2$. Together: $\tfrac12 n^2 + \tfrac12 n^2 = n^2$.</p>
+        <p class="k"><span class="kl">What we have now</span> Factoring $\approx \tfrac13 n^3$ (once). Each $b$ $\approx n^2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What if n doubles</span> $(2n)^3 = 2 \times 2 \times 2 \times n^3 = 8n^3$: factoring takes 8 times as long. $(2n)^2 = 2 \times 2 \times n^2 = 4n^2$: each $b$ takes 4 times as long.</p>
+      </li>
+    </ol>
     <div class="box theorem"><span class="label">Costs to remember</span>
       <table>
         <tr><th>Work on</th><th>Cost</th><th>If $n$ doubles</th></tr>
@@ -421,6 +825,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s8">8. Permutation matrices</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Row swap = two rows trade places (needed when a $0$ sits in a pivot spot). Permutation matrix $P$ = the identity with its rows reordered; multiplying $PA$ reorders the rows of $A$ the same way. Factorial $n! = n \times (n - 1) \times \dots \times 1$. Cycle = every row moves one place round. Transpose = rows become columns. Inverse = undo.</p>
+    </div>
     <p>When a zero lands in a pivot spot we swap rows (Lecture 03). A <b>permutation matrix</b> $P$ does the swaps. It is the identity with its rows rearranged.</p>
     <h3>All six 3 × 3 permutation matrices</h3>
     <table>
@@ -432,6 +839,22 @@
       <tr><td>$\begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{bmatrix}$</td><td>cycle: row 2 → top, row 3 → middle, row 1 → bottom</td></tr>
       <tr><td>$\begin{bmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}$</td><td>cycle the other way</td></tr>
     </table>
+    <p><b>Why exactly six?</b></p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Choose which row of $I$ goes on top.</p>
+        <p class="k"><span class="kl">How</span> Any of the 3 rows: 3 choices.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Choose the middle row.</p>
+        <p class="k"><span class="kl">How</span> One row is used, 2 are left: 2 choices. So far $3 \times 2 = 6$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> The bottom row.</p>
+        <p class="k"><span class="kl">How</span> Only 1 row is left: 1 choice. $6 \times 1 = 6$.</p>
+        <p class="k"><span class="kl">What we have now</span> $3! = 3 \times 2 \times 1 = 6$ permutation matrices.</p>
+      </li>
+    </ol>
     <div class="box theorem"><span class="label">Facts about permutation matrices</span>
       <ul>
         <li><b>How many:</b> $n \times n$ has $n! = n \times (n-1) \times \dots \times 1$ of them. $3! = 6$, $\ 4! = 24$.</li>
@@ -440,26 +863,42 @@
       </ul>
     </div>
     <div class="box example"><span class="label">Example: check the inverse of a cycle</span>
-      <p>$P = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{bmatrix}$, so $P^T = \begin{bmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}$ (the other cycle).</p>
-      <table>
-        <tr><th>Row of $P$</th><th>Takes this row of $P^T$</th><th>Row of $PP^T$</th></tr>
-        <tr><td>$(0, 1, 0)$</td><td>row 2: $(1, 0, 0)$</td><td>$(1, 0, 0)$</td></tr>
-        <tr><td>$(0, 0, 1)$</td><td>row 3: $(0, 1, 0)$</td><td>$(0, 1, 0)$</td></tr>
-        <tr><td>$(1, 0, 0)$</td><td>row 1: $(0, 0, 1)$</td><td>$(0, 0, 1)$</td></tr>
-      </table>
-      <p>$PP^T = I$ ✓, so $P^T$ undoes $P$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Transpose $P = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{bmatrix}$: rows become columns.</p>
+          <p class="k"><span class="kl">How</span> Row 1 $(0, 1, 0)$ becomes column 1. Row 2 $(0, 0, 1)$ becomes column 2. Row 3 $(1, 0, 0)$ becomes column 3.</p>
+          <p class="k"><span class="kl">What we have now</span> $P^T = \begin{bmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}$ (the other cycle).</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Multiply $PP^T$ one row at a time.</p>
+          <p class="k"><span class="kl">Why</span> If we get $I$, then $P^T$ undoes $P$.</p>
+          <p class="k"><span class="kl">How</span> A row with a single 1 just picks one row of $P^T$. Row 1 of $P$, $(0, 1, 0)$, picks row 2 of $P^T$: $(1, 0, 0)$. Row 2, $(0, 0, 1)$, picks row 3: $(0, 1, 0)$. Row 3, $(1, 0, 0)$, picks row 1: $(0, 0, 1)$.</p>
+          <table>
+            <tr><th>Row of $P$</th><th>Takes this row of $P^T$</th><th>Row of $PP^T$</th></tr>
+            <tr><td>$(0, 1, 0)$</td><td>row 2: $(1, 0, 0)$</td><td>$(1, 0, 0)$</td></tr>
+            <tr><td>$(0, 0, 1)$</td><td>row 3: $(0, 1, 0)$</td><td>$(0, 1, 0)$</td></tr>
+            <tr><td>$(1, 0, 0)$</td><td>row 1: $(0, 0, 1)$</td><td>$(0, 0, 1)$</td></tr>
+          </table>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> The rows are $(1, 0, 0)$, $(0, 1, 0)$, $(0, 0, 1)$: that is $I$. So $PP^T = I$ ✓, and $P^T$ undoes $P$.</p>
+        </li>
+      </ol>
     </div>
 
     <!-- ====================================================== -->
     <div class="box finance"><span class="label">In finance</span>
       <ul>
-        <li>A risk or pricing model often solves $Ax = b$ with the <b>same $A$</b> and many different $b$'s (many payoffs, many scenarios). Build $L$ and $U$ once (about $\tfrac13 n^3$ work), then each new $b$ costs only $n^2$. Example 9 does this.</li>
+        <li>A risk or pricing model often solves $Ax = b$ with the <b>same $A$</b> and many different $b$'s (many payoffs, many scenarios). Build $L$ and $U$ once (about $\tfrac13 n^3$ work), then each new $b$ costs only $n^2$. Example 10 does this.</li>
         <li>The cost count matters: a 1,000-asset model means about $3 \times 10^8$ operations to factor, which is quick for a computer. Doubling to 2,000 assets makes it 8 times as long.</li>
       </ul>
     </div>
 
     <!-- ====================================================== -->
     <h2 id="s9">9. Summary</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Inverse = undo. Transpose = rows become columns. $L$ = lower triangular, 1s on the diagonal, multipliers below. $U$ = upper triangular staircase with the pivots on its diagonal. $D$ = diagonal matrix of pivots. Multiplier = (number to remove) ÷ (pivot). Permutation = identity with rows reordered.</p>
+    </div>
     <table>
       <tr><th>Idea</th><th>In one line</th></tr>
       <tr><td>Inverse of a product</td><td>$(AB)^{-1} = B^{-1}A^{-1}$: reverse order (socks and shoes).</td></tr>
@@ -471,6 +910,13 @@
       <tr><td>Cost</td><td>$\approx \tfrac13 n^3$ for $A$, $\approx n^2$ per $b$.</td></tr>
       <tr><td>Permutations</td><td>Rows of $I$ rearranged; $n!$ of them; $P^{-1} = P^T$.</td></tr>
     </table>
+    <dl class="vocab">
+      <dt>L</dt><dd>lower triangular; 1s on the diagonal; each multiplier in the spot it cleared.</dd>
+      <dt>U</dt><dd>upper triangular; the staircase left after elimination; pivots on the diagonal.</dd>
+      <dt>D</dt><dd>diagonal matrix holding the pivots, so that $A = LDU$.</dd>
+      <dt>Multiplier</dt><dd>(number to remove) ÷ (pivot).</dd>
+      <dt>Permutation matrix</dt><dd>identity with rows reordered; $P^{-1} = P^T$.</dd>
+    </dl>
   </div>
   </section>
 
@@ -480,143 +926,457 @@
 
     <h2>Worked examples</h2>
 
+    <!-- E0 -->
+    <div class="worked">
+      <h3>Example 1 (interactive): Options Replication Lab, A = LU</h3>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <table>
+          <tr><th>Word</th><th>In simple words</th><th>Example (Nifty)</th></tr>
+          <tr><td><b>CE / PE</b></td><td>CE pays if Nifty ends <b>above</b> the strike; PE pays if it ends <b>below</b>.</td><td>20,000 PE: ends 19,900 → 100 points; ends 20,100 → 0.</td></tr>
+          <tr><td><b>Premium / Lot size</b></td><td>Today's price of an option (points, per 1 quantity) / quantity in one NSE lot.</td><td>131.44 points × 65 ≈ ₹8,544 for 1 lot.</td></tr>
+          <tr><td><b>Payoff matrix $A$</b></td><td>One row per Nifty level, one column per product.</td><td>Row 19,900 of the starting market: (2, 0, 1).</td></tr>
+          <tr><td><b>Pivot / multiplier $\ell$</b></td><td>Pivot = the leader number; $\ell$ = (number to remove) ÷ (pivot).</td><td>Remove 1 under pivot 2: $\ell = \tfrac12$.</td></tr>
+          <tr><td><b>$U$ (upper)</b></td><td>The staircase left after elimination: zeros below the diagonal.</td><td>$\begin{bmatrix} 2 & 0 & 1 \\ 0 & 1 & -\tfrac12 \\ 0 & 0 & 1 \end{bmatrix}$</td></tr>
+          <tr><td><b>$L$ (lower)</b></td><td>The diary of elimination: 1s on the diagonal, the multipliers below it.</td><td>$\ell_{21} = \tfrac12$ sits in row 2, column 1.</td></tr>
+          <tr><td><b>$A = LU$</b></td><td>$A$ split into two triangles: $L$ times $U$ gives back $A$.</td><td>Row 2 of $A$ = ½ × (row 1 of $U$) + (row 2 of $U$).</td></tr>
+          <tr><td><b>$D$ and $LDU$</b></td><td>$D$ holds the pivots; dividing them out of $U$ leaves 1s on its diagonal.</td><td>$D = \text{diag}(2, 1, 1)$.</td></tr>
+          <tr><td><b>$P$ and $PA = LU$</b></td><td>A swap matrix, used when a pivot spot is 0.</td><td>Swap the order of two Nifty levels first.</td></tr>
+          <tr><td><b>Forward substitution</b></td><td>Solve $Lc = b$ from the top down.</td><td>$c_1 = 3$, then $c_2 = 2 - \tfrac12 \times 3 = \tfrac12$.</td></tr>
+          <tr><td><b>Back substitution</b></td><td>Solve $Ux = c$ from the bottom up.</td><td>$z = 1$ first, then $y$, then $x$.</td></tr>
+          <tr><td><b>Factor once</b></td><td>Do the slow part (elimination) once, reuse it for every client.</td><td>3 clients = 1 factorization + 3 quick solves.</td></tr>
+        </table>
+      </div>
+      <h4>1. The agenda: what question are we solving?</h4>
+      <div class="box finance"><span class="label">The question, as a story</span>
+        <p>Your desk trades three options. Nifty will expire at 19,900, 20,000 or 20,100 (payoffs in points ÷ 100, per 1 quantity):</p>
+        <table>
+          <tr><th>Product</th><th>Pays at 19,900</th><th>at 20,000</th><th>at 20,100</th></tr>
+          <tr><td>A = buy 20,100 PE</td><td>2</td><td>1</td><td>0</td></tr>
+          <tr><td>B = buy 19,900 CE</td><td>0</td><td>1</td><td>2</td></tr>
+          <tr><td>C = buy 20,000 PE</td><td>1</td><td>0</td><td>0</td></tr>
+        </table>
+        <p>Clients keep arriving: one wants 3 / 2 / 2, the next 2 / 0 / 2, the next 0 / 1 / 3. Each time you need the lots.</p>
+        <p><b>Lecture 03's way:</b> redo the whole elimination for every client. <b>Lecture 04's way:</b> compute $A^{-1}$ (more work than needed).</p>
+        <p class="answer">Lecture 05's way: do the elimination <b>once</b>, and keep two things from it: $U$ (the staircase that's left) and $L$ (a diary of every row move). Then every client is two quick, easy passes: top down through $L$, bottom up through $U$.</p>
+      </div>
+
+      <h4>2. The core maths we use (this lecture)</h4>
+      <table>
+        <tr><th>Maths piece</th><th>What it is</th><th>In the lab</th></tr>
+        <tr><td>$U$</td><td>upper triangular: what elimination leaves</td><td>section 4 builds it</td></tr>
+        <tr><td>$L$</td><td>lower triangular: 1s on the diagonal, multipliers below; rebuilds $A$'s rows from $U$'s rows</td><td>section 5, row by row</td></tr>
+        <tr><td>$A = LU$</td><td>the factorization; check by multiplying back</td><td>section 5 check</td></tr>
+        <tr><td>$D$, $A = LDU$</td><td>the pivots pulled out into a diagonal matrix</td><td>section 6</td></tr>
+        <tr><td>$P$, $PA = LU$</td><td>a row swap first, when a pivot spot is 0</td><td>shown only if needed</td></tr>
+        <tr><td>Forward + back substitution</td><td>$Lc = b$ top down, then $Ux = c$ bottom up</td><td>section 7</td></tr>
+        <tr><td>Cost: $n^3/3$ once, $n^2$ per client</td><td>why factoring once pays off</td><td>section 8</td></tr>
+      </table>
+
+      <h4>3. How your inputs become maths</h4>
+      <table>
+        <tr><th>You type</th><th>It becomes</th><th>Meaning</th></tr>
+        <tr><td>Nifty levels</td><td>rows of $A$</td><td>one row per expiry level</td></tr>
+        <tr><td>Products (buy/sell CE, PE, future, bond, strike)</td><td>columns of $A$</td><td>what 1 quantity pays at each level ($\max(S-K,0)$ in points ÷ 100)</td></tr>
+        <tr><td>"Client wants"</td><td>$b$</td><td>the payoff to build; the lab adds two more example clients</td></tr>
+        <tr><td>(the output)</td><td>$L$, $U$ (and $D$, $P$)</td><td>computed once from the products; the same for every client</td></tr>
+        <tr><td>Lot size (65) and premiums</td><td>rupee values and cost</td><td>money only; the lots do not depend on them</td></tr>
+      </table>
+
+      <h4>4. Walkthrough: the market the lab starts with</h4>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">Start</span> $A$ has rows 19,900 / 20,000 / 20,100 and columns A, B, C:</p>
+          $$ A = \begin{bmatrix} 2 & 0 & 1 \\ 1 & 1 & 0 \\ 0 & 2 & 0 \end{bmatrix} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">Column 1</span> Pivot 2. Row 2 has 1 to remove: $\ell_{21} = 1 \div 2 = \tfrac12$. Row 2 − ½ × row 1: $(1 - 1,\ 1 - 0,\ 0 - \tfrac12) = (0, 1, -\tfrac12)$. Row 3 already has 0: $\ell_{31} = 0$.</p>
+          <p class="k"><span class="kl">Write it down</span> $\ell_{21} = \tfrac12$ and $\ell_{31} = 0$ go into $L$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Column 2</span> Pivot 1 (row 2). Row 3 has 2 to remove: $\ell_{32} = 2 \div 1 = 2$. Row 3 − 2 × row 2: $(0,\ 2 - 2,\ 0 + 1) = (0, 0, 1)$.</p>
+          <p class="k"><span class="kl">Write it down</span> $\ell_{32} = 2$ goes into $L$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">The two factors</span></p>
+          $$ L = \begin{bmatrix} 1 & 0 & 0 \\ \tfrac12 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 2 & 0 & 1 \\ 0 & 1 & -\tfrac12 \\ 0 & 0 & 1 \end{bmatrix} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">What $U$ tells you</span> Each row of $U$ is a <b>view</b> of your payoff graph: a mix of Nifty levels chosen so that one more product <b>disappears</b>.</p>
+          <table>
+            <tr><th>View (row of $U$)</th><th>Mix of Nifty levels</th><th>A shows</th><th>B shows</th><th>C shows</th><th>Gone</th></tr>
+            <tr><td>1</td><td>(at 19,900)</td><td>2</td><td>0</td><td>1</td><td>—</td></tr>
+            <tr><td>2</td><td>(at 20,000) − ½ × (at 19,900)</td><td>0</td><td>1</td><td>−½</td><td>A</td></tr>
+            <tr><td>3</td><td>(at 19,900) − 2 × (at 20,000) + (at 20,100)<br><i>= the bend of the graph at 20,000</i></td><td>0</td><td>0</td><td>1</td><td>A, B</td></tr>
+          </table>
+          <p class="k"><span class="kl">How to read view 2</span> For A: $1 - \tfrac12 \times 2 = 0$. For B: $1 - \tfrac12 \times 0 = 1$. For C: $0 - \tfrac12 \times 1 = -\tfrac12$. A disappears.</p>
+          <p class="k"><span class="kl">How to read view 3</span> For A (20,100 PE): $2 - 2 \times 1 + 0 = 0$. For B (19,900 CE): $0 - 2 \times 1 + 2 = 0$. For C (20,000 PE): $1 - 2 \times 0 + 0 = 1$. Only C is left.</p>
+          <p class="k"><span class="kl">In graph words</span> View 3 is how much the payoff graph <b>bends</b> at 20,000. A and B are straight lines across 19,900–20,100 (no bend), so they vanish. C has its kink right at 20,000, so it's the only one that shows. That's why U is solved bottom-up: the last view sees only C.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What $L$ tells you</span> $L$ is the <b>translation back</b>: how each real Nifty level is made from the views. Its numbers are the multipliers you subtracted.</p>
+          <table>
+            <tr><th>Real Nifty level</th><th>From the views (row of $L$)</th><th>Check with $U$'s rows</th></tr>
+            <tr><td>19,900</td><td>view 1</td><td>(2, 0, 1) ✓</td></tr>
+            <tr><td>20,000</td><td>½ × view 1 + view 2</td><td>(1, 0, ½) + (0, 1, −½) = (1, 1, 0) ✓</td></tr>
+            <tr><td>20,100</td><td>2 × view 2 + view 3</td><td>(0, 2, −1) + (0, 0, 1) = (0, 2, 0) ✓</td></tr>
+          </table>
+          <p class="k"><span class="kl">In graph words</span> The real graph at each Nifty level = some of the views added back together. Used the other way (top down), $L$ turns the client's graph into the same views: client 3 / 2 / 2 → view 1 = 3, view 2 = $2 - \tfrac12 \times 3 = \tfrac12$, view 3 (the bend) = $3 - 2 \times 2 + 2 = 1$. That is $c = (3, \tfrac12, 1)$.</p>
+          <p class="k"><span class="kl">Putting them together</span> The client's bend is 1, and only C bends, so <b>1 lot of C</b>. Then view 2 gives B, and view 1 gives A.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">$D$</span> Pivots 2, 1, 1: $D = \text{diag}(2, 1, 1)$, and $U$ with its rows divided by the pivots is $\begin{bmatrix} 1 & 0 & \tfrac12 \\ 0 & 1 & -\tfrac12 \\ 0 & 0 & 1 \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Client 3 / 2 / 2, step 1 (top down)</span> $Lc = b$: $c_1 = 3$. $c_2 = 2 - \tfrac12 \times 3 = \tfrac12$. $c_3 = 2 - 0 \times 3 - 2 \times \tfrac12 = 1$.</p>
+          <p class="k"><span class="kl">Step 2 (bottom up)</span> $Ux = c$: $z = 1 \div 1 = 1$. $y = (\tfrac12 + \tfrac12 \times 1) \div 1 = 1$. $x = (3 - 1 \times 1) \div 2 = 1$.</p>
+          <p class="k"><span class="kl">Answer</span> Buy 1 lot each of A, B, C. Check: $(2,1,0) + (0,1,2) + (1,0,0) = (3, 2, 2)$ ✓.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Next client, no new elimination</span> Straddle shape 2 / 0 / 2: $c = (2,\ 0 - 1,\ 2 + 2) = (2, -1, 4)$, then $z = 4$, $y = -1 + 2 = 1$, $x = (2 - 4) \div 2 = -1$: sell 1 A, buy 1 B, buy 4 C. Same $L$ and $U$, just two quick passes.</p>
+        </li>
+      </ol>
+
+      <h4>4b. See $U$ and $L$ in pictures</h4>
+      <p>The lab below draws these pictures for <b>your own inputs</b>, in order: everything about $U$ first, then everything about $L$, then the client. They redraw every time you change a product, a level or the client:</p>
+      <ol>
+        <li><b>4a</b>: your products' payoff graphs and their kinks;</li>
+        <li><b>4d</b>: $U$'s bottom equation drawn (a ruler and the gap: the bend), then $U$ as a staircase of bars;</li>
+        <li><b>5b</b>: $L$ rebuilding each real Nifty level from pieces of the views;</li>
+        <li><b>7b</b>: your client's dots, their bend, and the recipe's graph passing through every dot.</li>
+      </ol>
+      <h4>5. What each output section shows, and what to look for</h4>
+      <table>
+        <tr><th>Lab section</th><th>What it shows</th><th>What to identify</th></tr>
+        <tr><td>1–3</td><td>the question, the payoffs (points and ₹), the equations</td><td>the matrix $A$</td></tr>
+        <tr><td>4. Part 1: $U$</td><td>your products' graph → 4a eliminate (client's numbers carried along, one table) → 4b $U$ = the simplified equations → 4c solve from the bottom, per 1 lot (one table) → 4d what $U$ means on your payoff graph (table + pictures)</td><td>everything about $U$, finished before moving on</td></tr>
+        <tr><td>5. Part 2: $L$</td><td>5a $L$ = the multipliers from 4a (table) → 5b what $L$ does: undo the moves, rebuilding each original equation (table + picture) → 5c check $LU = A$</td><td>everything about $L$, finished before moving on</td></tr>
+        <tr><td>6. $D$</td><td>$A = LDU$</td><td>the pivots</td></tr>
+        <tr><td>7. Solve</td><td>$Lc = b$ top down, $Ux = c$ bottom up, with every line; 7b your client in a picture</td><td>the lots, and the check</td></tr>
+        <tr><td>8. Many clients</td><td>three clients from one factorization</td><td>only the two quick passes change</td></tr>
+        <tr><td>9–10</td><td>pictures; price and arbitrage (points and ₹)</td><td>the fair price</td></tr>
+      </table>
+
+      <h4>6. What the factorization can tell you</h4>
+      <table>
+        <tr><th>What you see</th><th>Maths meaning</th><th>Options meaning</th><th>Preset to try</th></tr>
+        <tr><td>no swaps, all pivots non-zero</td><td>$A = LU$, invertible</td><td>every payoff has one recipe; factor once, serve every client</td><td>Lecture example, butterfly</td></tr>
+        <tr><td>a swap was needed</td><td>$PA = LU$</td><td>same, but the Nifty levels are processed in a different order</td><td>change a product so its first payoff is 0</td></tr>
+        <tr><td>a 0 on $U$'s diagonal</td><td>singular</td><td>a product copies others (or a level can't be isolated): no single recipe</td><td>Put–call parity, incomplete market</td></tr>
+      </table>
+
+      <h4>7. How this is used with real options</h4>
+      <ul>
+        <li><b>Many payoffs, one factorization.</b> A desk quoting lots of custom payoffs on the same set of listed options factors once and reuses $L$ and $U$ for every quote.</li>
+        <li><b>Option pricing by finite differences.</b> Solving the Black–Scholes equation on a grid (implicit or Crank–Nicolson methods) needs a linear system at every time step with the same matrix. It is factored once with LU (for these tridiagonal matrices, the "Thomas algorithm") and reused at every step.</li>
+        <li><b>Correlated scenarios.</b> Monte Carlo for baskets uses the Cholesky factorization, a close cousin of LU for symmetric matrices ($A = LL^T$), to turn independent random numbers into correlated ones.</li>
+        <li><b>Speed.</b> Factoring costs about $n^3/3$ steps once; each new right side costs about $n^2$. For big systems this is the difference between seconds and hours.</li>
+      </ul>
+
+      <h4>8. Try it</h4>
+      <ul>
+        <li><b>Butterfly</b> preset: clean multipliers, easy $L$.</li>
+        <li><b>Two levels</b> preset: a 2×2 factorization you can check by hand.</li>
+        <li>Make the first product pay 0 at the first level: watch a <b>swap</b> and $PA = LU$ appear.</li>
+        <li><b>Put–call parity</b> preset: a 0 on $U$'s diagonal and the "stuck" message.</li>
+        <li>Change "Client wants" and see that $L$ and $U$ stay the same; only $c$ and $x$ change.</li>
+      </ul>
+      <div id="replab" data-lu></div>
+    </div>
+
     <!-- E1 -->
     <div class="worked">
-      <h3>Example 1: A = LU for a 2 × 2</h3>
+      <h3>Example 2: A = LU for a 2 × 2</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Factor $A = \begin{bmatrix} 1 & 2 \\ 3 & 8 \end{bmatrix}$ into $LU$, and then into $LDU$.</p>
       </div>
-      <div class="steps">
-        <p><b>Eliminate.</b> Pivot $1$, multiplier $3 \div 1 = 3$. Row 2 − 3 × row 1 $= (3, 8) - (3, 6) = (0, 2)$.</p>
-        <p><b>Write down $L$ and $U$.</b> The multiplier $3$ goes in spot (2, 1) of $L$:</p>
-        $$ A = \underbrace{\begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}}_{L}\underbrace{\begin{bmatrix} 1 & 2 \\ 0 & 2 \end{bmatrix}}_{U} $$
-        <p><b>Check:</b> row 2 of $LU = 3 \times (1, 2) + (0, 2) = (3, 8)$ ✓.</p>
-        <p><b>LDU:</b> pivots $1$ and $2$. Divide row 2 of $U$ by $2$: $(0, 1)$.</p>
-        $$ A = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix}\begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix} $$
-        <p class="answer">$L = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}$, $\ U = \begin{bmatrix} 1 & 2 \\ 0 & 2 \end{bmatrix}$</p>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Pivot = the diagonal number used to clear below it. Multiplier = (number to remove) ÷ (pivot). $U$ = upper triangular, what is left after elimination. $L$ = lower triangular with 1s on the diagonal and the multiplier below. $D$ = diagonal matrix of the pivots.</p>
       </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Clear the $3$ under the pivot $1$.</p>
+          <p class="k"><span class="kl">Why this amount</span> $3 \div 1 = 3$: subtract 3 × row 1.</p>
+          <p class="k"><span class="kl">How</span> $3 \times (1, 2) = (3, 6)$. Then $(3 - 3,\ 8 - 6) = (0, 2)$.</p>
+          <p class="k"><span class="kl">What we have now</span> $U = \begin{bmatrix} 1 & 2 \\ 0 & 2 \end{bmatrix}$, multiplier $3$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Write $L$.</p>
+          <p class="k"><span class="kl">How</span> 1s on the diagonal, the multiplier $3$ in spot (2, 1) (the spot it cleared).</p>
+          $$ A = \underbrace{\begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}}_{L}\underbrace{\begin{bmatrix} 1 & 2 \\ 0 & 2 \end{bmatrix}}_{U} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> Row 1 of $LU$: $1 \times (1, 2) = (1, 2)$ ✓. Row 2: $3 \times (1, 2) = (3, 6)$; add $(0, 2)$: $(3, 8)$ ✓.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Split out the pivots for $LDU$.</p>
+          <p class="k"><span class="kl">How</span> Pivots are $1$ and $2$, so $D = \begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix}$. Row 1 of $U$ ÷ 1: $(1, 2)$. Row 2 ÷ 2: $(0 \div 2,\ 2 \div 2) = (0, 1)$.</p>
+          $$ A = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix}\begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix} $$
+          <p class="k"><span class="kl">Check</span> $D$ × new $U$: row 1 $1 \times (1, 2) = (1, 2)$, row 2 $2 \times (0, 1) = (0, 2)$. That is the old $U$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">$L = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}$, $\ U = \begin{bmatrix} 1 & 2 \\ 0 & 2 \end{bmatrix}$</p>
     </div>
 
     <!-- E2 -->
     <div class="worked">
-      <h3>Example 2: A = LU for a 3 × 3</h3>
+      <h3>Example 3: A = LU for a 3 × 3</h3>
       <div class="box example"><span class="label">Problem</span>
-        <p>Factor $A = \begin{bmatrix} 1 & 1 & 1 \\ 2 & 3 & 1 \\ 1 & 3 & 4 \end{bmatrix}$ (the matrix from Lecture 03, Example 3).</p>
+        <p>Factor $A = \begin{bmatrix} 1 & 1 & 1 \\ 2 & 3 & 1 \\ 1 & 3 & 4 \end{bmatrix}$ (the matrix from Lecture 03, Example 4).</p>
       </div>
-      <div class="steps">
-        <p><b>Eliminate and record the multipliers:</b></p>
-        <table>
-          <tr><th>Step</th><th>Work</th><th>Multiplier</th></tr>
-          <tr><td>row 2 − 2 × row 1</td><td>$(2, 3, 1) - (2, 2, 2) = (0, 1, -1)$</td><td>$\ell_{21} = 2$</td></tr>
-          <tr><td>row 3 − 1 × row 1</td><td>$(1, 3, 4) - (1, 1, 1) = (0, 2, 3)$</td><td>$\ell_{31} = 1$</td></tr>
-          <tr><td>row 3 − 2 × row 2</td><td>$(0, 2, 3) - (0, 2, -2) = (0, 0, 5)$</td><td>$\ell_{32} = 2$</td></tr>
-        </table>
-        $$ L = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ 1 & 2 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 1 & 1 & 1 \\ 0 & 1 & -1 \\ 0 & 0 & 5 \end{bmatrix} $$
-        <p><b>Check row 3 of $LU$:</b> $1 \times (1, 1, 1) + 2 \times (0, 1, -1) + 1 \times (0, 0, 5) = (1,\ 1 + 2,\ 1 - 2 + 5) = (1, 3, 4)$ ✓.</p>
-        <p class="answer">Multipliers 2, 1, 2 go straight into $L$.</p>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$\ell_{21}$ = the multiplier used to clear spot (row 2, column 1); likewise $\ell_{31}$, $\ell_{32}$. Pivot = the diagonal number used to clear below it. $U$ = what is left after elimination. $L$ = 1s on the diagonal, each $\ell$ in its own spot.</p>
       </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Clear spot (2, 1).</p>
+          <p class="k"><span class="kl">Why this amount</span> Pivot $1$, number $2$: $2 \div 1 = 2$. So $\ell_{21} = 2$.</p>
+          <p class="k"><span class="kl">How</span> $2 \times (1, 1, 1) = (2, 2, 2)$. Then $(2 - 2,\ 3 - 2,\ 1 - 2) = (0, 1, -1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Clear spot (3, 1).</p>
+          <p class="k"><span class="kl">Why this amount</span> Pivot $1$, number $1$: $1 \div 1 = 1$. So $\ell_{31} = 1$.</p>
+          <p class="k"><span class="kl">How</span> $(1 - 1,\ 3 - 1,\ 4 - 1) = (0, 2, 3)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Clear spot (3, 2).</p>
+          <p class="k"><span class="kl">Why this amount</span> New pivot = the $1$ in row 2, column 2. Number $2$: $2 \div 1 = 2$. So $\ell_{32} = 2$.</p>
+          <p class="k"><span class="kl">How</span> $2 \times (0, 1, -1) = (0, 2, -2)$. Then $(0 - 0,\ 2 - 2,\ 3 - (-2)) = (0, 0, 3 + 2) = (0, 0, 5)$.</p>
+          <table>
+            <tr><th>Step</th><th>Work</th><th>Multiplier</th></tr>
+            <tr><td>row 2 − 2 × row 1</td><td>$(2, 3, 1) - (2, 2, 2) = (0, 1, -1)$</td><td>$\ell_{21} = 2$</td></tr>
+            <tr><td>row 3 − 1 × row 1</td><td>$(1, 3, 4) - (1, 1, 1) = (0, 2, 3)$</td><td>$\ell_{31} = 1$</td></tr>
+            <tr><td>row 3 − 2 × row 2</td><td>$(0, 2, 3) - (0, 2, -2) = (0, 0, 5)$</td><td>$\ell_{32} = 2$</td></tr>
+          </table>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we have now</span> $U$ = the rows left over; $L$ = the multipliers in their spots.</p>
+          $$ L = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ 1 & 2 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 1 & 1 & 1 \\ 0 & 1 & -1 \\ 0 & 0 & 5 \end{bmatrix} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check row 1</span> $(1, 0, 0)$ takes $U$ row 1: $(1, 1, 1)$ ✓.</p>
+          <p class="k"><span class="kl">Check row 2</span> $(2, 1, 0)$: $2 \times (1, 1, 1) = (2, 2, 2)$; add $(0, 1, -1)$: $(2, 3, 1)$ ✓.</p>
+          <p class="k"><span class="kl">Check row 3</span> $(1, 2, 1)$: $1 \times (1, 1, 1) + 2 \times (0, 1, -1) + 1 \times (0, 0, 5) = (1,\ 1 + 2,\ 1 - 2 + 5) = (1, 3, 4)$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">Multipliers 2, 1, 2 go straight into $L$.</p>
     </div>
 
     <!-- E3 -->
     <div class="worked">
-      <h3>Example 3: Solve with L and U</h3>
+      <h3>Example 4: Solve with L and U</h3>
       <div class="box example"><span class="label">Problem</span>
-        <p>Use $L$ and $U$ from Example 2 to solve $Ax = (6, 11, 19)$.</p>
+        <p>Use $L$ and $U$ from Example 3 to solve $Ax = (6, 11, 19)$.</p>
       </div>
-      <div class="steps">
-        <p><b>Step 1: $Lc = b$, top to bottom.</b></p>
-        <table>
-          <tr><th>Equation</th><th>Work</th><th>Result</th></tr>
-          <tr><td>$c_1 = 6$</td><td>—</td><td>$c_1 = 6$</td></tr>
-          <tr><td>$2c_1 + c_2 = 11$</td><td>$12 + c_2 = 11$</td><td>$c_2 = -1$</td></tr>
-          <tr><td>$c_1 + 2c_2 + c_3 = 19$</td><td>$6 - 2 + c_3 = 19$</td><td>$c_3 = 15$</td></tr>
-        </table>
-        <p><b>Step 2: $Ux = c$, bottom to top.</b></p>
-        <table>
-          <tr><th>Equation</th><th>Work</th><th>Result</th></tr>
-          <tr><td>$5z = 15$</td><td>divide by 5</td><td>$z = 3$</td></tr>
-          <tr><td>$y - z = -1$</td><td>$y - 3 = -1$</td><td>$y = 2$</td></tr>
-          <tr><td>$x + y + z = 6$</td><td>$x + 5 = 6$</td><td>$x = 1$</td></tr>
-        </table>
-        <p class="answer">Answer: $(x, y, z) = (1, 2, 3)$, the same as Lecture 03.</p>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$b = (6, 11, 19)$ = the right-hand side (known). $c$ = the middle stop: $Lc = b$. $x = (x, y, z)$ = the unknown: $Ux = c$. Forward substitution = solve from the top row down. Back substitution = solve from the bottom row up.</p>
       </div>
+      <p><b>Step 1: $Lc = b$, top to bottom.</b></p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Row 1 of $L$: $c_1 = 6$.</p>
+          <p class="k"><span class="kl">Why</span> Only one unknown in the top row. Read it off.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Row 2: $2c_1 + c_2 = 11$.</p>
+          <p class="k"><span class="kl">How</span> $2 \times 6 = 12$, so $12 + c_2 = 11$. Take 12 away: $c_2 = 11 - 12 = -1$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Row 3: $c_1 + 2c_2 + c_3 = 19$.</p>
+          <p class="k"><span class="kl">How</span> $c_1 = 6$. $2c_2 = 2 \times (-1) = -2$. So $6 - 2 + c_3 = 19$, i.e. $4 + c_3 = 19$. Take 4 away: $c_3 = 15$.</p>
+          <p class="k"><span class="kl">What we have now</span> $c = (6, -1, 15)$.</p>
+          <table>
+            <tr><th>Equation</th><th>Work</th><th>Result</th></tr>
+            <tr><td>$c_1 = 6$</td><td>—</td><td>$c_1 = 6$</td></tr>
+            <tr><td>$2c_1 + c_2 = 11$</td><td>$12 + c_2 = 11$</td><td>$c_2 = -1$</td></tr>
+            <tr><td>$c_1 + 2c_2 + c_3 = 19$</td><td>$6 - 2 + c_3 = 19$</td><td>$c_3 = 15$</td></tr>
+          </table>
+        </li>
+      </ol>
+      <p><b>Step 2: $Ux = c$, bottom to top.</b></p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Row 3 of $U$: $5z = 15$.</p>
+          <p class="k"><span class="kl">How</span> Divide by 5: $z = 15 \div 5 = 3$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Row 2: $y - z = -1$.</p>
+          <p class="k"><span class="kl">How</span> Put in $z = 3$: $y - 3 = -1$. Add 3: $y = -1 + 3 = 2$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Row 1: $x + y + z = 6$.</p>
+          <p class="k"><span class="kl">How</span> $y + z = 2 + 3 = 5$, so $x + 5 = 6$. Take 5 away: $x = 1$.</p>
+          <table>
+            <tr><th>Equation</th><th>Work</th><th>Result</th></tr>
+            <tr><td>$5z = 15$</td><td>divide by 5</td><td>$z = 3$</td></tr>
+            <tr><td>$y - z = -1$</td><td>$y - 3 = -1$</td><td>$y = 2$</td></tr>
+            <tr><td>$x + y + z = 6$</td><td>$x + 5 = 6$</td><td>$x = 1$</td></tr>
+          </table>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> Rows of $A$ times $(1, 2, 3)$. Row 1 $(1, 1, 1)$: $1 + 2 + 3 = 6$ ✓. Row 2 $(2, 3, 1)$: $2 + 6 + 3 = 11$ ✓. Row 3 $(1, 3, 4)$: $1 + 6 + 12 = 19$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">Answer: $(x, y, z) = (1, 2, 3)$, the same as Lecture 03.</p>
     </div>
 
     <!-- E4 -->
     <div class="worked">
-      <h3>Example 4: E has tangled numbers, L does not</h3>
+      <h3>Example 5: E has tangled numbers, L does not</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Elimination did "row 2 − 3 × row 1" and then "row 3 − 4 × row 2" (with (3, 1) already zero). Find $E = E_{32}E_{21}$ and $L$.</p>
       </div>
-      <div class="steps">
-        <p><b>$E$:</b> row 3 of $E = -4 \times$ (row 2 of $E_{21}$) + row 3 $= -4 \times (-3, 1, 0) + (0, 0, 1) = (12, -4, 1)$.</p>
-        $$ E = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 12 & -4 & 1 \end{bmatrix} \qquad L = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 4 & 1 \end{bmatrix} $$
-        <p class="answer">$E$ has a tangled $12 = 3 \times 4$. $L$ just holds the multipliers 3 and 4.</p>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$E_{21}$ = identity with $-3$ in spot (2, 1): it does "row 2 − 3 × row 1". $E_{32}$ = identity with $-4$ in spot (3, 2): it does "row 3 − 4 × row 2". $E = E_{32}E_{21}$ = both steps in one matrix (forward). $L$ = the undo (backward): 1s on the diagonal, multipliers in their spots. Tangled = a number in $E$ made by mixing two multipliers.</p>
       </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Write the two step matrices.</p>
+          <p class="k"><span class="kl">How</span> $E_{21}$ rows: $(1, 0, 0)$, $(-3, 1, 0)$, $(0, 0, 1)$. $E_{32}$ rows: $(1, 0, 0)$, $(0, 1, 0)$, $(0, -4, 1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Multiply $E = E_{32}E_{21}$ row by row (rows of $E_{32}$ mix rows of $E_{21}$).</p>
+          <p class="k"><span class="kl">Rows 1, 2</span> Row 1 picks $(1, 0, 0)$. Row 2 picks $(-3, 1, 0)$.</p>
+          <p class="k"><span class="kl">Row 3</span> $-4 \times (-3, 1, 0) = (12, -4, 0)$. Add row 3 $(0, 0, 1)$: $(12, -4, 1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Write $L$: multiplier 3 in spot (2, 1), 0 in spot (3, 1), 4 in spot (3, 2).</p>
+          $$ E = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 12 & -4 & 1 \end{bmatrix} \qquad L = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 4 & 1 \end{bmatrix} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> $L$ undoes $E$, so $LE$ should be $I$. Row 2 of $L$, $(3, 1, 0)$: $3 \times (1, 0, 0) + (-3, 1, 0) = (3 - 3, 1, 0) = (0, 1, 0)$ ✓.</p>
+          <p class="k"><span class="kl">Check</span> Row 3 of $L$, $(0, 4, 1)$: $4 \times (-3, 1, 0) = (-12, 4, 0)$; add $(12, -4, 1)$: $(-12 + 12,\ 4 - 4,\ 0 + 1) = (0, 0, 1)$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">$E$ has a tangled $12 = 3 \times 4$. $L$ just holds the multipliers 3 and 4.</p>
     </div>
 
     <!-- E5 -->
     <div class="worked">
-      <h3>Example 5: Inverse of a product</h3>
+      <h3>Example 6: Inverse of a product</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>If $A^{-1} = \begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix}$ and $B^{-1} = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}$, find $(AB)^{-1}$.</p>
       </div>
-      <div class="steps">
-        <p><b>Reverse order:</b> $(AB)^{-1} = B^{-1}A^{-1}$. Rows of $B^{-1}$ mix rows of $A^{-1}$:</p>
-        <table>
-          <tr><th>Row of $B^{-1}$</th><th>Mix</th><th>Result</th></tr>
-          <tr><td>$(1, 0)$</td><td>$1 \times (1, 2)$</td><td>$(1, 2)$</td></tr>
-          <tr><td>$(3, 1)$</td><td>$3 \times (1, 2) + 1 \times (0, 1)$</td><td>$(3, 7)$</td></tr>
-        </table>
-        <p class="answer">$(AB)^{-1} = \begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$</p>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Inverse = the undo matrix. Reverse order rule: $(AB)^{-1} = B^{-1}A^{-1}$ (undo the last step first). Product: each row of the left matrix tells how much of each row of the right matrix to add.</p>
       </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Use the reverse order: $(AB)^{-1} = B^{-1}A^{-1}$.</p>
+          <p class="k"><span class="kl">Why</span> $B$ acted first, so it is undone last (socks and shoes).</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Row 1</span> Row 1 of $B^{-1}$ is $(1, 0)$: $1 \times (1, 2) + 0 \times (0, 1) = (1, 2)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Row 2</span> Row 2 of $B^{-1}$ is $(3, 1)$: $3 \times (1, 2) = (3, 6)$. Add $1 \times (0, 1)$: $(3 + 0,\ 6 + 1) = (3, 7)$.</p>
+          <table>
+            <tr><th>Row of $B^{-1}$</th><th>Mix</th><th>Result</th></tr>
+            <tr><td>$(1, 0)$</td><td>$1 \times (1, 2)$</td><td>$(1, 2)$</td></tr>
+            <tr><td>$(3, 1)$</td><td>$3 \times (1, 2) + 1 \times (0, 1)$</td><td>$(3, 7)$</td></tr>
+          </table>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> Undo the given inverses: $A = \begin{bmatrix} 1 & -2 \\ 0 & 1 \end{bmatrix}$, $B = \begin{bmatrix} 1 & 0 \\ -3 & 1 \end{bmatrix}$. Row 1 of $AB$: $1 \times (1, 0) - 2 \times (-3, 1) = (1 + 6,\ 0 - 2) = (7, -2)$. Row 2: $(-3, 1)$.</p>
+          <p class="k"><span class="kl">Check</span> $AB$ times our answer, row 1: $7 \times (1, 2) - 2 \times (3, 7) = (7 - 6,\ 14 - 14) = (1, 0)$ ✓. Row 2: $-3 \times (1, 2) + 1 \times (3, 7) = (-3 + 3,\ -6 + 7) = (0, 1)$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">$(AB)^{-1} = \begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$</p>
     </div>
 
     <!-- E6 -->
     <div class="worked">
-      <h3>Example 6: Transposes</h3>
+      <h3>Example 7: Transposes</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Find $A^T$ for $A = \begin{bmatrix} 1 & 0 & 2 \\ 3 & 4 & 5 \end{bmatrix}$, and $(A^T)^{-1}$ for $A = \begin{bmatrix} 2 & 1 \\ 5 & 3 \end{bmatrix}$.</p>
       </div>
-      <div class="steps">
-        <p><b>First:</b> rows become columns: $A^T = \begin{bmatrix} 1 & 3 \\ 0 & 4 \\ 2 & 5 \end{bmatrix}$ ($2 \times 3 \to 3 \times 2$).</p>
-        <p><b>Second:</b> $ad - bc = 6 - 5 = 1$, so $A^{-1} = \begin{bmatrix} 3 & -1 \\ -5 & 2 \end{bmatrix}$ (2 × 2 shortcut). Then $(A^T)^{-1} = (A^{-1})^T = \begin{bmatrix} 3 & -5 \\ -1 & 2 \end{bmatrix}$.</p>
-        <p><b>Check:</b> $A^T = \begin{bmatrix} 2 & 5 \\ 1 & 3 \end{bmatrix}$. Row 1 of $A^T \times$ our answer: $(2 \times 3 + 5 \times (-1),\ 2 \times (-5) + 5 \times 2) = (1, 0)$ ✓.</p>
-        <p class="answer">$(A^T)^{-1} = \begin{bmatrix} 3 & -5 \\ -1 & 2 \end{bmatrix}$</p>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Transpose = rows become columns. Inverse = undo. For a $2 \times 2$ matrix $\begin{bmatrix} a & b \\ c & d \end{bmatrix}$ the shortcut inverse is: swap $a$ and $d$, change the signs of $b$ and $c$, divide by $ad - bc$. Rule: $(A^T)^{-1} = (A^{-1})^T$.</p>
       </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> First part: turn rows into columns.</p>
+          <p class="k"><span class="kl">How</span> Row 1 $(1, 0, 2)$ becomes column 1. Row 2 $(3, 4, 5)$ becomes column 2.</p>
+          <p class="k"><span class="kl">What we have now</span> $A^T = \begin{bmatrix} 1 & 3 \\ 0 & 4 \\ 2 & 5 \end{bmatrix}$ ($2 \times 3 \to 3 \times 2$).</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Second part: find $ad - bc$ for $\begin{bmatrix} 2 & 1 \\ 5 & 3 \end{bmatrix}$.</p>
+          <p class="k"><span class="kl">How</span> $a \times d = 2 \times 3 = 6$. $b \times c = 1 \times 5 = 5$. $6 - 5 = 1$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Build $A^{-1}$ with the shortcut.</p>
+          <p class="k"><span class="kl">How</span> Swap $2$ and $3$; make $1 \to -1$ and $5 \to -5$; divide by 1 (no change).</p>
+          <p class="k"><span class="kl">What we have now</span> $A^{-1} = \begin{bmatrix} 3 & -1 \\ -5 & 2 \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Transpose it: row 1 $(3, -1)$ becomes column 1, row 2 $(-5, 2)$ becomes column 2.</p>
+          <p class="k"><span class="kl">What we have now</span> $(A^T)^{-1} = (A^{-1})^T = \begin{bmatrix} 3 & -5 \\ -1 & 2 \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> $A^T = \begin{bmatrix} 2 & 5 \\ 1 & 3 \end{bmatrix}$. Row 1 of $A^T \times$ our answer: $(2 \times 3 + 5 \times (-1),\ 2 \times (-5) + 5 \times 2) = (6 - 5,\ -10 + 10) = (1, 0)$ ✓.</p>
+          <p class="k"><span class="kl">Check</span> Row 2: $(1 \times 3 + 3 \times (-1),\ 1 \times (-5) + 3 \times 2) = (3 - 3,\ -5 + 6) = (0, 1)$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">$(A^T)^{-1} = \begin{bmatrix} 3 & -5 \\ -1 & 2 \end{bmatrix}$</p>
     </div>
 
     <!-- E7 -->
     <div class="worked">
-      <h3>Example 7: How long will it take?</h3>
+      <h3>Example 8: How long will it take?</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Factoring a $500 \times 500$ matrix takes 1 second. About how long for $1000 \times 1000$? And for one extra right-hand side at size 1000, compared with size 500?</p>
       </div>
-      <div class="steps">
-        <p><b>Factoring</b> costs $\approx \tfrac13 n^3$. Doubling $n$ multiplies by $2^3 = 8$, so about <b>8 seconds</b>.</p>
-        <p><b>Each right-hand side</b> costs $\approx n^2$. Doubling $n$ multiplies by $2^2 = 4$.</p>
-        <p class="answer">About 8 seconds to factor; each $b$ takes 4 times as long as before (still tiny).</p>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Factoring = finding $L$ and $U$; it costs about $\tfrac13 n^3$ operations. Right-hand side $b$ = one new set of known numbers; solving for it costs about $n^2$. Doubling $n$ = going from 500 to 1000.</p>
       </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> See what doubling does to $n^3$.</p>
+          <p class="k"><span class="kl">How</span> $(2n)^3 = 2 \times 2 \times 2 \times n^3$. $2 \times 2 = 4$, $4 \times 2 = 8$. So 8 times the work.</p>
+          <p class="k"><span class="kl">What we have now</span> $1 \text{ second} \times 8 = $ about <b>8 seconds</b> to factor.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> See what doubling does to $n^2$.</p>
+          <p class="k"><span class="kl">How</span> $(2n)^2 = 2 \times 2 \times n^2 = 4n^2$.</p>
+          <p class="k"><span class="kl">What we have now</span> Each $b$ takes 4 times as long as at size 500.</p>
+        </li>
+      </ol>
+      <p class="answer">About 8 seconds to factor; each $b$ takes 4 times as long as before (still tiny).</p>
     </div>
 
     <!-- E8 -->
     <div class="worked">
-      <h3>Example 8: Permutations</h3>
+      <h3>Example 9: Permutations</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>(a) How many $4 \times 4$ permutation matrices are there? (b) What is the inverse of $P = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \end{bmatrix}$?</p>
       </div>
-      <div class="steps">
-        <p><b>(a)</b> $4! = 4 \times 3 \times 2 \times 1 = 24$.</p>
-        <p><b>(b)</b> $P$ swaps rows 1 and 3. Swapping again undoes it, so $P^{-1} = P$. Also $P^T = P$ (it is symmetric), which agrees with $P^{-1} = P^T$.</p>
-        <p class="answer">(a) 24 &nbsp;·&nbsp; (b) $P^{-1} = P$</p>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Permutation matrix = identity with rows reordered. $n!$ = number of ways to order $n$ rows. Inverse = undo. Transpose = rows become columns. Symmetric = equal to its own transpose.</p>
       </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">(a) What we do</span> Count the ways to order 4 rows.</p>
+          <p class="k"><span class="kl">How</span> Top row: 4 choices. Next: 3. Next: 2. Last: 1. $4 \times 3 = 12$, $12 \times 2 = 24$, $24 \times 1 = 24$.</p>
+          <p class="k"><span class="kl">What we have now</span> $4! = 24$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">(b) What we do</span> Read what $P$ does.</p>
+          <p class="k"><span class="kl">How</span> Row 1 of $P$ is $(0, 0, 1)$: it picks row 3 to go on top. Row 3 is $(1, 0, 0)$: it picks row 1 to go at the bottom. Row 2 stays. So $P$ swaps rows 1 and 3.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Undo it.</p>
+          <p class="k"><span class="kl">Why</span> Swapping rows 1 and 3 a second time puts them back. So $P^{-1} = P$.</p>
+          <p class="k"><span class="kl">Check</span> $PP$: row 1 $(0, 0, 1)$ picks row 3 of $P$ $= (1, 0, 0)$; row 2 picks $(0, 1, 0)$; row 3 picks row 1 $= (0, 0, 1)$. That is $I$ ✓.</p>
+          <p class="k"><span class="kl">Also</span> Transposing $P$ gives $P$ again (it is symmetric), which agrees with $P^{-1} = P^T$.</p>
+        </li>
+      </ol>
+      <p class="answer">(a) 24 &nbsp;·&nbsp; (b) $P^{-1} = P$</p>
     </div>
 
     <!-- E9 -->
     <div class="worked">
-      <h3>Example 9: Factor once, reuse for many payoffs (finance)</h3>
+      <h3>Example 10: Factor once, reuse for many payoffs (finance)</h3>
       <div class="box finance"><span class="label">Problem</span>
-        <p>The same three funds as Lecture 03, Example 8. Tomorrow is <b>down</b>, <b>flat</b> or <b>up</b>:</p>
+        <p>The same three funds as Lecture 03, Example 9. Tomorrow is <b>down</b>, <b>flat</b> or <b>up</b>:</p>
         <table>
           <tr><th>Fund</th><th>Price today</th><th>Pays if down</th><th>Pays if flat</th><th>Pays if up</th></tr>
           <tr><td>Fund 1</td><td>$1$</td><td>$1$</td><td>$2$</td><td>$1$</td></tr>
@@ -628,47 +1388,86 @@
       <div class="box intuition"><span class="label">Story first</span>
         <p>The funds (the "tickets") never change, only the orders do. So do the expensive work once, splitting the fund matrix into $L$ and $U$. Then each new order is two quick triangular solves.</p>
       </div>
-      <div class="steps">
-        <p><b>Step 1. Factor once.</b> The fund matrix (rows = states, columns = funds) is the matrix of Example 2, so</p>
-        $$ L = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ 1 & 2 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 1 & 1 & 1 \\ 0 & 1 & -1 \\ 0 & 0 & 5 \end{bmatrix}. $$
-        <p><b>Step 2. Client A $(6, 11, 19)$:</b> Example 3 already solved it: buy $(1, 2, 3)$ of funds 1, 2, 3.</p>
-        <p><b>Step 3. Client B $(3, 6, 8)$:</b></p>
-        <table>
-          <tr><th>Solve</th><th>Work</th><th>Result</th></tr>
-          <tr><td>$Lc = b$</td><td>$c_1 = 3$; $\ c_2 = 6 - 2(3) = 0$; $\ c_3 = 8 - 3 - 2(0) = 5$</td><td>$c = (3, 0, 5)$</td></tr>
-          <tr><td>$Ux = c$</td><td>$5z = 5 \Rightarrow z = 1$; $\ y - z = 0 \Rightarrow y = 1$; $\ x + 1 + 1 = 3 \Rightarrow x = 1$</td><td>$(1, 1, 1)$</td></tr>
-        </table>
-        <p><b>Check client B</b> (1 of each fund): down $1 + 1 + 1 = 3$ ✓, flat $2 + 3 + 1 = 6$ ✓, up $1 + 3 + 4 = 8$ ✓.</p>
-        <p><b>Step 4. Costs today</b> (prices $1, 2, 2$):</p>
-        <table>
-          <tr><th>Client</th><th>Recipe</th><th>Cost</th></tr>
-          <tr><td>A</td><td>$(1, 2, 3)$</td><td>$1 + 4 + 6 = 11$</td></tr>
-          <tr><td>B</td><td>$(1, 1, 1)$</td><td>$1 + 2 + 2 = 5$</td></tr>
-        </table>
-        <p class="answer">Client A: buy 1, 2, 3 of funds 1, 2, 3 for 11. Client B: buy 1 of each for 5. The factoring was done only once.</p>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Fund matrix $A$ = rows are the states (down, flat, up), columns are the funds; entry = what that fund pays in that state. $b$ = the payout a client wants in each state. $x$ = how many units of each fund to buy (the recipe). $L$, $U$ = the two triangular factors, found once. $c$ = the middle stop: $Lc = b$, then $Ux = c$. Cost = units × price today, added up.</p>
       </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Factor once.</p>
+          <p class="k"><span class="kl">Why</span> The fund matrix (rows = states, columns = funds) has rows $(1, 1, 1)$, $(2, 3, 1)$, $(1, 3, 4)$: exactly the matrix of Example 3. So we already have its factors.</p>
+          $$ L = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ 1 & 2 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 1 & 1 & 1 \\ 0 & 1 & -1 \\ 0 & 0 & 5 \end{bmatrix}. $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">Client A</span> $b = (6, 11, 19)$. Example 4 already solved it: $c = (6, -1, 15)$, then $x = (1, 2, 3)$. Buy 1, 2, 3 of funds 1, 2, 3.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Client B, $Lc = b$</span> $b = (3, 6, 8)$. Row 1: $c_1 = 3$.</p>
+          <p class="k"><span class="kl">How</span> Row 2: $2c_1 + c_2 = 6$. $2 \times 3 = 6$, so $6 + c_2 = 6$, so $c_2 = 0$.</p>
+          <p class="k"><span class="kl">How</span> Row 3: $c_1 + 2c_2 + c_3 = 8$. $3 + 2 \times 0 + c_3 = 8$, so $3 + c_3 = 8$, so $c_3 = 5$.</p>
+          <p class="k"><span class="kl">What we have now</span> $c = (3, 0, 5)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Client B, $Ux = c$</span> Row 3: $5z = 5$, divide by 5: $z = 1$.</p>
+          <p class="k"><span class="kl">How</span> Row 2: $y - z = 0$, so $y - 1 = 0$, so $y = 1$.</p>
+          <p class="k"><span class="kl">How</span> Row 1: $x + y + z = 3$. $y + z = 1 + 1 = 2$, so $x + 2 = 3$, so $x = 1$.</p>
+          <p class="k"><span class="kl">What we have now</span> Recipe $(1, 1, 1)$: one unit of each fund.</p>
+          <table>
+            <tr><th>Solve</th><th>Work</th><th>Result</th></tr>
+            <tr><td>$Lc = b$</td><td>$c_1 = 3$; $\ c_2 = 6 - 2(3) = 0$; $\ c_3 = 8 - 3 - 2(0) = 5$</td><td>$c = (3, 0, 5)$</td></tr>
+            <tr><td>$Ux = c$</td><td>$5z = 5 \Rightarrow z = 1$; $\ y - z = 0 \Rightarrow y = 1$; $\ x + 1 + 1 = 3 \Rightarrow x = 1$</td><td>$(1, 1, 1)$</td></tr>
+          </table>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check client B</span> 1 of each fund. Down: $1 + 1 + 1 = 3$ ✓. Flat: $2 + 3 + 1 = 6$ ✓. Up: $1 + 3 + 4 = 8$ ✓.</p>
+          <p class="k"><span class="kl">Check client A</span> $(1, 2, 3)$. Down: $1 + 2 + 3 = 6$ ✓. Flat: $2 + 6 + 3 = 11$ ✓. Up: $1 + 6 + 12 = 19$ ✓.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Price each recipe today (prices $1, 2, 2$).</p>
+          <p class="k"><span class="kl">Client A</span> $1 \times 1 = 1$, $2 \times 2 = 4$, $3 \times 2 = 6$. Add: $1 + 4 + 6 = 11$.</p>
+          <p class="k"><span class="kl">Client B</span> $1 \times 1 = 1$, $1 \times 2 = 2$, $1 \times 2 = 2$. Add: $1 + 2 + 2 = 5$.</p>
+          <table>
+            <tr><th>Client</th><th>Recipe</th><th>Cost</th></tr>
+            <tr><td>A</td><td>$(1, 2, 3)$</td><td>$1 + 4 + 6 = 11$</td></tr>
+            <tr><td>B</td><td>$(1, 1, 1)$</td><td>$1 + 2 + 2 = 5$</td></tr>
+          </table>
+          <p class="k"><span class="kl">In market words</span> The desk splits the fund matrix once; each new client order is just two quick triangular solves, like re-pricing a new Nifty CE/PE combination on the same book without rebuilding the model.</p>
+        </li>
+      </ol>
+      <p class="answer">Client A: buy 1, 2, 3 of funds 1, 2, 3 for 11. Client B: buy 1 of each for 5. The factoring was done only once.</p>
     </div>
 
     <!-- ====================================================== -->
     <h2>Practice problems</h2>
     <p>Answers are hidden. Click a problem to check your work.</p>
     <details class="proof"><summary>1. Factor $\begin{bmatrix} 2 & 3 \\ 6 & 11 \end{bmatrix}$ into $LU$.</summary>
-      <p>Multiplier $6 \div 2 = 3$. Row 2 − 3 × row 1 $= (0, 2)$. $L = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & 3 \\ 0 & 2 \end{bmatrix}$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Multiplier: $6 \div 2 = 3$.</p>
+          <p class="k"><span class="kl">How</span> $3 \times (2, 3) = (6, 9)$. Row 2 − that: $(6 - 6,\ 11 - 9) = (0, 2)$.</p>
+          <p class="k"><span class="kl">What we have now</span> $L = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & 3 \\ 0 & 2 \end{bmatrix}$.</p>
+          <p class="k"><span class="kl">Check</span> Row 2 of $LU$: $3 \times (2, 3) + (0, 2) = (6, 9 + 2) = (6, 11)$ ✓.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>2. What is $(ABC)^{-1}$?</summary>
       <p>$C^{-1}B^{-1}A^{-1}$: reverse order.</p>
     </details>
     <details class="proof"><summary>3. Transpose $\begin{bmatrix} 1 & 2 \\ 3 & 4 \\ 5 & 6 \end{bmatrix}$.</summary>
-      <p>$\begin{bmatrix} 1 & 3 & 5 \\ 2 & 4 & 6 \end{bmatrix}$.</p>
+      <p>Row 1 $(1, 2)$ becomes column 1, row 2 $(3, 4)$ becomes column 2, row 3 $(5, 6)$ becomes column 3: $\begin{bmatrix} 1 & 3 & 5 \\ 2 & 4 & 6 \end{bmatrix}$.</p>
     </details>
     <details class="proof"><summary>4. Multipliers were $\ell_{21} = 1$, $\ell_{31} = 2$, $\ell_{32} = 3$. Write $L$.</summary>
-      <p>$L = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 2 & 3 & 1 \end{bmatrix}$.</p>
+      <p>1s on the diagonal; $\ell_{21}$ in spot (2, 1), $\ell_{31}$ in spot (3, 1), $\ell_{32}$ in spot (3, 2): $L = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 2 & 3 & 1 \end{bmatrix}$.</p>
     </details>
     <details class="proof"><summary>5. About how many operations to factor a $300 \times 300$ matrix?</summary>
-      <p>$\tfrac13 \times 300^3 = \tfrac13 \times 27{,}000{,}000 = 9{,}000{,}000$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">How</span> $300^3 = 300 \times 300 \times 300$. $300 \times 300 = 90{,}000$. $90{,}000 \times 300 = 27{,}000{,}000$.</p>
+          <p class="k"><span class="kl">What we have now</span> $\tfrac13 \times 27{,}000{,}000 = 9{,}000{,}000$.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>6. How many $5 \times 5$ permutation matrices are there?</summary>
-      <p>$5! = 120$.</p>
+      <p>$5! = 5 \times 4 \times 3 \times 2 \times 1$: $5 \times 4 = 20$, $20 \times 3 = 60$, $60 \times 2 = 120$, $120 \times 1 = 120$.</p>
     </details>
 
   </div>
@@ -680,5 +1479,7 @@
   </nav>
   </div>
 </main>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script defer src="../assets/replication-lab.js"></script>
 </body>
 </html>

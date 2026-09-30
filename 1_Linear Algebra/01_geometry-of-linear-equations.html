@@ -33,6 +33,7 @@
 
     <nav class="contents"><span class="label">Contents</span>
       <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
         <li><a href="#s1">The problem: solving $Ax = b$</a></li>
         <li><a href="#s2">Vectors: the building blocks</a></li>
         <li><a href="#s3">From equations to matrix form</a></li>
@@ -49,7 +50,58 @@
     </nav>
 
     <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained from the very beginning, with a tiny example and an everyday picture. Each section below repeats the words it uses, so you never have to scroll back.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Unknown</b></td><td>a number we don't know yet and want to find; we give it a letter</td><td>$x$ in $x + 1 = 3$ (it is $2$)</td><td>the price tag hidden under your thumb</td></tr>
+      <tr><td><b>Equation</b></td><td>a sentence "left side = right side" that must be true</td><td>$x + 1 = 3$</td><td>a balance scale that must stay level</td></tr>
+      <tr><td><b>Coefficient</b></td><td>the number that multiplies an unknown</td><td>in $2x$, the coefficient is $2$</td><td>"2 packets of" something</td></tr>
+      <tr><td><b>Linear equation</b></td><td>each unknown is only multiplied by a number, then the pieces are added</td><td>$2x - y = 0$ (linear); $x^2 + y = 1$ (not)</td><td>a straight-line rule, no curves</td></tr>
+      <tr><td><b>System of equations</b></td><td>several equations that must <b>all</b> be true at the same time</td><td>$2x - y = 0$ and $-x + 2y = 3$</td><td>several rules a recipe must obey at once</td></tr>
+      <tr><td><b>Solution</b></td><td>values of the unknowns that make every equation true</td><td>$x = 1, y = 2$ for the pair above</td><td>the one recipe that passes every rule</td></tr>
+      <tr><td><b>Substitution</b></td><td>find one unknown in terms of another, then put that into a different equation</td><td>$y = 2x$, so $-x + 2y$ becomes $-x + 4x$</td><td>swapping a word for its meaning</td></tr>
+      <tr><td><b>Vector</b></td><td>an ordered list of numbers, written as a column</td><td>$\begin{bmatrix} 2 \\ 1 \end{bmatrix}$</td><td>an arrow: "2 steps right, 1 step up"</td></tr>
+      <tr><td><b>Component</b></td><td>one number inside a vector</td><td>$(2, 1)$ has components $2$ and $1$</td><td>one item on a shopping list</td></tr>
+      <tr><td><b>Real numbers</b> $\mathbb{R}$</td><td>every number on the number line</td><td>$0,\ -3,\ 2.5,\ \pi$</td><td>every mark on a ruler, including between the lines</td></tr>
+      <tr><td><b>$\mathbb{R}^2$, $\mathbb{R}^3$, $\mathbb{R}^n$</b></td><td>all vectors with 2, 3, or $n$ components</td><td>$(2, 1)$ is in $\mathbb{R}^2$</td><td>a flat sheet (2), a room (3), too many directions to draw ($n$)</td></tr>
+      <tr><td><b>Origin</b></td><td>the zero point, where every arrow starts</td><td>$(0, 0)$</td><td>"home" on a map</td></tr>
+      <tr><td><b>Scalar</b></td><td>a single ordinary number (not a list)</td><td>$2$, $-1$</td><td>a zoom factor</td></tr>
+      <tr><td><b>Scalar multiplication</b></td><td>multiply every component of a vector by one number</td><td>$2(2, 1) = (4, 2)$</td><td>walking the same way, twice as far</td></tr>
+      <tr><td><b>Vector addition</b></td><td>add component by component</td><td>$(2, 1) + (-1, 2) = (1, 3)$</td><td>walk one arrow, then the next from where you stopped</td></tr>
+      <tr><td><b>Linear combination</b></td><td>scale some vectors, then add them</td><td>$1(2, -1) + 2(-1, 2) = (0, 3)$</td><td>a recipe: 1 cup of this + 2 cups of that</td></tr>
+      <tr><td><b>Weights</b></td><td>the numbers used in a linear combination</td><td>the $1$ and $2$ above</td><td>how many cups of each ingredient</td></tr>
+      <tr><td><b>Matrix</b></td><td>a rectangular table of numbers</td><td>$\begin{bmatrix} 2 & -1 \\ -1 & 2 \end{bmatrix}$</td><td>a spreadsheet</td></tr>
+      <tr><td><b>Row</b> / <b>column</b></td><td>one line read left→right / one line read top→bottom</td><td>row 1 $= (2, -1)$; column 2 $= (-1, 2)$</td><td>row = one scenario; column = one product</td></tr>
+      <tr><td><b>$m \times n$</b></td><td>a matrix with $m$ rows and $n$ columns</td><td>$\begin{bmatrix} 1 & 2 & 3 \end{bmatrix}$ is $1 \times 3$</td><td>"rows by columns", like 3 shelves by 4 boxes</td></tr>
+      <tr><td><b>Coefficient matrix</b> $A$</td><td>the table of all coefficients: row $i$ = equation $i$, column $j$ = unknown $j$</td><td>for $2x - y = 0,\ -x + 2y = 3$: $A = \begin{bmatrix} 2 & -1 \\ -1 & 2 \end{bmatrix}$</td><td>the menu card: what each ingredient adds</td></tr>
+      <tr><td><b>Right-hand side</b> $b$</td><td>the vector of numbers the equations must equal</td><td>$b = (0, 3)$</td><td>the target, the order the client placed</td></tr>
+      <tr><td><b>$Ax = b$</b></td><td>the whole system in one line: matrix times unknowns equals target</td><td>$\begin{bmatrix} 2 & -1 \\ -1 & 2 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 0 \\ 3 \end{bmatrix}$</td><td>"which recipe makes this dish?"</td></tr>
+      <tr><td><b>Row picture</b></td><td>draw each equation as a line (or plane); the solution is where they all meet</td><td>two lines crossing at $(1, 2)$</td><td>two roads crossing at one junction</td></tr>
+      <tr><td><b>Column picture</b></td><td>see $Ax = b$ as "which mix of the column arrows lands on $b$?"</td><td>$1\,(\text{col }1) + 2\,(\text{col }2) = b$</td><td>walking along given arrows to reach a treasure</td></tr>
+      <tr><td><b>Plane</b></td><td>a flat surface that goes on forever; a linear equation in 3 unknowns draws one</td><td>$2x - y = 0$ in 3D</td><td>an endless sheet of glass</td></tr>
+      <tr><td><b>Hyperplane</b></td><td>the "flat" shape one linear equation makes in 4 or more dimensions</td><td>$x_1 + x_2 + x_3 + x_4 = 1$</td><td>a plane you can't draw</td></tr>
+      <tr><td><b>Dimension</b></td><td>how many separate directions a space has</td><td>a line: 1; a sheet: 2; a room: 3</td><td>how many numbers you need to say "where"</td></tr>
+      <tr><td><b>Span</b></td><td>every point you can reach with <b>all</b> combinations of some vectors</td><td>span of $(1, 0)$ and $(0, 1)$ = whole plane</td><td>every spot you can walk to using only those arrows</td></tr>
+      <tr><td><b>Column space</b></td><td>the span of the columns of a matrix</td><td>for $A$ above: all of $\mathbb{R}^2$</td><td>every payoff your products can build</td></tr>
+      <tr><td><b>Parallel</b></td><td>lines (or planes) with the same direction that never meet</td><td>$x + y = 1$ and $x + y = 3$</td><td>two railway tracks</td></tr>
+      <tr><td><b>Singular</b></td><td>a square matrix whose columns fill <b>less</b> than the whole space; some $b$ can't be reached</td><td>$\begin{bmatrix} 1 & 1 \\ 2 & 2 \end{bmatrix}$</td><td>two arrows pointing the same way: you're stuck on one road</td></tr>
+      <tr><td><b>Non-singular / invertible</b></td><td>a square matrix whose columns fill the <b>whole</b> space: exactly one solution for every $b$</td><td>$\begin{bmatrix} 2 & -1 \\ -1 & 2 \end{bmatrix}$</td><td>arrows pointing different ways: you can go anywhere</td></tr>
+      <tr><td><b>Dot product</b></td><td>multiply matching entries of two lists, then add</td><td>$(2, 5) \cdot (1, 2) = 2 + 10 = 12$</td><td>price list · quantity list = bill</td></tr>
+      <tr><td><b>Payoff</b></td><td>the money a product pays at expiry, in each possible scenario</td><td>20,000 CE pays $\max(S - 20{,}000, 0)$</td><td>what the ticket is worth when the match ends</td></tr>
+      <tr><td><b>CE / PE</b></td><td>call option (pays if Nifty ends <b>above</b> the strike) / put option (pays if it ends <b>below</b>)</td><td>19,800 CE at 20,000 pays $200$ points</td><td>a bet on "up" / a bet on "down"</td></tr>
+      <tr><td><b>Strike</b></td><td>the fixed level written into an option</td><td>the "20,000" in 20,000 CE</td><td>the line the bet is measured from</td></tr>
+      <tr><td><b>Lot</b></td><td>one unit of a traded product (here we just count lots)</td><td>"1 lot of A"</td><td>one packet</td></tr>
+      <tr><td><b>Bond</b></td><td>pays the same fixed amount whatever happens</td><td>pays $1$ if up, $1$ if down</td><td>money in a locker</td></tr>
+      <tr><td><b>Replication</b></td><td>building a wanted payoff out of products you can trade</td><td>2 bonds + 1 stock pays $(5, 3)$</td><td>cooking a restaurant dish at home from basic ingredients</td></tr>
+      <tr><td><b>Complete market</b></td><td>every payoff can be replicated (the payoff columns fill the whole space)</td><td>bond + stock in a two-state market</td><td>a kitchen where any dish can be made</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
     <h2 id="s1">1. The problem: solving $Ax = b$</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Equation = a sentence "left side = right side" that must be true. Unknown = a number we want to find, written as a letter ($x$, $y$). Coefficient = the number multiplying an unknown. $A$ = the table (matrix) of coefficients. $x$ = the list (vector) of unknowns. $b$ = the list of right-hand numbers. $Ax = b$ = "find the unknowns that make every equation true". Row = one equation. Column = everything that multiplies one unknown.</p>
+    </div>
 
     <div class="box definition"><span class="label">Definition: Linear equation</span>
       <p>An equation is <b>linear</b> if each unknown is just multiplied by a number, and the terms are added together.</p>
@@ -70,6 +122,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s2">2. Vectors: the building blocks</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Vector = an ordered list of numbers, drawn as an arrow from the origin. Component = one number in that list. Origin = the zero point $(0, 0)$ where arrows start. $\mathbb{R}^2$ = all lists of 2 real numbers (a flat sheet); $\mathbb{R}^3$ = all lists of 3 (a room). Scalar = one plain number. Scalar multiplication = multiply every component by that number. Vector addition = add matching components. Linear combination = scale some vectors, then add them.</p>
+    </div>
 
     <div class="box definition"><span class="label">Definition: Vector</span>
       <p>A <b>vector</b> is an ordered list of numbers, written as a column:</p>
@@ -116,11 +171,28 @@
 
 
     <p>We only ever need <b>two operations</b> on vectors:</p>
-    <ol class="step-list">
-      <li><b>Scalar multiplication</b> stretches, shrinks or flips an arrow: multiply every component by the number.
-        $$ 2\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 4 \\ 2 \end{bmatrix}, \qquad -1\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} -2 \\ -1 \end{bmatrix} $$</li>
-      <li><b>Vector addition</b> adds component by component. Geometrically, put the tail of the second arrow on the head of the first ("head-to-tail").
-        $$ \begin{bmatrix} 2 \\ 1 \end{bmatrix} + \begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} 1 \\ 3 \end{bmatrix} $$</li>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>Scalar multiplication</b>: multiply $v = (2, 1)$ by the number $2$.</p>
+        <p class="k"><span class="kl">Why</span> Multiplying by a number stretches, shrinks or flips the arrow. We want to see "twice as far, same direction".</p>
+        <p class="k"><span class="kl">How</span> Multiply each component on its own. Top: $2 \times 2 = 4$. Bottom: $2 \times 1 = 2$.</p>
+        $$ 2\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 2 \times 2 \\ 2 \times 1 \end{bmatrix} = \begin{bmatrix} 4 \\ 2 \end{bmatrix} $$
+        <p class="k"><span class="kl">What we have now</span> $2v = (4, 2)$: same direction as $v$, twice as long.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Multiply $v = (2, 1)$ by $-1$.</p>
+        <p class="k"><span class="kl">Why</span> A minus number flips the arrow to point the opposite way.</p>
+        <p class="k"><span class="kl">How</span> Top: $-1 \times 2 = -2$. Bottom: $-1 \times 1 = -1$.</p>
+        $$ -1\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} -2 \\ -1 \end{bmatrix} $$
+        <p class="k"><span class="kl">What we have now</span> $-v = (-2, -1)$: same length, pointing backwards (2 left, 1 down).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>Vector addition</b>: add $v = (2, 1)$ and $w = (-1, 2)$.</p>
+        <p class="k"><span class="kl">Why</span> Adding means "walk along $v$, then walk along $w$ starting where $v$ ended" (head-to-tail). The sum is where you finish.</p>
+        <p class="k"><span class="kl">How</span> Add the top numbers: $2 + (-1) = 2 - 1 = 1$. Add the bottom numbers: $1 + 2 = 3$.</p>
+        $$ \begin{bmatrix} 2 \\ 1 \end{bmatrix} + \begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} 2 + (-1) \\ 1 + 2 \end{bmatrix} = \begin{bmatrix} 1 \\ 3 \end{bmatrix} $$
+        <p class="k"><span class="kl">What we have now</span> $v + w = (1, 3)$: 1 right and 3 up from the origin.</p>
+      </li>
     </ol>
 
     <div class="figs">
@@ -163,6 +235,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s3">3. From equations to matrix form</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Equation = "left = right", must be true. Unknowns = the letters $x, y$ we want to find. Coefficient = the number in front of an unknown (in $-x$ it is $-1$). Matrix = a rectangular table of numbers. $m \times n$ = $m$ rows, $n$ columns. Coefficient matrix $A$ = the table of coefficients. Vector of unknowns $x$ = the list $(x, y)$. Right-hand side $b$ = the list of numbers after the "=" signs. Row = one equation. Column = one unknown's coefficients. Symmetric = the matrix looks the same when flipped across its diagonal.</p>
+    </div>
     <p>Our first example has two equations and two unknowns:</p>
     $$
     \begin{aligned}
@@ -194,6 +269,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s4">4. The row picture</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Row picture = draw each equation (row) as a line and look where the lines meet. Line = all the points $(x, y)$ that make one equation true. Point $(x, y)$ = a spot: $x$ across, $y$ up. Origin = the point $(0, 0)$. Solution = a point that makes <b>every</b> equation true, so it sits on every line. Right-hand side = the number after the "=".</p>
+    </div>
     <p><b>Idea:</b> take one equation at a time and draw <b>all</b> the points $(x, y)$ that satisfy it. Each equation gives a line. A solution of the system must satisfy <b>every</b> equation, so it must lie on <b>every</b> line: it is where the lines meet.</p>
 
     <h3>How to draw each line</h3>
@@ -204,6 +282,36 @@
       <tr><td>Point A</td><td>$(0, 0)$</td><td>$y = 0 \Rightarrow x = -3$: $(-3, 0)$</td></tr>
       <tr><td>Point B</td><td>$x = 1 \Rightarrow y = 2$: $(1, 2)$</td><td>$x = -1 \Rightarrow y = 1$: $(-1, 1)$</td></tr>
     </table>
+    <p>The same table, one tiny move at a time:</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Test whether line 1, $2x - y = 0$, goes through the origin.</p>
+        <p class="k"><span class="kl">Why</span> If $(0, 0)$ works, we get a first point for free.</p>
+        <p class="k"><span class="kl">How</span> Put $x = 0$, $y = 0$: $2 \times 0 - 0 = 0 - 0 = 0$. The right side is $0$. Equal ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> Point A of line 1 is $(0, 0)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find a second point on line 1 by choosing $x = 1$.</p>
+        <p class="k"><span class="kl">Why</span> Two points fix a line. $x = 1$ is an easy number.</p>
+        <p class="k"><span class="kl">How</span> $2 \times 1 - y = 0$, so $2 - y = 0$. "2 minus what is 0?" Add $y$ to both sides: $2 = y$.</p>
+        <p class="k"><span class="kl">What we have now</span> Point B of line 1 is $(1, 2)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Test line 2, $-x + 2y = 3$, at the origin.</p>
+        <p class="k"><span class="kl">How</span> $-0 + 2 \times 0 = 0$, but the right side is $3$, and $0 \ne 3$.</p>
+        <p class="k"><span class="kl">What we have now</span> Line 2 misses the origin. We need two other points.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> On line 2, choose $y = 0$.</p>
+        <p class="k"><span class="kl">How</span> $-x + 2 \times 0 = 3$, so $-x + 0 = 3$, so $-x = 3$. Flip both signs: $x = -3$.</p>
+        <p class="k"><span class="kl">What we have now</span> Point A of line 2 is $(-3, 0)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> On line 2, choose $x = -1$.</p>
+        <p class="k"><span class="kl">How</span> $-(-1) + 2y = 3$. Minus a minus is a plus, so $1 + 2y = 3$. Take 1 from both sides: $2y = 3 - 1 = 2$. Halve both sides: $y = 2 \div 2 = 1$.</p>
+        <p class="k"><span class="kl">What we have now</span> Point B of line 2 is $(-1, 1)$. Both lines can now be drawn.</p>
+      </li>
+    </ol>
 
     <div class="box intuition"><span class="label">Tip: the origin test</span>
       <p>A line goes through the origin <b>exactly when</b> its right-hand side is $0$. Checking this first tells you a lot about the picture before you draw anything.</p>
@@ -227,11 +335,26 @@
       <figcaption><b>Row picture.</b> Each equation is a line. The only point on both lines is $(1, 2)$, so that is the solution.</figcaption>
     </figure>
 
-    <p><b>Check the solution</b> in both equations: $2(1) - 2 = 0$ ✓ and $-1 + 2(2) = 3$ ✓. So $x = 1,\ y = 2$.</p>
+    <p><b>Check the solution</b> in both original equations:</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put $x = 1$, $y = 2$ into equation 1, $2x - y = 0$.</p>
+        <p class="k"><span class="kl">Why</span> The crossing point must make every equation true. Reading it off a picture is not proof; the numbers are.</p>
+        <p class="k"><span class="kl">How</span> $2 \times 1 = 2$. Then $2 - 2 = 0$. The right side is $0$ ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put $x = 1$, $y = 2$ into equation 2, $-x + 2y = 3$.</p>
+        <p class="k"><span class="kl">How</span> $-x = -1$. $2y = 2 \times 2 = 4$. Then $-1 + 4 = 3$. The right side is $3$ ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> Both equations hold, so $x = 1,\ y = 2$.</p>
+      </li>
+    </ol>
     <p>This is the picture you have seen in school. It works well for 2 × 2, but as we will see in section 8 it becomes very hard to use once there are more unknowns.</p>
 
     <!-- ====================================================== -->
     <h2 id="s5">5. The column picture ★</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Column = everything that multiplies one unknown, stacked top to bottom; here each column is a vector (an arrow). Column picture = ask "how much of each column arrow, added together, lands on $b$?". $b$ = the target vector $(0, 3)$. Linear combination = scale arrows by numbers, then add. Weights = those numbers ($x$ and $y$). Substitution = replace a letter by what it equals. "Both sides" = the left and the right of the "=": doing the same thing to both keeps the equation true.</p>
+    </div>
     <p>Now read the <b>same</b> two equations a column at a time. Nothing about the system changes. We only regroup it, pulling out everything that multiplies $x$ and everything that multiplies $y$:</p>
     $$
     \begin{bmatrix} 2x - y \\ -x + 2y \end{bmatrix} = \begin{bmatrix} 0 \\ 3 \end{bmatrix}
@@ -254,65 +377,103 @@
     $$
     <p>The plan: use one equation to write $y$ in terms of $x$, put that into the other equation to find $x$, then go back and find $y$.</p>
 
-    <p><b>1a. Write $y$ in terms of $x$ (from equation 1).</b></p>
-    $$
-    \begin{aligned}
-      2x - y &= 0 \\
-      2x &= y &&\text{add } y \text{ to both sides} \\
-      y &= 2x
-    \end{aligned}
-    $$
-    <p>So in any solution, $y$ must be exactly twice $x$.</p>
-
-    <p><b>1b. Find $x$ (substitute into equation 2).</b> Replace $y$ with $2x$ in equation (2):</p>
-    $$
-    \begin{aligned}
-      -x + 2y &= 3 \\
-      -x + 2(2x) &= 3 &&\text{put } y = 2x \\
-      -x + 4x &= 3 &&2(2x) = 4x \\
-      3x &= 3 &&-x + 4x = 3x \\
-      x &= 1 &&\text{divide both sides by } 3
-    \end{aligned}
-    $$
-
-    <p><b>1c. Find $y$ (put $x = 1$ back into $y = 2x$).</b></p>
-    $$
-    \begin{aligned}
-      y &= 2x \\
-      y &= 2(1) &&\text{put } x = 1 \\
-      y &= 2
-    \end{aligned}
-    $$
-    <p>You can also get $y$ from equation (2) directly, and it gives the same answer:</p>
-    $$
-    \begin{aligned}
-      -x + 2y &= 3 \\
-      -1 + 2y &= 3 &&\text{put } x = 1 \\
-      2y &= 4 &&\text{add } 1 \text{ to both sides} \\
-      y &= 2 &&\text{divide both sides by } 2
-    \end{aligned}
-    $$
-
-    <p><b>1d. Check both original equations</b> with $x = 1$, $y = 2$:</p>
-    $$
-    \begin{aligned}
-      \text{(1)}:&\quad 2(1) - 2 = 2 - 2 = 0 \;✓ \\
-      \text{(2)}:&\quad -1 + 2(2) = -1 + 4 = 3 \;✓
-    \end{aligned}
-    $$
-    <p>So $x = 1$, $y = 2$ is the only pair that satisfies both equations.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>1a.</b> Use equation (1), $2x - y = 0$, to say what $y$ is in terms of $x$.</p>
+        <p class="k"><span class="kl">Why</span> Equation (1) has a $0$ on the right and only a plain $-y$, so $y$ is easy to get alone.</p>
+        <p class="k"><span class="kl">How</span> Add $y$ to both sides. Left: $2x - y + y = 2x$. Right: $0 + y = y$. So $2x = y$, which we read backwards as $y = 2x$.</p>
+        $$
+        \begin{aligned}
+          2x - y &= 0 \\
+          2x &= y &&\text{add } y \text{ to both sides} \\
+          y &= 2x
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> In any solution, $y$ must be exactly twice $x$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>1b.</b> Put $y = 2x$ into equation (2), $-x + 2y = 3$.</p>
+        <p class="k"><span class="kl">Why</span> Then equation (2) contains only one unknown, $x$, and one unknown can be solved straight away.</p>
+        <p class="k"><span class="kl">How, move 1</span> Replace $y$ by $2x$: $-x + 2(2x) = 3$.</p>
+        <p class="k"><span class="kl">How, move 2</span> $2(2x)$ means "2 lots of $2x$" $= 4x$. So $-x + 4x = 3$.</p>
+        <p class="k"><span class="kl">How, move 3</span> Minus one $x$ plus four $x$'s leaves three $x$'s: $-1 + 4 = 3$, so $3x = 3$.</p>
+        <p class="k"><span class="kl">How, move 4</span> "3 times what is 3?" Divide both sides by 3: $x = 3 \div 3 = 1$.</p>
+        $$
+        \begin{aligned}
+          -x + 2y &= 3 \\
+          -x + 2(2x) &= 3 &&\text{put } y = 2x \\
+          -x + 4x &= 3 &&2(2x) = 4x \\
+          3x &= 3 &&-x + 4x = 3x \\
+          x &= 1 &&\text{divide both sides by } 3
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $x = 1$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>1c.</b> Find $y$ by putting $x = 1$ back into $y = 2x$.</p>
+        <p class="k"><span class="kl">Why</span> $y = 2x$ is already "$y$ alone", so this is the quickest way.</p>
+        <p class="k"><span class="kl">How</span> $y = 2 \times 1 = 2$.</p>
+        $$
+        \begin{aligned}
+          y &= 2x \\
+          y &= 2(1) &&\text{put } x = 1 \\
+          y &= 2
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">Another way</span> Use equation (2) directly: $-1 + 2y = 3$. Add 1 to both sides: $2y = 3 + 1 = 4$. Halve both sides: $y = 4 \div 2 = 2$. Same answer.</p>
+        $$
+        \begin{aligned}
+          -x + 2y &= 3 \\
+          -1 + 2y &= 3 &&\text{put } x = 1 \\
+          2y &= 4 &&\text{add } 1 \text{ to both sides} \\
+          y &= 2 &&\text{divide both sides by } 2
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $x = 1$, $y = 2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>1d.</b> Check both <b>original</b> equations with $x = 1$, $y = 2$.</p>
+        <p class="k"><span class="kl">Why</span> A small slip in any move would show up here.</p>
+        <p class="k"><span class="kl">Check (1)</span> $2x - y$: $2 \times 1 = 2$, then $2 - 2 = 0$. Should be $0$ ✓.</p>
+        <p class="k"><span class="kl">Check (2)</span> $-x + 2y$: $-1$, and $2 \times 2 = 4$, then $-1 + 4 = 3$. Should be $3$ ✓.</p>
+        $$
+        \begin{aligned}
+          \text{(1)}:&\quad 2(1) - 2 = 2 - 2 = 0 \;✓ \\
+          \text{(2)}:&\quad -1 + 2(2) = -1 + 4 = 3 \;✓
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $x = 1$, $y = 2$ is the only pair that satisfies both equations.</p>
+      </li>
+    </ol>
 
     <p><b>Step 2: Put those numbers into the column picture.</b> The column picture says $x\,(\text{column 1}) + y\,(\text{column 2}) = b$:</p>
     $$
     x \begin{bmatrix} 2 \\ -1 \end{bmatrix} + y \begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} 0 \\ 3 \end{bmatrix}
     $$
-    <p>With $x = 1$ and $y = 2$:</p>
-    $$
-    1 \begin{bmatrix} 2 \\ -1 \end{bmatrix} + 2 \begin{bmatrix} -1 \\ 2 \end{bmatrix}
-    = \begin{bmatrix} 2 \\ -1 \end{bmatrix} + \begin{bmatrix} -2 \\ 4 \end{bmatrix}
-    = \begin{bmatrix} 2 + (-2) \\ -1 + 4 \end{bmatrix}
-    = \begin{bmatrix} 0 \\ 3 \end{bmatrix} = b \;✓
-    $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Scale column 1 by $x = 1$.</p>
+        <p class="k"><span class="kl">How</span> Top: $1 \times 2 = 2$. Bottom: $1 \times (-1) = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(2, -1)$: one step along column 1.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Scale column 2 by $y = 2$.</p>
+        <p class="k"><span class="kl">How</span> Top: $2 \times (-1) = -2$. Bottom: $2 \times 2 = 4$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(-2, 4)$: two steps along column 2.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add the two scaled columns, box by box.</p>
+        <p class="k"><span class="kl">Why</span> In the column picture the answer is "this much of column 1 <b>plus</b> this much of column 2".</p>
+        <p class="k"><span class="kl">How</span> Top: $2 + (-2) = 0$. Bottom: $-1 + 4 = 3$.</p>
+        $$
+        1 \begin{bmatrix} 2 \\ -1 \end{bmatrix} + 2 \begin{bmatrix} -1 \\ 2 \end{bmatrix}
+        = \begin{bmatrix} 2 \\ -1 \end{bmatrix} + \begin{bmatrix} -2 \\ 4 \end{bmatrix}
+        = \begin{bmatrix} 2 + (-2) \\ -1 + 4 \end{bmatrix}
+        = \begin{bmatrix} 0 \\ 3 \end{bmatrix} = b \;✓
+        $$
+        <p class="k"><span class="kl">What we have now</span> $(0, 3)$, which is exactly $b$ ✓.</p>
+      </li>
+    </ol>
     <p>It lands exactly on $b = (0, 3)$. The same two numbers that satisfy the equations are the amounts that make the columns add up to $b$.</p>
 
     <figure class="fig" style="max-width:420px;margin:20px auto">
@@ -350,6 +511,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s6">6. Row vs column: side by side</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Row picture = one line per equation; the answer is where the lines meet. Column picture = one arrow per unknown (column); the answer is how much of each arrow reaches $b$. Point = a location $(x, y)$. Weights = the amounts that multiply the arrows. Hyperplane = the flat shape one equation makes when there are more than 3 unknowns. $n$ dimensions = lists of $n$ numbers.</p>
+    </div>
     <p>Both pictures solve the <b>same</b> system and give the <b>same</b> answer $(x, y) = (1, 2)$. They just draw it differently.</p>
     <table>
       <tr><th></th><th>Row picture</th><th>Column picture</th></tr>
@@ -362,6 +526,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s7">7. All combinations: which $b$ can we reach?</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Linear combination = $x\,(\text{col 1}) + y\,(\text{col 2})$: scale the column arrows, then add. Target $b = (b_1, b_2)$ = any point we want to land on; $b_1$ is its top number, $b_2$ its bottom number. Reach = find weights $x, y$ that land exactly on $b$. Span = the set of <b>all</b> points reachable this way. Column space = the span of a matrix's columns. $\mathbb{R}^2$ = the whole flat plane.</p>
+    </div>
 
     <h3>The question</h3>
     <p>So far the right-hand side was fixed at $b = (0, 3)$, and we found the one combination that reaches it. Now change the question:</p>
@@ -381,6 +548,22 @@
       <tr><td>$2$</td><td>$1$</td><td>$(4, -2) + (-1, 2)$</td><td>$(3, 0)$</td></tr>
       <tr><td>$-1$</td><td>$-1$</td><td>$(-2, 1) + (1, -2)$</td><td>$(-1, -1)$</td></tr>
     </table>
+    <p>One row of the table, slowly ($x = 2$, $y = 1$):</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Scale column 1 by $x = 2$.</p>
+        <p class="k"><span class="kl">How</span> Top: $2 \times 2 = 4$. Bottom: $2 \times (-1) = -2$. Result $(4, -2)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Scale column 2 by $y = 1$.</p>
+        <p class="k"><span class="kl">How</span> Top: $1 \times (-1) = -1$. Bottom: $1 \times 2 = 2$. Result $(-1, 2)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add them box by box.</p>
+        <p class="k"><span class="kl">How</span> Top: $4 + (-1) = 3$. Bottom: $-2 + 2 = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> We land on $(3, 0)$, as the table says. Every other row is done the same way.</p>
+      </li>
+    </ol>
     <p>The results go up, down, left and right. Drawing every whole-number combination gives a slanted grid that keeps going in all directions:</p>
 
     <figure class="fig" style="max-width:440px;margin:20px auto">
@@ -447,35 +630,56 @@
     $$
     <p>Solve exactly as in section 5, only with $b_1, b_2$ instead of $0, 3$.</p>
 
-    <p><b>Write $y$ in terms of $x$ (from the top equation).</b></p>
-    $$
-    \begin{aligned}
-      2x - y &= b_1 \\
-      2x &= b_1 + y &&\text{add } y \text{ to both sides} \\
-      y &= 2x - b_1 &&\text{subtract } b_1 \text{ from both sides}
-    \end{aligned}
-    $$
-
-    <p><b>Find $x$ (substitute into the bottom equation).</b></p>
-    $$
-    \begin{aligned}
-      -x + 2y &= b_2 \\
-      -x + 2(2x - b_1) &= b_2 &&\text{put } y = 2x - b_1 \\
-      -x + 4x - 2b_1 &= b_2 &&\text{multiply out the bracket} \\
-      3x - 2b_1 &= b_2 &&-x + 4x = 3x \\
-      3x &= 2b_1 + b_2 &&\text{add } 2b_1 \text{ to both sides} \\
-      x &= \frac{2b_1 + b_2}{3} &&\text{divide by } 3
-    \end{aligned}
-    $$
-
-    <p><b>Find $y$ (put $x$ back into $y = 2x - b_1$).</b></p>
-    $$
-    \begin{aligned}
-      y &= 2\cdot\frac{2b_1 + b_2}{3} - b_1 \\
-      y &= \frac{4b_1 + 2b_2}{3} - \frac{3b_1}{3} &&\text{write } b_1 \text{ as } \tfrac{3b_1}{3} \\
-      y &= \frac{b_1 + 2b_2}{3} &&4b_1 - 3b_1 = b_1
-    \end{aligned}
-    $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Get $y$ alone from the top equation, $2x - y = b_1$.</p>
+        <p class="k"><span class="kl">Why</span> Same plan as section 5: one unknown in terms of the other, then substitute.</p>
+        <p class="k"><span class="kl">How, move 1</span> Add $y$ to both sides: $2x = b_1 + y$.</p>
+        <p class="k"><span class="kl">How, move 2</span> Take $b_1$ away from both sides: $2x - b_1 = y$, i.e. $y = 2x - b_1$.</p>
+        $$
+        \begin{aligned}
+          2x - y &= b_1 \\
+          2x &= b_1 + y &&\text{add } y \text{ to both sides} \\
+          y &= 2x - b_1 &&\text{subtract } b_1 \text{ from both sides}
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $y = 2x - b_1$. (Check with $b_1 = 0$: $y = 2x$, as in section 5.)</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put $y = 2x - b_1$ into the bottom equation, $-x + 2y = b_2$.</p>
+        <p class="k"><span class="kl">Why</span> Then only $x$ is unknown.</p>
+        <p class="k"><span class="kl">How, move 1</span> Replace $y$: $-x + 2(2x - b_1) = b_2$.</p>
+        <p class="k"><span class="kl">How, move 2</span> Open the bracket: $2 \times 2x = 4x$ and $2 \times (-b_1) = -2b_1$. So $-x + 4x - 2b_1 = b_2$.</p>
+        <p class="k"><span class="kl">How, move 3</span> Collect the $x$'s: $-1 + 4 = 3$, so $3x - 2b_1 = b_2$.</p>
+        <p class="k"><span class="kl">How, move 4</span> Add $2b_1$ to both sides: $3x = 2b_1 + b_2$.</p>
+        <p class="k"><span class="kl">How, move 5</span> Divide both sides by 3: $x = \frac{2b_1 + b_2}{3}$.</p>
+        $$
+        \begin{aligned}
+          -x + 2y &= b_2 \\
+          -x + 2(2x - b_1) &= b_2 &&\text{put } y = 2x - b_1 \\
+          -x + 4x - 2b_1 &= b_2 &&\text{multiply out the bracket} \\
+          3x - 2b_1 &= b_2 &&-x + 4x = 3x \\
+          3x &= 2b_1 + b_2 &&\text{add } 2b_1 \text{ to both sides} \\
+          x &= \frac{2b_1 + b_2}{3} &&\text{divide by } 3
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> A formula for $x$ that works for any target.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put that $x$ back into $y = 2x - b_1$.</p>
+        <p class="k"><span class="kl">How, move 1</span> $2 \times \frac{2b_1 + b_2}{3} = \frac{4b_1 + 2b_2}{3}$ (double the top of the fraction).</p>
+        <p class="k"><span class="kl">How, move 2</span> To take away $b_1$ from a fraction with bottom 3, write $b_1$ as $\frac{3b_1}{3}$ (three thirds of $b_1$ is $b_1$).</p>
+        <p class="k"><span class="kl">How, move 3</span> Subtract the tops: $4b_1 + 2b_2 - 3b_1 = b_1 + 2b_2$. So $y = \frac{b_1 + 2b_2}{3}$.</p>
+        $$
+        \begin{aligned}
+          y &= 2\cdot\frac{2b_1 + b_2}{3} - b_1 \\
+          y &= \frac{4b_1 + 2b_2}{3} - \frac{3b_1}{3} &&\text{write } b_1 \text{ as } \tfrac{3b_1}{3} \\
+          y &= \frac{b_1 + 2b_2}{3} &&4b_1 - 3b_1 = b_1
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> Formulas for both weights, for any $b$.</p>
+      </li>
+    </ol>
 
     <div class="box theorem"><span class="label">Result</span>
       <p>For <b>any</b> $b = (b_1, b_2)$, the weights</p>
@@ -490,12 +694,43 @@
       <tr><td>$(3, 0)$</td><td>$\frac{6 + 0}{3} = 2$</td><td>$\frac{3 + 0}{3} = 1$</td><td>$(4 - 1,\ -2 + 2) = (3, 0)$ ✓</td></tr>
       <tr><td>$(5, 7)$</td><td>$\frac{10 + 7}{3} = \frac{17}{3}$</td><td>$\frac{5 + 14}{3} = \frac{19}{3}$</td><td>$(\frac{34 - 19}{3},\ \frac{-17 + 38}{3}) = (5, 7)$ ✓</td></tr>
     </table>
+    <p>The hardest row, $b = (5, 7)$, slowly:</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Work out $x = \frac{2b_1 + b_2}{3}$ with $b_1 = 5$, $b_2 = 7$.</p>
+        <p class="k"><span class="kl">How</span> $2 \times 5 = 10$. Then $10 + 7 = 17$. So $x = \frac{17}{3}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Work out $y = \frac{b_1 + 2b_2}{3}$.</p>
+        <p class="k"><span class="kl">How</span> $2 \times 7 = 14$. Then $5 + 14 = 19$. So $y = \frac{19}{3}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Check the top component of $x(2, -1) + y(-1, 2)$.</p>
+        <p class="k"><span class="kl">How</span> $2 \times \frac{17}{3} = \frac{34}{3}$. $-1 \times \frac{19}{3} = -\frac{19}{3}$. Add: $\frac{34 - 19}{3} = \frac{15}{3} = 5$. Should be $b_1 = 5$ ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Check the bottom component.</p>
+        <p class="k"><span class="kl">How</span> $-1 \times \frac{17}{3} = -\frac{17}{3}$. $2 \times \frac{19}{3} = \frac{38}{3}$. Add: $\frac{-17 + 38}{3} = \frac{21}{3} = 7$. Should be $b_2 = 7$ ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> Even a messy target is reached exactly.</p>
+      </li>
+    </ol>
 
     <h3>Why it works: the columns point in different directions</h3>
     <p>Column 1 and column 2 are <b>not</b> on the same line. Two arrows in different directions work like "east" and "north" on a map: by walking some amount along each, you can reach any spot.</p>
     <div class="box pitfall"><span class="label">Compare: when it would fail</span>
       <p>Suppose column 2 were $(-2, 1)$ instead. That is just $-1 \times$ column 1, so both arrows lie on the <b>same line</b>. Every combination is</p>
       $$ x(2, -1) + y(-2, 1) = (x - y)(2, -1), $$
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Rewrite $(-2, 1)$ using column 1.</p>
+          <p class="k"><span class="kl">How</span> $-1 \times (2, -1) = (-2, 1)$. So $y(-2, 1) = -y(2, -1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Add the two pieces.</p>
+          <p class="k"><span class="kl">How</span> $x$ copies of $(2, -1)$ plus $-y$ copies of $(2, -1)$ is $x - y$ copies: $(x - y)(2, -1)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Whatever $x$ and $y$ are, the result is some number times $(2, -1)$.</p>
+        </li>
+      </ol>
       <p>which is always a multiple of $(2, -1)$ and stays on that one line. A target like $(0, 3)$ is off the line and can <b>never</b> be reached. Section 9 looks at this case in detail.</p>
     </div>
 
@@ -518,6 +753,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s8">8. Three equations, three unknowns</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Unknowns $x, y, z$ = three numbers to find. $3 \times 3$ = 3 rows (equations) and 3 columns (unknowns). Substitution = replace a letter by what it equals. Plane = the endless flat sheet of all $(x, y, z)$ that make one equation true. Row picture = three planes; the answer is the one point on all three. Column picture = three arrows (the columns); the answer is how much of each lands on $b$. Right-hand side $b$ = the numbers after the "=" signs.</p>
+    </div>
     $$
     \begin{aligned}
       2x - y \phantom{{}+2y-z} &= 0 &&\text{(1)} \\
@@ -535,55 +773,85 @@
     <h3>8.1 Solve it step by step</h3>
     <p>The plan: equation (1) has only $x$ and $y$, so it gives $y$ in terms of $x$. Then (2) gives $z$ in terms of $x$. Then (3) has only one unknown left, $x$.</p>
 
-    <p><b>Step a. Write $y$ in terms of $x$ (from equation 1).</b></p>
-    $$
-    \begin{aligned}
-      2x - y &= 0 \\
-      2x &= y &&\text{add } y \text{ to both sides} \\
-      y &= 2x
-    \end{aligned}
-    $$
-
-    <p><b>Step b. Write $z$ in terms of $x$ (from equation 2).</b></p>
-    $$
-    \begin{aligned}
-      -x + 2y - z &= -1 \\
-      -x + 2(2x) - z &= -1 &&\text{put } y = 2x \\
-      -x + 4x - z &= -1 &&2(2x) = 4x \\
-      3x - z &= -1 &&-x + 4x = 3x \\
-      3x + 1 &= z &&\text{add } z \text{ and } 1 \text{ to both sides} \\
-      z &= 3x + 1
-    \end{aligned}
-    $$
-
-    <p><b>Step c. Find $x$ (substitute both into equation 3).</b></p>
-    $$
-    \begin{aligned}
-      -3y + 4z &= 4 \\
-      -3(2x) + 4(3x + 1) &= 4 &&\text{put } y = 2x,\ z = 3x + 1 \\
-      -6x + 12x + 4 &= 4 &&\text{multiply out the brackets} \\
-      6x + 4 &= 4 &&-6x + 12x = 6x \\
-      6x &= 0 &&\text{subtract } 4 \text{ from both sides} \\
-      x &= 0 &&\text{divide by } 6
-    \end{aligned}
-    $$
-
-    <p><b>Step d. Find $y$ and $z$ (put $x = 0$ back).</b></p>
-    $$
-    \begin{aligned}
-      y &= 2x = 2(0) = 0 \\
-      z &= 3x + 1 = 3(0) + 1 = 1
-    \end{aligned}
-    $$
-
-    <p><b>Step e. Check all three original equations</b> with $(x, y, z) = (0, 0, 1)$:</p>
-    $$
-    \begin{aligned}
-      \text{(1)}:&\quad 2(0) - 0 = 0 \;✓ \\
-      \text{(2)}:&\quad -0 + 2(0) - 1 = -1 \;✓ \\
-      \text{(3)}:&\quad -3(0) + 4(1) = 4 \;✓
-    \end{aligned}
-    $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>Step a.</b> Get $y$ alone from equation (1), $2x - y = 0$.</p>
+        <p class="k"><span class="kl">Why</span> Equation (1) has only two unknowns and a $0$ on the right: the easiest one to start with.</p>
+        <p class="k"><span class="kl">How</span> Add $y$ to both sides: $2x - y + y = 0 + y$, so $2x = y$.</p>
+        $$
+        \begin{aligned}
+          2x - y &= 0 \\
+          2x &= y &&\text{add } y \text{ to both sides} \\
+          y &= 2x
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $y = 2x$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>Step b.</b> Put $y = 2x$ into equation (2), $-x + 2y - z = -1$, and get $z$ alone.</p>
+        <p class="k"><span class="kl">Why</span> After replacing $y$, equation (2) only has $x$ and $z$, so it tells us $z$ in terms of $x$.</p>
+        <p class="k"><span class="kl">How, move 1</span> Replace $y$: $-x + 2(2x) - z = -1$.</p>
+        <p class="k"><span class="kl">How, move 2</span> $2(2x) = 4x$: $-x + 4x - z = -1$.</p>
+        <p class="k"><span class="kl">How, move 3</span> $-1 + 4 = 3$ lots of $x$: $3x - z = -1$.</p>
+        <p class="k"><span class="kl">How, move 4</span> Add $z$ to both sides: $3x = -1 + z$.</p>
+        <p class="k"><span class="kl">How, move 5</span> Add $1$ to both sides: $3x + 1 = z$.</p>
+        $$
+        \begin{aligned}
+          -x + 2y - z &= -1 \\
+          -x + 2(2x) - z &= -1 &&\text{put } y = 2x \\
+          -x + 4x - z &= -1 &&2(2x) = 4x \\
+          3x - z &= -1 &&-x + 4x = 3x \\
+          3x + 1 &= z &&\text{add } z \text{ and } 1 \text{ to both sides} \\
+          z &= 3x + 1
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $y = 2x$ and $z = 3x + 1$. Everything depends only on $x$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>Step c.</b> Put both into equation (3), $-3y + 4z = 4$.</p>
+        <p class="k"><span class="kl">Why</span> Then equation (3) has just one unknown, $x$.</p>
+        <p class="k"><span class="kl">How, move 1</span> Replace: $-3(2x) + 4(3x + 1) = 4$.</p>
+        <p class="k"><span class="kl">How, move 2</span> Open the brackets: $-3 \times 2x = -6x$; $4 \times 3x = 12x$; $4 \times 1 = 4$. So $-6x + 12x + 4 = 4$.</p>
+        <p class="k"><span class="kl">How, move 3</span> $-6 + 12 = 6$: $6x + 4 = 4$.</p>
+        <p class="k"><span class="kl">How, move 4</span> Take 4 from both sides: $6x = 4 - 4 = 0$.</p>
+        <p class="k"><span class="kl">How, move 5</span> "6 times what is 0?" Only $0$: $x = 0 \div 6 = 0$.</p>
+        $$
+        \begin{aligned}
+          -3y + 4z &= 4 \\
+          -3(2x) + 4(3x + 1) &= 4 &&\text{put } y = 2x,\ z = 3x + 1 \\
+          -6x + 12x + 4 &= 4 &&\text{multiply out the brackets} \\
+          6x + 4 &= 4 &&-6x + 12x = 6x \\
+          6x &= 0 &&\text{subtract } 4 \text{ from both sides} \\
+          x &= 0 &&\text{divide by } 6
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $x = 0$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>Step d.</b> Put $x = 0$ back into $y = 2x$ and $z = 3x + 1$.</p>
+        <p class="k"><span class="kl">How</span> $y = 2 \times 0 = 0$. $z = 3 \times 0 + 1 = 0 + 1 = 1$.</p>
+        $$
+        \begin{aligned}
+          y &= 2x = 2(0) = 0 \\
+          z &= 3x + 1 = 3(0) + 1 = 1
+        \end{aligned}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $(x, y, z) = (0, 0, 1)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> <b>Step e.</b> Check all three <b>original</b> equations with $(0, 0, 1)$.</p>
+        <p class="k"><span class="kl">Check (1)</span> $2x - y = 2 \times 0 - 0 = 0 - 0 = 0$. Should be $0$ ✓.</p>
+        <p class="k"><span class="kl">Check (2)</span> $-x + 2y - z = -0 + 2 \times 0 - 1 = 0 + 0 - 1 = -1$. Should be $-1$ ✓.</p>
+        <p class="k"><span class="kl">Check (3)</span> $-3y + 4z = -3 \times 0 + 4 \times 1 = 0 + 4 = 4$. Should be $4$ ✓.</p>
+        $$
+        \begin{aligned}
+          \text{(1)}:&\quad 2(0) - 0 = 0 \;✓ \\
+          \text{(2)}:&\quad -0 + 2(0) - 1 = -1 \;✓ \\
+          \text{(3)}:&\quad -3(0) + 4(1) = 4 \;✓
+        \end{aligned}
+        $$
+      </li>
+    </ol>
     <div class="box theorem"><span class="label">Solution</span>
       <p>$$ (x, y, z) = (0, 0, 1) $$</p>
     </div>
@@ -623,13 +891,26 @@
     $$
     <p>The question: how much of each column do we need to build $b$?</p>
     <p>Compare $b$ with the columns: $b = (0, -1, 4)$ is <b>exactly column 3</b>. So we need none of column 1, none of column 2 and one of column 3:</p>
-    $$
-    0 \begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix}
-    + 0 \begin{bmatrix} -1 \\ 2 \\ -3 \end{bmatrix}
-    + 1 \begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix}
-    = \begin{bmatrix} 0 + 0 + 0 \\ 0 + 0 - 1 \\ 0 + 0 + 4 \end{bmatrix}
-    = \begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix} = b \;✓
-    $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Compare $b$ with each column, number by number.</p>
+        <p class="k"><span class="kl">Why</span> If $b$ equals one column, the recipe is "1 of that column, 0 of the rest", with no solving needed.</p>
+        <p class="k"><span class="kl">How</span> Column 3 is $(0, -1, 4)$ and $b$ is $(0, -1, 4)$: top $0 = 0$, middle $-1 = -1$, bottom $4 = 4$.</p>
+        <p class="k"><span class="kl">What we have now</span> Guess: $x = 0$, $y = 0$, $z = 1$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Build $0(\text{col 1}) + 0(\text{col 2}) + 1(\text{col 3})$, row by row.</p>
+        <p class="k"><span class="kl">How</span> Top: $0 \times 2 + 0 \times (-1) + 1 \times 0 = 0 + 0 + 0 = 0$. Middle: $0 \times (-1) + 0 \times 2 + 1 \times (-1) = 0 + 0 - 1 = -1$. Bottom: $0 \times 0 + 0 \times (-3) + 1 \times 4 = 0 + 0 + 4 = 4$.</p>
+        $$
+        0 \begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix}
+        + 0 \begin{bmatrix} -1 \\ 2 \\ -3 \end{bmatrix}
+        + 1 \begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix}
+        = \begin{bmatrix} 0 + 0 + 0 \\ 0 + 0 - 1 \\ 0 + 0 + 4 \end{bmatrix}
+        = \begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix} = b \;✓
+        $$
+        <p class="k"><span class="kl">What we have now</span> $(0, -1, 4) = b$ ✓.</p>
+      </li>
+    </ol>
     <p>So $(x, y, z) = (0, 0, 1)$: the same answer as 8.1, found in one look.</p>
 
     <figure class="fig plot3d">
@@ -639,20 +920,32 @@
 
     <h3>8.4 Change only the right-hand side</h3>
     <p>Keep the same $A$, but choose a new $b$ equal to column 1 + column 2:</p>
-    $$
-    b = \begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix} + \begin{bmatrix} -1 \\ 2 \\ -3 \end{bmatrix}
-      = \begin{bmatrix} 2 - 1 \\ -1 + 2 \\ 0 - 3 \end{bmatrix}
-      = \begin{bmatrix} 1 \\ 1 \\ -3 \end{bmatrix}
-    $$
-    <p>We built $b$ from one of column 1 and one of column 2, so the weights are $x = 1$, $y = 1$, $z = 0$.</p>
-    <p><b>Check in the equations</b> (now with right-hand sides $1, 1, -3$):</p>
-    $$
-    \begin{aligned}
-      \text{(1)}:&\quad 2(1) - 1 = 1 \;✓ \\
-      \text{(2)}:&\quad -1 + 2(1) - 0 = 1 \;✓ \\
-      \text{(3)}:&\quad -3(1) + 4(0) = -3 \;✓
-    \end{aligned}
-    $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Build the new $b$ = column 1 + column 2.</p>
+        <p class="k"><span class="kl">Why</span> If we build $b$ ourselves from the columns, we already know the recipe.</p>
+        <p class="k"><span class="kl">How</span> Top: $2 + (-1) = 2 - 1 = 1$. Middle: $-1 + 2 = 1$. Bottom: $0 + (-3) = 0 - 3 = -3$.</p>
+        $$
+        b = \begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix} + \begin{bmatrix} -1 \\ 2 \\ -3 \end{bmatrix}
+          = \begin{bmatrix} 2 - 1 \\ -1 + 2 \\ 0 - 3 \end{bmatrix}
+          = \begin{bmatrix} 1 \\ 1 \\ -3 \end{bmatrix}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $b = (1, 1, -3)$, made of one column 1 and one column 2, so the weights are $x = 1$, $y = 1$, $z = 0$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Check in the three original equations (now with right-hand sides $1, 1, -3$).</p>
+        <p class="k"><span class="kl">Check (1)</span> $2x - y = 2 \times 1 - 1 = 2 - 1 = 1$. Should be $1$ ✓.</p>
+        <p class="k"><span class="kl">Check (2)</span> $-x + 2y - z = -1 + 2 \times 1 - 0 = -1 + 2 - 0 = 1$. Should be $1$ ✓.</p>
+        <p class="k"><span class="kl">Check (3)</span> $-3y + 4z = -3 \times 1 + 4 \times 0 = -3 + 0 = -3$. Should be $-3$ ✓.</p>
+        $$
+        \begin{aligned}
+          \text{(1)}:&\quad 2(1) - 1 = 1 \;✓ \\
+          \text{(2)}:&\quad -1 + 2(1) - 0 = 1 \;✓ \\
+          \text{(3)}:&\quad -3(1) + 4(0) = -3 \;✓
+        \end{aligned}
+        $$
+      </li>
+    </ol>
     <table>
       <tr><th></th><th>What changes when $b$ changes</th></tr>
       <tr><td><b>Row picture</b></td><td>All three planes move (their right-hand sides changed) and now meet at a new point $(1, 1, 0)$.</td></tr>
@@ -663,6 +956,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s9">9. When it goes wrong: singular matrices</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Linear combination = scale the columns and add them. "Fill the whole space" = every possible $b$ can be reached. Non-singular (invertible) = a square matrix whose columns reach every $b$, each in exactly one way. Singular = a square matrix whose columns reach only part of the space, because one column is a combination of the others. Plane = a flat sheet. Parallel lines = same direction, never meeting.</p>
+    </div>
     <div class="box theorem"><span class="label">The key question, in two languages</span>
       <p><b>Algebra:</b> Can I solve $Ax = b$ for <b>every</b> right-hand side $b$?</p>
       <p><b>Geometry:</b> Do the linear combinations of the columns fill the <b>whole</b> space?</p>
@@ -715,6 +1011,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s10">10. Thinking in $n$ dimensions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Dimension = how many separate directions there are (how many numbers describe a spot). $\mathbb{R}^9$ = all lists of 9 real numbers. Component = one number in a list. Column question = "which mix of the columns gives $b$?". Non-singular = the columns fill the whole space. Flat piece = a line, plane, or its higher-dimensional cousin, through the origin. Unreachable = no combination of the columns lands there.</p>
+    </div>
     <p>Now imagine 9 equations in 9 unknowns. There are nine columns, and each is a vector with 9 components, so it lives in 9-dimensional space $\mathbb{R}^9$. Nobody can picture that, but the <b>column question is exactly the same</b>: which combination of the nine columns gives $b$, and do their combinations fill all of $\mathbb{R}^9$?</p>
     <ul>
       <li>A <b>random</b> 9 × 9 matrix is almost certainly non-singular. Its nine columns point in "genuinely different" directions and fill the whole space.</li>
@@ -726,24 +1025,58 @@
 
     <!-- ====================================================== -->
     <h2 id="s11">11. Matrix × vector, two ways</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Matrix $A$ = a table of numbers. Vector $x$ = a list of numbers (one per column of $A$). $Ax$ = "matrix times vector", a new list. Column = a top-to-bottom line of $A$. Row = a left-to-right line of $A$. Weights = the entries of $x$, telling how much of each column to take. Dot product = multiply matching entries of two lists, then add. Entry = one number in a matrix or vector. $m \times n$ = $m$ rows, $n$ columns.</p>
+    </div>
     <p>The matrix form $Ax = b$ contains a multiplication: a <b>matrix times a vector</b>. Take</p>
     $$ A = \begin{bmatrix} 2 & 5 \\ 1 & 3 \end{bmatrix}, \qquad x = \begin{bmatrix} 1 \\ 2 \end{bmatrix}. $$
 
     <h3>Way 1: by columns (Strang's favourite)</h3>
     <p>$Ax$ is a combination of the columns of $A$, with the entries of $x$ as the weights:</p>
-    $$
-    Ax = 1 \begin{bmatrix} 2 \\ 1 \end{bmatrix} + 2 \begin{bmatrix} 5 \\ 3 \end{bmatrix}
-    = \begin{bmatrix} 2 + 10 \\ 1 + 6 \end{bmatrix}
-    = \begin{bmatrix} 12 \\ 7 \end{bmatrix}
-    $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Take $x_1 = 1$ copy of column 1, $(2, 1)$.</p>
+        <p class="k"><span class="kl">Why</span> The first entry of $x$ says how much of the first column to use.</p>
+        <p class="k"><span class="kl">How</span> Top: $1 \times 2 = 2$. Bottom: $1 \times 1 = 1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(2, 1)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Take $x_2 = 2$ copies of column 2, $(5, 3)$.</p>
+        <p class="k"><span class="kl">How</span> Top: $2 \times 5 = 10$. Bottom: $2 \times 3 = 6$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(10, 6)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add the two pieces, box by box.</p>
+        <p class="k"><span class="kl">How</span> Top: $2 + 10 = 12$. Bottom: $1 + 6 = 7$.</p>
+        $$
+        Ax = 1 \begin{bmatrix} 2 \\ 1 \end{bmatrix} + 2 \begin{bmatrix} 5 \\ 3 \end{bmatrix}
+        = \begin{bmatrix} 2 + 10 \\ 1 + 6 \end{bmatrix}
+        = \begin{bmatrix} 12 \\ 7 \end{bmatrix}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $Ax = (12, 7)$.</p>
+      </li>
+    </ol>
 
     <h3>Way 2: by rows (dot products)</h3>
     <p>Each entry of $Ax$ is one row of $A$ "dotted" with $x$: multiply matching entries and add.</p>
-    $$
-    Ax = \begin{bmatrix} \text{row}_1 \cdot x \\ \text{row}_2 \cdot x \end{bmatrix}
-    = \begin{bmatrix} 2(1) + 5(2) \\ 1(1) + 3(2) \end{bmatrix}
-    = \begin{bmatrix} 12 \\ 7 \end{bmatrix}
-    $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Top entry = row 1 $(2, 5)$ dotted with $x = (1, 2)$.</p>
+        <p class="k"><span class="kl">Why</span> Row 1 is equation 1: it tells what the first answer number is made of.</p>
+        <p class="k"><span class="kl">How</span> First with first: $2 \times 1 = 2$. Second with second: $5 \times 2 = 10$. Add: $2 + 10 = 12$.</p>
+        <p class="k"><span class="kl">What we have now</span> Top entry $= 12$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Bottom entry = row 2 $(1, 3)$ dotted with $x = (1, 2)$.</p>
+        <p class="k"><span class="kl">How</span> $1 \times 1 = 1$. $3 \times 2 = 6$. Add: $1 + 6 = 7$.</p>
+        $$
+        Ax = \begin{bmatrix} \text{row}_1 \cdot x \\ \text{row}_2 \cdot x \end{bmatrix}
+        = \begin{bmatrix} 2(1) + 5(2) \\ 1(1) + 3(2) \end{bmatrix}
+        = \begin{bmatrix} 12 \\ 7 \end{bmatrix}
+        $$
+        <p class="k"><span class="kl">What we have now</span> $Ax = (12, 7)$, the same as Way 1 ✓.</p>
+      </li>
+    </ol>
 
     <p>Look at the middle steps: both ways do <b>exactly the same four multiplications</b> ($2 \cdot 1$, $5 \cdot 2$, $1 \cdot 1$, $3 \cdot 2$). They only group them differently, so they must give the same answer.</p>
 
@@ -770,11 +1103,14 @@
         <li>$x$ is how many units of each asset you hold (the weights).</li>
         <li>$b$ is the payoff you want to build, such as an option.</li>
       </ul>
-      <p>"Can I solve $Ax = b$ for <b>every</b> $b$?" becomes "Can I replicate <b>every</b> payoff?" If yes, the market is <b>complete</b>. If two assets have proportional payoffs (dependent columns), the extra asset adds nothing new and some payoffs cannot be hedged. That is the singular case. Example 6 in the Examples tab works this out with numbers.</p>
+      <p>"Can I solve $Ax = b$ for <b>every</b> $b$?" becomes "Can I replicate <b>every</b> payoff?" If yes, the market is <b>complete</b>. If two assets have proportional payoffs (dependent columns), the extra asset adds nothing new and some payoffs cannot be hedged. That is the singular case. Example 9 in the Examples tab works this out with numbers.</p>
     </div>
 
     <!-- ====================================================== -->
     <h2 id="s12">12. Vocabulary and summary</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Every word below is a short reminder; section 0 has each one with a tiny example. Linear = unknowns only multiplied by numbers and added. Vector = a list of numbers / an arrow. Linear combination = scale and add. Span = everything reachable by combinations. Singular = columns miss part of the space. Non-singular = columns fill it.</p>
+    </div>
     <dl class="vocab">
       <dt>Linear equation</dt><dd>Unknowns only multiplied by constants and added. Its graph is a line (2D), plane (3D) or hyperplane.</dd>
       <dt>Coefficient matrix $A$</dt><dd>The numbers multiplying the unknowns. Row $i$ is equation $i$, and column $j$ belongs to unknown $j$.</dd>
@@ -809,30 +1145,535 @@
     <h2>Worked examples</h2>
     <p>Each example is solved step by step. Try it yourself first, then read the solution.</p>
 
+    <!-- E0 -->
+    <div class="worked">
+      <h3>Example 1 (interactive): Options Replication Lab</h3>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <table>
+          <tr><th>Word</th><th>In simple words</th><th>Example (Nifty)</th></tr>
+          <tr><td><b>Spot</b></td><td>Where Nifty is right now.</td><td>Nifty is at 20,000 today.</td></tr>
+          <tr><td><b>Expiry</b></td><td>The last day of the option.</td><td>This Thursday.</td></tr>
+          <tr><td><b>Strike</b></td><td>The Nifty level written on the option.</td><td>20,000.</td></tr>
+          <tr><td><b>CE (call)</b></td><td>Pays if Nifty ends <b>above</b> the strike. Pays nothing below.</td><td>20,000 CE: Nifty ends 20,300 → you get 300. Ends 19,800 → you get 0.</td></tr>
+          <tr><td><b>PE (put)</b></td><td>Pays if Nifty ends <b>below</b> the strike. Pays nothing above.</td><td>20,000 PE: Nifty ends 19,800 → you get 200. Ends 20,300 → you get 0.</td></tr>
+          <tr><td><b>Future</b></td><td>Pays Nifty's move from the agreed price, up or down (can be a loss).</td><td>Bought at 20,000. Ends 20,300 → +300. Ends 19,800 → −200.</td></tr>
+          <tr><td><b>Bond</b></td><td>Pays the same fixed amount whatever Nifty does.</td><td>Pays 100 at every Nifty level.</td></tr>
+          <tr><td><b>Premium</b></td><td>The price you pay today to buy an option.</td><td>The 20,000 CE costs 150 today.</td></tr>
+          <tr><td><b>IV</b></td><td>How much the market thinks Nifty will jump around. More jumpy = options cost more.</td><td>IV 20% gives bigger premiums than IV 12%.</td></tr>
+          <tr><td><b>Black–Scholes</b></td><td>A formula that gives a fair premium from spot, strike, days left, IV and interest rate. The lab uses it to fill in prices.</td><td>Spot 20,000, strike 20,000, 7 days, IV 12% → the lab fills in the premium for you.</td></tr>
+          <tr><td><b>Payoff</b></td><td>What a product pays at expiry, at each Nifty level.</td><td>20,000 CE at 19,900 / 20,000 / 20,100 pays 0 / 0 / 100.</td></tr>
+          <tr><td><b>Replicate</b></td><td>Build the client's payoff by mixing products.</td><td>1 CE + 1 PE = a straddle.</td></tr>
+          <tr><td><b>Elimination</b></td><td>Solve the equations by cancelling one unknown at a time (Lecture 03).</td><td>Take row 1 away from row 2 to remove $x$.</td></tr>
+          <tr><td><b>Pivot</b></td><td>The number used to clear the numbers under it.</td><td>The first non-zero number in a row.</td></tr>
+          <tr><td><b>Multiplier</b></td><td>How many copies of the pivot row to take away.</td><td>Remove 6 under pivot 2: $6 \div 2 = 3$ copies.</td></tr>
+          <tr><td><b>Arbitrage</b></td><td>Free money: two things pay the same tomorrow but cost different today.</td><td>Buy the cheap one, sell the dear one, keep the gap.</td></tr>
+        </table>
+      </div>
+      <h4>1. The agenda: what question are we solving?</h4>
+      <div class="box finance"><span class="label">The question</span>
+        <p>A client says: <b>"I want a position that pays me these amounts depending on where Nifty expires."</b> You can only trade what is on the screen: a few CEs, PEs, a future, a bond.</p>
+        <p class="answer">How many lots of each product give exactly the client's payoff at every Nifty level?</p>
+        <p>This lecture's angle: <b>see</b> the answer. The same question can be drawn two ways (the row picture and the column picture), and the pictures show whether there is one answer, many, or none.</p>
+      </div>
+
+      <h4>2. The core maths we use (this lecture)</h4>
+      <table>
+        <tr><th>Maths piece</th><th>What it is</th><th>In the lab</th></tr>
+        <tr><td>Linear equation</td><td>numbers × unknowns added up = a target, e.g. $2x + z = 3$</td><td>one equation per Nifty level</td></tr>
+        <tr><td>Row picture</td><td>draw each equation on its own: a line (2 unknowns) or a flat sheet (3 unknowns). The answer is where they all meet.</td><td>left graph; axes = lots</td></tr>
+        <tr><td>Linear combination</td><td>multiply vectors by numbers and add: $x \cdot A + y \cdot B + z \cdot C$</td><td>mixing lots of products</td></tr>
+        <tr><td>Column picture</td><td>each column is an arrow; find how much of each arrow walks you to the target</td><td>right graph; axes = payoffs</td></tr>
+        <tr><td>Matrix form $Ax = b$</td><td>the same equations packed into one line; $Ax$ = combination of the columns of $A$</td><td>section 3 of the lab output</td></tr>
+        <tr><td>Singular / non-singular</td><td>non-singular: exactly one answer; singular: none or infinitely many</td><td>the diagnosis in section 4</td></tr>
+      </table>
+
+      <h4>3. How your inputs become maths</h4>
+      <table>
+        <tr><th>You type</th><th>It becomes</th><th>Meaning</th></tr>
+        <tr><td>2 or 3 Nifty levels</td><td>the <b>rows</b> (equations)</td><td>one equation per possible expiry level; 2 levels = 2D pictures, 3 levels = 3D pictures</td></tr>
+        <tr><td>the products (buy/sell CE, PE, future, bond, strike)</td><td>the <b>columns</b> (arrows)</td><td>column = what 1 lot pays at each level, from $\max(S - K, 0)$ etc., in points ÷ 100</td></tr>
+        <tr><td>"Client wants"</td><td>the right side $b$ (the red target)</td><td>the payoff to copy</td></tr>
+        <tr><td>(the answer)</td><td>$x, y, z$</td><td>lots of A, B, C (negative = sell)</td></tr>
+        <tr><td>Premiums (typed, or Black–Scholes)</td><td>a price for each column</td><td>used to price the recipe and check for arbitrage</td></tr>
+        <tr><td>Days-left slider</td><td>changes the numbers in $A$</td><td>0 = payoffs at expiry; more days = value before expiry (payoff + time value)</td></tr>
+      </table>
+
+      <h4>4. Walkthrough: the market the lab starts with</h4>
+      <p>A = buy 20,100 PE, B = buy 19,900 CE, C = buy 20,000 PE. The client wants 3 / 2 / 2 (300 / 200 / 200 points) at 19,900 / 20,000 / 20,100.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Work out what 1 lot of each product pays at each level.</p>
+          <p class="k"><span class="kl">How</span> A (20,100 PE) at 19,900: $\max(20{,}100 - 19{,}900, 0) = 200$ points → 2. At 20,000: 100 → 1. At 20,100: 0. So A = (2, 1, 0). Same way B (19,900 CE) = (0, 1, 2) and C (20,000 PE) = (1, 0, 0).</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Rows: one level at a time</span> At 19,900: $2x + 0y + 1z = 3$. At 20,000: $1x + 1y + 0z = 2$. At 20,100: $0x + 2y + 0z = 2$.</p>
+          <p class="k"><span class="kl">In the picture</span> Each equation is one flat sheet in the left graph. Every point on the 19,900 sheet pays exactly 3 at 19,900, but may pay anything at the other levels.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Solve</span> The 20,100 row has only $y$: $2y = 2$, so $y = 1$. Put it in the 20,000 row: $x + 1 = 2$, so $x = 1$. Put $x$ in the 19,900 row: $2 + z = 3$, so $z = 1$. (Lecture 03 shows the general method, elimination.)</p>
+          <p class="k"><span class="kl">Row picture check</span> The point $(1, 1, 1)$ sits on all three sheets: $2 + 1 = 3$ ✓, $1 + 1 = 2$ ✓, $2 = 2$ ✓. That's where the sheets meet.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Columns: one product at a time</span> $1 \times A + 1 \times B + 1 \times C = (2, 1, 0) + (0, 1, 2) + (1, 0, 0) = (2+0+1,\ 1+1+0,\ 0+2+0) = (3, 2, 2)$ ✓.</p>
+          <p class="k"><span class="kl">In the picture</span> In the right graph: walk along arrow A, then B from its tip, then C, and you land exactly on the red target $(3, 2, 2)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Matrix form</span> Both views are the same equation:</p>
+          $$ \underbrace{\begin{bmatrix} 2 & 0 & 1 \\ 1 & 1 & 0 \\ 0 & 2 & 0 \end{bmatrix}}_{\text{columns} = A,\,B,\,C} \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 3 \\ 2 \\ 2 \end{bmatrix} $$
+          <p class="k"><span class="kl">In trading words</span> Buy 1 lot each of the 20,100 PE, the 19,900 CE and the 20,000 PE.</p>
+        </li>
+      </ol>
+
+      <h4>5. What each output section shows, and what to look for</h4>
+      <table>
+        <tr><th>Lab section</th><th>What it shows</th><th>What to identify</th></tr>
+        <tr><td>1. The question</td><td>your market and the client's wish, in words</td><td>Is this the question you meant?</td></tr>
+        <tr><td>2. Payoff numbers</td><td>every $\max(S-K,0)$ worked out</td><td>each product's arrow (its column)</td></tr>
+        <tr><td>3. The equations</td><td>one equation per level, then $Ax = b$</td><td>which number means what: rows = levels, columns = products</td></tr>
+        <tr><td>4–5. Solving</td><td>elimination and back substitution (details in Lecture 03)</td><td>the lots, and the diagnosis: one / many / no answer</td></tr>
+        <tr><td>6. Check</td><td>the recipe's payoff at every level</td><td>every row ticks ✓</td></tr>
+        <tr><td>7. Row and column pictures</td><td>sheets meeting; arrows walking to the target</td><td><b>this lecture's main point</b>: see why the answer is what it is</td></tr>
+        <tr><td>8. Price and arbitrage</td><td>cost of the recipe from the premiums</td><td>the fair price; any free-money trade</td></tr>
+      </table>
+
+      <h4>6. The three pictures you can get</h4>
+      <table>
+        <tr><th>Row picture</th><th>Column picture</th><th>Maths</th><th>Options meaning</th><th>Preset to try</th></tr>
+        <tr><td>sheets meet at <b>one point</b></td><td>arrows point in truly different directions and reach the target</td><td>non-singular: one answer</td><td>exactly one recipe</td><td>Lecture example, butterfly</td></tr>
+        <tr><td>sheets meet along a <b>whole line</b></td><td>arrows lie flat on one sheet, and the target is on that sheet</td><td>singular: infinitely many</td><td>a product is a copy of others (CE − PE = future). Many recipes, which must cost the same.</td><td>Put–call parity</td></tr>
+        <tr><td>sheets <b>never all meet</b></td><td>arrows lie flat, and the target is off their sheet</td><td>singular: no answer</td><td>the payoff can't be built from these products. The lab shows the closest hedge.</td><td>Incomplete market</td></tr>
+      </table>
+
+      <h4>7. How this is used with real options</h4>
+      <ul>
+        <li><b>Every product is an arrow.</b> Its payoff list (one number per Nifty level) is a vector. Seeing products as arrows is the column picture, and it's how quants think about hedging.</li>
+        <li><b>Buildable payoffs = everything the arrows can reach.</b> If your arrows point in as many different directions as there are Nifty levels, any payoff can be built (a <b>complete market</b>). If they lie flat, only payoffs on their sheet can be built.</li>
+        <li><b>Every level must match.</b> The row picture is a risk check: a hedge that works at 19,900 but misses at 20,100 still leaves you exposed. Only the meeting point is a full hedge.</li>
+        <li><b>Price and arbitrage:</b> the recipe's cost is lots × premiums. If two different recipes land on the same target but cost different amounts, there's arbitrage.</li>
+        <li><b>Two levels (2D):</b> start there. Lines instead of sheets, and flat arrows in a plane, make the ideas easy to see before going to 3D.</li>
+      </ul>
+
+      <h4>8. Try it</h4>
+      <ul>
+        <li><b>Two levels</b> preset: see two lines crossing and two arrows adding up to the target.</li>
+        <li><b>Butterfly</b> preset: three sheets meeting at one point.</li>
+        <li><b>Put–call parity</b> preset: the sheets share a line; the arrows lie flat.</li>
+        <li><b>Incomplete market</b> preset: the target sits off the arrows' sheet.</li>
+        <li>Change the "Client wants" numbers and watch the red target and the meeting point move.</li>
+      </ul>
+      <div id="replab"></div>
+    </div>
+
+    <div class="worked">
+      <h3>Example 2 (2D): Build a payoff from a PE and a PE/CE strategy (row and column pictures)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Nifty will expire at one of two levels: <b>19,900</b> or <b>20,000</b>. Payoffs are in Nifty points ÷ 100.</p>
+        <p>You can trade two products:</p>
+        <table>
+          <tr><th>Product</th><th>What it is</th><th>Pays at 19,900</th><th>Pays at 20,000</th></tr>
+          <tr><td><b>A</b></td><td>buy 1 × <b>20,100 PE</b></td><td>$2$</td><td>$1$</td></tr>
+          <tr><td><b>B</b></td><td>buy 2 × <b>20,000 PE</b>, sell 1 × <b>19,800 CE</b></td><td>$1$</td><td>$-2$</td></tr>
+        </table>
+        <p>A client wants a position that pays <b>3</b> if Nifty expires at 19,900 and <b>−1</b> (a loss of 1) if it expires at 20,000.</p>
+        <p><b>How many lots $x$ of A and $y$ of B</b> should you trade? Show the answer as a <b>row picture</b> and a <b>column picture</b>.</p>
+        <p>(On the board this is: solve $2x + y = 3$, $\ x - 2y = -1$, and find its row picture and column picture.)</p>
+      </div>
+
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>PE (put) = pays $\max(K - S, 0)$: money if Nifty $S$ ends below the strike $K$. CE (call) = pays $\max(S - K, 0)$: money if Nifty ends above $K$. Strike = the level written in the option. $\max(a, 0)$ = "$a$ if it is positive, otherwise 0". Lot = one unit traded. Payoff = what a product pays in each scenario. Row = one Nifty level (scenario). Column = one product. $x, y$ = lots of A and B. $b$ = the client's wanted payoff. Row picture = lines of lot choices; column picture = product arrows adding up to the target.</p>
+      </div>
+      <h4>Step 0: where the payoff numbers come from</h4>
+      <table>
+        <tr><th>Leg</th><th>Formula</th><th>At 19,900</th><th>At 20,000</th></tr>
+        <tr><td>20,100 PE</td><td>$\max(20{,}100 - S, 0)$</td><td>$200 \to 2$</td><td>$100 \to 1$</td></tr>
+        <tr><td>20,000 PE</td><td>$\max(20{,}000 - S, 0)$</td><td>$100 \to 1$</td><td>$0 \to 0$</td></tr>
+        <tr><td>19,800 CE</td><td>$\max(S - 19{,}800, 0)$</td><td>$100 \to 1$</td><td>$200 \to 2$</td></tr>
+      </table>
+      <p><b>A</b> = one 20,100 PE = $(2, 1)$. &nbsp; <b>B</b> = 2 × 20,000 PE − 1 × 19,800 CE = $(2 - 1,\ 0 - 2) = (1, -2)$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Work out A's payoff: one 20,100 PE.</p>
+          <p class="k"><span class="kl">How</span> At 19,900: $20{,}100 - 19{,}900 = 200$, positive, so it pays $200$ points $\to 200 \div 100 = 2$. At 20,000: $20{,}100 - 20{,}000 = 100 \to 1$.</p>
+          <p class="k"><span class="kl">What we have now</span> A $= (2, 1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Work out the two legs of B.</p>
+          <p class="k"><span class="kl">How</span> 20,000 PE at 19,900: $20{,}000 - 19{,}900 = 100 \to 1$; at 20,000: $20{,}000 - 20{,}000 = 0 \to 0$. 19,800 CE at 19,900: $19{,}900 - 19{,}800 = 100 \to 1$; at 20,000: $20{,}000 - 19{,}800 = 200 \to 2$.</p>
+          <p class="k"><span class="kl">What we have now</span> 20,000 PE $= (1, 0)$; 19,800 CE $= (1, 2)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Combine: buy 2 × PE, sell 1 × CE.</p>
+          <p class="k"><span class="kl">Why</span> "Buy" adds the payoff; "sell" means you pay it out, so it is subtracted.</p>
+          <p class="k"><span class="kl">How</span> At 19,900: $2 \times 1 - 1 \times 1 = 2 - 1 = 1$. At 20,000: $2 \times 0 - 1 \times 2 = 0 - 2 = -2$.</p>
+          <p class="k"><span class="kl">What we have now</span> B $= (1, -2)$.</p>
+        </li>
+      </ol>
+
+      <h4>Step 1: turn the question into equations</h4>
+      <p>$x$ lots of A and $y$ lots of B pay $x \times$ (A's payoff) $+ y \times$ (B's payoff). Write one line per expiry level:</p>
+      $$
+      \begin{aligned}
+        2x + y &= 3 &&\text{(Nifty at 19,900)} \\
+        x - 2y &= -1 &&\text{(Nifty at 20,000)}
+      \end{aligned}
+      $$
+
+      <h4>Which part of the equations means what</h4>
+      $$
+      \underbrace{\begin{bmatrix} 2 & 1 \\ 1 & -2 \end{bmatrix}}_{A}
+      \underbrace{\begin{bmatrix} x \\ y \end{bmatrix}}_{\text{lots}}
+      = \underbrace{\begin{bmatrix} 3 \\ -1 \end{bmatrix}}_{b\ \text{(target)}}
+      $$
+      <table>
+        <tr><th>Part</th><th>Numbers</th><th>Market meaning</th></tr>
+        <tr><td><b>Row 1</b> of the matrix</td><td>$(2, 1)$</td><td>what A and B pay if Nifty expires at <b>19,900</b></td></tr>
+        <tr><td><b>Row 2</b></td><td>$(1, -2)$</td><td>what A and B pay if Nifty expires at <b>20,000</b></td></tr>
+        <tr><td><b>Column 1</b> (multiplies $x$)</td><td>$(2, 1)$</td><td>product <b>A</b> (20,100 PE): its payoff in both scenarios</td></tr>
+        <tr><td><b>Column 2</b> (multiplies $y$)</td><td>$(1, -2)$</td><td>product <b>B</b> (2 PE − 1 CE): its payoff in both scenarios</td></tr>
+        <tr><td>$x$, $y$</td><td>unknown</td><td>number of lots of A and of B to trade</td></tr>
+        <tr><td>right side $b$</td><td>$(3, -1)$</td><td>the payoff the client wants</td></tr>
+      </table>
+      <div class="box intuition"><span class="label">How this links to the main topic of Lecture 01</span>
+        <ul>
+          <li><b>Row picture</b> = read the table <b>one scenario (row) at a time</b>: "at 19,900 my total must be 3", "at 20,000 my total must be −1". Each row is a line of possible $(x, y)$; the answer is where the lines cross.</li>
+          <li><b>Column picture</b> = read the table <b>one product (column) at a time</b>: "how much of A and how much of B, mixed together, gives the target?". This is exactly the replication question a trader asks.</li>
+        </ul>
+      </div>
+
+      <div class="steps">
+        <h4>Step 2: solve</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Get $x$ alone from the 20,000 equation, $x - 2y = -1$.</p>
+            <p class="k"><span class="kl">Why</span> $x$ has no number in front of it there, so it is the easiest letter to free.</p>
+            <p class="k"><span class="kl">How</span> Add $2y$ to both sides: $x - 2y + 2y = -1 + 2y$, so $x = 2y - 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = 2y - 1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $x = 2y - 1$ into the 19,900 equation, $2x + y = 3$.</p>
+            <p class="k"><span class="kl">How, move 1</span> Replace $x$: $2(2y - 1) + y = 3$.</p>
+            <p class="k"><span class="kl">How, move 2</span> Open the bracket: $2 \times 2y = 4y$, $2 \times (-1) = -2$. So $4y - 2 + y = 3$.</p>
+            <p class="k"><span class="kl">How, move 3</span> Collect $y$'s: $4y + y = 5y$. So $5y - 2 = 3$.</p>
+            <p class="k"><span class="kl">How, move 4</span> Add 2 to both sides: $5y = 3 + 2 = 5$.</p>
+            <p class="k"><span class="kl">How, move 5</span> Divide by 5: $y = 5 \div 5 = 1$.</p>
+            $$
+            \begin{aligned}
+              2(2y - 1) + y &= 3 &&\text{put } x = 2y - 1 \\
+              4y - 2 + y &= 3 &&\text{multiply out} \\
+              5y &= 5 &&\text{add 2 to both sides} \\
+              y &= 1 &&\text{divide by 5}
+            \end{aligned}
+            $$
+            <p class="k"><span class="kl">What we have now</span> $y = 1$: 1 lot of B.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $y = 1$ back into $x = 2y - 1$.</p>
+            <p class="k"><span class="kl">How</span> $2 \times 1 = 2$, then $2 - 1 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = 1$: 1 lot of A.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check in the original equations, one Nifty level at a time.</p>
+            <p class="k"><span class="kl">Check 19,900</span> $2x + y = 2 \times 1 + 1 = 2 + 1 = 3$. Wanted $3$ ✓.</p>
+            <p class="k"><span class="kl">Check 20,000</span> $x - 2y = 1 - 2 \times 1 = 1 - 2 = -1$. Wanted $-1$ ✓.</p>
+            <p class="k"><span class="kl">In market words</span> 1 lot of A + 1 lot of B:</p>
+            <table>
+              <tr><th>Nifty expires at</th><th>1 × A</th><th>1 × B</th><th>Total</th><th>Wanted</th></tr>
+              <tr><td>19,900</td><td>$2$</td><td>$1$</td><td>$3$</td><td>$3$ ✓</td></tr>
+              <tr><td>20,000</td><td>$1$</td><td>$-2$</td><td>$-1$</td><td>$-1$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
+        <p class="answer">Trade 1 lot of A (20,100 PE) and 1 lot of B (2 × 20,000 PE − 1 × 19,800 CE): $x = 1$, $y = 1$.</p>
+
+        <h4>Step 3: the row picture</h4>
+        <p>Each scenario gives one line of $(x, y)$ choices that hit that scenario's target:</p>
+        <table>
+          <tr><th>Line</th><th>Two easy points</th><th>Meaning</th></tr>
+          <tr><td>19,900: $2x + y = 3$</td><td>$(0, 3)$ and $(1.5, 0)$</td><td>every mix of lots that pays exactly 3 at 19,900</td></tr>
+          <tr><td>20,000: $x - 2y = -1$</td><td>$(-1, 0)$ and $(1, 1)$</td><td>every mix of lots that pays exactly −1 at 20,000</td></tr>
+        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find two points on the 19,900 line, $2x + y = 3$.</p>
+            <p class="k"><span class="kl">How</span> Put $x = 0$: $0 + y = 3$, so $y = 3$: point $(0, 3)$. Put $y = 0$: $2x = 3$, so $x = 3 \div 2 = 1.5$: point $(1.5, 0)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find two points on the 20,000 line, $x - 2y = -1$.</p>
+            <p class="k"><span class="kl">How</span> Put $y = 0$: $x - 0 = -1$, so $x = -1$: point $(-1, 0)$. Put $x = 1$: $1 - 2y = -1$; take 1 from both sides: $-2y = -2$; divide by $-2$: $y = 1$: point $(1, 1)$.</p>
+            <p class="k"><span class="kl">What we have now</span> Two points per line, enough to draw both.</p>
+          </li>
+        </ol>
+        <p>The only mix on <b>both</b> lines is where they cross: $(1, 1)$.</p>
+
+        <h4>Step 4: the column picture</h4>
+        <p>Now think of each product as an arrow of payoffs (19,900 across, 20,000 up):</p>
+        $$ x \begin{bmatrix} 2 \\ 1 \end{bmatrix} + y \begin{bmatrix} 1 \\ -2 \end{bmatrix} = \begin{bmatrix} 3 \\ -1 \end{bmatrix} $$
+        <p>Take 1 lot of A (arrow to $(2, 1)$), then add 1 lot of B (arrow of $(1, -2)$) on its tip. You land exactly on the client's target $(3, -1)$.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Walk $x = 1$ times along arrow A.</p>
+            <p class="k"><span class="kl">How</span> $1 \times (2, 1) = (1 \times 2,\ 1 \times 1) = (2, 1)$.</p>
+            <p class="k"><span class="kl">What we have now</span> We stand at $(2, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> From there, walk $y = 1$ times along arrow B.</p>
+            <p class="k"><span class="kl">How</span> Across: $2 + 1 = 3$. Up: $1 + (-2) = 1 - 2 = -1$.</p>
+            <p class="k"><span class="kl">What we have now</span> We stand at $(3, -1)$, the client's target ✓.</p>
+          </li>
+        </ol>
+
+        <div class="figs">
+          <figure class="fig" style="margin:0">
+            <svg viewBox="0 0 320 300" role="img" aria-label="Row picture: two lines cross at (1,1)"><rect width="320" height="300" style="fill:var(--paper)"/><line x1="20.0" y1="266.0" x2="20.0" y2="34.0" style="stroke:var(--rule);stroke-width:1"/><line x1="60.0" y1="266.0" x2="60.0" y2="34.0" style="stroke:var(--rule);stroke-width:1"/><line x1="100.0" y1="266.0" x2="100.0" y2="34.0" style="stroke:var(--rule);stroke-width:1"/><line x1="140.0" y1="266.0" x2="140.0" y2="34.0" style="stroke:var(--rule);stroke-width:1"/><line x1="180.0" y1="266.0" x2="180.0" y2="34.0" style="stroke:var(--rule);stroke-width:1"/><line x1="220.0" y1="266.0" x2="220.0" y2="34.0" style="stroke:var(--rule);stroke-width:1"/><line x1="260.0" y1="266.0" x2="260.0" y2="34.0" style="stroke:var(--rule);stroke-width:1"/><line x1="4.0" y1="250.0" x2="276.0" y2="250.0" style="stroke:var(--rule);stroke-width:1"/><line x1="4.0" y1="210.0" x2="276.0" y2="210.0" style="stroke:var(--rule);stroke-width:1"/><line x1="4.0" y1="170.0" x2="276.0" y2="170.0" style="stroke:var(--rule);stroke-width:1"/><line x1="4.0" y1="130.0" x2="276.0" y2="130.0" style="stroke:var(--rule);stroke-width:1"/><line x1="4.0" y1="90.0" x2="276.0" y2="90.0" style="stroke:var(--rule);stroke-width:1"/><line x1="4.0" y1="50.0" x2="276.0" y2="50.0" style="stroke:var(--rule);stroke-width:1"/><line x1="4.0" y1="170.0" x2="276.0" y2="170.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><line x1="100.0" y1="266.0" x2="100.0" y2="34.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><text x="20" y="184" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">-2</text><text x="60" y="184" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">-1</text><text x="140" y="184" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">1</text><text x="180" y="184" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">2</text><text x="220" y="184" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">3</text><text x="260" y="184" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">4</text><text x="95" y="254" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">-2</text><text x="95" y="214" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">-1</text><text x="95" y="134" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">1</text><text x="95" y="94" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">2</text><text x="95" y="54" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">3</text><line x1="92.0" y1="34.0" x2="188.0" y2="226.0" style="stroke:var(--def-b);stroke-width:3"/><line x1="4.0" y1="198.0" x2="276.0" y2="62.0" style="stroke:var(--ex-b);stroke-width:3"/><circle cx="140.0" cy="130.0" r="6" style="fill:var(--warn-b)"/><text x="154.0" y="148.0" text-anchor="start" style="fill:var(--warn-b);font:600 12px var(--sans)">(1, 1)</text><text x="194.0" y="222.0" text-anchor="start" style="fill:var(--def-b);font:600 12px var(--sans)">19,900: 2x + y = 3</text><text x="164.0" y="98.0" text-anchor="start" style="fill:var(--ex-b);font:600 12px var(--sans)">20,000: x − 2y = −1</text></svg>
+            <figcaption><b>Row picture.</b> Axes = lots of A ($x$, across) and lots of B ($y$, up). Blue line = all mixes paying 3 at 19,900; green line = all mixes paying −1 at 20,000. They cross at $(1, 1)$: 1 lot of each.</figcaption>
+          </figure>
+          <figure class="fig" style="margin:0">
+            <svg viewBox="0 0 320 300" role="img" aria-label="Column picture: A plus B reaches the target (3,-1)"><rect width="320" height="300" style="fill:var(--paper)"/><defs><marker id="l1e1b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--def-b)"/></marker><marker id="l1e1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ex-b)"/></marker><marker id="l1e1r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--warn-b)"/></marker></defs><line x1="30.0" y1="256.0" x2="30.0" y2="24.0" style="stroke:var(--rule);stroke-width:1"/><line x1="70.0" y1="256.0" x2="70.0" y2="24.0" style="stroke:var(--rule);stroke-width:1"/><line x1="110.0" y1="256.0" x2="110.0" y2="24.0" style="stroke:var(--rule);stroke-width:1"/><line x1="150.0" y1="256.0" x2="150.0" y2="24.0" style="stroke:var(--rule);stroke-width:1"/><line x1="190.0" y1="256.0" x2="190.0" y2="24.0" style="stroke:var(--rule);stroke-width:1"/><line x1="230.0" y1="256.0" x2="230.0" y2="24.0" style="stroke:var(--rule);stroke-width:1"/><line x1="270.0" y1="256.0" x2="270.0" y2="24.0" style="stroke:var(--rule);stroke-width:1"/><line x1="14.0" y1="240.0" x2="286.0" y2="240.0" style="stroke:var(--rule);stroke-width:1"/><line x1="14.0" y1="200.0" x2="286.0" y2="200.0" style="stroke:var(--rule);stroke-width:1"/><line x1="14.0" y1="160.0" x2="286.0" y2="160.0" style="stroke:var(--rule);stroke-width:1"/><line x1="14.0" y1="120.0" x2="286.0" y2="120.0" style="stroke:var(--rule);stroke-width:1"/><line x1="14.0" y1="80.0" x2="286.0" y2="80.0" style="stroke:var(--rule);stroke-width:1"/><line x1="14.0" y1="40.0" x2="286.0" y2="40.0" style="stroke:var(--rule);stroke-width:1"/><line x1="14.0" y1="120.0" x2="286.0" y2="120.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><line x1="70.0" y1="256.0" x2="70.0" y2="24.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><text x="30" y="134" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">-1</text><text x="110" y="134" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">1</text><text x="150" y="134" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">2</text><text x="190" y="134" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">3</text><text x="230" y="134" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">4</text><text x="270" y="134" text-anchor="middle" style="fill:var(--ink-soft);font:10px var(--sans)">5</text><text x="65" y="244" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">-3</text><text x="65" y="204" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">-2</text><text x="65" y="164" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">-1</text><text x="65" y="84" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">1</text><text x="65" y="44" text-anchor="end" style="fill:var(--ink-soft);font:10px var(--sans)">2</text><line x1="70.0" y1="120.0" x2="146.4" y2="81.8" style="stroke:var(--def-b);stroke-width:3" marker-end="url(#l1e1b)"/><text x="146.0" y="70.0" text-anchor="middle" style="fill:var(--def-b);font:600 12px var(--sans)">A = 20,100 PE (2, 1)</text><line x1="150.0" y1="80.0" x2="188.2" y2="156.4" style="stroke:var(--ex-b);stroke-width:3;stroke-dasharray:6 4" marker-end="url(#l1e1g)"/><text x="194.0" y="94.0" text-anchor="start" style="fill:var(--ex-b);font:600 12px var(--sans)">+ B (1, −2)</text><line x1="70.0" y1="120.0" x2="186.2" y2="158.7" style="stroke:var(--warn-b);stroke-width:3" marker-end="url(#l1e1r)"/><circle cx="190.0" cy="160.0" r="5" style="fill:var(--warn-b)"/><text x="184.0" y="182.0" text-anchor="end" style="fill:var(--warn-b);font:600 12px var(--sans)">target (3, −1)</text><text x="282.0" y="176.0" text-anchor="end" style="fill:var(--ink-soft);font:500 11px var(--sans)">pays at 19,900 →</text><text x="76" y="28.0" style="fill:var(--ink-soft);font:500 11px var(--sans)">pays at 20,000 ↑</text></svg>
+            <figcaption><b>Column picture.</b> Axes = payoff at 19,900 (across) and at 20,000 (up). 1 × A (blue) then 1 × B (green, dashed) lands on the target $(3, -1)$ (red).</figcaption>
+          </figure>
+        </div>
+      </div>
+      <h4>What each picture is telling you</h4>
+      <p>Both pictures come from the same table:</p>
+      <table>
+        <tr><th></th><th>Product A</th><th>Product B</th><th>Client wants</th></tr>
+        <tr><td>Nifty at 19,900</td><td>$2$</td><td>$1$</td><td>$3$</td></tr>
+        <tr><td>Nifty at 20,000</td><td>$1$</td><td>$-2$</td><td>$-1$</td></tr>
+      </table>
+
+      <div class="box intuition"><span class="label">Row picture: read the table across (one scenario at a time)</span>
+        <ul>
+          <li><b>Row 19,900:</b> $2x + y = 3$ means "if Nifty ends at 19,900, my lots must add up to 3". Many choices work, e.g. $(0, 3)$, $(1, 1)$, $(1.5, 0)$. They all lie on the <b>blue line</b>.</li>
+          <li><b>Row 20,000:</b> $x - 2y = -1$ means "if Nifty ends at 20,000, my total must be −1". Choices like $(-1, 0)$, $(1, 1)$, $(3, 2)$ lie on the <b>green line</b>.</li>
+          <li>You don't know which scenario will happen, so your lots must satisfy <b>both</b>: the point on both lines, where they <b>cross</b>, $(1, 1)$.</li>
+        </ul>
+        <p>Graph axes = <b>number of lots</b> ($x$ across, $y$ up). Each line = "all lot choices that are fine in that scenario".</p>
+        <p><b>It tells you:</b> each scenario is a condition; the answer is the lot choice that meets every condition at once.</p>
+      </div>
+
+      <div class="box intuition"><span class="label">Column picture: read the table down (one product at a time)</span>
+        <ul>
+          <li><b>Column A</b> = product A as an arrow $(2, 1)$: pays 2 at 19,900 and 1 at 20,000.</li>
+          <li><b>Column B</b> = product B as an arrow $(1, -2)$.</li>
+          <li><b>Target</b> = the client's payoff $(3, -1)$.</li>
+          <li>Question: how many of arrow A plus how many of arrow B lands exactly on the target? Walk 1 × A to $(2, 1)$, then 1 × B moves you by $(1, -2)$ to $(3, -1)$ ✓.</li>
+        </ul>
+        <p>Graph axes = <b>payoffs</b> (at 19,900 across, at 20,000 up). Each product = one arrow.</p>
+        <p><b>It tells you:</b> the client's payoff is <b>built from</b> the products; $x = 1$, $y = 1$ is the recipe. This is the trader's replication question.</p>
+      </div>
+
+      <div class="box theorem"><span class="label">The same answer, two ways of reading it</span>
+        <table>
+          <tr><th></th><th>Row picture</th><th>Column picture</th></tr>
+          <tr><td>Reads the table by</td><td>scenario (row): 19,900, then 20,000</td><td>product (column): A, then B</td></tr>
+          <tr><td>Graph axes</td><td>lots of A, lots of B</td><td>payoff at 19,900, payoff at 20,000</td></tr>
+          <tr><td>Each line / arrow is</td><td>one scenario's condition</td><td>one product's payoff</td></tr>
+          <tr><td>Answer looks like</td><td>where the lines cross: $(1, 1)$</td><td>the lots that make the arrows reach the target: 1 A + 1 B</td></tr>
+          <tr><td>Trader's question</td><td>"which lot sizes satisfy each scenario?"</td><td>"which mix of products replicates the client's payoff?"</td></tr>
+        </table>
+        <p>Same answer both ways: $x = 1$, $y = 1$. The column picture is the one that matters most later: if the product arrows can't reach a target, that payoff can't be replicated (the column space idea, Lecture 07).</p>
+      </div>
+    </div>
+
+
     <!-- ---------- E1 ---------- -->
     <div class="worked">
-      <h3>Example 1: Both pictures for one system</h3>
+      <h3>Example 3 (3D): the same idea with three expiry levels</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Now Nifty can expire at <b>three</b> levels: <b>19,900</b>, <b>20,000</b> or <b>20,100</b> (payoffs in points ÷ 100). Three products:</p>
+        <table>
+          <tr><th>Product</th><th>What it is</th><th>19,900</th><th>20,000</th><th>20,100</th></tr>
+          <tr><td><b>A</b></td><td>buy 1 × <b>20,100 PE</b></td><td>$2$</td><td>$1$</td><td>$0$</td></tr>
+          <tr><td><b>B</b></td><td>buy 1 × <b>19,900 CE</b></td><td>$0$</td><td>$1$</td><td>$2$</td></tr>
+          <tr><td><b>C</b></td><td>buy 1 × <b>20,000 PE</b></td><td>$1$</td><td>$0$</td><td>$0$</td></tr>
+        </table>
+        <p>A client wants <b>3</b> at 19,900, <b>2</b> at 20,000 and <b>2</b> at 20,100. How many lots $x, y, z$ of A, B, C? Draw the row picture and the column picture (now in 3D).</p>
+      </div>
+
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>PE (put) with strike $K$ = pays $\max(K - S, 0)$, money when Nifty $S$ ends below $K$. CE (call) = pays $\max(S - K, 0)$, money when Nifty ends above $K$. Lot = one unit. $x, y, z$ = lots of A, B, C. Row = one expiry level. Column = one product's payoff at all three levels. Plane = all lot choices $(x, y, z)$ that meet one level's target. Row picture = three planes meeting at one point. Column picture = three payoff arrows chained to reach the target.</p>
+      </div>
+      <h4>Step 0: where the numbers come from</h4>
+      <table>
+        <tr><th>Option</th><th>Formula</th><th>19,900</th><th>20,000</th><th>20,100</th></tr>
+        <tr><td>20,100 PE</td><td>$\max(20{,}100 - S, 0)$</td><td>$200 \to 2$</td><td>$100 \to 1$</td><td>$0$</td></tr>
+        <tr><td>19,900 CE</td><td>$\max(S - 19{,}900, 0)$</td><td>$0$</td><td>$100 \to 1$</td><td>$200 \to 2$</td></tr>
+        <tr><td>20,000 PE</td><td>$\max(20{,}000 - S, 0)$</td><td>$100 \to 1$</td><td>$0$</td><td>$0$</td></tr>
+      </table>
+
+      <h4>Step 1: equations, and which part means what</h4>
+      $$
+      \begin{aligned}
+        2x + 0y + 1z &= 3 &&\text{(Nifty at 19,900)} \\
+        1x + 1y + 0z &= 2 &&\text{(Nifty at 20,000)} \\
+        0x + 2y + 0z &= 2 &&\text{(Nifty at 20,100)}
+      \end{aligned}
+      \qquad
+      \underbrace{\begin{bmatrix} 2 & 0 & 1 \\ 1 & 1 & 0 \\ 0 & 2 & 0 \end{bmatrix}}_{\text{col 1 = A, col 2 = B, col 3 = C}}
+      \begin{bmatrix} x \\ y \\ z \end{bmatrix} = \begin{bmatrix} 3 \\ 2 \\ 2 \end{bmatrix}
+      $$
+      <table>
+        <tr><th>Part</th><th>Market meaning</th></tr>
+        <tr><td>each <b>row</b></td><td>one expiry level: what A, B, C pay there</td></tr>
+        <tr><td>each <b>column</b></td><td>one product: its payoff at all three levels</td></tr>
+        <tr><td>$x, y, z$</td><td>lots of A, B, C</td></tr>
+        <tr><td>right side</td><td>the client's wanted payoff $(3, 2, 2)$</td></tr>
+      </table>
+
+      <div class="steps">
+        <h4>Step 2: solve (easiest row first)</h4>
+        <table>
+          <tr><th>Row</th><th>Equation</th><th>Work</th><th>Result</th></tr>
+          <tr><td>20,100</td><td>$2y = 2$</td><td>divide by 2</td><td>$y = 1$</td></tr>
+          <tr><td>20,000</td><td>$x + y = 2$</td><td>$x + 1 = 2$</td><td>$x = 1$</td></tr>
+          <tr><td>19,900</td><td>$2x + z = 3$</td><td>$2 + z = 3$</td><td>$z = 1$</td></tr>
+        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Start with the 20,100 row: $0x + 2y + 0z = 2$, i.e. $2y = 2$.</p>
+            <p class="k"><span class="kl">Why</span> It has only one unknown ($y$), so it can be answered at once.</p>
+            <p class="k"><span class="kl">How</span> "2 times what is 2?" Divide both sides by 2: $y = 2 \div 2 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $y = 1$: 1 lot of B (19,900 CE).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use the 20,000 row: $x + y = 2$.</p>
+            <p class="k"><span class="kl">Why</span> Now that $y$ is known, only $x$ is left in it.</p>
+            <p class="k"><span class="kl">How</span> Put $y = 1$: $x + 1 = 2$. Take 1 from both sides: $x = 2 - 1 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = 1$: 1 lot of A (20,100 PE).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use the 19,900 row: $2x + z = 3$.</p>
+            <p class="k"><span class="kl">How</span> Put $x = 1$: $2 \times 1 = 2$, so $2 + z = 3$. Take 2 from both sides: $z = 3 - 2 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $z = 1$: 1 lot of C (20,000 PE).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check every original equation (every Nifty level).</p>
+            <p class="k"><span class="kl">Check 19,900</span> $2x + 0y + 1z = 2 \times 1 + 0 + 1 \times 1 = 2 + 0 + 1 = 3$. Wanted $3$ ✓.</p>
+            <p class="k"><span class="kl">Check 20,000</span> $1x + 1y + 0z = 1 + 1 + 0 = 2$. Wanted $2$ ✓.</p>
+            <p class="k"><span class="kl">Check 20,100</span> $0x + 2y + 0z = 0 + 2 \times 1 + 0 = 2$. Wanted $2$ ✓.</p>
+            <table>
+              <tr><th>Nifty at</th><th>1 A</th><th>1 B</th><th>1 C</th><th>Total</th><th>Wanted</th></tr>
+              <tr><td>19,900</td><td>$2$</td><td>$0$</td><td>$1$</td><td>$3$</td><td>$3$ ✓</td></tr>
+              <tr><td>20,000</td><td>$1$</td><td>$1$</td><td>$0$</td><td>$2$</td><td>$2$ ✓</td></tr>
+              <tr><td>20,100</td><td>$0$</td><td>$2$</td><td>$0$</td><td>$2$</td><td>$2$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
+        <p class="answer">Buy 1 lot each of the 20,100 PE, the 19,900 CE and the 20,000 PE: $(x, y, z) = (1, 1, 1)$.</p>
+
+        <h4>Step 3: row picture in 3D, three planes</h4>
+        <p>With three unknowns, each scenario's equation is a flat <b>plane</b> of $(x, y, z)$ lot choices. The answer is the one point on all three planes.</p>
+        <figure class="fig plot3d">
+          <div id="l1e2row" class="plot3d-box" role="img" aria-label="Three planes meet at (1,1,1)"></div>
+          <figcaption><b>Row picture.</b> Axes = lots of A, B, C. Blue plane: pays 3 at 19,900. Green plane: pays 2 at 20,000. Orange plane: pays 2 at 20,100. All three meet at the red point $(1, 1, 1)$. <b>Drag to rotate.</b></figcaption>
+        </figure>
+
+        <h4>Step 4: column picture in 3D, three arrows</h4>
+        <p>Each product is an arrow of payoffs (19,900, 20,000, 20,100). Walk 1 × A, then 1 × B, then 1 × C, and you land on the target $(3, 2, 2)$.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Walk 1 × A from the origin.</p>
+            <p class="k"><span class="kl">How</span> $(0 + 2,\ 0 + 1,\ 0 + 0) = (2, 1, 0)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add 1 × B $= (0, 1, 2)$.</p>
+            <p class="k"><span class="kl">How</span> $(2 + 0,\ 1 + 1,\ 0 + 2) = (2, 2, 2)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add 1 × C $= (1, 0, 0)$.</p>
+            <p class="k"><span class="kl">How</span> $(2 + 1,\ 2 + 0,\ 2 + 0) = (3, 2, 2)$.</p>
+            <p class="k"><span class="kl">What we have now</span> The target $(3, 2, 2)$ ✓.</p>
+          </li>
+        </ol>
+        <figure class="fig plot3d">
+          <div id="l1e2col" class="plot3d-box" role="img" aria-label="A then B then C lands on (3,2,2)"></div>
+          <figcaption><b>Column picture.</b> Axes = payoff at 19,900, 20,000, 20,100. Blue = 1 × A $(2, 1, 0)$, green = + 1 × B $(0, 1, 2)$, orange = + 1 × C $(1, 0, 0)$. The chain ends on the red target $(3, 2, 2)$. <b>Drag to rotate.</b></figcaption>
+        </figure>
+      </div>
+      <div class="box theorem"><span class="label">2D vs 3D, same idea</span>
+        <table>
+          <tr><th></th><th>Example 2 (2D)</th><th>Example 3 (3D)</th></tr>
+          <tr><td>Scenarios (rows)</td><td>2 expiry levels</td><td>3 expiry levels</td></tr>
+          <tr><td>Products (columns)</td><td>2</td><td>3</td></tr>
+          <tr><td>Row picture</td><td>2 lines crossing at a point</td><td>3 planes meeting at a point</td></tr>
+          <tr><td>Column picture</td><td>2 arrows added to reach the target</td><td>3 arrows added to reach the target</td></tr>
+          <tr><td>Answer</td><td>1 lot of A, 1 lot of B</td><td>1 lot each of A, B, C</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="worked">
+      <h3>Example 4: Both pictures for one system</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Solve and describe the row and column pictures:</p>
         $$ x + y = 3, \qquad x - y = 1 $$
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Matrix form = the system written as $Ax = b$: coefficient table $A$ times unknowns $(x, y)$ equals right-hand side $b$. Row picture = each equation as a line; the answer is where they cross. Column picture = the columns as arrows; the answer is how much of each reaches $b$. Adding two equations = add left sides together and right sides together; the result is still true.</p>
+      </div>
       <div class="steps">
         <p><b>Matrix form.</b> $\begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 3 \\ 1 \end{bmatrix}$</p>
         <p><b>Solve.</b> Adding the two equations gives $2x = 4$, so $x = 2$. Then $y = 3 - 2 = 1$.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add the two equations: $(x + y) + (x - y) = 3 + 1$.</p>
+            <p class="k"><span class="kl">Why</span> One has $+y$, the other $-y$. Added together they cancel, leaving only $x$.</p>
+            <p class="k"><span class="kl">How</span> Left: $x + x = 2x$ and $y - y = 0$, so $2x$. Right: $3 + 1 = 4$. So $2x = 4$.</p>
+            <p class="k"><span class="kl">What we have now</span> $2x = 4$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Solve $2x = 4$.</p>
+            <p class="k"><span class="kl">How</span> Divide both sides by 2: $x = 4 \div 2 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $x = 2$ into $x + y = 3$.</p>
+            <p class="k"><span class="kl">How</span> $2 + y = 3$. Take 2 from both sides: $y = 3 - 2 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(x, y) = (2, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check both original equations.</p>
+            <p class="k"><span class="kl">Check 1</span> $x + y = 2 + 1 = 3$ ✓.</p>
+            <p class="k"><span class="kl">Check 2</span> $x - y = 2 - 1 = 1$ ✓.</p>
+          </li>
+        </ol>
         <p><b>Row picture.</b> Line $x + y = 3$ passes through $(3,0)$ and $(0,3)$. Line $x - y = 1$ passes through $(1,0)$ and $(0,-1)$. They cross at $(2, 1)$.</p>
         <p><b>Column picture.</b>
           $$ 2\begin{bmatrix} 1 \\ 1 \end{bmatrix} + 1\begin{bmatrix} 1 \\ -1 \end{bmatrix} = \begin{bmatrix} 3 \\ 1 \end{bmatrix} ✓ $$</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Build $2(\text{col 1}) + 1(\text{col 2})$, box by box.</p>
+            <p class="k"><span class="kl">How</span> Top: $2 \times 1 + 1 \times 1 = 2 + 1 = 3$. Bottom: $2 \times 1 + 1 \times (-1) = 2 - 1 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(3, 1) = b$ ✓.</p>
+          </li>
+        </ol>
         <p class="answer">Answer: $(x, y) = (2, 1)$</p>
       </div>
     </div>
 
     <!-- ---------- E2 ---------- -->
     <div class="worked">
-      <h3>Example 2: No solution (singular)</h3>
+      <h3>Example 5: No solution (singular)</h3>
       <div class="box example"><span class="label">Problem</span>
         $$ x + y = 1, \qquad 2x + 2y = 6 $$
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Slope = how steep a line is. Intercept = where a line crosses an axis. Parallel = same slope, never meeting. Singular = the columns point along one line, so they can't reach every $b$. Multiple of a vector = that vector times some number. Contradiction = two equations that can't both be true.</p>
+      </div>
       <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Divide the second equation, $2x + 2y = 6$, by 2 on both sides.</p>
+            <p class="k"><span class="kl">Why</span> To compare it with the first equation, which has $1x + 1y$.</p>
+            <p class="k"><span class="kl">How</span> $2x \div 2 = x$, $2y \div 2 = y$, $6 \div 2 = 3$. So $x + y = 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> Equation 1 says $x + y = 1$; equation 2 says $x + y = 3$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Ask whether both can be true.</p>
+            <p class="k"><span class="kl">How</span> The same sum $x + y$ can't be $1$ and $3$ at once: $1 \ne 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> No $(x, y)$ works. Check with any try, e.g. $(1, 0)$: equation 1 gives $1 + 0 = 1$ ✓, but equation 2 gives $2 \times 1 + 2 \times 0 = 2 \ne 6$ ✗.</p>
+          </li>
+        </ol>
         <p><b>Row picture.</b> Divide the second equation by 2: $x + y = 3$. So the two lines have the same slope but different intercepts. They are <b>parallel</b> and never meet.</p>
         <figure class="fig" style="max-width:360px">
           <svg viewBox="0 0 300 260" role="img" aria-label="Two parallel lines x+y=1 and x+y=3">
@@ -847,47 +1688,113 @@
           <figcaption>Parallel lines: no point lies on both, so there is no solution.</figcaption>
         </figure>
         <p><b>Column picture.</b> Column 1 = $(1, 2)$ and column 2 = $(1, 2)$ are the <b>same</b> vector. Every combination $x(1,2) + y(1,2) = (x+y)(1,2)$ lies on one line through the origin. $b = (1, 6)$ is not a multiple of $(1, 2)$, so it cannot be reached.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Try to write $b = (1, 6)$ as $c \times (1, 2)$.</p>
+            <p class="k"><span class="kl">Why</span> Every combination of the columns is some number $c = x + y$ times $(1, 2)$.</p>
+            <p class="k"><span class="kl">How</span> Top: $c \times 1 = 1$ forces $c = 1$. Bottom: $c \times 2 = 1 \times 2 = 2$, but $b$ needs $6$. $2 \ne 6$ ✗.</p>
+            <p class="k"><span class="kl">What we have now</span> No $c$ works, so $b$ is off the line of the columns.</p>
+          </li>
+        </ol>
         <p class="answer">Answer: no solution. The matrix is singular.</p>
       </div>
     </div>
 
     <!-- ---------- E3 ---------- -->
     <div class="worked">
-      <h3>Example 3: Infinitely many solutions (singular)</h3>
+      <h3>Example 6: Infinitely many solutions (singular)</h3>
       <div class="box example"><span class="label">Problem</span>
         $$ x + y = 1, \qquad 2x + 2y = 2 $$
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Same line = two equations that are copies (one is a number times the other), so they draw one line. Infinitely many solutions = every point on that line works. Singular = the columns point along one line. Column picture = how much of each column arrow reaches $b$.</p>
+      </div>
       <div class="steps">
         <p><b>Row picture.</b> The second equation is just 2 × the first. Both describe the <b>same line</b>, so every point on it is a solution.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Multiply the first equation, $x + y = 1$, by 2 on both sides.</p>
+            <p class="k"><span class="kl">How</span> $2 \times x = 2x$, $2 \times y = 2y$, $2 \times 1 = 2$. So $2x + 2y = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> Exactly equation 2. It adds no new rule.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check three points in <b>both</b> original equations.</p>
+            <p class="k"><span class="kl">Check (1, 0)</span> $1 + 0 = 1$ ✓; $2 \times 1 + 2 \times 0 = 2 + 0 = 2$ ✓.</p>
+            <p class="k"><span class="kl">Check (0, 1)</span> $0 + 1 = 1$ ✓; $2 \times 0 + 2 \times 1 = 0 + 2 = 2$ ✓.</p>
+            <p class="k"><span class="kl">Check (2, −1)</span> $2 + (-1) = 1$ ✓; $2 \times 2 + 2 \times (-1) = 4 - 2 = 2$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> Any $(x, y)$ with $x + y = 1$ works: infinitely many.</p>
+          </li>
+        </ol>
         <p><b>Column picture.</b> Again both columns are $(1, 2)$. This time $b = (1, 2)$ <b>does</b> lie on that line, so it can be reached, and in many ways:</p>
         $$ (x, y) = (1, 0),\; (0, 1),\; (2, -1),\; \dots \quad\text{any } x + y = 1 $$
         <p class="answer">Answer: infinitely many solutions.</p>
       </div>
-      <div class="box intuition"><span class="label">Compare Examples 2 and 3</span>
+      <div class="box intuition"><span class="label">Compare Examples 5 and 6</span>
         <p>Same singular matrix, different $b$. If $b$ lies in the space the columns can reach, there are infinitely many solutions. If it does not, there are none. A singular matrix never gives exactly one solution.</p>
       </div>
     </div>
 
     <!-- ---------- E4 ---------- -->
     <div class="worked">
-      <h3>Example 4: Matrix × vector, both ways</h3>
+      <h3>Example 7: Matrix × vector, both ways</h3>
       <div class="box example"><span class="label">Problem</span>
         $$ \begin{bmatrix} 1 & 2 & 0 \\ 0 & 1 & 3 \\ 2 & 0 & 1 \end{bmatrix}\begin{bmatrix} 1 \\ -1 \\ 2 \end{bmatrix} = \; ? $$
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>By columns = $Ax$ is $x_1$ copies of column 1 plus $x_2$ copies of column 2 plus $x_3$ copies of column 3. By rows = each answer number is one row of $A$ dotted with $x$. Dot product = multiply matching entries, then add. Entry = one number in the matrix or vector.</p>
       </div>
       <div class="steps">
         <p><b>By columns.</b>
           $$ 1\begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix} - 1\begin{bmatrix} 2 \\ 1 \\ 0 \end{bmatrix} + 2\begin{bmatrix} 0 \\ 3 \\ 1 \end{bmatrix}
              = \begin{bmatrix} 1 - 2 + 0 \\ 0 - 1 + 6 \\ 2 - 0 + 2 \end{bmatrix} = \begin{bmatrix} -1 \\ 5 \\ 4 \end{bmatrix} $$</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take $1$ copy of column 1, $(1, 0, 2)$.</p>
+            <p class="k"><span class="kl">How</span> $(1 \times 1,\ 1 \times 0,\ 1 \times 2) = (1, 0, 2)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take $-1$ copy of column 2, $(2, 1, 0)$.</p>
+            <p class="k"><span class="kl">Why</span> The second entry of $x$ is $-1$: use column 2 backwards.</p>
+            <p class="k"><span class="kl">How</span> $(-1 \times 2,\ -1 \times 1,\ -1 \times 0) = (-2, -1, 0)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take $2$ copies of column 3, $(0, 3, 1)$.</p>
+            <p class="k"><span class="kl">How</span> $(2 \times 0,\ 2 \times 3,\ 2 \times 1) = (0, 6, 2)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add the three pieces, row by row.</p>
+            <p class="k"><span class="kl">How</span> Top: $1 + (-2) + 0 = -1$. Middle: $0 + (-1) + 6 = 5$. Bottom: $2 + 0 + 2 = 4$.</p>
+            <p class="k"><span class="kl">What we have now</span> $Ax = (-1, 5, 4)$.</p>
+          </li>
+        </ol>
         <p><b>By rows.</b> $(1,2,0)\cdot(1,-1,2) = -1$, &nbsp; $(0,1,3)\cdot(1,-1,2) = 5$, &nbsp; $(2,0,1)\cdot(1,-1,2) = 4$ ✓</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 1 $(1, 2, 0)$ dotted with $x = (1, -1, 2)$.</p>
+            <p class="k"><span class="kl">How</span> $1 \times 1 = 1$; $2 \times (-1) = -2$; $0 \times 2 = 0$. Add: $1 - 2 + 0 = -1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 2 $(0, 1, 3)$ dotted with $x$.</p>
+            <p class="k"><span class="kl">How</span> $0 \times 1 = 0$; $1 \times (-1) = -1$; $3 \times 2 = 6$. Add: $0 - 1 + 6 = 5$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 3 $(2, 0, 1)$ dotted with $x$.</p>
+            <p class="k"><span class="kl">How</span> $2 \times 1 = 2$; $0 \times (-1) = 0$; $1 \times 2 = 2$. Add: $2 + 0 + 2 = 4$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(-1, 5, 4)$, the same as by columns ✓.</p>
+          </li>
+        </ol>
         <p class="answer">Answer: $(-1, 5, 4)$</p>
       </div>
     </div>
 
     <!-- ---------- E5 ---------- -->
     <div class="worked">
-      <h3>Example 5: Is $b$ a combination of the columns?</h3>
+      <h3>Example 8: Is $b$ a combination of the columns?</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Let $u = (1, 0, 1)$ and $v = (0, 1, 1)$. Is $b$ a combination of $u$ and $v$ when (a) $b = (2, 3, 5)$ and (b) $b = (1, 1, 1)$?</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Combination of $u$ and $v$ = $x\,u + y\,v$ for some numbers $x, y$. Component = one number of a vector (top, middle, bottom). Condition = an extra equation that may or may not hold. Span = every combination of $u$ and $v$; here a plane. Plane $z = x + y$ = all points whose third number is the first plus the second.</p>
       </div>
       <div class="steps">
         <p><b>What the question means.</b> "$b$ is a combination of $u$ and $v$" means we can find two numbers $x$ and $y$ with</p>
@@ -895,12 +1802,27 @@
         <p>So we look for $x$ and $y$. If they exist, the answer is yes. If no pair works, the answer is no.</p>
 
         <p><b>Step 1. Work out $x\,u + y\,v$ in general.</b></p>
-        $$
-        x \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + y \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}
-        = \begin{bmatrix} x \\ 0 \\ x \end{bmatrix} + \begin{bmatrix} 0 \\ y \\ y \end{bmatrix}
-        = \begin{bmatrix} x + 0 \\ 0 + y \\ x + y \end{bmatrix}
-        = \begin{bmatrix} x \\ y \\ x + y \end{bmatrix}
-        $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Scale $u = (1, 0, 1)$ by $x$.</p>
+            <p class="k"><span class="kl">How</span> $(x \times 1,\ x \times 0,\ x \times 1) = (x, 0, x)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Scale $v = (0, 1, 1)$ by $y$.</p>
+            <p class="k"><span class="kl">How</span> $(y \times 0,\ y \times 1,\ y \times 1) = (0, y, y)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add, component by component.</p>
+            <p class="k"><span class="kl">How</span> Top: $x + 0 = x$. Middle: $0 + y = y$. Bottom: $x + y$.</p>
+            $$
+            x \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + y \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}
+            = \begin{bmatrix} x \\ 0 \\ x \end{bmatrix} + \begin{bmatrix} 0 \\ y \\ y \end{bmatrix}
+            = \begin{bmatrix} x + 0 \\ 0 + y \\ x + y \end{bmatrix}
+            = \begin{bmatrix} x \\ y \\ x + y \end{bmatrix}
+            $$
+            <p class="k"><span class="kl">What we have now</span> Every combination looks like $(x,\ y,\ x + y)$.</p>
+          </li>
+        </ol>
         <p>Every combination of $u$ and $v$ has this shape: <b>the third component is always the first plus the second.</b></p>
 
         <p><b>Step 2. Set it equal to $b = (b_1, b_2, b_3)$.</b> Matching components gives three equations:</p>
@@ -914,34 +1836,66 @@
         <p>There are <b>3 equations but only 2 unknowns</b>. The top and middle equations already fix $x$ and $y$. The bottom equation is then an extra condition that may or may not hold.</p>
 
         <h4>(a) $b = (2, 3, 5)$</h4>
-        $$
-        \begin{aligned}
-          x &= 2 &&\text{top: } b_1 = 2 \\
-          y &= 3 &&\text{middle: } b_2 = 3 \\
-          x + y &= 2 + 3 = 5 &&\text{bottom needs } b_3 = 5 \;✓
-        \end{aligned}
-        $$
-        <p>All three equations hold. Check by building the combination:</p>
-        $$
-        2 \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + 3 \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}
-        = \begin{bmatrix} 2 \\ 0 \\ 2 \end{bmatrix} + \begin{bmatrix} 0 \\ 3 \\ 3 \end{bmatrix}
-        = \begin{bmatrix} 2 \\ 3 \\ 5 \end{bmatrix} = b \;✓
-        $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Read $x$ from the top equation and $y$ from the middle one.</p>
+            <p class="k"><span class="kl">Why</span> The top says $x = b_1$ and the middle says $y = b_2$: they hand us the answers directly.</p>
+            <p class="k"><span class="kl">How</span> $b_1 = 2$, so $x = 2$. $b_2 = 3$, so $y = 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = 2$, $y = 3$, with no choice left.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Test the bottom equation, $x + y = b_3$.</p>
+            <p class="k"><span class="kl">How</span> $2 + 3 = 5$, and $b_3 = 5$. Equal ✓.</p>
+            $$
+            \begin{aligned}
+              x &= 2 &&\text{top: } b_1 = 2 \\
+              y &= 3 &&\text{middle: } b_2 = 3 \\
+              x + y &= 2 + 3 = 5 &&\text{bottom needs } b_3 = 5 \;✓
+            \end{aligned}
+            $$
+            <p class="k"><span class="kl">What we have now</span> All three equations hold.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check by building $2u + 3v$.</p>
+            <p class="k"><span class="kl">How</span> $2u = (2, 0, 2)$. $3v = (0, 3, 3)$. Add: top $2 + 0 = 2$, middle $0 + 3 = 3$, bottom $2 + 3 = 5$.</p>
+            $$
+            2 \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + 3 \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}
+            = \begin{bmatrix} 2 \\ 0 \\ 2 \end{bmatrix} + \begin{bmatrix} 0 \\ 3 \\ 3 \end{bmatrix}
+            = \begin{bmatrix} 2 \\ 3 \\ 5 \end{bmatrix} = b \;✓
+            $$
+          </li>
+        </ol>
         <p class="answer">(a) Yes: $b = 2u + 3v$.</p>
 
         <h4>(b) $b = (1, 1, 1)$</h4>
-        $$
-        \begin{aligned}
-          x &= 1 &&\text{top: } b_1 = 1 \\
-          y &= 1 &&\text{middle: } b_2 = 1 \\
-          x + y &= 1 + 1 = 2 &&\text{bottom needs } b_3 = 1, \text{ but } 2 \ne 1 \;✗
-        \end{aligned}
-        $$
-        <p>The top and middle equations <b>force</b> $x = 1$ and $y = 1$. There is no freedom left, and with those values the bottom gives $2$, not $1$. Check what that forced combination actually produces:</p>
-        $$
-        1 \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + 1 \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}
-        = \begin{bmatrix} 1 \\ 1 \\ 2 \end{bmatrix} \ne \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}
-        $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Read $x$ and $y$ from the top and middle equations.</p>
+            <p class="k"><span class="kl">How</span> $b_1 = 1$, so $x = 1$. $b_2 = 1$, so $y = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = 1$, $y = 1$, forced: no freedom left.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Test the bottom equation, $x + y = b_3$.</p>
+            <p class="k"><span class="kl">How</span> $1 + 1 = 2$, but $b_3 = 1$, and $2 \ne 1$ ✗.</p>
+            $$
+            \begin{aligned}
+              x &= 1 &&\text{top: } b_1 = 1 \\
+              y &= 1 &&\text{middle: } b_2 = 1 \\
+              x + y &= 1 + 1 = 2 &&\text{bottom needs } b_3 = 1, \text{ but } 2 \ne 1 \;✗
+            \end{aligned}
+            $$
+            <p class="k"><span class="kl">What we have now</span> The only possible $x, y$ fail the third equation.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Build the forced combination $1u + 1v$ to see what it really gives.</p>
+            <p class="k"><span class="kl">How</span> Top: $1 + 0 = 1$. Middle: $0 + 1 = 1$. Bottom: $1 + 1 = 2$.</p>
+            $$
+            1 \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix} + 1 \begin{bmatrix} 0 \\ 1 \\ 1 \end{bmatrix}
+            = \begin{bmatrix} 1 \\ 1 \\ 2 \end{bmatrix} \ne \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}
+            $$
+            <p class="k"><span class="kl">What we have now</span> $(1, 1, 2)$, which misses $b = (1, 1, 1)$ in the bottom number.</p>
+          </li>
+        </ol>
         <p>It misses $b$ by $1$ in the third component, and no other choice of $x, y$ can fix that.</p>
         <p class="answer">(b) No: $(1, 1, 1)$ is not a combination of $u$ and $v$.</p>
       </div>
@@ -967,7 +1921,7 @@
 
     <!-- ---------- E6 ---------- -->
     <div class="worked">
-      <h3>Example 6: Building a payoff from two assets (finance)</h3>
+      <h3>Example 9: Building a payoff from two assets (finance)</h3>
       <div class="box finance"><span class="label">Problem</span>
         <p>You buy assets <b>today</b>. <b>Tomorrow</b> the market goes either <b>up</b> or <b>down</b>, and each asset pays you money depending on which happens.</p>
         <table>
@@ -978,6 +1932,9 @@
         <p>You want to receive <b>$5$ if up</b> and <b>$3$ if down</b>. How many bonds and how many stocks should you buy, and what does it cost today?</p>
       </div>
 
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Asset = something you can buy (here a bond or a stock). Bond = pays the same amount whatever happens. Stock = pays more if the market goes up, less if down. State = one possible tomorrow (up or down). Price today = what you pay now. Payoff tomorrow = what you receive later, depending on the state. $x$ = number of bonds, $y$ = number of stocks. Column = one asset's payoffs (up on top, down below). Replicate = build the wanted payoff from assets.</p>
+      </div>
       <div class="box intuition"><span class="label">First, the same problem as an everyday story</span>
         <p>A shop sells two kinds of ticket. You buy them <b>today</b>. <b>Tomorrow</b> the weather is either ☀️ sunny or 🌧️ rainy, and each ticket pays you depending on the weather.</p>
         <table>
@@ -1021,33 +1978,64 @@
         $$
 
         <p><b>Step 3. Solve.</b> Subtract (down) from (up), and $x$ disappears:</p>
-        $$
-        \begin{aligned}
-          (x + 3y) - (x + y) &= 5 - 3 \\
-          2y &= 2 \\
-          y &= 1
-        \end{aligned}
-        $$
-        <p>Put $y = 1$ into (down):</p>
-        $$
-        \begin{aligned}
-          x + 1 &= 3 \\
-          x &= 2
-        \end{aligned}
-        $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take the (down) equation away from the (up) equation.</p>
+            <p class="k"><span class="kl">Why</span> Both have exactly one $x$. Subtracting makes $x$ vanish, leaving only $y$.</p>
+            <p class="k"><span class="kl">How</span> Left: $(x + 3y) - (x + y) = x - x + 3y - y = 0 + 2y = 2y$. Right: $5 - 3 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $2y = 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Solve $2y = 2$.</p>
+            <p class="k"><span class="kl">How</span> Divide both sides by 2: $y = 2 \div 2 = 1$.</p>
+            $$
+            \begin{aligned}
+              (x + 3y) - (x + y) &= 5 - 3 \\
+              2y &= 2 \\
+              y &= 1
+            \end{aligned}
+            $$
+            <p class="k"><span class="kl">What we have now</span> $y = 1$: one stock.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $y = 1$ into (down), $x + y = 3$.</p>
+            <p class="k"><span class="kl">How</span> $x + 1 = 3$. Take 1 from both sides: $x = 3 - 1 = 2$.</p>
+            $$
+            \begin{aligned}
+              x + 1 &= 3 \\
+              x &= 2
+            \end{aligned}
+            $$
+            <p class="k"><span class="kl">What we have now</span> $x = 2$: two bonds.</p>
+          </li>
+        </ol>
 
-        <p><b>Step 4. Check what you receive tomorrow.</b></p>
-        <table>
-          <tr><th>State</th><th>2 bonds</th><th>1 stock</th><th>Total</th><th>Wanted</th></tr>
-          <tr><td>Up</td><td>$2 \times 1 = 2$</td><td>$1 \times 3 = 3$</td><td>$5$</td><td>$5$ ✓</td></tr>
-          <tr><td>Down</td><td>$2 \times 1 = 2$</td><td>$1 \times 1 = 1$</td><td>$3$</td><td>$3$ ✓</td></tr>
-        </table>
+        <p><b>Step 4. Check what you receive tomorrow</b> (the original equations, state by state).</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">Check up</span> $x + 3y = 2 + 3 \times 1 = 2 + 3 = 5$. Wanted $5$ ✓.</p>
+            <p class="k"><span class="kl">Check down</span> $x + y = 2 + 1 = 3$. Wanted $3$ ✓.</p>
+            <table>
+              <tr><th>State</th><th>2 bonds</th><th>1 stock</th><th>Total</th><th>Wanted</th></tr>
+              <tr><td>Up</td><td>$2 \times 1 = 2$</td><td>$1 \times 3 = 3$</td><td>$5$</td><td>$5$ ✓</td></tr>
+              <tr><td>Down</td><td>$2 \times 1 = 2$</td><td>$1 \times 1 = 1$</td><td>$3$</td><td>$3$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
         <p class="answer">Answer: buy 2 bonds and 1 stock.</p>
 
         <p><b>Step 5. What it costs today.</b> Now use the prices:</p>
-        $$ \underbrace{2 \times 1}_{\text{2 bonds}} + \underbrace{1 \times 2}_{\text{1 stock}} = 2 + 2 = 4 $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Price each part with today's prices (bond $1$, stock $2$).</p>
+            <p class="k"><span class="kl">Why</span> What you pay today is price × how many, added up. Tomorrow's payoffs don't enter here.</p>
+            <p class="k"><span class="kl">How</span> 2 bonds: $2 \times 1 = 2$. 1 stock: $1 \times 2 = 2$. Total: $2 + 2 = 4$.</p>
+            $$ \underbrace{2 \times 1}_{\text{2 bonds}} + \underbrace{1 \times 2}_{\text{1 stock}} = 2 + 2 = 4 $$
+            <p class="k"><span class="kl">What we have now</span> The recipe costs $4$ today.</p>
+          </li>
+        </ol>
         <p class="answer">You pay $4$ today, and tomorrow you receive $5$ (if up) or $3$ (if down).</p>
-        <p>This is the basic idea behind pricing options (Example 7): build the payoff from assets you know, then add up their prices.</p>
+        <p>This is the basic idea behind pricing options (Example 10): build the payoff from assets you know, then add up their prices.</p>
       </div>
 
       <div class="box pitfall"><span class="label">Two different numbers for every asset</span>
@@ -1065,15 +2053,18 @@
 
     <!-- ---------- E7 ---------- -->
     <div class="worked">
-      <h3>Example 7: Pricing a call option (finance)</h3>
+      <h3>Example 10: Pricing a call option (finance)</h3>
       <div class="box finance"><span class="label">Problem</span>
-        <p>Same market as Example 6. Tomorrow is either <b>up</b> or <b>down</b>, and today a bond costs $1$ and a stock costs $2$:</p>
+        <p>Same market as Example 9. Tomorrow is either <b>up</b> or <b>down</b>, and today a bond costs $1$ and a stock costs $2$:</p>
         <table>
           <tr><th>Asset</th><th>Price today</th><th>Pays if up</th><th>Pays if down</th></tr>
           <tr><td><b>Bond</b></td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
           <tr><td><b>Stock</b></td><td>$2$</td><td>$3$</td><td>$1$</td></tr>
         </table>
         <p>A <b>call option with strike $1$</b> gives you the right (not the obligation) to buy the stock tomorrow for $1$. What is the option worth today?</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Call option (like a CE) = the right, but not the duty, to buy something later at a fixed price. Strike = that fixed price (here $1$). Payoff = what the option gives you tomorrow: $\max(\text{stock} - \text{strike}, 0)$. Replicate = build the same payoff from bond and stock. Borrow = a negative number of bonds: get money now, repay it tomorrow. Price today = what the recipe costs now. Arbitrage = risk-free profit if two things that pay the same have different prices.</p>
       </div>
       <div class="steps">
         <p><b>Step 1. Work out what the option pays tomorrow.</b> You only use the option if the stock is worth more than $1$. Then you gain "stock price $- 1$".</p>
@@ -1082,6 +2073,17 @@
           <tr><td>Up</td><td>$3$</td><td>Yes: buy for $1$ something worth $3$</td><td>$3 - 1 = 2$</td></tr>
           <tr><td>Down</td><td>$1$</td><td>No gain: buy for $1$ something worth $1$</td><td>$0$</td></tr>
         </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Work out the payoff if the market goes up.</p>
+            <p class="k"><span class="kl">How</span> Stock $= 3$, strike $= 1$. $3 - 1 = 2$, which is more than $0$, so you use the option and gain $\max(2, 0) = 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Work out the payoff if the market goes down.</p>
+            <p class="k"><span class="kl">How</span> Stock $= 1$, strike $= 1$. $1 - 1 = 0$, so $\max(0, 0) = 0$: nothing gained.</p>
+            <p class="k"><span class="kl">What we have now</span> The option's payoff vector is $(2, 0)$.</p>
+          </li>
+        </ol>
         <p>So the option pays $(2, 0)$: $2$ if up, $0$ if down.</p>
 
         <p><b>Step 2. Build the same payoff from bond and stock (column picture).</b> Find $x$ bonds and $y$ stocks with</p>
@@ -1099,33 +2101,64 @@
         $$
 
         <p><b>Step 4. Solve.</b> Subtract (down) from (up):</p>
-        $$
-        \begin{aligned}
-          (x + 3y) - (x + y) &= 2 - 0 \\
-          2y &= 2 \\
-          y &= 1
-        \end{aligned}
-        $$
-        <p>Put $y = 1$ into (down):</p>
-        $$
-        \begin{aligned}
-          x + 1 &= 0 \\
-          x &= -1
-        \end{aligned}
-        $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take (down) away from (up).</p>
+            <p class="k"><span class="kl">Why</span> Each has one $x$, so subtracting removes $x$.</p>
+            <p class="k"><span class="kl">How</span> Left: $(x + 3y) - (x + y) = x - x + 3y - y = 2y$. Right: $2 - 0 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $2y = 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Solve $2y = 2$.</p>
+            <p class="k"><span class="kl">How</span> Divide both sides by 2: $y = 1$.</p>
+            $$
+            \begin{aligned}
+              (x + 3y) - (x + y) &= 2 - 0 \\
+              2y &= 2 \\
+              y &= 1
+            \end{aligned}
+            $$
+            <p class="k"><span class="kl">What we have now</span> $y = 1$: one stock.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $y = 1$ into (down), $x + y = 0$.</p>
+            <p class="k"><span class="kl">How</span> $x + 1 = 0$. Take 1 from both sides: $x = 0 - 1 = -1$.</p>
+            $$
+            \begin{aligned}
+              x + 1 &= 0 \\
+              x &= -1
+            \end{aligned}
+            $$
+            <p class="k"><span class="kl">What we have now</span> $x = -1$: minus one bond.</p>
+          </li>
+        </ol>
 
-        <p><b>Step 5. Check.</b></p>
-        <table>
-          <tr><th>State</th><th>$-1$ bond</th><th>$1$ stock</th><th>Total</th><th>Option pays</th></tr>
-          <tr><td>Up</td><td>$-1 \times 1 = -1$</td><td>$1 \times 3 = 3$</td><td>$2$</td><td>$2$ ✓</td></tr>
-          <tr><td>Down</td><td>$-1 \times 1 = -1$</td><td>$1 \times 1 = 1$</td><td>$0$</td><td>$0$ ✓</td></tr>
-        </table>
+        <p><b>Step 5. Check</b> in the original equations, state by state.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">Check up</span> $x + 3y = -1 + 3 \times 1 = -1 + 3 = 2$. Option pays $2$ ✓.</p>
+            <p class="k"><span class="kl">Check down</span> $x + y = -1 + 1 = 0$. Option pays $0$ ✓.</p>
+            <table>
+              <tr><th>State</th><th>$-1$ bond</th><th>$1$ stock</th><th>Total</th><th>Option pays</th></tr>
+              <tr><td>Up</td><td>$-1 \times 1 = -1$</td><td>$1 \times 3 = 3$</td><td>$2$</td><td>$2$ ✓</td></tr>
+              <tr><td>Down</td><td>$-1 \times 1 = -1$</td><td>$1 \times 1 = 1$</td><td>$0$</td><td>$0$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
 
         <p><b>Step 6. What $x = -1$ means.</b> A negative number of bonds means you <b>borrow</b> instead of buy: you get $1$ today and must pay back $1$ tomorrow, whatever happens. So the recipe is</p>
         <p class="answer">Buy 1 stock and borrow 1. This pays exactly the same as the option.</p>
 
         <p><b>Step 7. Price the option.</b> The recipe costs</p>
-        $$ \underbrace{-1 \times 1}_{\text{borrow 1}} + \underbrace{1 \times 2}_{\text{buy 1 stock}} = -1 + 2 = 1. $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add up today's cost of the recipe.</p>
+            <p class="k"><span class="kl">Why</span> Same payoff tomorrow means same price today; otherwise you could buy the cheap one, sell the dear one, and pocket the gap with no risk.</p>
+            <p class="k"><span class="kl">How</span> Borrowing 1 bond: $-1 \times 1 = -1$ (you receive 1). Buying 1 stock: $1 \times 2 = 2$ (you pay 2). Net: $-1 + 2 = 1$.</p>
+            $$ \underbrace{-1 \times 1}_{\text{borrow 1}} + \underbrace{1 \times 2}_{\text{buy 1 stock}} = -1 + 2 = 1. $$
+            <p class="k"><span class="kl">What we have now</span> The recipe costs $1$, so the option is worth $1$.</p>
+          </li>
+        </ol>
         <p>The option and the recipe pay the same tomorrow in every state, so they must cost the same today.</p>
         <p class="answer">The option is worth $1$ today.</p>
       </div>
@@ -1148,12 +2181,48 @@
     </details>
     <details class="proof"><summary>4. Compute $\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}\begin{bmatrix} 2 \\ -1 \end{bmatrix}$ by columns.</summary>
       <p>$2(1, 3) - 1(2, 4) = (2 - 2,\; 6 - 4) = (0, 2)$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Take 2 copies of column 1, $(1, 3)$.</p>
+          <p class="k"><span class="kl">How</span> $(2 \times 1,\ 2 \times 3) = (2, 6)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Take $-1$ copy of column 2, $(2, 4)$.</p>
+          <p class="k"><span class="kl">How</span> $(-1 \times 2,\ -1 \times 4) = (-2, -4)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Add box by box.</p>
+          <p class="k"><span class="kl">How</span> Top: $2 + (-2) = 0$. Bottom: $6 + (-4) = 2$.</p>
+          <p class="k"><span class="kl">Check by rows</span> Row 1: $1 \times 2 + 2 \times (-1) = 2 - 2 = 0$ ✓. Row 2: $3 \times 2 + 4 \times (-1) = 6 - 4 = 2$ ✓.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>5. For which $c$ is $\begin{bmatrix} 1 & 2 \\ 3 & c \end{bmatrix}$ singular?</summary>
       <p>It is singular when column 2 is a multiple of column 1: $(2, c) = 2(1, 3)$, so $c = 6$.</p>
     </details>
     <details class="proof"><summary>6. Write $3x - y = 5,\; x + 4y = 6$ in column form and solve it.</summary>
       <p>$x(3, 1) + y(-1, 4) = (5, 6)$. From the second equation $x = 6 - 4y$. Substituting gives $18 - 13y = 5$, so $y = 1$ and $x = 2$. Check: $2(3,1) + 1(-1,4) = (5, 6)$ ✓.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Get $x$ alone from $x + 4y = 6$.</p>
+          <p class="k"><span class="kl">How</span> Take $4y$ from both sides: $x = 6 - 4y$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Put it into $3x - y = 5$.</p>
+          <p class="k"><span class="kl">How, move 1</span> $3(6 - 4y) - y = 5$.</p>
+          <p class="k"><span class="kl">How, move 2</span> Open the bracket: $3 \times 6 = 18$, $3 \times (-4y) = -12y$. So $18 - 12y - y = 5$.</p>
+          <p class="k"><span class="kl">How, move 3</span> $-12y - y = -13y$: $18 - 13y = 5$.</p>
+          <p class="k"><span class="kl">How, move 4</span> Take 18 from both sides: $-13y = 5 - 18 = -13$.</p>
+          <p class="k"><span class="kl">How, move 5</span> Divide by $-13$: $y = 1$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Put $y = 1$ into $x = 6 - 4y$.</p>
+          <p class="k"><span class="kl">How</span> $4 \times 1 = 4$, then $6 - 4 = 2$. So $x = 2$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> $3x - y = 6 - 1 = 5$ ✓. $x + 4y = 2 + 4 = 6$ ✓.</p>
+        </li>
+      </ol>
     </details>
 
     </div>
@@ -1166,6 +2235,7 @@
   </div>
 </main>
 <script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script defer src="../assets/replication-lab.js"></script>
 <script>
 // Interactive 3D figures for section 8 (row picture: planes; column picture: vectors).
 window.addEventListener("load", function () {
@@ -1257,6 +2327,43 @@ window.addEventListener("load", function () {
   var ex5Layout = JSON.parse(JSON.stringify(layout));
   ex5Layout.scene = scene([-1, 3], [-1, 3], [-2, 6], { x: -0.7, y: -2.0, z: 1.2 });
   Plotly.newPlot("ex5plot3d", ex5, ex5Layout, config);
+
+  // ---- Example 2 (3D) plots ----
+  (function () {
+    var orangeC = c("--int-b");
+    function sc(xr, yr, zr, eye, t) {
+      var S = scene(xr, yr, zr, eye); S.xaxis.title.text = t[0]; S.yaxis.title.text = t[1]; S.zaxis.title.text = t[2]; return S;
+    }
+    function pl(pts, color, name) {
+      return { type: "mesh3d", name: name, opacity: 0.35, color: color, flatshading: true, hoverinfo: "name", showlegend: true,
+        x: pts.map(function (p) { return p[0]; }), y: pts.map(function (p) { return p[1]; }), z: pts.map(function (p) { return p[2]; }),
+        i: [0, 0], j: [1, 2], k: [2, 3] };
+    }
+    var L1 = JSON.parse(JSON.stringify(layout));
+    L1.scene = sc([-1, 3], [-1, 3], [-2, 4], { x: 1.7, y: -1.5, z: 0.9 }, ["lots A (x)", "lots B (y)", "lots C (z)"]);
+    Plotly.newPlot("l1e2row", [
+      pl([[-0.5, -1, 4], [2.5, -1, -2], [2.5, 3, -2], [-0.5, 3, 4]], blue, "19,900: 2x + z = 3"),
+      pl([[-1, 3, -2], [3, -1, -2], [3, -1, 4], [-1, 3, 4]], green, "20,000: x + y = 2"),
+      pl([[-1, 1, -2], [3, 1, -2], [3, 1, 4], [-1, 1, 4]], orangeC, "20,100: 2y = 2"),
+      { type: "scatter3d", mode: "markers+text", name: "answer (1, 1, 1)", marker: { color: red, size: 7 }, x: [1], y: [1], z: [1],
+        text: ["(1, 1, 1)"], textposition: "top right", textfont: { size: 14, color: red } }
+    ], L1, config);
+
+    function leg(a, b, color, name) {
+      return { type: "scatter3d", mode: "lines+markers", name: name, line: { color: color, width: 8 }, marker: { size: [2, 5], color: color },
+        x: [a[0], b[0]], y: [a[1], b[1]], z: [a[2], b[2]] };
+    }
+    var L2 = JSON.parse(JSON.stringify(layout));
+    L2.scene = sc([0, 4], [0, 3], [0, 3], { x: 1.6, y: -1.6, z: 0.9 }, ["pays at 19,900", "pays at 20,000", "pays at 20,100"]);
+    Plotly.newPlot("l1e2col", [
+      leg([0, 0, 0], [2, 1, 0], blue, "1 × A (2, 1, 0)"),
+      leg([2, 1, 0], [2, 2, 2], green, "+ 1 × B (0, 1, 2)"),
+      leg([2, 2, 2], [3, 2, 2], orangeC, "+ 1 × C (1, 0, 0)"),
+      { type: "scatter3d", mode: "lines", name: "target", line: { color: red, width: 4, dash: "dash" }, x: [0, 3], y: [0, 2], z: [0, 2] },
+      { type: "scatter3d", mode: "markers+text", name: "target (3, 2, 2)", marker: { color: red, size: 7 }, x: [3], y: [2], z: [2],
+        text: ["target (3, 2, 2)"], textposition: "middle right", textfont: { size: 14, color: red } }
+    ], L2, config);
+  })();
 
   // Plots drawn while their tab was hidden need a resize once the tab is shown.
   document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {

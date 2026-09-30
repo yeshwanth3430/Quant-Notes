@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solving Ax = b</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>Solving Ax = b: Row Reduced Form R</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 09</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 09</p>
+  <h1>Solving Ax = b: Row Reduced Form R</h1>
+  <p class="subtitle">The complete answer to any system of linear equations: when does a solution exist, how to find one, how to find all of them, and how the rank tells you which of these can happen.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
+        <li><a href="#s1">The lecture in five questions</a></li>
+        <li><a href="#s2">The system and the augmented matrix</a></li>
+        <li><a href="#s3">Elimination with the right side carried along</a></li>
+        <li><a href="#s4">When is there a solution?</a></li>
+        <li><a href="#s5">One particular solution</a></li>
+        <li><a href="#s6">The complete solution</a></li>
+        <li><a href="#s7">The picture: a shifted flat piece</a></li>
+        <li><a href="#s8">Rank limits: r ≤ m and r ≤ n</a></li>
+        <li><a href="#s9">The four cases</a></li>
+        <li><a href="#s10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained from the very beginning, with a tiny example and an everyday picture. Each section below repeats the words it uses, so you never have to scroll back.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Matrix</b> $A$</td><td>a table of numbers with rows and columns</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$</td><td>a spreadsheet</td></tr>
+      <tr><td><b>Row</b> / <b>column</b></td><td>one line read left→right / one line read top→bottom</td><td>row 1 $= (1, 2)$, column 1 $= (1, 3)$</td><td>row = one scenario; column = one product</td></tr>
+      <tr><td><b>$m \times n$</b></td><td>$m$ rows, $n$ columns</td><td>a $3 \times 4$ matrix has 3 rows, 4 columns</td><td>3 scenarios, 4 products</td></tr>
+      <tr><td><b>Unknowns</b> $x = (x_1, \dots, x_n)$</td><td>numbers we want to find, one per column</td><td>$x_1 + x_2 = 3$ has unknowns $x_1, x_2$</td><td>how many lots of each product</td></tr>
+      <tr><td><b>Right side</b> $b = (b_1, \dots, b_m)$</td><td>the numbers the equations must equal, one per row</td><td>in $x_1 + x_2 = 3$, the right side is $3$</td><td>what the client wants in each scenario</td></tr>
+      <tr><td><b>$Ax = b$</b></td><td>"mix the columns with amounts $x$ to get exactly $b$"</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}\begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 3 \\ 7 \end{bmatrix}$</td><td>build the client's payoff from the products</td></tr>
+      <tr><td><b>$Ax = 0$</b></td><td>the same, but the target is all zeros</td><td>$x_1 + x_2 = 0$</td><td>a position that pays nothing</td></tr>
+      <tr><td><b>Solution</b></td><td>an $x$ that makes every equation true</td><td>$(1, 2)$ solves $x_1 + x_2 = 3$</td><td>a recipe that works</td></tr>
+      <tr><td><b>Solvable</b></td><td>at least one solution exists</td><td>$x_1 + x_2 = 3$ is solvable</td><td>the order can be filled</td></tr>
+      <tr><td><b>Augmented matrix</b> $[A \mid b]$</td><td>$A$ with $b$ stuck on as an extra last column</td><td>$\left[\begin{array}{cc|c} 1 & 1 & 3 \end{array}\right]$</td><td>products + the client's order in one table</td></tr>
+      <tr><td><b>Elimination</b></td><td>subtract a multiple of one row from a row below to make zeros</td><td>row 2 − 3 × row 1</td><td>cancelling one unknown at a time</td></tr>
+      <tr><td><b>Pivot</b></td><td>the first non-zero number in a row after elimination</td><td>the $1$ in $\begin{bmatrix} \boxed{1} & 2 \end{bmatrix}$</td><td>a "leader" for its column</td></tr>
+      <tr><td><b>Multiplier</b></td><td>(number to remove) ÷ (pivot)</td><td>remove 3 under pivot 1: $3 \div 1 = 3$</td><td>how many copies of the leader row to subtract</td></tr>
+      <tr><td><b>Zero row</b></td><td>a row of $A$ that became all zeros</td><td>$(0, 0, 0, 0)$</td><td>a scenario that was a copy of others</td></tr>
+      <tr><td><b>Condition on $b$</b></td><td>a rule the right side must obey for a solution to exist</td><td>$b_3 = b_1 + b_2$</td><td>"the order must be consistent"</td></tr>
+      <tr><td><b>Column space</b> $C(A)$</td><td>all combinations of the columns: every $b$ that <i>can</i> be reached</td><td>columns $(1, 0), (0, 1)$ reach every $b$</td><td>every payoff the products can build</td></tr>
+      <tr><td><b>Nullspace</b> $N(A)$</td><td>all solutions of $Ax = 0$</td><td>for $\begin{bmatrix} 1 & 1 \end{bmatrix}$: all $c(1, -1)$</td><td>every "no profit, no loss" position</td></tr>
+      <tr><td><b>Pivot / free variable</b></td><td>pivot = forced by the equations; free = you may choose it</td><td>in $x_1 + 2x_2 = 0$: $x_1$ pivot, $x_2$ free</td><td>original product / copy product</td></tr>
+      <tr><td><b>Special solution</b></td><td>solution of $Ax = 0$ with one free variable 1, others 0</td><td>$(-2, 1)$ for $x_1 + 2x_2 = 0$</td><td>a basic zero-payoff copy trade</td></tr>
+      <tr><td><b>Particular solution</b> $x_p$</td><td><b>one</b> solution of $Ax = b$, made by setting all free variables to 0</td><td>for $x_1 + x_2 = 3$: $x_2 = 0 \Rightarrow x_p = (3, 0)$</td><td>one recipe that fills the order</td></tr>
+      <tr><td><b>Complete solution</b></td><td><b>all</b> solutions of $Ax = b$: $x = x_p + x_n$</td><td>$(3, 0) + c(1, -1)$</td><td>every recipe that fills the order</td></tr>
+      <tr><td><b>$x_n$</b></td><td>any vector from the nullspace</td><td>$c(1, -1)$</td><td>any zero-payoff add-on</td></tr>
+      <tr><td><b>Rank</b> $r$</td><td>the number of pivots</td><td>$\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$ has rank 1</td><td>how many truly different products</td></tr>
+      <tr><td><b>Full column rank</b></td><td>$r = n$: every column has a pivot</td><td>tall matrix like $4 \times 2$ with rank 2</td><td>no redundant products</td></tr>
+      <tr><td><b>Full row rank</b></td><td>$r = m$: every row has a pivot</td><td>wide matrix like $2 \times 4$ with rank 2</td><td>every scenario can be targeted: any order can be filled</td></tr>
+      <tr><td><b>Full rank / invertible</b></td><td>square and $r = m = n$</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix}$</td><td>exactly one recipe for every order</td></tr>
+      <tr><td><b>Unique</b></td><td>exactly one (at most one)</td><td>"a unique solution"</td><td>only one recipe</td></tr>
+      <tr><td><b>Reduced row echelon form</b> $R$</td><td>the tidiest staircase: pivots 1, zeros above and below them</td><td>$\begin{bmatrix} 1 & 0 & 3 \\ 0 & 1 & 2 \end{bmatrix}$</td><td>a fully tidied table</td></tr>
+      <tr><td><b>Identity</b> $I$</td><td>1s on the diagonal, 0s elsewhere</td><td>$\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$</td><td>"do nothing"</td></tr>
+      <tr><td><b>$F$</b></td><td>the numbers of $R$ in the pivot rows and free columns</td><td>in $\begin{bmatrix} 1 & 0 & 3 \\ 0 & 1 & 2 \end{bmatrix}$, $F = \begin{bmatrix} 3 \\ 2 \end{bmatrix}$</td><td>the recipe for copy products</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. The lecture in five questions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$Ax = b$ = "mix the columns of $A$ with amounts $x$ to get exactly $b$". Solution = amounts that work. Particular solution = one working $x$. Nullspace = all $x$ with $Ax = 0$. Rank = number of pivots.</p>
+    </div>
+    <p>Lecture 08 solved $Ax = 0$ (target = nothing). This lecture solves $Ax = b$ for <b>any target $b$</b>, completely.</p>
+    <table>
+      <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
+      <tr><td>1</td><td>Is there a solution at all?</td><td>Only if $b$ passes the <b>conditions</b> found by elimination (zero rows must say $0 = 0$).</td></tr>
+      <tr><td>2</td><td>How do I find one solution?</td><td>Set all free variables to 0, solve for the pivot variables: the <b>particular solution</b> $x_p$.</td></tr>
+      <tr><td>3</td><td>How do I find all solutions?</td><td>$x = x_p + x_n$: one particular solution <b>plus anything from the nullspace</b>.</td></tr>
+      <tr><td>4</td><td>What do the solutions look like?</td><td>A flat piece (line, plane, …) <b>shifted away from the origin</b>. Not a subspace.</td></tr>
+      <tr><td>5</td><td>How does the rank decide everything?</td><td>Comparing $r$ with $m$ (rows) and $n$ (columns) tells you whether there are 0, 1 or infinitely many solutions.</td></tr>
+    </table>
+    <div class="box finance"><span class="label">The trading question behind this lecture</span>
+      <p>Columns = products (CE, PE, bond, future…), rows = Nifty scenarios, $b$ = the payoff a client wants. The lecture answers: <b>Can I build the client's payoff? If yes, give me one recipe. Then give me every recipe.</b> The rank tells you in advance whether the answer will be "impossible", "exactly one way" or "infinitely many ways".</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">2. The system and the augmented matrix</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Right side $b = (b_1, b_2, b_3)$ = the numbers each equation must equal. Augmented matrix $[A \mid b]$ = the matrix $A$ with $b$ stuck on as an extra column, so that whatever we do to the rows of $A$ we also do to $b$.</p>
+    </div>
+    <p>Same matrix as Lecture 08, but now with a general right side:</p>
+    $$
+    \begin{aligned}
+      x_1 + 2x_2 + 2x_3 + 2x_4 &= b_1 \\
+      2x_1 + 4x_2 + 6x_3 + 8x_4 &= b_2 \\
+      3x_1 + 6x_2 + 8x_3 + 10x_4 &= b_3
+    \end{aligned}
+    \qquad
+    [A \mid b] = \left[\begin{array}{cccc|c} 1 & 2 & 2 & 2 & b_1 \\ 2 & 4 & 6 & 8 & b_2 \\ 3 & 6 & 8 & 10 & b_3 \end{array}\right]
+    $$
+    <p><b>Something to notice first:</b> row 3 of $A$ is row 1 + row 2: $(1 + 2,\ 2 + 4,\ 2 + 6,\ 2 + 8) = (3, 6, 8, 10)$ ✓. So the left side of equation 3 is always the left side of equation 1 plus the left side of equation 2.</p>
+    <div class="box theorem"><span class="label">So we can predict the condition</span>
+      <p>If left 1 + left 2 = left 3, then the right sides must also match: $b_1 + b_2 = b_3$. Otherwise equation 3 contradicts equations 1 and 2.</p>
+      <table>
+        <tr><th>$b$</th><th>$b_1 + b_2$</th><th>$b_3$</th><th>Can we solve?</th></tr>
+        <tr><td>$(1, 5, 6)$</td><td>$6$</td><td>$6$</td><td>yes (maybe)</td></tr>
+        <tr><td>$(1, 5, 17)$</td><td>$6$</td><td>$17$</td><td><b>no</b>: equations contradict each other</td></tr>
+      </table>
+    </div>
+    <p><b>Why the augmented matrix?</b> Every elimination step changes a whole equation, both sides. Writing $b$ as an extra column makes sure the right side gets exactly the same treatment. (In MATLAB: <code>[A b]</code>.)</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">3. Elimination with the right side carried along</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Elimination = subtract a multiple of one row from a row below to make zeros. Pivot = the first non-zero number of a row, used to clear below it. Multiplier = (number to remove) ÷ (pivot). The last column ($b$) goes along for the ride: it gets the same subtraction.</p>
+    </div>
+
+    <p>We solve it like a child would: one small move at a time. Each step says <b>what</b> we do, <b>why</b>, <b>how</b> (the actual numbers), and <b>what we have now</b>.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look at column 1. Pick the top number, the $1$ in row 1, as our <b>leader</b> (pivot).</p>
+        <p class="k"><span class="kl">Why</span> We want zeros under the leader. Then rows 2 and 3 no longer contain $x_1$, and a row with fewer unknowns is easier to solve.</p>
+        <p class="k"><span class="kl">What we have now</span> Leader $= 1$. Under it sit a $2$ (row 2) and a $3$ (row 3). Both must become $0$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Turn the $2$ in row 2 into $0$.</p>
+        <p class="k"><span class="kl">Why this amount</span> Ask: "how many leaders make 2?" $2 \div 1 = 2$. So we take away <b>2 copies of row 1</b> from row 2.</p>
+        <p class="k"><span class="kl">How</span> First make 2 copies of row 1: $2 \times (1, 2, 2, 2 \mid b_1) = (2, 4, 4, 4 \mid 2b_1)$. Then take them away, box by box:</p>
+        <table><tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>col 4</th><th>right side</th></tr>
+          <tr><td>Row 2</td><td>$2$</td><td>$4$</td><td>$6$</td><td>$8$</td><td>$b_2$</td></tr>
+          <tr><td>take away 2 × row 1</td><td>$-2$</td><td>$-4$</td><td>$-4$</td><td>$-4$</td><td>$-2b_1$</td></tr>
+          <tr><td><b>New row 2</b></td><td>$2-2=\mathbf{0}$</td><td>$4-4=\mathbf{0}$</td><td>$6-4=\mathbf{2}$</td><td>$8-4=\mathbf{4}$</td><td>$\mathbf{b_2 - 2b_1}$</td></tr>
+        </table>
+        <p class="k"><span class="kl">Why b changes too</span> Row 2 is a whole equation: left side $=$ right side. If we take $2$ copies of equation 1 away from the left side, we must take the same away from the right side, or the "$=$" stops being true. Equation 1's right side is $b_1$, so we take away $2b_1$.</p>
+        <p class="k"><span class="kl">What we have now</span> Row 2 $= (0, 0, 2, 4 \mid b_2 - 2b_1)$. The $x_1$ is gone from it. (Bonus: $x_2$ vanished too.)</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Turn the $3$ in row 3 into $0$.</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many leaders make 3?" $3 \div 1 = 3$. Take away <b>3 copies of row 1</b>.</p>
+        <p class="k"><span class="kl">How</span> 3 copies of row 1: $3 \times (1, 2, 2, 2 \mid b_1) = (3, 6, 6, 6 \mid 3b_1)$. Take them away:</p>
+        <table><tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>col 4</th><th>right side</th></tr>
+          <tr><td>Row 3</td><td>$3$</td><td>$6$</td><td>$8$</td><td>$10$</td><td>$b_3$</td></tr>
+          <tr><td>take away 3 × row 1</td><td>$-3$</td><td>$-6$</td><td>$-6$</td><td>$-6$</td><td>$-3b_1$</td></tr>
+          <tr><td><b>New row 3</b></td><td>$3-3=\mathbf{0}$</td><td>$6-6=\mathbf{0}$</td><td>$8-6=\mathbf{2}$</td><td>$10-6=\mathbf{4}$</td><td>$\mathbf{b_3 - 3b_1}$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Column 1 is cleaned: $(1, 0, 0)$ going down.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look for the next leader in row 2, column 2.</p>
+        <p class="k"><span class="kl">What we see</span> Row 2 has a $0$ there, and row 3 under it also has a $0$. There is no non-zero number to use.</p>
+        <p class="k"><span class="kl">Why we skip</span> A leader can't be $0$: we would have to divide by it. There's no row below with a non-zero number to swap in. So column 2 gets <b>no leader</b>, and $x_2$ will be a <b>free</b> variable.</p>
+        <p class="k"><span class="kl">What we have now</span> Move right to column 3. Row 2 has a $2$ there: that is leader number 2.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Turn the $2$ under it (row 3, column 3) into $0$.</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many leaders make 2?" $2 \div 2 = 1$. Take away <b>1 copy of row 2</b>.</p>
+        <p class="k"><span class="kl">How</span></p>
+        <table><tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>col 4</th><th>right side</th></tr>
+          <tr><td>Row 3</td><td>$0$</td><td>$0$</td><td>$2$</td><td>$4$</td><td>$b_3 - 3b_1$</td></tr>
+          <tr><td>take away 1 × row 2</td><td>$0$</td><td>$0$</td><td>$-2$</td><td>$-4$</td><td>$-(b_2 - 2b_1)$</td></tr>
+          <tr><td><b>New row 3</b></td><td>$\mathbf{0}$</td><td>$\mathbf{0}$</td><td>$2-2=\mathbf{0}$</td><td>$4-4=\mathbf{0}$</td><td>see below</td></tr>
+        </table>
+        <p class="k"><span class="kl">Right side, slowly</span> $b_3 - 3b_1 - (b_2 - 2b_1)$. Open the bracket: taking away "$-2b_1$" means adding $2b_1$, so it becomes $b_3 - 3b_1 - b_2 + 2b_1$. Put the $b_1$'s together: $-3b_1 + 2b_1 = -b_1$. Result: $\mathbf{b_3 - b_2 - b_1}$.</p>
+        <p class="k"><span class="kl">What we have now</span> The whole left side of row 3 is zeros.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Final picture</span> Leaders are boxed. The left part is the staircase $U$ from Lecture 08. The right column is now called $c$ ($b$ after the same moves).</p>
+        $$ [U \mid c] = \left[\begin{array}{cccc|c} \boxed{1} & 2 & 2 & 2 & b_1 \\ 0 & 0 & \boxed{2} & 4 & b_2 - 2b_1 \\ 0 & 0 & 0 & 0 & b_3 - b_2 - b_1 \end{array}\right] $$
+      </li>
+    </ol>
+
+    <!-- ====================================================== -->
+    <h2 id="s4">4. When is there a solution?</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Zero row = a row of the left part that became all zeros. Solvable = at least one solution exists. Condition on $b$ = a rule $b$ must satisfy. Column space = every $b$ that can be written as a combination of the columns.</p>
+    </div>
+    <p>Look at the last row: $0x_1 + 0x_2 + 0x_3 + 0x_4 = b_3 - b_2 - b_1$, i.e.</p>
+    $$ 0 = b_3 - b_2 - b_1 $$
+    <table>
+      <tr><th>If</th><th>The last row says</th><th>Result</th></tr>
+      <tr><td>$b_3 - b_2 - b_1 = 0$</td><td>$0 = 0$: always true</td><td>no contradiction: <b>solvable</b></td></tr>
+      <tr><td>$b_3 - b_2 - b_1 \ne 0$</td><td>$0 = $ something non-zero: impossible</td><td><b>no solution</b></td></tr>
+    </table>
+    <p class="answer">Condition for solvability: $b_1 + b_2 = b_3$, exactly as predicted.</p>
+    <p><b>With numbers, step by step:</b></p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Try $b = (1, 5, 6)$: put $b_1 = 1$, $b_2 = 5$, $b_3 = 6$ into the right column $c$.</p>
+        <p class="k"><span class="kl">How</span> Top: $c_1 = b_1 = 1$. Middle: $c_2 = b_2 - 2b_1 = 5 - 2 \times 1 = 5 - 2 = 3$. Bottom: $c_3 = b_3 - b_2 - b_1 = 6 - 5 - 1 = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> The last row reads $0 = 0$. True. <b>No fight between the equations: solvable ✓.</b></p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Try $b = (1, 5, 17)$.</p>
+        <p class="k"><span class="kl">How</span> Bottom: $c_3 = 17 - 5 - 1 = 11$.</p>
+        <p class="k"><span class="kl">What we have now</span> The last row reads $0x_1 + 0x_2 + 0x_3 + 0x_4 = 11$, i.e. $0 = 11$. Zero times anything is zero, so no choice of $x$ can make this true. <b>No solution ✗.</b></p>
+      </li>
+    </ol>
+
+    <h3>Two ways to say the same condition</h3>
+    <table>
+      <tr><th>Language</th><th>Condition</th><th>Why</th></tr>
+      <tr><td><b>Columns</b></td><td>$b$ is in the column space $C(A)$</td><td>$Ax$ is a combination of the columns; a solution exists exactly when $b$ is such a combination</td></tr>
+      <tr><td><b>Rows</b></td><td>if a combination of the <b>rows</b> of $A$ gives the zero row, the <b>same combination</b> of the entries of $b$ must give $0$</td><td>row 1 + row 2 − row 3 = zero row, so $b_1 + b_2 - b_3$ must be $0$</td></tr>
+    </table>
+    <div class="box finance"><span class="label">Market meaning</span>
+      <p>If one scenario's payoffs are always the sum of two others' (for every product), then <b>every</b> buildable payoff has that property too. A client order that breaks the pattern (e.g. wants $b = (1, 5, 17)$) simply cannot be built from these products.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s5">5. One particular solution</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Pivot variables = unknowns of pivot columns (here $x_1, x_3$), forced by the equations. Free variables = unknowns of columns without pivots (here $x_2, x_4$), which you may choose. Particular solution $x_p$ = the one solution you get by setting <b>all free variables to 0</b>. Back substitution = solve the bottom equation first, then go up.</p>
+    </div>
+    <p>Take the solvable right side $b = (1, 5, 6)$. After elimination, $c = (1, 3, 0)$, so the equations are</p>
+    $$
+    \begin{aligned}
+      x_1 + 2x_2 + 2x_3 + 2x_4 &= 1 \\
+      2x_3 + 4x_4 &= 3 \\
+      0 &= 0 \quad (\text{fine})
+    \end{aligned}
+    $$
+    <div class="box theorem"><span class="label">Recipe for a particular solution</span>
+      <ol>
+        <li>Check every zero row says $0 = 0$ (otherwise: no solution, stop).</li>
+        <li>Set <b>all free variables to 0</b>.</li>
+        <li>Solve for the pivot variables by back substitution.</li>
+      </ol>
+    </div>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look at the zero row first.</p>
+        <p class="k"><span class="kl">Why</span> If it said $0 = 11$, there would be no solution and we would stop right here.</p>
+        <p class="k"><span class="kl">What we have now</span> It says $0 = 0$. Safe to go on.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Sort the unknowns into "leaders" and "free".</p>
+        <p class="k"><span class="kl">How</span> Leaders sit in columns 1 and 3, so $x_1$ and $x_3$ are <b>pivot variables</b>. Columns 2 and 4 have no leader, so $x_2$ and $x_4$ are <b>free</b>.</p>
+        <p class="k"><span class="kl">Why</span> Pivot variables are forced by the equations. Free variables are ours to choose.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Choose the free ones: $x_2 = 0$ and $x_4 = 0$.</p>
+        <p class="k"><span class="kl">Why 0</span> It's the easiest number: anything times 0 is 0, so those terms simply disappear.</p>
+        <p class="k"><span class="kl">How</span> In row 1: $2x_2 = 2 \times 0 = 0$ and $2x_4 = 2 \times 0 = 0$ vanish, leaving $x_1 + 2x_3 = 1$. In row 2: $4x_4 = 4 \times 0 = 0$ vanishes, leaving $2x_3 = 3$.</p>
+        <p class="k"><span class="kl">What we have now</span> Two small equations: $x_1 + 2x_3 = 1$ and $2x_3 = 3$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Solve the <b>bottom</b> one first: $2x_3 = 3$.</p>
+        <p class="k"><span class="kl">Why bottom first</span> It has only one unknown, so we can answer it straight away.</p>
+        <p class="k"><span class="kl">How</span> "2 times what is 3?" Split both sides into 2 equal halves: $x_3 = 3 \div 2 = \tfrac32 = 1.5$. Check: $2 \times 1.5 = 3$ ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_3 = \tfrac32$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Go <b>up</b> to row 1 and use what we just found: $x_1 + 2x_3 = 1$.</p>
+        <p class="k"><span class="kl">How</span> Put $x_3 = \tfrac32$ in: $2 \times \tfrac32 = 3$, so $x_1 + 3 = 1$. "What plus 3 gives 1?" Take 3 away from both sides: $x_1 = 1 - 3 = -2$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_1 = -2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put the four numbers together in order $x_1, x_2, x_3, x_4$.</p>
+        $$ x_p = \begin{bmatrix} -2 \\ 0 \\ \tfrac32 \\ 0 \end{bmatrix} \quad \begin{matrix} \leftarrow \text{found in step 5} \\ \leftarrow \text{chosen in step 3} \\ \leftarrow \text{found in step 4} \\ \leftarrow \text{chosen in step 3} \end{matrix} $$
+      </li>
+    </ol>
+    <p><b>Check in the original $A$</b> (always do this):</p>
+    <table>
+      <tr><th>Row of $A$</th><th>Row · $x_p$</th><th>Should be</th></tr>
+      <tr><td>$(1, 2, 2, 2)$</td><td>$1(-2) + 0 + 2(\tfrac32) + 0 = -2 + 3 = 1$</td><td>$b_1 = 1$ ✓</td></tr>
+      <tr><td>$(2, 4, 6, 8)$</td><td>$2(-2) + 0 + 6(\tfrac32) + 0 = -4 + 9 = 5$</td><td>$b_2 = 5$ ✓</td></tr>
+      <tr><td>$(3, 6, 8, 10)$</td><td>$3(-2) + 0 + 8(\tfrac32) + 0 = -6 + 12 = 6$</td><td>$b_3 = 6$ ✓</td></tr>
+    </table>
+    <div class="box intuition"><span class="label">Why set the free variables to 0?</span>
+      <p>Any values would work, but 0 is the easiest: the free columns disappear and only the pivot columns remain, which always have exactly one answer by back substitution. In trading terms: "use only the original products, none of the copies".</p>
+    </div>
+    <p><b>Shortcut with $R$:</b> going on to reduced form, $[R \mid d] = \left[\begin{array}{cccc|c} 1 & 2 & 0 & -2 & -2 \\ 0 & 0 & 1 & 2 & \tfrac32 \\ 0 & 0 & 0 & 0 & 0 \end{array}\right]$. With the free variables 0, the pivot variables are simply the right-side numbers: $x_1 = -2$, $x_3 = \tfrac32$ ✓.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">6. The complete solution</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$x_p$ = one particular solution ($Ax_p = b$). $x_n$ = any vector in the nullspace ($Ax_n = 0$). Special solutions = the basic nullspace vectors (one free variable 1, the others 0). Complete solution = the collection of <b>every</b> solution.</p>
+    </div>
+    <div class="box theorem"><span class="label">The complete solution</span>
+      $$ x = x_p + x_n $$
+      <p><b>Why it works:</b> $A(x_p + x_n) = Ax_p + Ax_n = b + 0 = b$ ✓. Adding anything that produces zero doesn't change the result.</p>
+      <p><b>Why it catches every solution:</b> if $x$ and $x_p$ both solve $Ax = b$, then $A(x - x_p) = b - b = 0$, so $x - x_p$ is in the nullspace. So $x = x_p + (\text{something in the nullspace})$.</p>
+    </div>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Keep the one answer we found: $x_p = (-2, 0, \tfrac32, 0)$.</p>
+        <p class="k"><span class="kl">Why</span> It hits the target $b$ exactly. Everything else will be built on top of it.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find the "makes-nothing" vectors (special solutions of $Ax = 0$), the same way as Lecture 08.</p>
+        <p class="k"><span class="kl">How, first one</span> Set $x_2 = 1$, $x_4 = 0$, right side $0$. Row 2: $2x_3 + 4 \times 0 = 0$, so $2x_3 = 0$, so $x_3 = 0$. Row 1: $x_1 + 2 \times 1 + 2 \times 0 + 2 \times 0 = 0$, so $x_1 + 2 = 0$, so $x_1 = -2$. Result $s_1 = (-2, 1, 0, 0)$.</p>
+        <p class="k"><span class="kl">How, second one</span> Set $x_2 = 0$, $x_4 = 1$. Row 2: $2x_3 + 4 \times 1 = 0$, so $2x_3 = -4$, so $x_3 = -2$. Row 1: $x_1 + 0 + 2 \times (-2) + 2 \times 1 = 0$, so $x_1 - 4 + 2 = 0$, so $x_1 - 2 = 0$, so $x_1 = 2$. Result $s_2 = (2, 0, -2, 1)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Every "makes-nothing" vector is $c_1 s_1 + c_2 s_2$ for any numbers $c_1, c_2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add them to $x_p$.</p>
+        <p class="k"><span class="kl">Why</span> Adding something that makes 0 to something that makes $b$ still makes $b + 0 = b$.</p>
+        $$ x = \underbrace{\begin{bmatrix} -2 \\ 0 \\ \tfrac32 \\ 0 \end{bmatrix}}_{x_p} + \underbrace{c_1 \begin{bmatrix} -2 \\ 1 \\ 0 \\ 0 \end{bmatrix} + c_2 \begin{bmatrix} 2 \\ 0 \\ -2 \\ 1 \end{bmatrix}}_{x_n} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Test it: pick $c_1 = 1$, $c_2 = 0$ and build that solution.</p>
+        <p class="k"><span class="kl">How</span> Add box by box: $(-2 + (-2),\ 0 + 1,\ \tfrac32 + 0,\ 0 + 0) = (-4, 1, \tfrac32, 0)$.</p>
+        <p class="k"><span class="kl">Check every row of $A$</span></p>
+        <table>
+          <tr><th>Row of $A$</th><th>Multiply and add</th><th>Should be</th></tr>
+          <tr><td>$(1, 2, 2, 2)$</td><td>$1(-4) + 2(1) + 2(\tfrac32) + 2(0) = -4 + 2 + 3 + 0 = 1$</td><td>$1$ ✓</td></tr>
+          <tr><td>$(2, 4, 6, 8)$</td><td>$2(-4) + 4(1) + 6(\tfrac32) + 8(0) = -8 + 4 + 9 + 0 = 5$</td><td>$5$ ✓</td></tr>
+          <tr><td>$(3, 6, 8, 10)$</td><td>$3(-4) + 6(1) + 8(\tfrac32) + 10(0) = -12 + 6 + 12 + 0 = 6$</td><td>$6$ ✓</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> A second, different answer that also works. Any $c_1, c_2$ gives another.</p>
+      </li>
+    </ol>
+    <table>
+      <tr><th>Pick</th><th>Solution</th><th>Check row 1: $x_1 + 2x_2 + 2x_3 + 2x_4$ (should be 1)</th></tr>
+      <tr><td>$c_1 = 0, c_2 = 0$</td><td>$(-2, 0, \tfrac32, 0)$</td><td>$-2 + 0 + 3 + 0 = 1$ ✓</td></tr>
+      <tr><td>$c_1 = 1, c_2 = 0$</td><td>$(-4, 1, \tfrac32, 0)$</td><td>$-4 + 2 + 3 + 0 = 1$ ✓</td></tr>
+      <tr><td>$c_1 = 0, c_2 = 1$</td><td>$(0, 0, -\tfrac12, 1)$</td><td>$0 + 0 - 1 + 2 = 1$ ✓</td></tr>
+    </table>
+    <div class="box pitfall"><span class="label">Watch out: no constant in front of x_p</span>
+      <p>You may multiply $x_n$ by anything ($3x_n$ still gives 0). You may <b>not</b> multiply $x_p$: $A(3x_p) = 3b \ne b$. So it's exactly <b>one</b> $x_p$, plus <b>any</b> nullspace vector.</p>
+    </div>
+    <div class="box finance"><span class="label">Market meaning</span>
+      <p>$x_p$ = one recipe that builds the client's payoff. $x_n$ = any "no profit, no loss" add-on. Every recipe = that one recipe + some zero-payoff trade. All recipes pay the same, so if they cost different amounts today, you can sell the dear one and buy the cheap one: <b>arbitrage</b>.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">7. The picture: a shifted flat piece</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Subspace = a flat collection through the origin that you can't leave by adding or scaling. Origin = the zero vector. "Shifted" = moved away from the origin without tilting.</p>
+    </div>
+    <p>Here $x$ has 4 numbers, so the solutions live in 4-dimensional space: impossible to draw. But the shape is:</p>
+    <table>
+      <tr><th>Piece</th><th>Shape here</th><th>Through the origin?</th><th>Subspace?</th></tr>
+      <tr><td>nullspace (all $x_n$)</td><td>a 2-dimensional flat piece (2 free constants $c_1, c_2$)</td><td>yes</td><td>yes</td></tr>
+      <tr><td>all solutions $x_p + x_n$</td><td>the same flat piece, <b>shifted</b> to pass through $x_p$</td><td><b>no</b> ($A \cdot 0 = 0 \ne b$)</td><td><b>no</b></td></tr>
+    </table>
+    <p>A 3D picture of the same idea, for the smaller system $x + y + z = 3$ (one equation, three unknowns):</p>
+    <figure class="fig plot3d">
+      <div id="l9plot" class="plot3d-box" role="img" aria-label="Nullspace plane through origin and parallel solution plane through x_p"></div>
+      <figcaption><b>Purple:</b> the nullspace, all solutions of $x + y + z = 0$, a plane through the origin. <b>Green:</b> all solutions of $x + y + z = 3$: the same plane shifted to pass through $x_p = (3, 0, 0)$ (red). Every green point is $x_p$ + a purple point. <b>Drag to rotate.</b></figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">8. Rank limits: r ≤ m and r ≤ n</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$m$ = number of rows (equations). $n$ = number of columns (unknowns). Rank $r$ = number of pivots. Each pivot lives in its own row and its own column.</p>
+    </div>
+    <table>
+      <tr><th>Fact</th><th>Why</th></tr>
+      <tr><td>$r \le m$</td><td>each row can hold at most one pivot, and there are only $m$ rows</td></tr>
+      <tr><td>$r \le n$</td><td>each column can hold at most one pivot, and there are only $n$ columns</td></tr>
+    </table>
+    <p>So the rank is at most the smaller of $m$ and $n$. <b>Full rank</b> means the rank is as big as it can be. There are three kinds of "full", plus "not full":</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s9">9. The four cases</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Full column rank: $r = n$ (a pivot in every column, no free variables). Full row rank: $r = m$ (a pivot in every row, no zero rows). Unique = at most one solution. $R$ = reduced row echelon form. $I$ = identity. $F$ = free part of $R$.</p>
+    </div>
+
+    <h3>Case 1: full column rank, r = n (tall and thin)</h3>
+    <table>
+      <tr><th>Consequence</th><th>Why</th></tr>
+      <tr><td>no free variables</td><td>every column has a pivot</td></tr>
+      <tr><td>nullspace $= \{0\}$ only</td><td>no free variable to set to 1, so no special solutions</td></tr>
+      <tr><td>$x = x_p$: <b>0 or 1</b> solution</td><td>nothing to add from the nullspace; but zero rows may block some $b$</td></tr>
+      <tr><td>$R = \begin{bmatrix} I \\ 0 \end{bmatrix}$</td><td>identity on top, zero rows below</td></tr>
+    </table>
+    <p><b>Example:</b> $A = \begin{bmatrix} 1 & 3 \\ 2 & 1 \\ 6 & 1 \\ 5 & 1 \end{bmatrix}$ ($4 \times 2$, rank 2). The two columns point in different directions, so both get pivots. Four equations, two unknowns: most $b$ fail. But $b = (4, 3, 7, 6) = $ column 1 + column 2 works, with the <b>only</b> solution $x = (1, 1)$.</p>
+
+    <h3>Case 2: full row rank, r = m (short and wide)</h3>
+    <table>
+      <tr><th>Consequence</th><th>Why</th></tr>
+      <tr><td>no zero rows</td><td>every row has a pivot</td></tr>
+      <tr><td>solvable for <b>every</b> $b$</td><td>no zero row means no condition on $b$</td></tr>
+      <tr><td>$n - r = n - m$ free variables</td><td>the columns left over after the $m$ pivots</td></tr>
+      <tr><td><b>infinitely many</b> solutions (if $n > m$)</td><td>$x_p$ + a whole nullspace</td></tr>
+      <tr><td>$R = \begin{bmatrix} I & F \end{bmatrix}$ (columns possibly mixed)</td><td>identity in the pivot columns, free part elsewhere</td></tr>
+    </table>
+    <p><b>Example:</b> $A = \begin{bmatrix} 1 & 2 & 6 & 5 \\ 3 & 1 & 1 & 1 \end{bmatrix}$ ($2 \times 4$, rank 2). Two pivots (columns 1, 2), two free variables. Every $b$ can be reached, in infinitely many ways.</p>
+
+    <h3>Case 3: full rank, r = m = n (square, invertible)</h3>
+    <table>
+      <tr><th>Consequence</th><th>Why</th></tr>
+      <tr><td>$R = I$</td><td>square with a pivot in every row and column</td></tr>
+      <tr><td>nullspace $= \{0\}$</td><td>$r = n$</td></tr>
+      <tr><td>solvable for every $b$</td><td>$r = m$</td></tr>
+      <tr><td><b>exactly one</b> solution, for every $b$</td><td>both at once: the matrix is <b>invertible</b> (Lecture 04)</td></tr>
+    </table>
+    <p><b>Example:</b> $A = \begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix}$: row 2 − 3 × row 1 $= (0, -5)$, two pivots, $R = I$.</p>
+
+    <h3>Case 4: r &lt; m and r &lt; n (not full in either direction)</h3>
+    <table>
+      <tr><th>Consequence</th><th>Why</th></tr>
+      <tr><td>zero rows exist</td><td>$r &lt; m$: some $b$ fail the condition</td></tr>
+      <tr><td>free variables exist</td><td>$r &lt; n$: a nullspace beyond 0</td></tr>
+      <tr><td><b>0 or infinitely many</b> solutions</td><td>either $b$ fails, or $x_p$ + a whole nullspace</td></tr>
+      <tr><td>$R = \begin{bmatrix} I & F \\ 0 & 0 \end{bmatrix}$</td><td>identity, free part, zero rows</td></tr>
+    </table>
+    <p>The lecture's main $3 \times 4$ matrix (rank 2) is this case: $b = (1, 5, 17)$ gives no solution; $b = (1, 5, 6)$ gives infinitely many.</p>
+
+    <div class="box theorem"><span class="label">The whole lecture in one table</span>
+      <table>
+        <tr><th>Rank</th><th>Shape of $R$</th><th>Number of solutions of $Ax = b$</th><th>Market meaning</th></tr>
+        <tr><td>$r = m = n$</td><td>$I$</td><td><b>exactly 1</b></td><td>every payoff buildable, in exactly one way</td></tr>
+        <tr><td>$r = n &lt; m$</td><td>$\begin{bmatrix} I \\ 0 \end{bmatrix}$</td><td><b>0 or 1</b></td><td>no redundant products, but not every payoff is buildable</td></tr>
+        <tr><td>$r = m &lt; n$</td><td>$\begin{bmatrix} I & F \end{bmatrix}$</td><td><b>∞</b> (always at least 1)</td><td>complete market: every payoff buildable, many recipes</td></tr>
+        <tr><td>$r &lt; m, r &lt; n$</td><td>$\begin{bmatrix} I & F \\ 0 & 0 \end{bmatrix}$</td><td><b>0 or ∞</b></td><td>some payoffs impossible; possible ones have many recipes</td></tr>
+      </table>
+      <p><b>The rank tells you everything about the number of solutions.</b> Only the actual numbers in the solutions need the full calculation.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <div class="box finance"><span class="label">In finance</span>
+      <ul>
+        <li><b>Solvability</b> = can this payoff be replicated? It needs $b$ in the column space: the client's order must obey the same patterns all products obey.</li>
+        <li><b>Particular solution</b> = one hedge recipe; <b>complete solution</b> = every hedge recipe (one recipe + any zero-payoff trade). Different recipes costing different amounts = arbitrage.</li>
+        <li><b>Full row rank</b> ($r = m$) = a <b>complete market</b>: every payoff over these scenarios can be built. <b>Full column rank</b> ($r = n$) = <b>no redundant products</b>: each buildable payoff has one recipe. Examples 1 and 7 work through both with Nifty options.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s10">10. Summary</h2>
+    <table>
+      <tr><th>Idea</th><th>In one line</th></tr>
+      <tr><td>Augmented matrix $[A \mid b]$</td><td>carry $b$ along as an extra column so it gets the same row operations.</td></tr>
+      <tr><td>Solvability</td><td>every zero row must end as $0 = 0$; equivalently $b \in C(A)$.</td></tr>
+      <tr><td>Row version of the condition</td><td>a row combination giving the zero row forces the same combination of $b$ to be 0.</td></tr>
+      <tr><td>Particular solution $x_p$</td><td>free variables = 0, solve for the pivot variables.</td></tr>
+      <tr><td>Complete solution</td><td>$x = x_p + x_n$: one particular + any nullspace vector.</td></tr>
+      <tr><td>Shape</td><td>the nullspace shifted to pass through $x_p$; not a subspace.</td></tr>
+      <tr><td>Rank bounds</td><td>$r \le m$ and $r \le n$.</td></tr>
+      <tr><td>Four cases</td><td>$r = m = n$: 1; $r = n &lt; m$: 0 or 1; $r = m &lt; n$: ∞; $r &lt; m, n$: 0 or ∞.</td></tr>
+    </table>
+    <dl class="vocab">
+      <dt>Augmented matrix</dt><dd>$A$ with $b$ attached as a last column.</dd>
+      <dt>Solvable</dt><dd>has at least one solution.</dd>
+      <dt>Particular solution</dt><dd>one solution of $Ax = b$, with all free variables 0.</dd>
+      <dt>Complete solution</dt><dd>all solutions: $x_p + x_n$.</dd>
+      <dt>Full column rank</dt><dd>$r = n$: pivot in every column; nullspace $\{0\}$.</dd>
+      <dt>Full row rank</dt><dd>$r = m$: pivot in every row; solvable for every $b$.</dd>
+      <dt>Invertible</dt><dd>square with $r = m = n$; exactly one solution for every $b$.</dd>
+    </dl>
+  </div>
+  </section>
+
+  <!-- ================= EXAMPLES ================= -->
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+
+    <h2>Worked examples</h2>
+
+    <!-- E1 -->
+    <div class="worked">
+      <h3>Example 1: Can the client's Nifty payoff be built, and in how many ways? (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>At expiry Nifty ends at <b>19,900</b>, <b>20,000</b> or <b>20,100</b>. Four products (payoffs in points ÷ 100, same market as Lecture 08):</p>
+        <table>
+          <tr><th>Product</th><th>19,900</th><th>20,000</th><th>20,100</th><th>Price today</th></tr>
+          <tr><td><b>1.</b> 19,800 CE</td><td>$1$</td><td>$2$</td><td>$3$</td><td>$205$</td></tr>
+          <tr><td><b>2.</b> 20,200 PE</td><td>$3$</td><td>$2$</td><td>$1$</td><td>$195$</td></tr>
+          <tr><td><b>3.</b> Bond</td><td>$1$</td><td>$1$</td><td>$1$</td><td>$99$</td></tr>
+          <tr><td><b>4.</b> Future @ 20,000</td><td>$-1$</td><td>$0$</td><td>$1$</td><td>$0$</td></tr>
+        </table>
+        <p>(a) Which client payoffs $b = (b_1, b_2, b_3)$ can be built? (b) Client A wants $(2, 3, 4)$ and client B wants $(0, 0, 1)$ (like a 20,000 CE). Which can you build? (c) For the buildable one, find one recipe, then every recipe, and compare costs.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Column = one product's payoffs. Row = one scenario. $b$ = client's wanted payoff. Solvable = buildable. Particular solution = one recipe. Nullspace = zero-payoff trades. Complete solution = every recipe.</p>
+      </div>
+      <div class="steps">
+        <h4>(a) Which payoffs can be built? Step by step</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Write the problem as one table: each <b>column</b> is a product, each <b>row</b> is a Nifty level, and the last column is the client's wish $b$.</p>
+            <p class="k"><span class="kl">Why</span> Row 1 says "at 19,900, (lots of CE)×1 + (lots of PE)×3 + (bonds)×1 + (futures)×(−1) must equal $b_1$". Same for the other rows.</p>
+            $$ [A \mid b] = \left[\begin{array}{cccc|c} 1 & 3 & 1 & -1 & b_1 \\ 2 & 2 & 1 & 0 & b_2 \\ 3 & 1 & 1 & 1 & b_3 \end{array}\right] $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Leader = the $1$ at the top of column 1. Clear the $2$ under it.</p>
+            <p class="k"><span class="kl">Why this amount</span> $2 \div 1 = 2$, so take away 2 copies of row 1. Two copies: $(2, 6, 2, -2 \mid 2b_1)$.</p>
+            <table><tr><th></th><th>CE</th><th>PE</th><th>bond</th><th>future</th><th>right side</th></tr>
+              <tr><td>Row 2</td><td>$2$</td><td>$2$</td><td>$1$</td><td>$0$</td><td>$b_2$</td></tr>
+              <tr><td>take away 2 × row 1</td><td>$-2$</td><td>$-6$</td><td>$-2$</td><td>$+2$</td><td>$-2b_1$</td></tr>
+              <tr><td><b>New row 2</b></td><td>$\mathbf{0}$</td><td>$2-6=\mathbf{-4}$</td><td>$1-2=\mathbf{-1}$</td><td>$0-(-2)=\mathbf{2}$</td><td>$\mathbf{b_2 - 2b_1}$</td></tr>
+            </table>
+            <p class="k"><span class="kl">Careful</span> In the future column, taking away $-2$ is the same as adding $2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Clear the $3$ in row 3. $3 \div 1 = 3$ copies. Three copies: $(3, 9, 3, -3 \mid 3b_1)$.</p>
+            <table><tr><th></th><th>CE</th><th>PE</th><th>bond</th><th>future</th><th>right side</th></tr>
+              <tr><td>Row 3</td><td>$3$</td><td>$1$</td><td>$1$</td><td>$1$</td><td>$b_3$</td></tr>
+              <tr><td>take away 3 × row 1</td><td>$-3$</td><td>$-9$</td><td>$-3$</td><td>$+3$</td><td>$-3b_1$</td></tr>
+              <tr><td><b>New row 3</b></td><td>$\mathbf{0}$</td><td>$1-9=\mathbf{-8}$</td><td>$1-3=\mathbf{-2}$</td><td>$1+3=\mathbf{4}$</td><td>$\mathbf{b_3 - 3b_1}$</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Next leader: the $-4$ in row 2, column 2. Clear the $-8$ under it.</p>
+            <p class="k"><span class="kl">Why this amount</span> "How many $-4$'s make $-8$?" $-8 \div -4 = 2$ (minus divided by minus is plus). Take away 2 copies of the new row 2: $(0, -8, -2, 4 \mid 2b_2 - 4b_1)$.</p>
+            <table><tr><th></th><th>CE</th><th>PE</th><th>bond</th><th>future</th><th>right side</th></tr>
+              <tr><td>Row 3</td><td>$0$</td><td>$-8$</td><td>$-2$</td><td>$4$</td><td>$b_3 - 3b_1$</td></tr>
+              <tr><td>take away 2 × row 2</td><td>$0$</td><td>$+8$</td><td>$+2$</td><td>$-4$</td><td>$-2b_2 + 4b_1$</td></tr>
+              <tr><td><b>New row 3</b></td><td>$\mathbf{0}$</td><td>$\mathbf{0}$</td><td>$\mathbf{0}$</td><td>$\mathbf{0}$</td><td>$b_3 - 3b_1 - 2b_2 + 4b_1$</td></tr>
+            </table>
+            <p class="k"><span class="kl">Right side, slowly</span> Put the $b_1$'s together: $-3b_1 + 4b_1 = b_1$. So the right side is $\mathbf{b_1 - 2b_2 + b_3}$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we have now</span> Row 3 reads $0 = b_1 - 2b_2 + b_3$. The client's wish can be built only if this is zero.</p>
+            <p class="k"><span class="kl">In plain words</span> $b_1 - 2b_2 + b_3 = 0$ means $b_2 - b_1 = b_3 - b_2$: the payoff goes up (or down) by the <b>same step</b> from 19,900 to 20,000 as from 20,000 to 20,100. A straight line. Every one of our four products is a straight line, so mixing them only ever gives straight lines.</p>
+          </li>
+        </ol>
+        <p class="answer">Buildable exactly when $b_1 - 2b_2 + b_3 = 0$, i.e. the payoff is a straight line in Nifty (equal steps).</p>
+        <h4>(b) The two clients</h4>
+        <table>
+          <tr><th>Client</th><th>$b_1 - 2b_2 + b_3$, slowly</th><th>Buildable?</th></tr>
+          <tr><td>A: $(2, 3, 4)$</td><td>$2 - 2 \times 3 + 4 = 2 - 6 + 4 = 0$</td><td><b>yes</b> (steps $+1$, $+1$: straight)</td></tr>
+          <tr><td>B: $(0, 0, 1)$</td><td>$0 - 2 \times 0 + 1 = 1 \ne 0$</td><td><b>no</b> (steps $0$, then $+1$: a kink, like a real 20,000 CE)</td></tr>
+        </table>
+        <h4>(c) Client A: one recipe, step by step</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $b = (2, 3, 4)$ into the right column we built in (a).</p>
+            <p class="k"><span class="kl">How</span> Top: $b_1 = 2$. Middle: $b_2 - 2b_1 = 3 - 4 = -1$. Bottom: $2 - 6 + 4 = 0$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> $\;x_1 + 3x_2 + x_3 - x_4 = 2\;$ and $\;-4x_2 - x_3 + 2x_4 = -1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Leaders are in columns 1 (CE) and 2 (PE). Bond ($x_3$) and future ($x_4$) are free. Set them to $0$.</p>
+            <p class="k"><span class="kl">Why</span> "First try using only the options, no bonds, no futures." The zero terms vanish: $x_1 + 3x_2 = 2$ and $-4x_2 = -1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Bottom first: $-4x_2 = -1$.</p>
+            <p class="k"><span class="kl">How</span> Divide both sides by $-4$: $x_2 = \frac{-1}{-4} = \frac14$ (two minuses make a plus). Check: $-4 \times \tfrac14 = -1$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> PE lots $= \tfrac14 = 0.25$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Go up: $x_1 + 3x_2 = 2$.</p>
+            <p class="k"><span class="kl">How</span> $3 \times \tfrac14 = \tfrac34$. So $x_1 + \tfrac34 = 2$. Take $\tfrac34$ away from both sides: $x_1 = 2 - \tfrac34 = \tfrac84 - \tfrac34 = \tfrac54$.</p>
+            <p class="k"><span class="kl">What we have now</span> CE lots $= \tfrac54 = 1.25$. So $x_p = (\tfrac54, \tfrac14, 0, 0)$: <b>buy 1.25 CE + 0.25 PE</b>.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check at every Nifty level (payoff tomorrow).</p>
+            <table>
+              <tr><th>Nifty</th><th>1.25 × CE + 0.25 × PE</th><th>Client wants</th></tr>
+              <tr><td>19,900</td><td>$1.25(1) + 0.25(3) = 1.25 + 0.75 = 2$</td><td>$2$ ✓</td></tr>
+              <tr><td>20,000</td><td>$1.25(2) + 0.25(2) = 2.5 + 0.5 = 3$</td><td>$3$ ✓</td></tr>
+              <tr><td>20,100</td><td>$1.25(3) + 0.25(1) = 3.75 + 0.25 = 4$</td><td>$4$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
+        <h4>(c) Every recipe, step by step</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find the zero-payoff trades: set bond $= 1$, future $= 0$, right side $0$.</p>
+            <p class="k"><span class="kl">How</span> Row 2: $-4x_2 - 1 = 0$, so $-4x_2 = 1$, so $x_2 = -\tfrac14$. Row 1: $x_1 + 3(-\tfrac14) + 1 = 0$, so $x_1 - \tfrac34 + 1 = 0$, so $x_1 + \tfrac14 = 0$, so $x_1 = -\tfrac14$.</p>
+            <p class="k"><span class="kl">What we have now</span> $s_1 = (-\tfrac14, -\tfrac14, 1, 0)$: sell 0.25 CE, sell 0.25 PE, buy 1 bond. At 19,900: $-0.25 - 0.75 + 1 = 0$. Pays nothing ✓.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Second one: bond $= 0$, future $= 1$.</p>
+            <p class="k"><span class="kl">How</span> Row 2: $-4x_2 + 2 = 0$, so $x_2 = \tfrac12$. Row 1: $x_1 + \tfrac32 - 1 = 0$, so $x_1 + \tfrac12 = 0$, so $x_1 = -\tfrac12$.</p>
+            <p class="k"><span class="kl">What we have now</span> $s_2 = (-\tfrac12, \tfrac12, 0, 1)$: sell 0.5 CE, buy 0.5 PE, buy 1 future. At 19,900: $-0.5 + 1.5 + 0 - 1 = 0$ ✓.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Every recipe = our recipe + any amount of these.</p>
+            $$ x = (\tfrac54, \tfrac14, 0, 0) + c\,(-\tfrac14, -\tfrac14, 1, 0) + d\,(-\tfrac12, \tfrac12, 0, 1) $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Build three recipes and price them (price today, CE 205, PE 195, bond 99, future 0).</p>
+            <p class="k"><span class="kl">How, for c = 1, d = 2</span> CE: $\tfrac54 - \tfrac14 - 2 \times \tfrac12 = \tfrac54 - \tfrac14 - 1 = 1 - 1 = 0$. PE: $\tfrac14 - \tfrac14 + 2 \times \tfrac12 = 1$. Bond: $1$. Future: $2$. So $(0, 1, 1, 2)$.</p>
+            <table>
+              <tr><th>$c, d$</th><th>Recipe (CE, PE, bond, future)</th><th>In words</th><th>Payoff tomorrow</th><th>Price today, slowly</th></tr>
+              <tr><td>$0, 0$</td><td>$(\tfrac54, \tfrac14, 0, 0)$</td><td>1.25 CE + 0.25 PE</td><td>$(2, 3, 4)$ ✓</td><td>$1.25 \times 205 = 256.25$; $0.25 \times 195 = 48.75$; total $305$</td></tr>
+              <tr><td>$1, 0$</td><td>$(1, 0, 1, 0)$</td><td>1 CE + 1 bond</td><td>$(1+1, 2+1, 3+1) = (2, 3, 4)$ ✓</td><td>$205 + 99 = 304$</td></tr>
+              <tr><td>$1, 2$</td><td>$(0, 1, 1, 2)$</td><td>1 PE + 1 bond + 2 futures</td><td>$(3+1-2,\ 2+1+0,\ 1+1+2) = (2, 3, 4)$ ✓</td><td>$195 + 99 + 0 = 294$</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What it means</span> Same payoff tomorrow, different price today. <b>Sell</b> the 305 recipe (you receive 305) and <b>buy</b> the 294 recipe (you pay 294). You keep $305 - 294 = 11$ now. Tomorrow, whatever Nifty does, what you owe on one equals what you get on the other: they cancel.</p>
+          </li>
+        </ol>
+        <p class="answer">Client A's payoff can be built in infinitely many ways (rank 2 &lt; 3 scenarios and &lt; 4 products: case 4). The recipes pay the same but cost 305, 304, 294: sell the dearest, buy the cheapest, and pocket 11 with zero risk. The prices are inconsistent (as Lecture 08 found).</p>
+      </div>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 2: The lecture's system, complete solution</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>For $A = \begin{bmatrix} 1 & 2 & 2 & 2 \\ 2 & 4 & 6 & 8 \\ 3 & 6 & 8 & 10 \end{bmatrix}$, solve $Ax = (2, 4, 6)$ completely, or show it's impossible.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Test the condition $b_1 + b_2 = b_3$ first.</p>
+          <p class="k"><span class="kl">How</span> $2 + 4 = 6$, and $b_3 = 6$. Equal ✓. There is a solution.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Carry $b$ through the same elimination steps as the notes.</p>
+          <p class="k"><span class="kl">How</span> Top: $2$. Middle: $b_2 - 2b_1 = 4 - 2 \times 2 = 0$. Bottom: $b_3 - b_2 - b_1 = 6 - 4 - 2 = 0$.</p>
+          <p class="k"><span class="kl">What we have now</span> $x_1 + 2x_2 + 2x_3 + 2x_4 = 2$ and $2x_3 + 4x_4 = 0$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Free ones to 0: $x_2 = x_4 = 0$. Bottom: $2x_3 = 0$, so $x_3 = 0 \div 2 = 0$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Go up: $x_1 + 2 \times 0 = 2$, so $x_1 = 2$. So $x_p = (2, 0, 0, 0)$.</p>
+          <p class="k"><span class="kl">Check</span> $2 \times$ column 1 $= 2 \times (1, 2, 3) = (2, 4, 6)$ ✓. It makes sense: $b$ is exactly twice column 1.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Add the nullspace (same $A$, so same special solutions as the notes).</p>
+        </li>
+      </ol>
+      <p class="answer">$x = (2, 0, 0, 0) + c_1(-2, 1, 0, 0) + c_2(2, 0, -2, 1)$.</p>
+    </div>
+
+    <!-- E3 -->
+    <div class="worked">
+      <h3>Example 3: Full column rank, 0 or 1 solution</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>$A = \begin{bmatrix} 1 & 3 \\ 2 & 1 \\ 6 & 1 \\ 5 & 1 \end{bmatrix}$. Solve $Ax = (4, 3, 7, 6)$ and $Ax = (1, 0, 0, 0)$.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Leader $1$ at the top of column 1. Clear 2, 6, 5 under it.</p>
+          <p class="k"><span class="kl">How</span> Row 2 − 2 × row 1: $(2 - 2,\ 1 - 6) = (0, -5)$. Row 3 − 6 × row 1: $(6 - 6,\ 1 - 18) = (0, -17)$. Row 4 − 5 × row 1: $(5 - 5,\ 1 - 15) = (0, -14)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Leader $-5$ in row 2, column 2. Clear $-17$ and $-14$ under it.</p>
+          <p class="k"><span class="kl">How</span> $-17 \div -5 = \tfrac{17}{5}$ copies: $-17 - \tfrac{17}{5}(-5) = -17 + 17 = 0$. $-14 \div -5 = \tfrac{14}{5}$ copies: $-14 + 14 = 0$.</p>
+          <p class="k"><span class="kl">What we have now</span> 2 leaders, 2 columns: every column has a leader. Rank $2 = n$: <b>full column rank</b>, no free variables, nullspace only $\{0\}$. Rows 3 and 4 are zero rows, so some $b$ will fail.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Try $b = (4, 3, 7, 6)$. Guess: is it column 1 + column 2?</p>
+          <p class="k"><span class="kl">How</span> Box by box: $(1 + 3,\ 2 + 1,\ 6 + 1,\ 5 + 1) = (4, 3, 7, 6)$ ✓. So $x = (1, 1)$.</p>
+          <p class="k"><span class="kl">Why only one</span> No free variables, nothing to add: that's the only answer.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Try $b = (1, 0, 0, 0)$.</p>
+          <p class="k"><span class="kl">How</span> Rows 2 and 3 say $2x_1 + x_2 = 0$ and $6x_1 + x_2 = 0$. Take the first from the second: $4x_1 = 0$, so $x_1 = 0$. Then $2 \times 0 + x_2 = 0$, so $x_2 = 0$. Row 1 wants $x_1 + 3x_2 = 1$, but $0 + 0 = 0 \ne 1$ ✗.</p>
+        </li>
+      </ol>
+      <p class="answer">$(4, 3, 7, 6)$: exactly one solution $(1, 1)$. $(1, 0, 0, 0)$: no solution.</p>
+    </div>
+
+    <!-- E4 -->
+    <div class="worked">
+      <h3>Example 4: Full row rank, always solvable, infinitely many</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>$A = \begin{bmatrix} 1 & 2 & 6 & 5 \\ 3 & 1 & 1 & 1 \end{bmatrix}$. Solve $Ax = (3, 4)$ completely.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Leader $1$ in row 1. Clear the $3$ under it: $3 \div 1 = 3$ copies of row 1 $= (3, 6, 18, 15 \mid 9)$.</p>
+          <p class="k"><span class="kl">How</span> Row 2 − that: $(3-3,\ 1-6,\ 1-18,\ 1-15 \mid 4-9) = (0, -5, -17, -14 \mid -5)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Leaders in columns 1 and 2. Both rows have a leader, so no zero row and <b>no condition on $b$</b>. Columns 3, 4 are free.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Free ones to 0: $x_3 = x_4 = 0$. Bottom: $-5x_2 = -5$, so $x_2 = 1$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Go up: $x_1 + 2 \times 1 = 3$, so $x_1 = 1$. $x_p = (1, 1, 0, 0)$.</p>
+          <p class="k"><span class="kl">Check</span> Row 1: $1 + 2 = 3$ ✓. Row 2: $3 + 1 = 4$ ✓.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Tidy to $R$. Make leader 2 into $1$: divide row 2 by $-5$: $(0, 1, \tfrac{17}{5}, \tfrac{14}{5})$.</p>
+          <p class="k"><span class="kl">How</span> Clear above it: row 1 − 2 × row 2 $= (1,\ 2 - 2,\ 6 - \tfrac{34}{5},\ 5 - \tfrac{28}{5}) = (1, 0, -\tfrac45, -\tfrac35)$. So $F = \begin{bmatrix} -\tfrac45 & -\tfrac35 \\ \tfrac{17}{5} & \tfrac{14}{5} \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Special solutions = $-F$ on top, $I$ below: $(\tfrac45, -\tfrac{17}{5}, 1, 0)$ and $(\tfrac35, -\tfrac{14}{5}, 0, 1)$.</p>
+          <p class="k"><span class="kl">Check the first</span> Row 1: $\tfrac45 + 2(-\tfrac{17}{5}) + 6 = \tfrac45 - \tfrac{34}{5} + \tfrac{30}{5} = 0$ ✓. Row 2: $\tfrac{12}{5} - \tfrac{17}{5} + 1 = -\tfrac55 + 1 = 0$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">$x = (1, 1, 0, 0) + c_1(\tfrac45, -\tfrac{17}{5}, 1, 0) + c_2(\tfrac35, -\tfrac{14}{5}, 0, 1)$.</p>
+    </div>
+
+    <!-- E5 -->
+    <div class="worked">
+      <h3>Example 5: Square and invertible, exactly one</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Solve $\begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix} x = \begin{bmatrix} 5 \\ 5 \end{bmatrix}$.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Leader $1$. Clear the $3$: take away 3 copies of row 1, $(3, 6 \mid 15)$.</p>
+          <p class="k"><span class="kl">How</span> $(3 - 3,\ 1 - 6 \mid 5 - 15) = (0, -5 \mid -10)$.</p>
+          <p class="k"><span class="kl">What we have now</span> A leader in every row and every column: $r = m = n = 2$. Exactly one answer is coming.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Bottom: $-5x_2 = -10$, so $x_2 = -10 \div -5 = 2$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Go up: $x_1 + 2 \times 2 = 5$, so $x_1 + 4 = 5$, so $x_1 = 1$.</p>
+          <p class="k"><span class="kl">Check</span> Row 1: $1 + 4 = 5$ ✓. Row 2: $3 \times 1 + 2 = 5$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">$x = (1, 2)$: the only solution ($r = m = n = 2$, $R = I$).</p>
+    </div>
+
+    <!-- E6 -->
+    <div class="worked">
+      <h3>Example 6: Classify by rank alone</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Without solving, say how many solutions $Ax = b$ can have.</p>
+      </div>
+      <div class="steps">
+        <table>
+          <tr><th>Size</th><th>Rank</th><th>Case</th><th>Solutions</th></tr>
+          <tr><td>$3 \times 3$</td><td>$3$</td><td>$r = m = n$</td><td>exactly 1</td></tr>
+          <tr><td>$5 \times 2$</td><td>$2$</td><td>$r = n &lt; m$</td><td>0 or 1</td></tr>
+          <tr><td>$2 \times 6$</td><td>$2$</td><td>$r = m &lt; n$</td><td>∞</td></tr>
+          <tr><td>$4 \times 4$</td><td>$3$</td><td>$r &lt; m, r &lt; n$</td><td>0 or ∞</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- E7 -->
+    <div class="worked">
+      <h3>Example 7: The four cases as four Nifty markets (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Scenarios: Nifty at 19,900 / 20,000 / 20,100 (rows). For each set of products (columns), say what kind of market it is.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Complete market = every payoff can be built ($r = m$). No redundant products = no product is a copy of others ($r = n$). Rank = number of truly different payoff directions.</p>
+      </div>
+      <div class="steps">
+        <table>
+          <tr><th>Products</th><th>$m \times n$, rank</th><th>Case</th><th>Market meaning</th></tr>
+          <tr><td>20,000 PE $(1,0,0)$, 20,000 CE $(0,0,1)$, butterfly $(0,1,0)$</td><td>$3 \times 3$, $r = 3$</td><td>square, full rank</td><td>complete, no copies: every payoff has <b>exactly one</b> recipe</td></tr>
+          <tr><td>bond $(1,1,1)$, future $(-1,0,1)$</td><td>$3 \times 2$, $r = 2$</td><td>full column rank</td><td>no copies, but incomplete: only straight-line payoffs, each in <b>one</b> way</td></tr>
+          <tr><td>PE, CE, butterfly, bond</td><td>$3 \times 4$, $r = 3$</td><td>full row rank</td><td>complete with a copy (bond = PE + CE + butterfly): every payoff, <b>many</b> recipes</td></tr>
+          <tr><td>19,800 CE, 20,200 PE, bond, future</td><td>$3 \times 4$, $r = 2$</td><td>neither full</td><td>incomplete and with copies: some payoffs impossible, others in <b>many</b> ways</td></tr>
+        </table>
+        <p class="answer">Rank vs the number of scenarios tells you whether the market is complete; rank vs the number of products tells you whether there are redundant products.</p>
+      </div>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. For the lecture's $A$, is $b = (2, 3, 5)$ solvable? Is $(1, 1, 1)$?</summary>
+      <p>$(2, 3, 5)$: $2 + 3 = 5$ ✓ yes. $(1, 1, 1)$: $1 + 1 = 2 \ne 1$ ✗ no.</p>
+    </details>
+    <details class="proof"><summary>2. For the lecture's $A$ and $b = (2, 3, 5)$, find $x_p$.</summary>
+      <p>$c = (2,\ 3 - 4,\ 0) = (2, -1, 0)$. $2x_3 = -1 \Rightarrow x_3 = -\tfrac12$; $x_1 + 2(-\tfrac12) = 2 \Rightarrow x_1 = 3$. $x_p = (3, 0, -\tfrac12, 0)$. Check row 2: $6 - 3 = 3$ ✓.</p>
+    </details>
+    <details class="proof"><summary>3. Why can't you write the complete solution as $c\,x_p + x_n$?</summary>
+      <p>$A(c\,x_p) = c\,b$, which equals $b$ only when $c = 1$.</p>
+    </details>
+    <details class="proof"><summary>4. A $6 \times 4$ matrix has rank 4. Can $Ax = b$ have two different solutions?</summary>
+      <p>No: full column rank means nullspace $\{0\}$, so at most one solution.</p>
+    </details>
+    <details class="proof"><summary>5. A $3 \times 7$ matrix has rank 3. Is $Ax = b$ always solvable? How many free variables?</summary>
+      <p>Yes (full row rank). Free variables $7 - 3 = 4$, so infinitely many solutions.</p>
+    </details>
+    <details class="proof"><summary>6. Market: 3 scenarios, 3 products with rank 2. Can every client payoff be built?</summary>
+      <p>No: $r &lt; m$ means a zero row and a condition on $b$. Some payoffs are impossible; possible ones have infinitely many recipes (since $r &lt; n$).</p>
+    </details>
+
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="08_solving-ax-0-special-solutions.html">← 08 Solving Ax = 0</a>
+    <a href="10_independence-basis-dimension.html">10 Independence, Basis and Dimension →</a>
+  </nav>
+  </div>
+</main>
+
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script>
+// Nullspace plane x+y+z=0 vs solution plane x+y+z=3 through x_p=(3,0,0).
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var green = c("--ex-b"), red = c("--warn-b"), purple = c("--thm-b"), ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+  function axis(t) {
+    return { title: { text: t, font: { size: 14, color: ink } }, range: [-3, 4], autorange: false, tickmode: "linear", tick0: 0, dtick: 1,
+      tickfont: { size: 11, color: soft }, gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 3,
+      showbackground: true, backgroundcolor: paper2, showspikes: false };
+  }
+  function plane(k, color, name) {   // patch of x + y + z = k centred at (k/3, k/3, k/3)
+    var c0 = k / 3, u = [1, -1, 0], v = [1, 1, -2], xs = [], ys = [], zs = [];
+    [[-2, -1], [2, -1], [2, 1], [-2, 1]].forEach(function (st) {
+      xs.push(c0 + st[0] * u[0] + st[1] * v[0]); ys.push(c0 + st[0] * u[1] + st[1] * v[1]); zs.push(c0 + st[0] * u[2] + st[1] * v[2]);
+    });
+    return { type: "mesh3d", name: name, opacity: 0.45, color: color, hoverinfo: "name", showlegend: true,
+      x: xs, y: ys, z: zs, i: [0, 0], j: [1, 2], k: [2, 3] };
+  }
+  var data = [plane(0, purple, "nullspace: x + y + z = 0"), plane(3, green, "all solutions: x + y + z = 3"),
+    { type: "scatter3d", mode: "markers+text", name: "x_p = (3, 0, 0)", marker: { color: red, size: 7 }, x: [3], y: [0], z: [0], text: ["x_p"], textposition: "top right", textfont: { color: red, size: 14 } },
+    { type: "scatter3d", mode: "markers+text", name: "origin", marker: { color: ink, size: 5 }, x: [0], y: [0], z: [0], text: ["0"], textposition: "bottom left", textfont: { color: ink, size: 13 } },
+    { type: "scatter3d", mode: "lines", name: "shift by x_p", line: { color: red, width: 5, dash: "dash" }, x: [0, 3], y: [0, 0], z: [0, 0] }];
+  var layout = { margin: { l: 0, r: 0, t: 0, b: 60 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true,
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 12 } },
+    scene: { xaxis: axis("x"), yaxis: axis("y"), zaxis: axis("z"), aspectmode: "cube", dragmode: "turntable",
+      camera: { eye: { x: 1.6, y: -1.5, z: 0.8 }, up: { x: 0, y: 0, z: 1 } } } };
+  Plotly.newPlot("l9plot", data, layout, { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["toImage"] });
+  document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () { setTimeout(function () { Plotly.Plots.resize("l9plot"); }, 0); });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Independence, Basis, Dimension</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+<style>
+  .plot2d-box { width: 100%; height: 440px; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>Independence, Basis and Dimension</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 10</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 10</p>
+  <h1>Independence, Basis and Dimension</h1>
+  <p class="subtitle">Four words get exact meanings: independent vectors, vectors that span a space, a basis, and the dimension of a space. Then: the rank is the dimension of the column space, and $n - r$ is the dimension of the nullspace.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
+        <li><a href="#s1">The lecture in four words</a></li>
+        <li><a href="#s2">Key fact: more unknowns than equations</a></li>
+        <li><a href="#s3">Independence</a></li>
+        <li><a href="#s4">The independence test with a matrix</a></li>
+        <li><a href="#s5">Span</a></li>
+        <li><a href="#s6">Basis</a></li>
+        <li><a href="#s7">Testing a basis for R³</a></li>
+        <li><a href="#s8">Dimension</a></li>
+        <li><a href="#s9">The big example: C(A) and N(A)</a></li>
+        <li><a href="#s10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained from the very beginning, with a tiny example and an everyday picture. Each section repeats the words it uses.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Vector</b></td><td>a list of numbers written in a column</td><td>$(2, 1)$</td><td>an arrow; or one product's payoffs in each scenario</td></tr>
+      <tr><td><b>Zero vector</b> $0$</td><td>a vector with every number 0</td><td>$(0, 0)$</td><td>staying at home; a trade that pays nothing anywhere</td></tr>
+      <tr><td><b>Combination</b></td><td>multiply each vector by a number, then add</td><td>$3(1, 0) + 2(0, 1) = (3, 2)$</td><td>a recipe: 3 spoons of this + 2 spoons of that</td></tr>
+      <tr><td><b>Coefficients</b> $c_1, c_2, \dots$</td><td>the numbers used in a combination</td><td>in $3v_1 + 2v_2$: $c_1 = 3, c_2 = 2$</td><td>how many lots of each product</td></tr>
+      <tr><td><b>Zero combination</b></td><td>all coefficients are 0</td><td>$0v_1 + 0v_2 = 0$</td><td>buying nothing (always gives nothing)</td></tr>
+      <tr><td><b>Dependent</b></td><td>some combination that is <b>not</b> all zeros gives the zero vector</td><td>$v$ and $2v$: $2(v) - 1(2v) = 0$</td><td>one product can be copied from the others</td></tr>
+      <tr><td><b>Independent</b></td><td>only the zero combination gives the zero vector</td><td>$(1, 0)$ and $(0, 1)$</td><td>no product is a copy of the others</td></tr>
+      <tr><td><b>Space</b> (vector space)</td><td>a collection of vectors you can add and scale without leaving</td><td>$\mathbb{R}^2$ = all $(x, y)$</td><td>a room you can't walk out of by adding or stretching</td></tr>
+      <tr><td><b>Subspace</b></td><td>a space sitting inside a bigger space, always containing 0</td><td>a line through the origin in $\mathbb{R}^2$</td><td>a smaller room inside the house</td></tr>
+      <tr><td><b>$\mathbb{R}^n$</b></td><td>all vectors with $n$ real numbers</td><td>$\mathbb{R}^3$ = all $(x, y, z)$</td><td>all possible payoffs over $n$ scenarios</td></tr>
+      <tr><td><b>Span</b></td><td>the vectors <i>span</i> a space if the space = all their combinations</td><td>$(1, 0), (0, 1)$ span $\mathbb{R}^2$</td><td>everything you can cook from these ingredients</td></tr>
+      <tr><td><b>Basis</b></td><td>vectors that are independent <b>and</b> span the space</td><td>$(1, 0), (0, 1)$ for $\mathbb{R}^2$</td><td>just enough ingredients: nothing missing, nothing extra</td></tr>
+      <tr><td><b>Standard basis</b></td><td>the columns of the identity matrix</td><td>$(1,0,0), (0,1,0), (0,0,1)$</td><td>the x, y, z directions</td></tr>
+      <tr><td><b>Dimension</b></td><td>the number of vectors in <b>any</b> basis of the space</td><td>dim $\mathbb{R}^3 = 3$; a plane has dim 2</td><td>how many independent directions the room has</td></tr>
+      <tr><td><b>Matrix</b> $A$, $m \times n$</td><td>a table with $m$ rows and $n$ columns</td><td>$2 \times 3$: 2 rows, 3 columns</td><td>rows = scenarios, columns = products</td></tr>
+      <tr><td><b>Column space</b> $C(A)$</td><td>all combinations of the columns of $A$</td><td>columns $(1,0),(0,1)$: $C(A) = \mathbb{R}^2$</td><td>every payoff the products can build</td></tr>
+      <tr><td><b>Nullspace</b> $N(A)$</td><td>all $x$ with $Ax = 0$</td><td>for $\begin{bmatrix} 1 & 1 \end{bmatrix}$: all $c(1, -1)$</td><td>every "no profit, no loss" position</td></tr>
+      <tr><td><b>Pivot</b> (leader)</td><td>first non-zero number of a row after elimination</td><td>the $2$ in $(0, 2, 5)$</td><td>the leader of its column</td></tr>
+      <tr><td><b>Pivot column</b> / <b>free column</b></td><td>a column with a pivot / a column without one</td><td>in $\begin{bmatrix} 1 & 2 \\ 0 & 0 \end{bmatrix}$: col 1 pivot, col 2 free</td><td>original product / copy product</td></tr>
+      <tr><td><b>Special solution</b></td><td>solution of $Ax = 0$ with one free variable 1, the others 0</td><td>$(-2, 1)$ for $x_1 + 2x_2 = 0$</td><td>one basic zero-payoff trade</td></tr>
+      <tr><td><b>Rank</b> $r$</td><td>number of pivots</td><td>$\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$: rank 1</td><td>how many truly different products</td></tr>
+      <tr><td><b>Invertible</b></td><td>square matrix with a pivot in every row and column</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix}$</td><td>every target reachable in exactly one way</td></tr>
+      <tr><td><b>Row exchange</b></td><td>swap two rows</td><td>row 2 ↔ row 3</td><td>reordering the equations (doesn't change the answer)</td></tr>
+      <tr><td><b>Plane</b> / <b>line</b></td><td>flat 2-direction piece / 1-direction piece</td><td>all $(s, s, t)$ is a plane in $\mathbb{R}^3$</td><td>a sheet of paper / a stick</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. The lecture in four words</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Vector = a list of numbers. Combination = multiply each vector by a number, then add. Space = a collection of vectors closed under adding and scaling.</p>
+    </div>
+    <table>
+      <tr><th>Word</th><th>Question it answers</th><th>Looks at</th><th>Said about</th></tr>
+      <tr><td><b>Independent</b></td><td>Can a non-zero combination give $0$?</td><td>combinations that give zero</td><td>a bunch of vectors</td></tr>
+      <tr><td><b>Span</b></td><td>What do <b>all</b> combinations fill?</td><td>all combinations</td><td>a bunch of vectors</td></tr>
+      <tr><td><b>Basis</b></td><td>Independent <b>and</b> spanning?</td><td>both</td><td>a bunch of vectors</td></tr>
+      <tr><td><b>Dimension</b></td><td>How many vectors in a basis?</td><td>a number</td><td>a space</td></tr>
+    </table>
+    <div class="box pitfall"><span class="label">Use the words correctly</span>
+      <ul>
+        <li><b>Vectors</b> are independent, span, or form a basis. (Not "the matrix is independent".)</li>
+        <li><b>A matrix</b> has a rank. (Not "the rank of a subspace".)</li>
+        <li><b>A space</b> has a dimension. (Not "the dimension of $A$", but "the dimension of the column space of $A$".)</li>
+      </ul>
+      <p>These meet in one sentence: <b>the rank of a matrix = the dimension of its column space.</b></p>
+    </div>
+    <div class="box finance"><span class="label">The trading question behind this lecture</span>
+      <p>Products = vectors (their payoffs in each Nifty scenario). <b>Independent</b>: no product can be copied from the others. <b>Span</b>: all payoffs you can build. <b>Basis</b>: the smallest set of products that still builds everything. <b>Dimension</b>: how many truly different products the market really has.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">2. Key fact: more unknowns than equations</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$m$ = number of equations (rows). $n$ = number of unknowns (columns). Pivot = leader of a row. Free variable = unknown whose column has no pivot; you may choose it. Nullspace = all solutions of $Ax = 0$.</p>
+    </div>
+    <div class="box theorem"><span class="label">Key fact</span>
+      <p>If $n > m$ (more unknowns than equations), then $Ax = 0$ has a solution <b>other than</b> $x = 0$.</p>
+      <p><b>Why:</b> each pivot needs its own row, so there are at most $m$ pivots. There are $n$ columns, so at least $n - m$ columns have no pivot. Those are free variables. Set one of them to $1$, solve for the pivots, and you get a non-zero solution.</p>
+    </div>
+    <p><b>Example:</b> 2 equations, 3 unknowns. $A = \begin{bmatrix} 2 & 1 & 1 \\ 1 & 2 & -1 \end{bmatrix}$. Find a non-zero $c$ with $Ac = 0$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Leader = the $2$ at the top of column 1. Clear the $1$ under it.</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many 2's make 1?" $1 \div 2 = \tfrac12$. Take away half of row 1: $\tfrac12(2, 1, 1) = (1, \tfrac12, \tfrac12)$.</p>
+        <p class="k"><span class="kl">How</span> $(1 - 1,\ 2 - \tfrac12,\ -1 - \tfrac12) = (0, \tfrac32, -\tfrac32)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Leaders in columns 1 and 2. Column 3 has no leader, so $c_3$ is <b>free</b>.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Set the free one to $1$: $c_3 = 1$.</p>
+        <p class="k"><span class="kl">Why not 0</span> If we set it to 0, everything becomes 0 and we learn nothing. $1$ gives a non-zero answer.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Bottom row: $\tfrac32 c_2 - \tfrac32 \times 1 = 0$.</p>
+        <p class="k"><span class="kl">How</span> Move $-\tfrac32$ across: $\tfrac32 c_2 = \tfrac32$, so $c_2 = 1$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Top row: $2c_1 + 1 \times 1 + 1 \times 1 = 0$.</p>
+        <p class="k"><span class="kl">How</span> $2c_1 + 2 = 0$, so $2c_1 = -2$, so $c_1 = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $c = (-1, 1, 1)$, not all zeros.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> $-1 \times (2, 1) + 1 \times (1, 2) + 1 \times (1, -1) = (-2 + 1 + 1,\ -1 + 2 - 1) = (0, 0)$ ✓.</p>
+      </li>
+    </ol>
+    <div class="box finance"><span class="label">Market meaning</span>
+      <p>More products than scenarios ($n > m$) always means a zero-payoff combination exists. With 3 Nifty levels and 5 products, at least $5 - 3 = 2$ products are copies of the others.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">3. Independence</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Combination = $c_1v_1 + c_2v_2 + \dots + c_nv_n$. Coefficients = the numbers $c_1, \dots, c_n$. Zero combination = all $c$'s are 0 (this always gives the zero vector, so it proves nothing).</p>
+    </div>
+    <div class="box definition"><span class="label">Definition</span>
+      <p>Vectors $v_1, \dots, v_n$ are <b>independent</b> if</p>
+      $$ c_1v_1 + c_2v_2 + \dots + c_nv_n = 0 \quad \text{only when} \quad c_1 = c_2 = \dots = c_n = 0. $$
+      <p>They are <b>dependent</b> (the opposite) if some combination with at least one $c \ne 0$ gives the zero vector.</p>
+    </div>
+    <p><b>In child words:</b> can you walk some steps along the vectors (forward or backward) and end up back home, without standing still? If yes: dependent. If the only way home is to not move at all: independent.</p>
+    <table>
+      <tr><th>Vectors</th><th>A combination that gives 0?</th><th>Verdict</th><th>Why</th></tr>
+      <tr><td>$v$ and $2v$</td><td>$2(v) - 1(2v) = 0$</td><td><b>dependent</b></td><td>one is just a stretched copy of the other</td></tr>
+      <tr><td>$v_1 = (2, 1)$ and $v_2 = (0, 0)$</td><td>$0 \cdot v_1 + 6 \cdot v_2 = 0$</td><td><b>dependent</b></td><td>the zero vector kills independence: take none of $v_1$, any amount of it</td></tr>
+      <tr><td>$(2, 1)$ and $(1, 2)$</td><td>only $0, 0$</td><td><b>independent</b></td><td>they point in different directions</td></tr>
+      <tr><td>$(2, 1)$, $(1, 2)$, $(1, -1)$</td><td>$-1(2,1) + 1(1,2) + 1(1,-1) = 0$</td><td><b>dependent</b></td><td>3 vectors in a 2D plane (key fact, section 2)</td></tr>
+    </table>
+    <figure class="fig plot3d">
+      <div id="l10indep" class="plot2d-box" role="img" aria-label="Three vectors in the plane: going out v2, then v3, then back along v1 returns to 0"></div>
+      <figcaption>Three vectors in a plane are always dependent. Walk along $v_2$, then along $v_3$ (the thin purple copy, starting at the tip of $v_2$): you land exactly on the tip of $v_1$. So $v_2 + v_3 - v_1 = 0$: go back along $v_1$ and you are home.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h2 id="s4">4. The independence test with a matrix</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Put the vectors as <b>columns</b> of a matrix $A$. Then a combination $c_1v_1 + \dots + c_nv_n$ is exactly $Ac$ (matrix times the list of coefficients). Nullspace $N(A)$ = all $c$ with $Ac = 0$. Rank $r$ = number of pivots.</p>
+    </div>
+    <div class="box theorem"><span class="label">The test</span>
+      <table>
+        <tr><th></th><th>Columns independent</th><th>Columns dependent</th></tr>
+        <tr><td>Nullspace</td><td>only $\{0\}$</td><td>contains some $c \ne 0$</td></tr>
+        <tr><td>Free variables</td><td>none</td><td>at least one</td></tr>
+        <tr><td>Rank</td><td>$r = n$ (every column a pivot column)</td><td>$r &lt; n$</td></tr>
+      </table>
+    </div>
+    <p><b>Why this works:</b> $Ac = 0$ says "$c_1$ of column 1 + $c_2$ of column 2 + … = zero column". So a non-zero $c$ in the nullspace is exactly a non-zero combination giving 0: dependence. And a free column is always a combination of the earlier pivot columns; that's what its special solution says.</p>
+    <div class="box finance"><span class="label">Market meaning</span>
+      <p>Put each product's payoff vector as a column. A non-zero vector in the nullspace is a list of lots that pays <b>zero in every scenario</b>. If such a trade exists, some product is redundant, and its price must match the price of its copy, or there is arbitrage.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s5">5. Span</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Combination = multiply and add. Space = closed under adding and scaling. Column space $C(A)$ = all combinations of the columns of $A$.</p>
+    </div>
+    <div class="box definition"><span class="label">Definition</span>
+      <p>Vectors $v_1, \dots, v_\ell$ <b>span</b> a space when the space consists of <b>all</b> their combinations.</p>
+    </div>
+    <ul>
+      <li>The columns of $A$ span the column space $C(A)$. That's how $C(A)$ was built.</li>
+      <li>The space they span is the <b>smallest</b> space containing them: any space holding the vectors must also hold all their combinations.</li>
+      <li>Spanning says nothing about extras: $(1,0), (0,1), (5,5)$ span $\mathbb{R}^2$, but $(5,5)$ is not needed.</li>
+    </ul>
+    <table>
+      <tr><th>Vectors</th><th>What they span</th></tr>
+      <tr><td>$(1, 0)$</td><td>the x-axis (a line)</td></tr>
+      <tr><td>$(1, 0), (2, 0)$</td><td>still the x-axis: the second adds nothing</td></tr>
+      <tr><td>$(1, 0), (0, 1)$</td><td>all of $\mathbb{R}^2$</td></tr>
+      <tr><td>$(1, 1, 2), (2, 2, 5)$</td><td>a plane inside $\mathbb{R}^3$ (section 7)</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">6. Basis</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Independent = no non-zero combination gives 0 (nothing extra). Span = all combinations fill the space (nothing missing).</p>
+    </div>
+    <div class="box definition"><span class="label">Definition</span>
+      <p>A <b>basis</b> for a space is a list of vectors with two properties:</p>
+      <ol>
+        <li>they are <b>independent</b> (not too many);</li>
+        <li>they <b>span</b> the space (enough).</li>
+      </ol>
+    </div>
+    <p><b>Why it matters:</b> give me a basis, and you've told me the whole space: it is exactly all their combinations, and each vector in it is built in <b>only one way</b> (independence means no two recipes differ by a zero combination).</p>
+    <table>
+      <tr><th>Try</th><th>Independent?</th><th>Span $\mathbb{R}^3$?</th><th>Basis for $\mathbb{R}^3$?</th></tr>
+      <tr><td>$(1,0,0), (0,1,0), (0,0,1)$</td><td>yes</td><td>yes</td><td><b>yes</b> (the standard basis)</td></tr>
+      <tr><td>$(1,1,2), (2,2,5)$</td><td>yes</td><td>no: only a plane</td><td>no: too few</td></tr>
+      <tr><td>$(1,1,2), (2,2,5), (3,3,7)$</td><td>no: $(3,3,7) = (1,1,2) + (2,2,5)$</td><td>no: still the plane</td><td>no</td></tr>
+      <tr><td>$(1,1,2), (2,2,5), (3,4,8)$</td><td>yes (section 7)</td><td>yes</td><td><b>yes</b></td></tr>
+    </table>
+    <p><b>Standard basis, checked like a child:</b> $c_1(1,0,0) + c_2(0,1,0) + c_3(0,0,1) = (c_1, c_2, c_3)$. For this to be $(0,0,0)$ each $c$ must be 0. Independent ✓. And any $(x, y, z) = x(1,0,0) + y(0,1,0) + z(0,0,1)$. Spans ✓. With a matrix: the columns form $I$, and $N(I) = \{0\}$.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">7. Testing a basis for R³</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Invertible = square matrix with a pivot in every row and column. Row exchange = swapping two rows when a leader spot holds a 0. Plane = a flat 2-direction piece.</p>
+    </div>
+    <div class="box theorem"><span class="label">Test for Rⁿ</span>
+      <p>$n$ vectors in $\mathbb{R}^n$ form a basis <b>exactly when</b> the $n \times n$ matrix with those columns is <b>invertible</b>.</p>
+    </div>
+    <h3>First try: (1,1,2), (2,2,5), (3,3,8)</h3>
+    <p>In the lecture, Strang adds $(3,3,8)$, hoping it leaves the plane. Let's check it slowly.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look for a pattern. All three vectors have <b>first number = second number</b>: $(1,1,\cdot), (2,2,\cdot), (3,3,\cdot)$.</p>
+        <p class="k"><span class="kl">Why it matters</span> Adding or scaling such vectors keeps first = second. So every combination has first = second. $(1, 0, 0)$ can never be built. They can't span $\mathbb{R}^3$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find the combination. Want $a(1,1,2) + b(2,2,5) = (3,3,8)$.</p>
+        <p class="k"><span class="kl">How</span> First entry: $a + 2b = 3$, so $a = 3 - 2b$. Third entry: $2a + 5b = 8$. Put $a$ in: $2(3 - 2b) + 5b = 8$, so $6 - 4b + 5b = 8$, so $6 + b = 8$, so $b = 2$. Then $a = 3 - 4 = -1$.</p>
+        <p class="k"><span class="kl">Check</span> $-1(1,1,2) + 2(2,2,5) = (-1 + 4,\ -1 + 4,\ -2 + 10) = (3, 3, 8)$ ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we have now</span> $(3,3,8)$ lies <b>in the plane</b> of the first two. Dependent. Not a basis. (A small slip in the lecture; the plot below shows it.)</p>
+      </li>
+    </ol>
+    <h3>Second try: (1,1,2), (2,2,5), (3,4,8)</h3>
+    <p>Break the pattern: second number $4 \ne 3$. Put them as columns and eliminate.</p>
+    $$ A = \begin{bmatrix} 1 & 2 & 3 \\ 1 & 2 & 4 \\ 2 & 5 & 8 \end{bmatrix} $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Leader = the $1$ at the top-left. Clear the $1$ and the $2$ under it.</p>
+        <p class="k"><span class="kl">How</span> Row 2 − 1 × row 1: $(1-1,\ 2-2,\ 4-3) = (0, 0, 1)$. Row 3 − 2 × row 1: $(2-2,\ 5-4,\ 8-6) = (0, 1, 2)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we see</span> Row 2's leader spot (column 2) holds a $0$. But row 3 has a $1$ there.</p>
+        <p class="k"><span class="kl">What we do</span> <b>Swap</b> rows 2 and 3. Order of equations doesn't change the answers.</p>
+        <p class="k"><span class="kl">What we have now</span> $\begin{bmatrix} 1 & 2 & 3 \\ 0 & 1 & 2 \\ 0 & 0 & 1 \end{bmatrix}$: leaders $1, 1, 1$, one in every row and column.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Conclusion</span> 3 pivots in a $3 \times 3$ matrix: invertible. Nullspace $= \{0\}$: independent. Rank 3 = number of rows: they span $\mathbb{R}^3$. <b>Basis ✓.</b></p>
+      </li>
+    </ol>
+    <figure class="fig plot3d">
+      <div id="l10plane" class="plot3d-box" role="img" aria-label="Plane x = y spanned by (1,1,2) and (2,2,5), with (3,3,7) and (3,3,8) inside it and (3,4,8) outside"></div>
+      <figcaption><b>Purple sheet:</b> the plane spanned by $(1,1,2)$ and $(2,2,5)$ (blue), all points with $x = y$. $(3,3,7)$ and $(3,3,8)$ (red) lie <b>on</b> the sheet: adding either one gives dependence. $(3,4,8)$ (green) pokes <b>off</b> the sheet: with it, the three vectors are a basis for $\mathbb{R}^3$. <b>Drag to rotate</b> and look along the sheet edge-on.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">8. Dimension</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Basis = independent + spanning. "Not unique" = there are many different ones. Dimension = a single number attached to a space.</p>
+    </div>
+    <div class="box theorem"><span class="label">The great fact</span>
+      <p>A space has <b>many</b> bases (any invertible $3 \times 3$ matrix gives a basis of $\mathbb{R}^3$ from its columns). But <b>every basis has the same number of vectors.</b> That number is the <b>dimension</b> of the space.</p>
+    </div>
+    <table>
+      <tr><th>Space</th><th>One basis</th><th>Dimension</th></tr>
+      <tr><td>$\mathbb{R}^3$</td><td>$(1,0,0), (0,1,0), (0,0,1)$</td><td>3</td></tr>
+      <tr><td>$\mathbb{R}^n$</td><td>columns of $I_n$</td><td>$n$</td></tr>
+      <tr><td>plane $x = y$ in $\mathbb{R}^3$</td><td>$(1,1,2), (2,2,5)$</td><td>2</td></tr>
+      <tr><td>a line through 0</td><td>one non-zero vector on it</td><td>1</td></tr>
+      <tr><td>$\{0\}$ alone</td><td>empty list</td><td>0</td></tr>
+    </table>
+    <div class="box theorem"><span class="label">If you know the dimension d</span>
+      <ul>
+        <li>More than $d$ vectors: must be <b>dependent</b>.</li>
+        <li>Fewer than $d$ vectors: can't <b>span</b>.</li>
+        <li>Exactly $d$ vectors: independent ⇔ they span ⇔ basis. <b>Check one, you get the other free.</b> (If $d$ independent vectors didn't span, a missing vector could be added and stay independent, giving $d + 1$ independent vectors: impossible.)</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s9">9. The big example: C(A) and N(A)</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Column space $C(A)$ = all combinations of the columns. Nullspace $N(A)$ = all $x$ with $Ax = 0$. Pivot column = column with a leader. Special solution = one free variable 1, other free variables 0, then solve. Rank $r$ = number of pivots.</p>
+    </div>
+    $$ A = \begin{bmatrix} 1 & 2 & 3 & 1 \\ 1 & 1 & 2 & 1 \\ 1 & 2 & 3 & 1 \end{bmatrix} \qquad \text{columns: } (1,1,1),\ (2,1,2),\ (3,2,3),\ (1,1,1) $$
+    <p>Notice: column 3 = column 1 + column 2, and column 4 = column 1.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Leader = the $1$ at the top of column 1. Clear the two $1$'s under it.</p>
+        <p class="k"><span class="kl">How</span> Row 2 − row 1: $(1-1,\ 1-2,\ 2-3,\ 1-1) = (0, -1, -1, 0)$. Row 3 − row 1: $(1-1,\ 2-2,\ 3-3,\ 1-1) = (0, 0, 0, 0)$.</p>
+        <p class="k"><span class="kl">What we have now</span> $U = \begin{bmatrix} \boxed{1} & 2 & 3 & 1 \\ 0 & \boxed{-1} & -1 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}$. Leaders in columns 1 and 2. Rank $r = 2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Column space</span> The <b>pivot columns of the original $A$</b>, $(1,1,1)$ and $(2,1,2)$, are a basis for $C(A)$. So $\dim C(A) = 2 = r$.</p>
+        <p class="k"><span class="kl">Why original A</span> Elimination changes the columns themselves (the zero row of $U$ is not in $C(A)$). It keeps <b>which</b> columns are pivot columns.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> First special solution: $x_3 = 1$, $x_4 = 0$.</p>
+        <p class="k"><span class="kl">How</span> Row 2 of $U$: $-x_2 - 1 = 0$, so $x_2 = -1$. Row 1: $x_1 + 2(-1) + 3(1) + 1(0) = 0$, so $x_1 - 2 + 3 = 0$, so $x_1 + 1 = 0$, so $x_1 = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $s_1 = (-1, -1, 1, 0)$: "−col 1 − col 2 + col 3 = 0", i.e. col 3 = col 1 + col 2 ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Second special solution: $x_3 = 0$, $x_4 = 1$.</p>
+        <p class="k"><span class="kl">How</span> Row 2: $-x_2 - 0 = 0$, so $x_2 = 0$. Row 1: $x_1 + 0 + 0 + 1 = 0$, so $x_1 = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $s_2 = (-1, 0, 0, 1)$: "−col 1 + col 4 = 0", i.e. col 4 = col 1 ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Nullspace</span> $s_1, s_2$ are independent (look at entries 3, 4: $(1,0)$ and $(0,1)$) and every nullspace vector is a combination of them. So they are a <b>basis for $N(A)$</b>, and $\dim N(A) = 2$ = number of free variables $= n - r = 4 - 2$.</p>
+      </li>
+    </ol>
+    <table>
+      <tr><th>Other bases for $C(A)$?</th><th>Verdict</th><th>Why</th></tr>
+      <tr><td>cols 1 and 3: $(1,1,1), (3,2,3)$</td><td>yes</td><td>2 vectors, not multiples, in a space of dimension 2</td></tr>
+      <tr><td>cols 2 and 3, cols 2 and 4, cols 3 and 4</td><td>yes</td><td>same reason</td></tr>
+      <tr><td>cols 1 and 4</td><td><b>no</b></td><td>they are the same vector: dependent</td></tr>
+      <tr><td>$(2,2,2)$ and $(7,5,7)$</td><td>yes</td><td>$(2,2,2) = 2 \times$ col 1; $(7,5,7)$ = sum of all columns; not multiples of each other</td></tr>
+    </table>
+    <div class="box theorem"><span class="label">The two dimension formulas</span>
+      $$ \dim C(A) = r \qquad\qquad \dim N(A) = n - r $$
+      <p>Pivot columns count the column space; free columns count the nullspace. Together: $r + (n - r) = n$ = number of columns.</p>
+    </div>
+    <div class="box finance"><span class="label">In finance</span>
+      <ul>
+        <li><b>dim C(A) = rank</b> = number of truly different products = number of scenarios you can control independently. Rank = number of scenarios: <b>complete market</b>.</li>
+        <li><b>dim N(A) = n − r</b> = number of independent zero-payoff trades (redundancies). Each one is a price relation that must hold (e.g. put–call parity), or arbitrage appears.</li>
+        <li><b>A basis of products</b> = a minimal set of instruments. Everything else in the market is a fixed recipe of them.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s10">10. Summary</h2>
+    <table>
+      <tr><th>Idea</th><th>In one line</th></tr>
+      <tr><td>Key fact</td><td>$n > m$ ⇒ $Ax = 0$ has a non-zero solution.</td></tr>
+      <tr><td>Independent</td><td>only the zero combination gives 0 ⇔ $N(A) = \{0\}$ ⇔ $r = n$.</td></tr>
+      <tr><td>Dependent</td><td>some non-zero combination gives 0 ⇔ free variables exist.</td></tr>
+      <tr><td>Span</td><td>the space = all combinations of the vectors.</td></tr>
+      <tr><td>Basis</td><td>independent + spanning; each vector built in one way.</td></tr>
+      <tr><td>Basis of $\mathbb{R}^n$</td><td>$n$ vectors whose $n \times n$ matrix is invertible.</td></tr>
+      <tr><td>Dimension</td><td>number of vectors in every basis.</td></tr>
+      <tr><td>Column space</td><td>basis = pivot columns of $A$; $\dim = r$.</td></tr>
+      <tr><td>Nullspace</td><td>basis = special solutions; $\dim = n - r$.</td></tr>
+    </table>
+    <dl class="vocab">
+      <dt>Independent</dt><dd>no non-zero combination gives the zero vector.</dd>
+      <dt>Dependent</dt><dd>some non-zero combination gives the zero vector.</dd>
+      <dt>Span</dt><dd>the vectors span a space if the space is all their combinations.</dd>
+      <dt>Basis</dt><dd>an independent list that spans.</dd>
+      <dt>Dimension</dt><dd>the number of vectors in any basis.</dd>
+      <dt>Rank</dt><dd>number of pivots = dimension of the column space.</dd>
+    </dl>
+  </div>
+  </section>
+
+  <!-- ================= EXAMPLES ================= -->
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+
+    <h2>Worked examples</h2>
+
+    <!-- E1 -->
+    <div class="worked">
+      <h3>Example 1: How many truly different products does this Nifty market have? (finance, 3D)</h3>
+      <div class="box finance"><span class="label">Story</span>
+        <p>A trader's screen shows five products on Nifty, all expiring tomorrow. Nifty ends at <b>19,900</b>, <b>20,000</b> or <b>20,100</b>. The trader asks: are these five really different, or are some just copies of others? Which ones do I actually need? And are the prices fair?</p>
+      </div>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Payoff tomorrow in points ÷ 100 (so 100 points = 1 unit):</p>
+        <table>
+          <tr><th>Product</th><th>How the payoff is computed</th><th>19,900</th><th>20,000</th><th>20,100</th><th>Price today</th></tr>
+          <tr><td><b>1.</b> 20,000 PE</td><td>$\max(20{,}000 - S, 0) \div 100$</td><td>$1$</td><td>$0$</td><td>$0$</td><td>$40$</td></tr>
+          <tr><td><b>2.</b> Bond</td><td>pays 1 always</td><td>$1$</td><td>$1$</td><td>$1$</td><td>$99$</td></tr>
+          <tr><td><b>3.</b> 20,000 CE</td><td>$\max(S - 20{,}000, 0) \div 100$</td><td>$0$</td><td>$0$</td><td>$1$</td><td>$40$</td></tr>
+          <tr><td><b>4.</b> Future @ 20,000</td><td>$(S - 20{,}000) \div 100$</td><td>$-1$</td><td>$0$</td><td>$1$</td><td>$0$</td></tr>
+          <tr><td><b>5.</b> 20,000 straddle</td><td>PE + CE in one ticket</td><td>$1$</td><td>$0$</td><td>$1$</td><td>$85$</td></tr>
+        </table>
+        <p>(a) Are the five payoff vectors independent? (b) Find every dependency. (c) Find a basis and the dimension of what they span. Is the market complete? (d) Are the prices consistent?</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Each product = a vector of 3 payoffs (one per Nifty level) = one column. Independent = no product is a copy of the others. Dependency = a list of lots that pays zero at every level (a nullspace vector). Span = all payoffs you can build. Basis = the fewest products that still build everything. Dimension = how many products are in that basis. Complete market = every payoff over the 3 levels can be built.</p>
+      </div>
+      <div class="box intuition"><span class="label">Which part of the maths means what</span>
+        <table>
+          <tr><th>Maths</th><th>Market</th></tr>
+          <tr><td>column $j$ of $A$</td><td>product $j$'s payoff at 19,900 / 20,000 / 20,100</td></tr>
+          <tr><td>row $i$ of $A$</td><td>one Nifty level: what each product pays there</td></tr>
+          <tr><td>$c = (c_1, \dots, c_5)$</td><td>lots of each product (negative = sell)</td></tr>
+          <tr><td>$Ac = 0$</td><td>the position pays nothing at every level</td></tr>
+          <tr><td>rank $r$ = dim $C(A)$</td><td>number of truly different products</td></tr>
+          <tr><td>dim $N(A) = n - r$</td><td>number of independent copy relations</td></tr>
+        </table>
+      </div>
+      $$ A = \begin{bmatrix} 1 & 1 & 0 & -1 & 1 \\ 0 & 1 & 0 & 0 & 0 \\ 0 & 1 & 1 & 1 & 1 \end{bmatrix} \begin{matrix} \leftarrow 19{,}900 \\ \leftarrow 20{,}000 \\ \leftarrow 20{,}100 \end{matrix} $$
+      <h4>(a) Independent? Step by step</h4>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Count: 5 products (columns), 3 levels (rows).</p>
+          <p class="k"><span class="kl">Why</span> Key fact: more unknowns than equations ($5 > 3$) means a non-zero combination giving zero must exist.</p>
+          <p class="k"><span class="kl">What we have now</span> <b>Dependent</b>, before any arithmetic. At least $5 - 3 = 2$ products are copies.</p>
+        </li>
+      </ol>
+      <h4>(b) Every dependency, step by step</h4>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Leader = the $1$ at the top of column 1 (PE). Under it: $0$ and $0$. Already clean.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Next leader: row 2, column 2 (bond) = $1$. Clear the $1$ under it in row 3.</p>
+          <p class="k"><span class="kl">How</span> $1 \div 1 = 1$ copy. Row 3 − row 2: $(0-0,\ 1-1,\ 1-0,\ 1-0,\ 1-0) = (0, 0, 1, 1, 1)$.</p>
+          <p class="k"><span class="kl">In market words</span> "Payoff at 20,100 minus payoff at 20,000" for each product.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we have now</span> $U = \begin{bmatrix} \boxed{1} & 1 & 0 & -1 & 1 \\ 0 & \boxed{1} & 0 & 0 & 0 \\ 0 & 0 & \boxed{1} & 1 & 1 \end{bmatrix}$. Leaders in columns 1, 2, 3 (PE, bond, CE). Free: column 4 (future) and column 5 (straddle).</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> First special solution: future $c_4 = 1$, straddle $c_5 = 0$.</p>
+          <p class="k"><span class="kl">How</span> Row 3: $c_3 + 1 + 0 = 0$, so $c_3 = -1$. Row 2: $c_2 = 0$. Row 1: $c_1 + 0 + 0 - 1 + 0 = 0$, so $c_1 = 1$.</p>
+          <p class="k"><span class="kl">What we have now</span> $s_1 = (1, 0, -1, 1, 0)$: <b>buy 1 PE, sell 1 CE, buy 1 future</b>.</p>
+          <p class="k"><span class="kl">Check</span> 19,900: $1 - 0 - 1 = 0$ ✓. 20,000: $0 - 0 + 0 = 0$ ✓. 20,100: $0 - 1 + 1 = 0$ ✓. This is <b>put–call parity</b>: CE − PE = future.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Second special solution: future $c_4 = 0$, straddle $c_5 = 1$.</p>
+          <p class="k"><span class="kl">How</span> Row 3: $c_3 + 0 + 1 = 0$, so $c_3 = -1$. Row 2: $c_2 = 0$. Row 1: $c_1 + 0 + 0 - 0 + 1 = 0$, so $c_1 = -1$.</p>
+          <p class="k"><span class="kl">What we have now</span> $s_2 = (-1, 0, -1, 0, 1)$: <b>buy 1 straddle, sell 1 PE, sell 1 CE</b>.</p>
+          <p class="k"><span class="kl">Check</span> 19,900: $1 - 1 - 0 = 0$ ✓. 20,000: $0$ ✓. 20,100: $1 - 0 - 1 = 0$ ✓. Of course: a straddle <i>is</i> a PE plus a CE.</p>
+        </li>
+      </ol>
+      <h4>(c) Basis and dimension</h4>
+      <table>
+        <tr><th>Question</th><th>Answer</th><th>Why</th></tr>
+        <tr><td>rank</td><td>$3$</td><td>3 leaders</td></tr>
+        <tr><td>basis for what they span</td><td>PE, bond, CE (pivot columns)</td><td>independent, and future and straddle are recipes of them</td></tr>
+        <tr><td>$\dim C(A)$</td><td>$3$</td><td>= rank</td></tr>
+        <tr><td>complete market?</td><td><b>yes</b></td><td>$\dim C(A) = 3$ = number of Nifty levels, so $C(A) = \mathbb{R}^3$</td></tr>
+        <tr><td>$\dim N(A)$</td><td>$2$</td><td>$n - r = 5 - 3$: parity and "straddle = PE + CE"</td></tr>
+      </table>
+      <h4>(d) Are the prices consistent? Step by step</h4>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Price each zero-payoff trade (price today, buying costs +, selling gives −).</p>
+          <p class="k"><span class="kl">Why</span> A trade that pays nothing tomorrow in every case must cost nothing today. Otherwise someone gets free money.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">How, $s_1$</span> Buy PE $+40$, sell CE $-40$, buy future $+0$: total $40 - 40 + 0 = 0$ ✓. Parity holds.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">How, $s_2$</span> Buy straddle $+85$, sell PE $-40$, sell CE $-40$: total $85 - 80 = 5$ ✗. Not zero!</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What it means</span> The straddle is 5 too expensive. Do the <b>reverse</b> of $s_2$: <b>sell</b> the straddle (receive 85), <b>buy</b> 1 PE and 1 CE (pay 80). Keep 5 now. Tomorrow what you owe on the straddle is exactly what your PE + CE pay you, at every level.</p>
+        </li>
+      </ol>
+      <p class="answer">Five products, but only <b>3 are truly different</b> (dimension 3; basis PE, bond, CE). The other two are copies, giving 2 price rules. Parity holds; the straddle is overpriced by 5, so there is an arbitrage.</p>
+      <figure class="fig plot3d">
+        <div id="l10mkt" class="plot3d-box" role="img" aria-label="Five product payoff vectors in 3D"></div>
+        <figcaption>Each arrow is one product's payoff vector (19,900 on x, 20,000 on y, 20,100 on z). PE, bond and CE (solid) point in three independent directions, so they reach all of $\mathbb{R}^3$. The future (dashed) and straddle (dashed) are combinations of them: future $=$ CE − PE, straddle $=$ PE + CE. <b>Drag to rotate.</b></figcaption>
+      </figure>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 2: The same idea with two Nifty levels (finance, 2D)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Now Nifty ends at only <b>19,900</b> or <b>20,100</b>. Products (points ÷ 100): 20,000 PE $(1, 0)$, 20,000 CE $(0, 1)$, future @ 20,000 $(-1, 1)$, bond $(1, 1)$. (a) Independent? (b) Is {bond, future} a basis? (c) Dimension?</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Vector = payoff at (19,900, 20,100). Basis for $\mathbb{R}^2$ = 2 independent vectors. Dimension of $\mathbb{R}^2$ = 2.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">(a) What we do</span> Count: 4 vectors in $\mathbb{R}^2$. More than 2, so <b>dependent</b>.</p>
+          <p class="k"><span class="kl">Example</span> bond = PE + CE: $(1,0) + (0,1) = (1,1)$ ✓. Also future = CE − PE: $(0,1) - (1,0) = (-1, 1)$ ✓.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">(b) What we do</span> Test bond and future: columns $\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}$.</p>
+          <p class="k"><span class="kl">How</span> Leader $1$. Row 2 − row 1: $(1-1,\ 1-(-1)) = (0, 2)$. Leaders $1$ and $2$: two pivots, invertible.</p>
+          <p class="k"><span class="kl">What we have now</span> Independent, and 2 vectors in a space of dimension 2, so they also span. <b>Basis ✓.</b></p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Build the PE from them</span> Want $a(1,1) + b(-1,1) = (1,0)$. First: $a - b = 1$. Second: $a + b = 0$. Add the two: $2a = 1$, $a = \tfrac12$; then $b = -\tfrac12$. So PE $= \tfrac12$ bond $- \tfrac12$ future. Check 19,900: $\tfrac12 + \tfrac12 = 1$ ✓; 20,100: $\tfrac12 - \tfrac12 = 0$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">Dimension 2: any two non-parallel products are a basis. {PE, CE}, {bond, future}, {PE, bond} … all work. The other two products are always recipes of the chosen pair.</p>
+      <figure class="fig plot3d">
+        <div id="l10mkt2" class="plot2d-box" role="img" aria-label="Four product payoff vectors in 2D"></div>
+        <figcaption>Four arrows in a 2D plane. Any two that are not on the same line (e.g. bond and future) form a basis; the other arrows are combinations of them.</figcaption>
+      </figure>
+    </div>
+
+    <!-- E3 -->
+    <div class="worked">
+      <h3>Example 3: Independent or dependent?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Decide for each set: (i) $(1, 2, 3), (2, 4, 6)$; (ii) $(1, 0, 1), (0, 1, 1), (1, 1, 0)$; (iii) $(1, 2), (3, 1), (0, 0)$.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">(i)</span> Is one a multiple of the other? $2 \times (1, 2, 3) = (2, 4, 6)$ ✓. So $2v_1 - v_2 = 0$: <b>dependent</b>.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">(ii) What we do</span> Put them in columns: $\begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 1 & 1 & 0 \end{bmatrix}$. Eliminate.</p>
+          <p class="k"><span class="kl">How</span> Row 3 − row 1: $(0, 1, -1)$. Then row 3 − row 2: $(0, 0, -2)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Leaders $1, 1, -2$: three pivots, no free variables. <b>Independent</b> (and a basis for $\mathbb{R}^3$).</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">(iii)</span> Contains the zero vector: $0 \cdot (1,2) + 0 \cdot (3,1) + 1 \cdot (0,0) = 0$. <b>Dependent</b>. (Also: 3 vectors in $\mathbb{R}^2$.)</p>
+        </li>
+      </ol>
+    </div>
+
+    <!-- E4 -->
+    <div class="worked">
+      <h3>Example 4: Bases and dimensions of C(A) and N(A)</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>$A = \begin{bmatrix} 1 & 2 & 0 \\ 2 & 4 & 1 \\ 3 & 6 & 1 \end{bmatrix}$. Find a basis and the dimension of $C(A)$ and $N(A)$.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Leader $1$. Clear the $2$ and $3$ under it.</p>
+          <p class="k"><span class="kl">How</span> Row 2 − 2 × row 1: $(2-2,\ 4-4,\ 1-0) = (0, 0, 1)$. Row 3 − 3 × row 1: $(3-3,\ 6-6,\ 1-0) = (0, 0, 1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Column 2 has no leader (both 0). Next leader: row 2, column 3 = $1$. Row 3 − row 2 $= (0, 0, 0)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Leaders in columns 1 and 3. Rank 2. Free: $x_2$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Column space</span> Basis: columns 1 and 3 of the <b>original</b> $A$: $(1, 2, 3)$ and $(0, 1, 1)$. Dimension 2.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Nullspace</span> $x_2 = 1$: row 2 says $x_3 = 0$; row 1 says $x_1 + 2 = 0$, so $x_1 = -2$. Basis: $(-2, 1, 0)$. Dimension $1 = 3 - 2$.</p>
+          <p class="k"><span class="kl">Check</span> $-2 \times$ col 1 + col 2 $= (-2 + 2,\ -4 + 4,\ -6 + 6) = 0$ ✓.</p>
+        </li>
+      </ol>
+      <p class="answer">$\dim C(A) = 2$ with basis $(1,2,3), (0,1,1)$; $\dim N(A) = 1$ with basis $(-2, 1, 0)$.</p>
+    </div>
+
+    <!-- E5 -->
+    <div class="worked">
+      <h3>Example 5: A basis for the plane x + y + z = 0</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>The plane of all $(x, y, z)$ with $x + y + z = 0$ is a subspace of $\mathbb{R}^3$. Find a basis and its dimension.</p>
+      </div>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> See it as a nullspace: it's $N(A)$ for $A = \begin{bmatrix} 1 & 1 & 1 \end{bmatrix}$.</p>
+          <p class="k"><span class="kl">What we have now</span> One leader (column 1), rank 1. Free: $y$ and $z$. So $\dim = 3 - 1 = 2$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">How</span> $y = 1, z = 0$: $x + 1 = 0$, $x = -1$, giving $(-1, 1, 0)$. $y = 0, z = 1$: $x = -1$, giving $(-1, 0, 1)$.</p>
+        </li>
+      </ol>
+      <p class="answer">Basis $(-1, 1, 0), (-1, 0, 1)$; dimension 2. (Market reading: with 3 Nifty levels and one bond, these are the payoffs with "total across levels = 0".)</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. Can 4 vectors in $\mathbb{R}^3$ be independent? Can 2 vectors span $\mathbb{R}^3$?</summary>
+      <p>No (more than 3 in dimension 3 are dependent). No (fewer than 3 can't span).</p>
+    </details>
+    <details class="proof"><summary>2. Are $(1, 1)$ and $(2, 3)$ a basis for $\mathbb{R}^2$?</summary>
+      <p>$\begin{bmatrix} 1 & 2 \\ 1 & 3 \end{bmatrix}$: row 2 − row 1 $= (0, 1)$. Two pivots, invertible: yes.</p>
+    </details>
+    <details class="proof"><summary>3. A $5 \times 8$ matrix has rank 4. What are $\dim C(A)$ and $\dim N(A)$?</summary>
+      <p>$\dim C(A) = 4$, $\dim N(A) = 8 - 4 = 4$.</p>
+    </details>
+    <details class="proof"><summary>4. Why is any set containing the zero vector dependent?</summary>
+      <p>Take coefficient 1 on the zero vector and 0 on everything else: a non-zero combination that gives 0.</p>
+    </details>
+    <details class="proof"><summary>5. In Example 1, what is the dimension of the span of {PE, CE, straddle}?</summary>
+      <p>2: straddle = PE + CE, and PE, CE are independent.</p>
+    </details>
+    <details class="proof"><summary>6. Market: 4 Nifty levels, 6 products with rank 4. Complete? How many independent price rules?</summary>
+      <p>Complete (rank = 4 levels). $6 - 4 = 2$ zero-payoff trades, so 2 price rules.</p>
+    </details>
+
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="09_solving-ax-b-row-reduced-form.html">← 09 Solving Ax = b</a>
+    <a href="11_four-fundamental-subspaces.html">11 The Four Fundamental Subspaces →</a>
+  </nav>
+  </div>
+</main>
+
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script>
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var green = c("--ex-b"), red = c("--warn-b"), purple = c("--thm-b"), blue = c("--accent"), ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+  var cfg = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["toImage"] };
+
+  // ---------- 2D helpers ----------
+  function ax2(t, lo, hi) {
+    return { title: { text: t, font: { color: ink, size: 13 } }, range: [lo, hi], autorange: false, tickmode: "linear", dtick: 1,
+      tickfont: { color: soft, size: 11 }, gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 2, fixedrange: true };
+  }
+  function arrow(from, to, color, label, dash) {
+    return [{ x: to[0], y: to[1], ax: from[0], ay: from[1], xref: "x", yref: "y", axref: "x", ayref: "y",
+      showarrow: true, arrowhead: 3, arrowsize: 1.3, arrowwidth: dash ? 2 : 3, arrowcolor: color, text: "" },
+      { x: to[0], y: to[1], xref: "x", yref: "y", showarrow: false, text: label, font: { color: color, size: 14 },
+        xanchor: to[0] < 0 ? "right" : "left", yanchor: to[1] < 0 ? "top" : "bottom", xshift: to[0] < 0 ? -4 : 4 }];
+  }
+  function plot2d(id, arrows, xr, yr, xt, yt, dashed) {
+    var el = document.getElementById(id); if (!el) return;
+    var traces = (dashed || []).map(function (d) {
+      return { type: "scatter", mode: "lines", x: [d[0][0], d[1][0]], y: [d[0][1], d[1][1]], line: { color: d[2], dash: "dash", width: 2 }, hoverinfo: "skip", showlegend: false };
+    });
+    traces.push({ type: "scatter", mode: "markers", x: [0], y: [0], marker: { color: ink, size: 7 }, hoverinfo: "skip", showlegend: false });
+    Plotly.newPlot(id, traces, { margin: { l: 50, r: 20, t: 10, b: 50 }, paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: paper2,
+      xaxis: Object.assign(ax2(xt, xr[0], xr[1]), { scaleanchor: "y", scaleratio: 1 }), yaxis: ax2(yt, yr[0], yr[1]),
+      annotations: [].concat.apply([], arrows), showlegend: false }, cfg);
+  }
+
+  // Notes: three vectors in the plane
+  plot2d("l10indep", [
+    arrow([0, 0], [2, 1], blue, "v₁ = (2, 1)"),
+    arrow([0, 0], [1, 2], green, "v₂ = (1, 2)"),
+    arrow([0, 0], [1, -1], purple, "v₃ = (1, −1)"),
+    arrow([1, 2], [2, 1], purple, "", true)
+  ], [-1, 4], [-2, 3], "first entry", "second entry");
+
+  // Examples: 2-level market
+  plot2d("l10mkt2", [
+    arrow([0, 0], [1, 0], blue, "PE (1, 0)"),
+    arrow([0, 0], [0, 1], green, "CE (0, 1)"),
+    arrow([0, 0], [-1, 1], red, "future (−1, 1)"),
+    arrow([0, 0], [1, 1], purple, "bond (1, 1)")
+  ], [-2, 2], [-1, 2], "payoff at 19,900", "payoff at 20,100");
+
+  // ---------- 3D helpers ----------
+  function ax3(t, lo, hi) {
+    return { title: { text: t, font: { size: 13, color: ink } }, range: [lo, hi], autorange: false, tickmode: "linear", tick0: 0, dtick: 1,
+      tickfont: { size: 10, color: soft }, gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 3,
+      showbackground: true, backgroundcolor: paper2, showspikes: false };
+  }
+  function vec3(v, color, name, dash, pos) {
+    return { type: "scatter3d", mode: "lines+markers+text", name: name, x: [0, v[0]], y: [0, v[1]], z: [0, v[2]],
+      line: { color: color, width: 7, dash: dash ? "dash" : "solid" }, marker: { size: [0, 5], color: color },
+      text: ["", name], textposition: pos || "top center", textfont: { color: color, size: 13 }, hoverinfo: "name" };
+  }
+  function scene(xt, yt, zt, lo, hi, eye) {
+    return { xaxis: ax3(xt, lo, hi), yaxis: ax3(yt, lo, hi), zaxis: ax3(zt, lo, hi), aspectmode: "cube", dragmode: "turntable",
+      camera: { eye: eye, up: { x: 0, y: 0, z: 1 } } };
+  }
+  var lay3 = { margin: { l: 0, r: 0, t: 0, b: 0 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: false };
+
+  // Notes: the plane x = y
+  if (document.getElementById("l10plane")) {
+    var plane = { type: "mesh3d", opacity: 0.3, color: purple, hoverinfo: "skip",
+      x: [0, 9, 9, 0], y: [0, 9, 9, 0], z: [0, 0, 9, 9], i: [0, 0], j: [1, 2], k: [2, 3] };
+    Plotly.newPlot("l10plane", [plane,
+      vec3([1, 1, 2], blue, "(1,1,2)", false, "bottom right"), vec3([2, 2, 5], blue, "(2,2,5)", false, "middle left"),
+      vec3([3, 3, 7], red, "(3,3,7)", false, "middle left"), vec3([3, 3, 8], red, "(3,3,8)", false, "top left"),
+      vec3([3, 4, 8], green, "(3,4,8)", false, "top right")],
+      Object.assign({}, lay3, { scene: scene("x", "y", "z", 0, 9, { x: 2.1, y: 1.1, z: 0.5 }) }), cfg);
+  }
+
+  // Examples: five products
+  if (document.getElementById("l10mkt")) {
+    Plotly.newPlot("l10mkt", [
+      vec3([1, 0, 0], blue, "PE"), vec3([1, 1, 1], purple, "bond"), vec3([0, 0, 1], green, "CE"),
+      vec3([-1, 0, 1], red, "future", true, "top center"), vec3([1, 0, 1], red, "straddle", true, "middle right")],
+      Object.assign({}, lay3, { scene: scene("19,900", "20,000", "20,100", -2, 2, { x: 1.25, y: -1.35, z: 0.75 }) }), cfg);
+  }
+
+  document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      setTimeout(function () { ["l10indep", "l10mkt2", "l10plane", "l10mkt"].forEach(function (id) {
+        var el = document.getElementById(id); if (el && el.data) Plotly.Plots.resize(el); }); }, 0);
+    });
+  });
+});
+</script>
+</body>
+</html>

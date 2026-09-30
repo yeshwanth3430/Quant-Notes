@@ -1,0 +1,1364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Column Space and Nullspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>Column Space and Nullspace</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 07</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 07</p>
+  <h1>Column Space and Nullspace</h1>
+  <p class="subtitle">The two most important subspaces of a matrix: which outputs $b$ it can reach, and which inputs $x$ it sends to zero.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
+        <li><a href="#s1">The lecture in five questions</a></li>
+        <li><a href="#s1b">The two ideas in the simplest way</a></li>
+        <li><a href="#s2">Recap: union and intersection</a></li>
+        <li><a href="#s3">The column space C(A)</a></li>
+        <li><a href="#s4">When can Ax = b be solved?</a></li>
+        <li><a href="#s5">A column that adds nothing</a></li>
+        <li><a href="#s6">The nullspace N(A)</a></li>
+        <li><a href="#s7">Why N(A) is a subspace</a></li>
+        <li><a href="#s8">Solutions of Ax = b are not a subspace</a></li>
+        <li><a href="#s9">Two ways to describe a subspace</a></li>
+        <li><a href="#s10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained from the very beginning, with a tiny example and an everyday picture. Each section repeats the words it uses.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Vector</b></td><td>a list of numbers written in a column</td><td>$(1, 2, 3, 4)$</td><td>a basket: how many apples, bananas, oranges; or one product's payoff in each Nifty scenario</td></tr>
+      <tr><td><b>Entry</b> (component)</td><td>one number inside a vector</td><td>the 2nd entry of $(1, 2, 3, 4)$ is $2$</td><td>one box of the basket</td></tr>
+      <tr><td><b>Zero vector</b> $0$</td><td>a vector with every entry 0</td><td>$(0, 0, 0)$</td><td>an empty basket; a trade that pays nothing anywhere</td></tr>
+      <tr><td><b>Origin</b></td><td>the point where every coordinate is 0 (the zero vector drawn as a point)</td><td>$(0, 0, 0)$ in 3D</td><td>"home"; "no position"</td></tr>
+      <tr><td><b>Scaling</b> (multiply by a number)</td><td>multiply every entry by the same number</td><td>$3 \times (1, 0, 1) = (3, 0, 3)$</td><td>buying 3 lots instead of 1; a negative number = the reverse trade</td></tr>
+      <tr><td><b>Adding vectors</b></td><td>add entry by entry</td><td>$(1, 0) + (0, 1) = (1, 1)$</td><td>putting two baskets together</td></tr>
+      <tr><td><b>Linear combination</b></td><td>scale some vectors, then add them</td><td>$2(1, 2) + 3(1, 1) = (5, 7)$</td><td>a recipe: 2 packs of this + 3 packs of that</td></tr>
+      <tr><td><b>$\mathbb{R}^n$</b></td><td>all vectors with $n$ real numbers</td><td>$\mathbb{R}^4$ = all $(b_1, b_2, b_3, b_4)$</td><td>every possible payoff over $n$ scenarios</td></tr>
+      <tr><td><b>Subspace</b></td><td>a collection of vectors that contains $0$, and stays inside when you add or scale its members</td><td>a line through the origin</td><td>a room you can't walk out of by adding or stretching; a "safe trading rule"</td></tr>
+      <tr><td><b>Closed under adding / scaling</b></td><td>adding two members (or scaling one) gives another member</td><td>line $y = x$: $(1,1) + (2,2) = (3,3)$, still on it</td><td>combining two allowed trades is still allowed</td></tr>
+      <tr><td><b>Union</b> $S \cup T$</td><td>everything in $S$ <b>or</b> in $T$ (or both)</td><td>floor $\cup$ z-axis</td><td>putting two guest lists together</td></tr>
+      <tr><td><b>Intersection</b> $S \cap T$</td><td>only what is in $S$ <b>and</b> in $T$</td><td>floor $\cap$ z-axis $= \{0\}$</td><td>people who are on both guest lists</td></tr>
+      <tr><td><b>Plane</b> / <b>line</b></td><td>flat 2-direction piece / 1-direction piece</td><td>floor $z = 0$ / z-axis</td><td>a sheet of paper / a stick</td></tr>
+      <tr><td><b>Matrix</b> $A$, $m \times n$</td><td>a table of numbers with $m$ rows and $n$ columns</td><td>the lecture's $A$ is $4 \times 3$</td><td>rows = scenarios, columns = products (packs)</td></tr>
+      <tr><td><b>Column</b> / <b>row</b></td><td>a vertical list / a horizontal list inside a matrix</td><td>column 1 of $A$: $(1, 2, 3, 4)$; row 1: $(1, 1, 2)$</td><td>one pack's contents / one fruit type across packs</td></tr>
+      <tr><td><b>$Ax$</b> (matrix times vector)</td><td>$x_1 \times$ column 1 + $x_2 \times$ column 2 + …</td><td>$x = (1, 1, 0)$ gives col 1 + col 2</td><td>what you end up with after buying $x_1, x_2, \dots$ packs</td></tr>
+      <tr><td><b>Unknown</b> / <b>equation</b></td><td>a number we must find / a rule it must satisfy</td><td>$x_1 + x_2 = 3$</td><td>a blank to fill / an order to meet</td></tr>
+      <tr><td><b>$Ax = b$</b></td><td>find inputs $x$ that produce the target $b$</td><td>4 equations, 3 unknowns</td><td>"can this order be filled, and how?"</td></tr>
+      <tr><td><b>Solution</b></td><td>an $x$ that makes every equation true</td><td>$x = (1, 0, 0)$ solves $Ax = (1,2,3,4)$</td><td>a shopping list that fills the order</td></tr>
+      <tr><td><b>Column space</b> $C(A)$</td><td>all linear combinations of the columns of $A$ = every $Ax$</td><td>here: all $b$ that go up in equal steps</td><td>everything you can end up with from the packs</td></tr>
+      <tr><td><b>Nullspace</b> $N(A)$</td><td>all inputs $x$ with $Ax = 0$</td><td>here: all $c(1, 1, -1)$</td><td>every buy/return plan that leaves you with nothing</td></tr>
+      <tr><td><b>Dependent column</b> (redundant)</td><td>a column that is a combination of other columns</td><td>col 3 = col 1 + col 2</td><td>a pack that is two other packs taped together</td></tr>
+      <tr><td><b>Pivot column</b></td><td>a column that adds a new direction (kept)</td><td>columns 1 and 2 of $A$</td><td>an original pack</td></tr>
+      <tr><td><b>Dimension</b></td><td>how many independent directions a space has</td><td>a line: 1; a plane: 2</td><td>how many truly different packs there are</td></tr>
+      <tr><td><b>Distributive law</b></td><td>$A(v + w) = Av + Aw$</td><td>buying two plans together = buying each</td><td>"the till adds up the same either way"</td></tr>
+      <tr><td><b>Payoff</b></td><td>what a position pays in each scenario</td><td>20,000 CE at Nifty 20,200: 200 points</td><td>the money you get at expiry</td></tr>
+      <tr><td><b>CE</b> / <b>PE</b></td><td>call option / put option: pays $\max(S - K, 0)$ / $\max(K - S, 0)$ at expiry</td><td>20,000 PE at 19,800 pays 200</td><td>a bet on up / a bet on down</td></tr>
+      <tr><td><b>Future</b> / <b>bond</b></td><td>pays $S - F$ (a straight line) / pays a fixed 1 always</td><td>future at 20,000, Nifty 20,300: $+300$</td><td>a straight bet / cash in the bank</td></tr>
+      <tr><td><b>Replicate</b></td><td>build the same payoff from other products</td><td>20,050 CE = 1 future − 0.5 bond (Example 8)</td><td>cooking the same dish from other ingredients</td></tr>
+      <tr><td><b>Arbitrage</b></td><td>a trade that costs nothing (or pays you) today and can never lose</td><td>receive 0.2 today, owe 0 later</td><td>free money; a price that is wrong</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. The lecture in five questions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Subspace = a collection of vectors (lists of numbers) that contains $0$ and stays inside when you add two members or multiply one by a number. Union = everything in either set. Intersection = only what is in both sets. Column space $C(A)$ = every output $Ax$ = all combinations of the columns. Nullspace $N(A)$ = all inputs $x$ with $Ax = 0$. Origin = the zero vector.</p>
+    </div>
+    <table>
+      <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
+      <tr><td>1</td><td>Is the union of two subspaces a subspace?</td><td><b>No</b> (usually). The intersection <b>is</b>.</td></tr>
+      <tr><td>2</td><td>What is the column space $C(A)$?</td><td>All combinations of the columns: every output $Ax$ can produce.</td></tr>
+      <tr><td>3</td><td>When does $Ax = b$ have a solution?</td><td>Exactly when $b$ is in $C(A)$.</td></tr>
+      <tr><td>4</td><td>What is the nullspace $N(A)$?</td><td>All inputs $x$ with $Ax = 0$.</td></tr>
+      <tr><td>5</td><td>Are the solutions of $Ax = b$ a subspace?</td><td>Only if $b = 0$. Otherwise they miss the origin.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s1b">2. The two ideas in the simplest way</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Pack = a fixed bundle of fruit (in maths: one column). Buying $-1$ of a pack = returning one. Basket = the fruit you end up with (in maths: the output $b$). Column space = every basket you can end up with. Nullspace = every buy/return plan that leaves you with an empty basket. Copy (dependent) = a pack that is just other packs taped together.</p>
+    </div>
+
+    <h3>The story: a fruit shop</h3>
+    <p>A shop sells only 3 kinds of pack. You cannot buy loose fruit.</p>
+    <table>
+      <tr><th>Pack</th><th>Apples</th><th>Bananas</th><th>Oranges</th></tr>
+      <tr><td><b>A</b></td><td>1</td><td>0</td><td>1</td></tr>
+      <tr><td><b>B</b></td><td>0</td><td>1</td><td>1</td></tr>
+      <tr><td><b>C</b></td><td>1</td><td>1</td><td>2</td></tr>
+    </table>
+    <p>You can buy packs, and you can also <b>return</b> packs (a negative number).</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Check whether pack C is just packs A and B taped together.</p>
+        <p class="k"><span class="kl">Why</span> If it is, C brings nothing new: anything C gives you, A and B already give you.</p>
+        <p class="k"><span class="kl">How</span> Add A and B one fruit at a time. Apples: $1 + 0 = 1$. Bananas: $0 + 1 = 1$. Oranges: $1 + 1 = 2$.</p>
+        <p class="k"><span class="kl">What we have now</span> A + B $= (1, 1, 2)$, which is exactly pack C. So <b>C = A + B</b>: a copy.</p>
+      </li>
+    </ol>
+
+    <h3>Idea 1: Column space = everything you CAN end up with</h3>
+    <p>Buy different packs and see what fruit you get:</p>
+    <table>
+      <tr><th>You buy</th><th>Apples</th><th>Bananas</th><th>Oranges</th></tr>
+      <tr><td>1 A</td><td>1</td><td>0</td><td>1</td></tr>
+      <tr><td>1 B</td><td>0</td><td>1</td><td>1</td></tr>
+      <tr><td>1 A + 1 B</td><td>1</td><td>1</td><td>2</td></tr>
+      <tr><td>2 A + 3 B</td><td>2</td><td>3</td><td>5</td></tr>
+      <tr><td>1 C</td><td>1</td><td>1</td><td>2</td></tr>
+    </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Work out the "2 A + 3 B" row slowly.</p>
+        <p class="k"><span class="kl">Why</span> It shows how a mix of packs becomes a basket.</p>
+        <p class="k"><span class="kl">How</span> 2 A $= 2 \times (1, 0, 1) = (2, 0, 2)$. 3 B $= 3 \times (0, 1, 1) = (0, 3, 3)$. Add: apples $2 + 0 = 2$, bananas $0 + 3 = 3$, oranges $2 + 3 = 5$.</p>
+        <p class="k"><span class="kl">What we have now</span> The basket $(2, 3, 5)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look at the last column of the table: oranges.</p>
+        <p class="k"><span class="kl">Why</span> Every single pack has oranges = apples + bananas (A: $1 + 0 = 1$; B: $0 + 1 = 1$; C: $1 + 1 = 2$).</p>
+        <p class="k"><span class="kl">How</span> Adding packs adds apples, bananas and oranges separately, so the rule "oranges = apples + bananas" survives every mix. Check on $(2, 3, 5)$: $2 + 3 = 5$ ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> Every basket you can end up with has <b>oranges = apples + bananas</b>.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Test two orders with the rule.</p>
+        <p class="k"><span class="kl">How</span> Order 1: 2 apples, 3 bananas, 5 oranges. $2 + 3 = 5$, and it wants 5 oranges ✓. Order 2: 1 apple, 1 banana, 1 orange. $1 + 1 = 2$, but it wants 1 orange ✗.</p>
+        <p class="k"><span class="kl">What we have now</span> Order 1 can be filled (2 A + 3 B). Order 2 is impossible.</p>
+      </li>
+    </ol>
+    <table>
+      <tr><th>Can you end up with…</th><th>Check: oranges = apples + bananas?</th><th>Answer</th></tr>
+      <tr><td>2 apples, 3 bananas, 5 oranges</td><td>$2 + 3 = 5$ ✓</td><td><b>yes</b> (2 A + 3 B)</td></tr>
+      <tr><td>1 apple, 1 banana, 1 orange</td><td>$1 + 1 = 2$, not $1$ ✗</td><td><b>no</b>, impossible</td></tr>
+    </table>
+    <div class="box definition"><span class="label">Column space in one sentence</span>
+      <p>The <b>column space</b> is the list of <b>everything you can end up with</b> by buying (or returning) any amounts of the packs.</p>
+      <p>Here: every basket where oranges = apples + bananas.</p>
+    </div>
+    <p><b>Why it is useful:</b> it answers "can this order be filled?" instantly. In maths, "can this order be filled?" is the question "does $Ax = b$ have a solution?".</p>
+
+    <h3>Idea 2: Nullspace = every way to end up with NOTHING</h3>
+    <p>Can you buy and return packs and end up with <b>no fruit at all</b>?</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Try: buy 1 A, buy 1 B, return 1 C.</p>
+        <p class="k"><span class="kl">Why</span> C = A + B, so returning C should cancel buying A and B.</p>
+        <p class="k"><span class="kl">How</span> Add fruit by fruit. Apples: $1 + 0 - 1 = 0$. Bananas: $0 + 1 - 1 = 0$. Oranges: $1 + 1 - 2 = 0$.</p>
+        <table>
+          <tr><th></th><th>Apples</th><th>Bananas</th><th>Oranges</th></tr>
+          <tr><td>buy 1 A</td><td>$+1$</td><td>$0$</td><td>$+1$</td></tr>
+          <tr><td>buy 1 B</td><td>$0$</td><td>$+1$</td><td>$+1$</td></tr>
+          <tr><td>return 1 C</td><td>$-1$</td><td>$-1$</td><td>$-2$</td></tr>
+          <tr><td><b>left with</b></td><td><b>0</b></td><td><b>0</b></td><td><b>0</b></td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> The plan $(1, 1, -1)$ (1 A, 1 B, $-1$ C) leaves nothing.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Double the plan: $(2, 2, -2)$.</p>
+        <p class="k"><span class="kl">How</span> Apples: $2 + 0 - 2 = 0$. Bananas: $0 + 2 - 2 = 0$. Oranges: $2 + 2 - 4 = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> Still nothing. Doing nothing, $(0, 0, 0)$, also leaves nothing.</p>
+      </li>
+    </ol>
+    <div class="box definition"><span class="label">Nullspace in one sentence</span>
+      <p>The <b>nullspace</b> is the list of <b>every way of buying/returning packs that leaves you with nothing</b>.</p>
+      <p>Here: all $c \times (1, 1, -1)$, meaning buy $c$ A, buy $c$ B, return $c$ C.</p>
+    </div>
+    <p><b>Why does it exist?</b> Only because pack C is a <b>copy</b> (A + B taped together). If every pack were truly different, the only way to end up with nothing would be to do nothing.</p>
+    <p><b>Why it is useful:</b></p>
+    <ul>
+      <li><b>It spots copies.</b> A nullspace trade tells you some pack is a copy of others.</li>
+      <li><b>It gives other ways to fill the same order</b> (steps below).</li>
+      <li><b>It catches wrong prices</b> (steps below).</li>
+    </ul>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Fill the order "1 apple, 1 banana, 2 oranges" a second way.</p>
+        <p class="k"><span class="kl">Why</span> Adding or subtracting a "nothing" plan changes the packs but not the fruit.</p>
+        <p class="k"><span class="kl">How</span> First way: buy 1 A + 1 B, i.e. $(1, 1, 0)$. Subtract the nothing plan $(1, 1, -1)$ entry by entry: $1 - 1 = 0$, $1 - 1 = 0$, $0 - (-1) = 1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(0, 0, 1)$: just buy 1 C. Check: C $= (1, 1, 2)$ ✓. Same fruit, different packs.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Price the nothing plan when A costs ₹10, B costs ₹10, C costs ₹25.</p>
+        <p class="k"><span class="kl">Why</span> A plan that gives you no fruit should cost nothing.</p>
+        <p class="k"><span class="kl">How</span> Buy A: pay ₹10. Buy B: pay ₹10, total $10 + 10 = 20$ paid. Sell a C: get ₹25. Net: $25 - 20 = 5$.</p>
+        <p class="k"><span class="kl">What we have now</span> No fruit and ₹5 profit. So C is overpriced (fair price $10 + 10 = ₹20$).</p>
+      </li>
+    </ol>
+
+    <h3>Put side by side</h3>
+    <table>
+      <tr><th></th><th>Column space</th><th>Nullspace</th></tr>
+      <tr><td>Question</td><td>What can I <b>end up with</b>?</td><td>How can I end up with <b>nothing</b>?</td></tr>
+      <tr><td>It is a list of</td><td>baskets of fruit (the <b>results</b>)</td><td>amounts of packs (the <b>trades</b>)</td></tr>
+      <tr><td>Here</td><td>baskets with oranges = apples + bananas</td><td>all $c \times (1, 1, -1)$</td></tr>
+      <tr><td>In maths</td><td>all $b$ you can get as $Ax$</td><td>all $x$ with $Ax = 0$</td></tr>
+    </table>
+
+    <h3>The word dictionary</h3>
+    <table>
+      <tr><th>Shop word</th><th>Maths word</th></tr>
+      <tr><td>a pack (what's inside it)</td><td>a <b>column</b> of the matrix $A$</td></tr>
+      <tr><td>how many of each pack you buy</td><td>the input $x$</td></tr>
+      <tr><td>the fruit you end up with</td><td>the output $b = Ax$</td></tr>
+      <tr><td>everything you can end up with</td><td><b>column space</b> $C(A)$</td></tr>
+      <tr><td>every trade that leaves you with nothing</td><td><b>nullspace</b> $N(A)$</td></tr>
+      <tr><td>a pack that is a copy of others</td><td>a <b>dependent</b> column</td></tr>
+    </table>
+    <p>The rest of this lecture does exactly the same thing with the matrix below, which has 4 numbers per pack instead of 3, and where column 3 = column 1 + column 2 (a copy, just like pack C).</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">3. Recap: union and intersection</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Subspace = a collection of vectors that contains $0$ and is closed under adding and scaling (adding two members, or multiplying one by a number, gives another member). Union $P \cup L$ = everything in $P$ <b>or</b> in $L$. Intersection $P \cap L$ = only what is in $P$ <b>and</b> in $L$. Plane / line through the origin = flat sheet / straight stick passing through $0$. $\mathbb{R}^3$ = all lists of 3 numbers.</p>
+    </div>
+    <p>A <b>subspace</b> is a set of vectors you cannot escape by taking combinations: any $c\,v + d\,w$ of its members is still inside. It always contains $0$.</p>
+    <p>Take two subspaces of $\mathbb{R}^3$: a plane $P$ and a line $L$, both through the origin, with $L$ not lying in $P$.</p>
+    <table>
+      <tr><th></th><th>Means</th><th>Subspace?</th><th>Why</th></tr>
+      <tr><td><b>Union</b> $P \cup L$</td><td>vectors in $P$ <b>or</b> in $L$</td><td><b>No</b></td><td>add one vector from $P$ and one from $L$: the sum is usually in neither</td></tr>
+      <tr><td><b>Intersection</b> $P \cap L$</td><td>vectors in $P$ <b>and</b> in $L$</td><td><b>Yes</b></td><td>here it is just $\{0\}$, which is a subspace</td></tr>
+    </table>
+    <p>With numbers: $P$ = the floor (all $(x, y, 0)$), $L$ = the z-axis (all $(0, 0, t)$).</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Pick one vector from each: $(1, 0, 0)$ from the floor, $(0, 0, 1)$ from the z-axis.</p>
+        <p class="k"><span class="kl">Why</span> A subspace must keep the sum of any two members. If the union is a subspace, their sum must be in it.</p>
+        <p class="k"><span class="kl">How</span> Add entry by entry: $1 + 0 = 1$, $0 + 0 = 0$, $0 + 1 = 1$. Sum $= (1, 0, 1)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Third entry is $1 \ne 0$: not on the floor. First entry is $1 \ne 0$: not on the z-axis. The sum escaped, so the <b>union is not a subspace</b>.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find what is in both.</p>
+        <p class="k"><span class="kl">How</span> On the z-axis: $(0, 0, t)$. On the floor: third entry $= 0$. So $t = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> The intersection is only $(0, 0, 0)$, and $\{0\}$ is a subspace ($0 + 0 = 0$, $c \times 0 = 0$).</p>
+      </li>
+    </ol>
+
+    <div class="box theorem"><span class="label">The intersection of two subspaces is always a subspace</span>
+      <p>Take $v$ and $w$ that are in both $S$ and $T$.</p>
+      <table>
+        <tr><th>Test</th><th>In $S$?</th><th>In $T$?</th><th>So in $S \cap T$?</th></tr>
+        <tr><td>$v + w$</td><td>yes ($S$ is a subspace)</td><td>yes ($T$ is a subspace)</td><td>yes</td></tr>
+        <tr><td>$7v$</td><td>yes</td><td>yes</td><td>yes</td></tr>
+      </table>
+      <p>Anything you build from vectors in both stays in both.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">4. The column space C(A)</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Matrix $A$ = a table of numbers; here 4 rows and 3 columns ($4 \times 3$). Column = one vertical list of the table (one "pack"). Linear combination = scale each column by a number, then add. $Ax$ = $x_1 \times$ column 1 + $x_2 \times$ column 2 + $x_3 \times$ column 3. $\mathbb{R}^4$ = all lists of 4 numbers. Subspace = contains $0$, closed under adding and scaling. Dimension = number of independent directions.</p>
+    </div>
+    <p>The example for the whole lecture is a $4 \times 3$ matrix:</p>
+    $$ A = \begin{bmatrix} 1 & 1 & 2 \\ 2 & 1 & 3 \\ 3 & 1 & 4 \\ 4 & 1 & 5 \end{bmatrix} $$
+    <div class="box definition"><span class="label">Definition: Column space</span>
+      <p>The <b>column space</b> $C(A)$ is the set of <b>all linear combinations of the columns</b> of $A$. Equivalently, it is every output $Ax$ you can get from any input $x$.</p>
+    </div>
+    <ul>
+      <li>Each column has <b>4</b> numbers, so $C(A)$ lives in $\mathbb{R}^4$. (Number of <b>rows</b> = where the column space lives.)</li>
+      <li>It is a subspace: a combination of combinations is still a combination.</li>
+    </ul>
+    <p><b>Can 3 columns fill all of $\mathbb{R}^4$?</b> No. Three vectors can make at most a 3-dimensional piece of a 4-dimensional space. Here it is even smaller (section 6).</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s4">5. When can Ax = b be solved?</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$Ax = b$ = "find amounts $x_1, x_2, x_3$ of the three columns that add up to the target $b$". Unknowns = $x_1, x_2, x_3$ (3 of them). Equations = one per row (4 of them). Solution = an $x$ that makes all 4 equations true. Solvable = at least one solution exists. Column space $C(A)$ = every $b$ you can reach. Step = the difference between one entry of $b$ and the next.</p>
+    </div>
+    <p>$Ax = b$ is <b>4 equations, 3 unknowns</b>:</p>
+    $$ x_1 \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix} + x_2 \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix} + x_3 \begin{bmatrix} 2 \\ 3 \\ 4 \\ 5 \end{bmatrix} = \begin{bmatrix} b_1 \\ b_2 \\ b_3 \\ b_4 \end{bmatrix} $$
+    <p>Usually there is no solution. But for some special $b$ there is. The easy way to find good $b$'s: <b>pick an $x$ first</b> and see what $b$ comes out.</p>
+    <table>
+      <tr><th>Pick $x$</th><th>Combination</th><th>This $b$ is solvable</th></tr>
+      <tr><td>$(0, 0, 0)$</td><td>nothing</td><td>$(0, 0, 0, 0)$</td></tr>
+      <tr><td>$(1, 0, 0)$</td><td>column 1</td><td>$(1, 2, 3, 4)$</td></tr>
+      <tr><td>$(0, 1, 0)$</td><td>column 2</td><td>$(1, 1, 1, 1)$</td></tr>
+      <tr><td>$(1, 1, 0)$</td><td>column 1 + column 2</td><td>$(2, 3, 4, 5)$</td></tr>
+      <tr><td>$(2, -1, 0)$</td><td>2 × column 1 − column 2</td><td>$(1, 3, 5, 7)$</td></tr>
+    </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Work out the last row slowly: $x = (2, -1, 0)$.</p>
+        <p class="k"><span class="kl">Why</span> To see that "pick $x$, compute $Ax$" really gives a reachable $b$.</p>
+        <p class="k"><span class="kl">How</span> $2 \times$ column 1 $= (2, 4, 6, 8)$. $-1 \times$ column 2 $= (-1, -1, -1, -1)$. $0 \times$ column 3 $= (0, 0, 0, 0)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add them row by row.</p>
+        <p class="k"><span class="kl">How</span> Row 1: $2 - 1 + 0 = 1$. Row 2: $4 - 1 + 0 = 3$. Row 3: $6 - 1 + 0 = 5$. Row 4: $8 - 1 + 0 = 7$.</p>
+        <p class="k"><span class="kl">What we have now</span> $b = (1, 3, 5, 7)$, and $x = (2, -1, 0)$ solves $Ax = b$.</p>
+      </li>
+    </ol>
+
+    <div class="box theorem"><span class="label">The key fact</span>
+      $$ Ax = b \text{ has a solution} \iff b \text{ is in the column space } C(A). $$
+      <p>If $b$ is a combination of the columns, the numbers in that combination <b>are</b> the solution $x$. If it is not, no $x$ can work.</p>
+    </div>
+
+    <h3>What does C(A) look like here? "Equal steps"</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Drop column 3 and write a general $b$ from columns 1 and 2 only.</p>
+        <p class="k"><span class="kl">Why</span> Column 3 adds nothing new (section 6), so every $b$ in $C(A)$ is $x_1(1, 2, 3, 4) + x_2(1, 1, 1, 1)$.</p>
+        <p class="k"><span class="kl">How</span> Row by row: $1 \cdot x_1 + x_2$, then $2x_1 + x_2$, then $3x_1 + x_2$, then $4x_1 + x_2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Subtract each entry from the next one.</p>
+        <p class="k"><span class="kl">How</span> $(2x_1 + x_2) - (x_1 + x_2) = x_1$. $(3x_1 + x_2) - (2x_1 + x_2) = x_1$. $(4x_1 + x_2) - (3x_1 + x_2) = x_1$.</p>
+        <p class="k"><span class="kl">What we have now</span> Every step is the same number $x_1$. So every $b$ in the column space goes up (or down) in <b>equal steps</b>.</p>
+      </li>
+    </ol>
+    $$ b = (x_1 + x_2,\ \ 2x_1 + x_2,\ \ 3x_1 + x_2,\ \ 4x_1 + x_2) $$
+    <table>
+      <tr><th>$b$</th><th>Steps between numbers</th><th>Equal steps?</th><th>In $C(A)$?</th></tr>
+      <tr><td>$(1, 2, 3, 4)$</td><td>$+1, +1, +1$</td><td>yes</td><td>yes</td></tr>
+      <tr><td>$(1, 3, 5, 7)$</td><td>$+2, +2, +2$</td><td>yes</td><td>yes</td></tr>
+      <tr><td>$(5, 5, 5, 5)$</td><td>$0, 0, 0$</td><td>yes</td><td>yes</td></tr>
+      <tr><td>$(1, 0, 0, 0)$</td><td>$-1, 0, 0$</td><td><b>no</b></td><td><b>no</b>: $Ax = (1, 0, 0, 0)$ has no solution</td></tr>
+      <tr><td>$(1, 2, 4, 8)$</td><td>$+1, +2, +4$</td><td><b>no</b></td><td><b>no</b></td></tr>
+    </table>
+    <p>Confirm $(1, 0, 0, 0)$ is unreachable straight from the equations:</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Use rows 1 and 2 (with $x_3 = 0$, since column 3 is a copy): $x_1 + x_2 = 1$ and $2x_1 + x_2 = 0$.</p>
+        <p class="k"><span class="kl">Why</span> Two equations fix the two unknowns. Then rows 3 and 4 act as a test.</p>
+        <p class="k"><span class="kl">How</span> Row 2 minus row 1: $(2x_1 - x_1) + (x_2 - x_2) = 0 - 1$, so $x_1 = -1$. Then $-1 + x_2 = 1$, so $x_2 = 2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Row 3 needs $3x_1 + x_2 = 0$. With our numbers: $3 \times (-1) + 2 = -3 + 2 = -1$. That is not $0$ ✗.</p>
+        <p class="k"><span class="kl">What we have now</span> The only $x$ that fits rows 1 and 2 breaks row 3. No solution: $(1, 0, 0, 0)$ is not in $C(A)$.</p>
+      </li>
+    </ol>
+
+    <!-- ====================================================== -->
+    <h2 id="s5">6. A column that adds nothing</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Column = one vertical list of $A$. Combination = scale and add. Column space $C(A)$ = all combinations of the columns. Dependent (redundant) column = a column that is already a combination of others, so it adds no new direction. Pivot column = a column that adds a new direction (we keep it). Dimension = how many independent directions. Plane = a flat 2-direction piece.</p>
+    </div>
+    <p>Look at column 3:</p>
+    $$ \underbrace{(2, 3, 4, 5)}_{\text{col } 3} = \underbrace{(1, 2, 3, 4)}_{\text{col } 1} + \underbrace{(1, 1, 1, 1)}_{\text{col } 2} $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Check col 1 + col 2 = col 3, one entry at a time.</p>
+        <p class="k"><span class="kl">Why</span> If it is true, column 3 is a copy and adds nothing.</p>
+        <p class="k"><span class="kl">How</span> Row 1: $1 + 1 = 2$ ✓. Row 2: $2 + 1 = 3$ ✓. Row 3: $3 + 1 = 4$ ✓. Row 4: $4 + 1 = 5$ ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> All four match: column 3 $=$ column 1 $+$ column 2.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Check that column 2 is not a multiple of column 1.</p>
+        <p class="k"><span class="kl">How</span> To turn $(1, 2, 3, 4)$ into $(1, 1, 1, 1)$, row 1 needs "times 1" but row 2 needs "times $\tfrac12$". Different amounts, so no single multiple works.</p>
+        <p class="k"><span class="kl">What we have now</span> Column 2 adds a new direction. Columns 1 and 2 are pivot columns; column 3 is not.</p>
+      </li>
+    </ol>
+    <p>Column 3 is already a combination of columns 1 and 2. Throwing it away does <b>not</b> change the column space: anything you could build with it, you can build without it.</p>
+    <table>
+      <tr><th>Column</th><th>Adds a new direction?</th><th>Name</th></tr>
+      <tr><td>1: $(1, 2, 3, 4)$</td><td>yes (first one)</td><td>pivot column</td></tr>
+      <tr><td>2: $(1, 1, 1, 1)$</td><td>yes (not a multiple of column 1)</td><td>pivot column</td></tr>
+      <tr><td>3: $(2, 3, 4, 5)$</td><td>no (= col 1 + col 2)</td><td>not a pivot column</td></tr>
+    </table>
+    <div class="box theorem"><span class="label">Result</span>
+      <p>$C(A)$ is a <b>2-dimensional</b> subspace (a "plane") inside $\mathbb{R}^4$, made by columns 1 and 2.</p>
+      <p>(We could have thrown away column 1 instead, since column 1 = column 3 − column 2. By convention we keep the <b>earlier</b> columns and drop the later dependent ones.)</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">7. The nullspace N(A)</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Nullspace $N(A)$ = all inputs $x$ with $Ax = 0$ ("null" = zero). Input $x$ = how much of each column we take. $Ax = 0$ = the columns, scaled by $x$, cancel out completely. $\mathbb{R}^m$ / $\mathbb{R}^n$ = lists of $m$ / $n$ numbers ($m$ = rows, $n$ = columns). Line through the origin = all multiples $c \times$ (one vector).</p>
+    </div>
+    <div class="box definition"><span class="label">Definition: Nullspace</span>
+      <p>The <b>nullspace</b> $N(A)$ is the set of <b>all inputs $x$ that give output zero</b>:</p>
+      $$ N(A) = \{\ x \ :\ Ax = 0\ \} $$
+      <p>"Null" means zero. These are the combinations of the columns that <b>cancel out completely</b>.</p>
+    </div>
+    <table>
+      <tr><th></th><th>Column space $C(A)$</th><th>Nullspace $N(A)$</th></tr>
+      <tr><td>Contains</td><td>outputs $b$</td><td>inputs $x$</td></tr>
+      <tr><td>Lives in</td><td>$\mathbb{R}^m$ ($m$ = number of rows; here $\mathbb{R}^4$)</td><td>$\mathbb{R}^n$ ($n$ = number of columns; here $\mathbb{R}^3$)</td></tr>
+      <tr><td>Described by</td><td>vectors to combine (the columns)</td><td>an equation to satisfy ($Ax = 0$)</td></tr>
+    </table>
+
+    <h3>Finding N(A) for our matrix</h3>
+    <p>We need $x_1(\text{col } 1) + x_2(\text{col } 2) + x_3(\text{col } 3) = 0$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Start from the copy fact: col 3 = col 1 + col 2.</p>
+        <p class="k"><span class="kl">Why</span> A copy fact can be turned into "something = 0" by moving everything to one side.</p>
+        <p class="k"><span class="kl">How</span> Take col 3 away from both sides: col 1 + col 2 − col 3 $= 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> $1 \cdot (\text{col } 1) + 1 \cdot (\text{col } 2) - 1 \cdot (\text{col } 3) = 0$, so $x = (1, 1, -1)$ is in $N(A)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Multiply each row of the original $A$ by $(1, 1, -1)$ and add.</p>
+        <table>
+          <tr><th>Row of $A$</th><th>Row · $(1, 1, -1)$</th><th>Result</th></tr>
+          <tr><td>$(1, 1, 2)$</td><td>$1 + 1 - 2$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(2, 1, 3)$</td><td>$2 + 1 - 3$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(3, 1, 4)$</td><td>$3 + 1 - 4$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(4, 1, 5)$</td><td>$4 + 1 - 5$</td><td>$0$ ✓</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> All four rows give $0$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Try a multiple: $(2, 2, -2)$.</p>
+        <p class="k"><span class="kl">How</span> Row 1: $2 + 2 - 4 = 0$. Row 2: $4 + 2 - 6 = 0$. Row 3: $6 + 2 - 8 = 0$. Row 4: $8 + 2 - 10 = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> Any multiple works too: $(2, 2, -2)$, $(7, 7, -7)$, $(0, 0, 0)$ …</p>
+      </li>
+    </ol>
+    $$ N(A) = \{\ c\,(1, 1, -1)\ \} = \{\ (c,\ c,\ -c)\ \} $$
+    <p class="answer">$N(A)$ is a <b>line</b> through the origin in $\mathbb{R}^3$, in the direction $(1, 1, -1)$.</p>
+
+    <figure class="fig plot3d">
+      <div id="l7plot" class="plot3d-box" role="img" aria-label="Nullspace line through the origin and the shifted line of solutions to Ax=b"></div>
+      <figcaption><b>Green:</b> the nullspace $N(A)$, all $c(1, 1, -1)$. It goes through the origin, so it is a subspace. <b>Red:</b> all solutions of $Ax = (1, 2, 3, 4)$ (section 9). It is the same line shifted to pass through $(1, 0, 0)$; it misses the origin, so it is <b>not</b> a subspace. <b>Drag to rotate.</b></figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">8. Why N(A) is a subspace</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Subspace = contains $0$, and closed under adding and scaling. Closed under adding = if $v$ and $w$ are in, so is $v + w$. Closed under scaling = if $v$ is in, so is $c\,v$ for any number $c$. Distributive law = $A(v + w) = Av + Aw$. Nullspace = all $x$ with $Ax = 0$.</p>
+    </div>
+    <p>Two checks. Suppose $Av = 0$ and $Aw = 0$.</p>
+    <table>
+      <tr><th>Test</th><th>Work</th><th>Result</th></tr>
+      <tr><td>Adding</td><td>$A(v + w) = Av + Aw = 0 + 0$</td><td>$0$, so $v + w$ is in $N(A)$ ✓</td></tr>
+      <tr><td>Multiplying</td><td>$A(12v) = 12\,Av = 12 \times 0$</td><td>$0$, so $12v$ is in $N(A)$ ✓</td></tr>
+    </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Take two nullspace members: $v = (1, 1, -1)$ and $w = (2, 2, -2)$.</p>
+        <p class="k"><span class="kl">Why</span> Test "closed under adding" with real numbers.</p>
+        <p class="k"><span class="kl">How</span> Add entry by entry: $1 + 2 = 3$, $1 + 2 = 3$, $-1 + (-2) = -3$.</p>
+        <p class="k"><span class="kl">What we have now</span> $v + w = (3, 3, -3)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Multiply each row of the original $A$ by $(3, 3, -3)$. Row 1: $3 + 3 - 6 = 0$ ✓. Row 2: $6 + 3 - 9 = 0$ ✓. Row 3: $9 + 3 - 12 = 0$ ✓. Row 4: $12 + 3 - 15 = 0$ ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> The sum is still in $N(A)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Test scaling: $12v = (12, 12, -12)$.</p>
+        <p class="k"><span class="kl">How</span> Row 1: $12 + 12 - 24 = 0$. Row 2: $24 + 12 - 36 = 0$. Row 3: $36 + 12 - 48 = 0$. Row 4: $48 + 12 - 60 = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> Still in $N(A)$ ✓.</p>
+      </li>
+    </ol>
+    <p>This uses the distributive law $A(v + w) = Av + Aw$ and the fact that a number can move outside: $A(cv) = c(Av)$.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">9. Solutions of Ax = b are not a subspace</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Solution of $Ax = b$ = an $x$ that makes all rows equal the target $b$. Nullspace = all $x$ with $Ax = 0$. Subspace = contains $0$, closed under adding and scaling. Shifted = moved away from the origin without turning. Origin = the zero vector.</p>
+    </div>
+    <p>Now change the right side to $b = (1, 2, 3, 4)$ (not zero). Two solutions:</p>
+    <table>
+      <tr><th>$x$</th><th>Combination</th><th>Gives $b$?</th></tr>
+      <tr><td>$(1, 0, 0)$</td><td>column 1</td><td>$(1, 2, 3, 4)$ ✓</td></tr>
+      <tr><td>$(0, -1, 1)$</td><td>$-$col 2 + col 3 $= (2-1, 3-1, 4-1, 5-1)$</td><td>$(1, 2, 3, 4)$ ✓</td></tr>
+    </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Check $x = (0, -1, 1)$ row by row in the original $A$.</p>
+        <p class="k"><span class="kl">How</span> Row 1: $0 \cdot 1 - 1 \cdot 1 + 1 \cdot 2 = -1 + 2 = 1$. Row 2: $0 - 1 + 3 = 2$. Row 3: $0 - 1 + 4 = 3$. Row 4: $0 - 1 + 5 = 4$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(1, 2, 3, 4) = b$ ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Get all solutions: one solution plus anything from the nullspace.</p>
+        <p class="k"><span class="kl">Why</span> Adding a nullspace vector adds $0$ to the output, so the output stays $b$.</p>
+        <p class="k"><span class="kl">How</span> $x = (1, 0, 0) + c\,(1, 1, -1)$. With $c = -1$: $1 - 1 = 0$, $0 - 1 = -1$, $0 - (-1) = 1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(0, -1, 1)$: the second solution ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Subspace test 1: is $0$ a solution?</p>
+        <p class="k"><span class="kl">How</span> $A \cdot 0 = (0, 0, 0, 0)$, but $b = (1, 2, 3, 4)$. $0 \ne 1$ in row 1.</p>
+        <p class="k"><span class="kl">What we have now</span> $0$ is not a solution ✗.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Subspace test 2: add two solutions.</p>
+        <p class="k"><span class="kl">How</span> $(1, 0, 0) + (0, -1, 1) = (1, -1, 1)$. Row 1: $1 - 1 + 2 = 2$. Row 2: $2 - 1 + 3 = 4$. Row 3: $3 - 1 + 4 = 6$. Row 4: $4 - 1 + 5 = 8$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(2, 4, 6, 8) = 2b$, not $b$ ✗.</p>
+      </li>
+    </ol>
+    <table>
+      <tr><th>Subspace test</th><th>Result</th></tr>
+      <tr><td>Contains $0$?</td><td>No: $A \cdot 0 = 0 \ne b$ ✗</td></tr>
+      <tr><td>Adding two solutions</td><td>$(1, 0, 0) + (0, -1, 1) = (1, -1, 1)$ gives $A x = 2b$, not $b$ ✗</td></tr>
+    </table>
+    <p class="answer">The solutions form a line that <b>misses the origin</b> (red line in the graph). Not a subspace.</p>
+    <div class="box pitfall"><span class="label">Rule</span>
+      <p>Only the solutions of $Ax = \mathbf{0}$ form a subspace. For $b \ne 0$, the solutions are the nullspace <b>shifted</b> away from the origin.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s9">10. Two ways to describe a subspace</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Build it up = start from a few vectors and take all their combinations (scale and add). Cut it down = start from equations and keep every vector that passes them. Column space = built up from the columns. Nullspace = cut down by $Ax = 0$. Payoff = what a product pays in each scenario. Arbitrage = free money: a trade that pays nothing later but pays you today.</p>
+    </div>
+    <table>
+      <tr><th>Way</th><th>You are told</th><th>You find</th><th>Example</th></tr>
+      <tr><td><b>Build it up</b></td><td>a few vectors</td><td>all their combinations</td><td>column space: combine the columns</td></tr>
+      <tr><td><b>Cut it down</b></td><td>equations the vectors must satisfy</td><td>every vector passing the test</td><td>nullspace: all $x$ with $Ax = 0$</td></tr>
+    </table>
+    <p>Next lecture shows how to find the nullspace systematically (by elimination) when it can't be seen by eye.</p>
+
+    <!-- ====================================================== -->
+    <div class="box finance"><span class="label">In finance</span>
+      <ul>
+        <li><b>Column space = what you can build.</b> Columns are the payoffs of the products you can trade. A target payoff can be replicated exactly when it is in the column space (Example 8: some Nifty CEs can be built from futures + bonds, others cannot).</li>
+        <li><b>Nullspace = portfolios that pay nothing.</b> A nonzero $x$ with $Ax = 0$ is a mix that pays zero in every scenario. If its cost today is not zero, that is an <b>arbitrage</b>: free money (Example 9).</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s10">11. Summary</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Subspace = contains $0$, closed under adding and scaling. Union = in either set; intersection = in both. Column space $C(A)$ = all combinations of the columns. Nullspace $N(A)$ = all $x$ with $Ax = 0$. Dependent column = a column that is a mix of others. $\mathbb{R}^m$ = lists of $m$ numbers ($m$ = rows); $\mathbb{R}^n$ = lists of $n$ numbers ($n$ = columns).</p>
+    </div>
+    <table>
+      <tr><th>Idea</th><th>In one line</th></tr>
+      <tr><td>Union of subspaces</td><td>Usually <b>not</b> a subspace.</td></tr>
+      <tr><td>Intersection of subspaces</td><td><b>Always</b> a subspace.</td></tr>
+      <tr><td>Column space $C(A)$</td><td>All combinations of the columns; lives in $\mathbb{R}^m$.</td></tr>
+      <tr><td>$Ax = b$ solvable</td><td>Exactly when $b$ is in $C(A)$.</td></tr>
+      <tr><td>Dependent column</td><td>A column that is a mix of earlier ones adds nothing to $C(A)$.</td></tr>
+      <tr><td>Nullspace $N(A)$</td><td>All $x$ with $Ax = 0$; lives in $\mathbb{R}^n$; always a subspace.</td></tr>
+      <tr><td>Solutions of $Ax = b$, $b \ne 0$</td><td>A shifted copy of $N(A)$; not a subspace.</td></tr>
+    </table>
+  </div>
+  </section>
+
+  <!-- ================= EXAMPLES ================= -->
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+
+    <h2>Worked examples</h2>
+
+    <!-- E0 -->
+    <div class="worked">
+      <h3>Example 1 (interactive): Options Replication Lab, column space and nullspace</h3>
+      <div class="box theorem"><span class="label">Note: what this lecture teaches, in one look</span>
+        <table>
+          <tr><th>Idea</th><th>What it does</th><th>Example (CE, PE, future @ 20,000)</th></tr>
+          <tr><td><b>Subspace</b></td><td>A collection closed under adding and scaling, always containing 0. Two subspaces' <b>overlap</b> (intersection) is a subspace; their <b>union</b> usually is not.</td><td>All payoffs that are 0 at 20,000.</td></tr>
+          <tr><td><b>Column space $C(A)$</b></td><td><b>Can</b> the client's payoff be built? All payoffs your products can make. Inside → a recipe; outside → impossible.</td><td>Client (1, 0, 1) → inside → buy 1 CE + 1 PE.</td></tr>
+          <tr><td><b>Nullspace $N(A)$</b></td><td>All trades that pay <b>0 at every level</b>. Non-zero ones mean a product is a <b>copy</b> of others, there are <b>many recipes</b>, and the trade must <b>cost 0</b> or there is arbitrage.</td><td>Sell 1 CE, buy 1 PE, buy 1 future pays (0, 0, 0) (put–call parity).</td></tr>
+          <tr><td><b>They live in different places</b></td><td>Column space: payoffs (one number per Nifty level). Nullspace: lots (one number per product).</td><td>(1, 0, 1) is a payoff; (−1, 1, 1) is a list of lots.</td></tr>
+          <tr><td><b>All recipes</b></td><td>One recipe + any zero trade = another recipe that pays the same.</td><td>(1, 1, 0) + (−1, 1, 1) = (0, 2, 1): 2 PE + 1 future also pays (1, 0, 1).</td></tr>
+        </table>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <table>
+          <tr><th>Word</th><th>In simple words</th><th>Example (Nifty)</th></tr>
+          <tr><td><b>CE / PE / future</b></td><td>CE pays above the strike, PE below; a future pays Nifty's move from its price (can be negative).</td><td>20,000 CE at 20,100 → 100 points; future @ 20,000 at 19,900 → −100.</td></tr>
+          <tr><td><b>Payoff matrix $A$</b></td><td>Rows = Nifty levels, columns = products.</td><td>Row 19,900 of the parity market: (0, 1, −1).</td></tr>
+          <tr><td><b>Column space $C(A)$</b></td><td>All payoffs your products can build.</td><td>Every payoff that is 0 at 20,000.</td></tr>
+          <tr><td><b>Inside / outside</b></td><td>Inside = buildable; outside = no mix works.</td><td>(1, 0, 1) inside; (0, 1, 0) outside.</td></tr>
+          <tr><td><b>Rank</b></td><td>How many truly different directions the products point in.</td><td>CE, PE, future → rank 2.</td></tr>
+          <tr><td><b>Nullspace $N(A)$</b></td><td>All lots that pay 0 at every level.</td><td>Sell 1 CE, buy 1 PE, buy 1 future.</td></tr>
+          <tr><td><b>Pivot / free column</b></td><td>Free column = a product that is a copy of the others; it gives a zero trade.</td><td>The future is free here.</td></tr>
+          <tr><td><b>Special solution</b></td><td>Set one free product to 1, solve for the rest: one zero trade.</td><td>(−1, 1, 1).</td></tr>
+          <tr><td><b>Many recipes</b></td><td>Recipe + any zero trade = another recipe.</td><td>1 CE + 1 PE, or 2 PE + 1 future.</td></tr>
+          <tr><td><b>Arbitrage</b></td><td>Free money: a zero-payoff trade that doesn't cost 0.</td><td>It costs −10: you are paid 10 for nothing.</td></tr>
+          <tr><td><b>Subspace</b></td><td>Closed under adding and scaling, contains 0.</td><td>Both $C(A)$ and $N(A)$.</td></tr>
+        </table>
+      </div>
+      <h4>1. The agenda: what question are we solving?</h4>
+      <div class="box finance"><span class="label">The question, as a story</span>
+        <p>Your screen has three products, all around 20,000: A = buy 20,000 CE, B = buy 20,000 PE, C = buy a Nifty future at 20,000. Nifty ends at 19,900, 20,000 or 20,100 (points ÷ 100):</p>
+        <table>
+          <tr><th>Product</th><th>19,900</th><th>20,000</th><th>20,100</th><th>Premium</th></tr>
+          <tr><td>A = 20,000 CE</td><td>0</td><td>0</td><td>1</td><td>60</td></tr>
+          <tr><td>B = 20,000 PE</td><td>1</td><td>0</td><td>0</td><td>50</td></tr>
+          <tr><td>C = future @ 20,000</td><td>−1</td><td>0</td><td>1</td><td>0</td></tr>
+        </table>
+        <p>A client wants 1 / 0 / 1 (a straddle shape). Two questions:</p>
+        <p class="answer">1. Column space: <b>can</b> we build what the client wants? 2. Nullspace: is there a trade that pays <b>nothing at all</b>, and what does that tell us (copies, many recipes, free money)?</p>
+      </div>
+
+      <h4>2. The core maths we use (this lecture)</h4>
+      <table>
+        <tr><th>Maths piece</th><th>What it is</th><th>In the lab</th></tr>
+        <tr><td>Column space $C(A)$</td><td>all combinations of the columns</td><td>section 4: arrows, walks, shading, client inside/outside</td></tr>
+        <tr><td>Nullspace $N(A)$</td><td>all $x$ with $Ax = 0$</td><td>section 5: special solutions, checks, price</td></tr>
+        <tr><td>Subspace</td><td>closed under add and scale, contains 0</td><td>both spaces</td></tr>
+        <tr><td>Rank, free columns</td><td>size of $C(A)$; size of $N(A)$ = products − rank</td><td>section 6</td></tr>
+      </table>
+
+      <h4>3. How your inputs become maths</h4>
+      <table>
+        <tr><th>You type</th><th>It becomes</th><th>Meaning</th></tr>
+        <tr><td>Nifty levels</td><td>rows of $A$</td><td>the scenarios (column space lives here: one number per level)</td></tr>
+        <tr><td>Products</td><td>columns of $A$</td><td>arrows (nullspace lives among lots: one number per product)</td></tr>
+        <tr><td>"Client wants"</td><td>$b$</td><td>inside or outside $C(A)$?</td></tr>
+        <tr><td>Premiums</td><td>prices</td><td>does each zero trade cost 0?</td></tr>
+      </table>
+
+      <h4>4. Walkthrough: the market the lab starts with</h4>
+      <table>
+        <tr><th>Step</th><th>What we do</th><th>Result</th></tr>
+        <tr><td>Column space</td><td>Every product pays 0 at 20,000, so every mix pays 0 there. The products point in 2 directions.</td><td>$C(A)$ = all payoffs that are 0 at 20,000 (a flat sheet).</td></tr>
+        <tr><td>Client inside?</td><td>(1, 0, 1) is 0 at 20,000 ✓. Try 1 CE + 1 PE: (0, 0, 1) + (1, 0, 0) = (1, 0, 1).</td><td>inside: buy 1 CE + 1 PE.</td></tr>
+        <tr><td>Nullspace</td><td>Set every payoff to 0: at 19,900 $y - z = 0$; at 20,100 $x + z = 0$. The future is free: $z = 1$ gives $y = 1$, $x = -1$.</td><td>sell 1 CE, buy 1 PE, buy 1 future pays 0 everywhere.</td></tr>
+        <tr><td>Check it</td><td>19,900: $0 + 1 - 1 = 0$; 20,000: $0$; 20,100: $-1 + 0 + 1 = 0$</td><td>✓ (this is put–call parity: CE − PE = future)</td></tr>
+        <tr><td>Price it</td><td>$-60 + 50 + 0 = -10$</td><td>you are <b>paid 10</b> for a trade that pays nothing: arbitrage.</td></tr>
+        <tr><td>Many recipes</td><td>(1, 1, 0) + 1 × (−1, 1, 1) = (0, 2, 1): 2 PE + 1 future</td><td>pays (1, 0, 1) too, but costs 100 instead of 110.</td></tr>
+      </table>
+
+      <h4>5. What each output section shows, and what to look for</h4>
+      <table>
+        <tr><th>Lab section</th><th>What it shows</th><th>What to identify</th></tr>
+        <tr><td>1–3</td><td>the question, payoffs, equations</td><td>the matrix $A$</td></tr>
+        <tr><td>4. Column space</td><td>how the picture forms (arrows → walks → shading → client), a recipe checked</td><td>is the client inside?</td></tr>
+        <tr><td>5. Nullspace</td><td>how to find it, each zero trade checked and priced, the lots-space picture, many recipes</td><td>copies, arbitrage, other recipes</td></tr>
+        <tr><td>6. Side by side</td><td>question, where it lives, size, your market</td><td>rank and free columns</td></tr>
+        <tr><td>7–8</td><td>row/column pictures; price and arbitrage</td><td>the fair price</td></tr>
+      </table>
+
+      <h4>6. What this can tell you</h4>
+      <table>
+        <tr><th>What you see</th><th>Maths meaning</th><th>Options meaning</th></tr>
+        <tr><td>client inside $C(A)$</td><td>$Ax = b$ solvable</td><td>you can serve the client</td></tr>
+        <tr><td>client outside</td><td>not solvable</td><td>impossible with these products (closest hedge only)</td></tr>
+        <tr><td>nullspace only 0</td><td>no free columns</td><td>no copies: one recipe per payoff</td></tr>
+        <tr><td>a non-zero zero trade</td><td>free column, special solution</td><td>a copy product; many recipes; it must cost 0 or there is arbitrage</td></tr>
+      </table>
+
+      <h4>7. How this is used with real options</h4>
+      <ul>
+        <li><b>Can we quote it?</b> A client's payoff is quotable from listed options only if it is in the column space; otherwise the desk carries leftover risk.</li>
+        <li><b>Parity and arbitrage.</b> Zero-payoff trades (like CE − PE − future) are exactly the price relations that must hold. Arbitrage desks scan the option chain for zero trades that don't cost zero.</li>
+        <li><b>Cheapest recipe.</b> When the nullspace is non-zero, many recipes pay the same; traders pick the cheapest (or the most liquid).</li>
+        <li><b>Redundant instruments.</b> A free column means an instrument adds nothing new for hedging these scenarios.</li>
+      </ul>
+
+      <h4>8. Try it</h4>
+      <ul>
+        <li>Starting market (put–call parity): one zero trade, and it's mispriced by 10. Change the premiums so it costs 0.</li>
+        <li><b>Lecture example</b> preset: the nullspace is only 0, one recipe.</li>
+        <li><b>Incomplete market</b> preset: the client is outside the column space.</li>
+        <li>Set "Client wants" to something non-zero at 20,000 in the parity market: it jumps outside.</li>
+      </ul>
+      <div id="replab" data-csn data-preset="parity"></div>
+    </div>
+
+    <!-- E1 -->
+    <div class="worked">
+      <h3>Example 2: Which trading rules are "safe"? (subspaces with Nifty payoffs)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>At expiry Nifty ends <b>Low (19,800)</b>, <b>Mid (20,000)</b> or <b>High (20,200)</b>. Any position's result is a payoff list <b>(Low, Mid, High)</b>, in points ÷ 200.</p>
+        <p>Available positions: <b>20,000 PE</b> pays $(1, 0, 0)$, <b>20,000 CE</b> pays $(0, 0, 1)$, a <b>short future</b> (buy PE, sell CE) pays $(1, 0, -1)$, and a <b>straddle</b> (buy PE + buy CE) pays $(1, 0, 1)$.</p>
+        <p>A risk desk proposes four rules for which positions traders may hold. A rule is a <b>subspace</b> ("a safe rule") if: <b>no position</b> is allowed, <b>any size</b> of an allowed position is allowed (more lots, fewer lots, or the reverse trade), and <b>combining</b> two allowed positions is allowed. Which rules are safe?</p>
+        <table>
+          <tr><th>Rule</th><th>In trading words</th><th>In maths (board)</th></tr>
+          <tr><td>1</td><td>your <b>High</b> payoff must equal <b>Low + Mid</b> payoff</td><td>$b_1 + b_2 - b_3 = 0$</td></tr>
+          <tr><td>2</td><td>your <b>High</b> payoff must equal <b>Low × Mid</b> payoff</td><td>$b_1 b_2 - b_3 = 0$</td></tr>
+          <tr><td>3</td><td>hold <b>1 PE</b>, plus any number of <b>short futures</b> and any number of <b>straddles</b></td><td>$(1,0,0) + c_1(1,0,-1) + c_2(1,0,1)$</td></tr>
+          <tr><td>4</td><td>hold a position that pays <b>1 only if Nifty ends Mid</b> (a butterfly at 20,000), plus any number of <b>short futures</b> and <b>straddles</b></td><td>$(0,1,0) + c_1(1,0,-1) + c_2(1,0,1)$</td></tr>
+        </table>
+        <p>(These are the four sets from the board: "which are subspaces of $\mathbb{R}^3 = \{(b_1, b_2, b_3)\}$?")</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Payoff vector $(b_1, b_2, b_3)$ = what a position pays if Nifty ends Low, Mid, High. PE (put) = pays when Nifty ends below the strike; CE (call) = pays when Nifty ends above it. Short future = buy PE + sell CE. Straddle = buy PE + buy CE. Lot = one unit of a trade; a negative number of lots = the reverse trade. Subspace = contains "no position" $(0,0,0)$, and stays inside when you resize or combine. Closed under scaling / adding = resizing / combining keeps you inside. Origin = $(0, 0, 0)$.</p>
+      </div>
+
+      <h4>Step 0: the market story</h4>
+      <p>At expiry Nifty ends <b>Low (19,800)</b>, <b>Mid (20,000)</b> or <b>High (20,200)</b>. A vector $(b_1, b_2, b_3)$ is a <b>payoff</b>: what a position pays in (Low, Mid, High). Payoffs are in points ÷ 200 to keep the numbers small.</p>
+      <table>
+        <tr><th>Position</th><th>Low</th><th>Mid</th><th>High</th><th>Vector</th></tr>
+        <tr><td><b>20,000 PE</b>: $\max(20{,}000 - S, 0)$</td><td>$1$</td><td>$0$</td><td>$0$</td><td>$(1, 0, 0)$</td></tr>
+        <tr><td><b>20,000 CE</b>: $\max(S - 20{,}000, 0)$</td><td>$0$</td><td>$0$</td><td>$1$</td><td>$(0, 0, 1)$</td></tr>
+        <tr><td><b>Short future</b> = buy PE, sell CE</td><td>$1$</td><td>$0$</td><td>$-1$</td><td>$(1, 0, -1)$</td></tr>
+        <tr><td><b>Straddle</b> = buy PE + buy CE</td><td>$1$</td><td>$0$</td><td>$1$</td><td>$(1, 0, 1)$</td></tr>
+      </table>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Work out the PE payoff at each level.</p>
+          <p class="k"><span class="kl">How</span> Low: $\max(20{,}000 - 19{,}800, 0) = 200$, and $200 \div 200 = 1$. Mid: $\max(0, 0) = 0$. High: $\max(20{,}000 - 20{,}200, 0) = \max(-200, 0) = 0$.</p>
+          <p class="k"><span class="kl">What we have now</span> PE $= (1, 0, 0)$. The CE is the mirror image: $(0, 0, 1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Build the short future and the straddle, level by level.</p>
+          <p class="k"><span class="kl">How</span> Short future = PE − CE: Low $1 - 0 = 1$, Mid $0 - 0 = 0$, High $0 - 1 = -1$. Straddle = PE + CE: Low $1 + 0 = 1$, Mid $0 + 0 = 0$, High $0 + 1 = 1$.</p>
+          <p class="k"><span class="kl">What we have now</span> Short future $= (1, 0, -1)$, straddle $= (1, 0, 1)$.</p>
+        </li>
+      </ol>
+      <p>So the vectors on the board are real positions: $(1, 0, 0)$ = 1 PE, $(1, 0, -1)$ = short future, $(1, 0, 1)$ = straddle.</p>
+
+      <div class="box definition"><span class="label">The subspace test, in trading words</span>
+        <p>A set of payoffs is a <b>subspace</b> if all three of these are true:</p>
+        <table>
+          <tr><th>#</th><th>Maths check</th><th>Trading meaning</th></tr>
+          <tr><td>1</td><td>contains $(0, 0, 0)$</td><td>"no position" is allowed</td></tr>
+          <tr><td>2</td><td>closed under scaling: $c \cdot b$ stays in</td><td>trade <b>any size</b> (2 lots, half a lot, or reverse the trade) and stay allowed</td></tr>
+          <tr><td>3</td><td>closed under adding: $b + b'$ stays in</td><td><b>combine</b> two allowed positions and stay allowed</td></tr>
+        </table>
+        <p>To show "not a subspace", one failing example is enough.</p>
+      </div>
+
+      <div class="steps">
+
+        <!-- SET 1 -->
+        <h4>Set 1: $b_1 + b_2 - b_3 = 0$</h4>
+        <p><b>In words:</b> positions where <b>High payoff = Low payoff + Mid payoff</b>.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check 1: is "no position" $(0, 0, 0)$ allowed?</p>
+            <p class="k"><span class="kl">How</span> $b_1 + b_2 - b_3 = 0 + 0 - 0 = 0$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> "No position" passes the rule.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check 2: resize an allowed position. Take the straddle $(1, 0, 1)$ and buy 3 lots.</p>
+            <p class="k"><span class="kl">Why</span> A safe rule must let you trade any size.</p>
+            <p class="k"><span class="kl">How</span> Straddle first: $1 + 0 - 1 = 0$, so it is allowed. 3 lots: $3 \times (1, 0, 1) = (3, 0, 3)$. Rule: $3 + 0 - 3 = 0$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> The bigger position is still allowed.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check 3: combine two allowed positions, $(1, 0, 1)$ and $(0, 2, 2)$.</p>
+            <p class="k"><span class="kl">How</span> $(0, 2, 2)$ is allowed: $0 + 2 - 2 = 0$. Add entry by entry: $1 + 0 = 1$, $0 + 2 = 2$, $1 + 2 = 3$, giving $(1, 2, 3)$. Rule: $1 + 2 - 3 = 0$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> The combination is still allowed.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Show it works for <b>every</b> case, not just these numbers.</p>
+            <p class="k"><span class="kl">How</span> If $b_1 + b_2 = b_3$ and $b_1' + b_2' = b_3'$, adding the two equations gives $(b_1 + b_1') + (b_2 + b_2') = b_3 + b_3'$. Multiplying the first by $c$ gives $cb_1 + cb_2 = cb_3$.</p>
+            <p class="k"><span class="kl">What we have now</span> The rule survives adding and scaling.</p>
+          </li>
+        </ol>
+        <table>
+          <tr><th>Check</th><th>Example</th><th>Result</th></tr>
+          <tr><td>1. no position</td><td>$(0, 0, 0)$: $0 + 0 - 0 = 0$</td><td>✓</td></tr>
+          <tr><td>2. any size</td><td>straddle $(1, 0, 1)$ is in ($1 + 0 = 1$). Buy 3: $(3, 0, 3)$: $3 + 0 = 3$</td><td>✓</td></tr>
+          <tr><td>3. combine</td><td>$(1, 0, 1)$ + $(0, 2, 2)$ $= (1, 2, 3)$: $1 + 2 = 3$</td><td>✓</td></tr>
+        </table>
+        <p class="answer">Set 1 is a subspace: a flat plane through the origin.</p>
+
+        <!-- SET 2 -->
+        <h4>Set 2: $b_1 b_2 - b_3 = 0$</h4>
+        <p><b>In words:</b> positions where <b>High payoff = Low payoff × Mid payoff</b>.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check 1: "no position" $(0, 0, 0)$.</p>
+            <p class="k"><span class="kl">How</span> $0 \times 0 - 0 = 0 - 0 = 0$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> Passes check 1. Keep testing.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check 2: take an allowed position $(1, 1, 1)$ and buy 2 lots.</p>
+            <p class="k"><span class="kl">How</span> $(1, 1, 1)$ is allowed: $1 \times 1 - 1 = 1 - 1 = 0$. Two lots: $2 \times (1, 1, 1) = (2, 2, 2)$. Rule: $2 \times 2 - 2 = 4 - 2 = 2$, not $0$ ✗.</p>
+            <p class="k"><span class="kl">Why it fails</span> Doubling the position doubles the High payoff (to 2) but <b>quadruples</b> Low × Mid (to 4).</p>
+            <p class="k"><span class="kl">What we have now</span> One failing example is enough: not a subspace.</p>
+          </li>
+        </ol>
+        <table>
+          <tr><th>Check</th><th>Example</th><th>Result</th></tr>
+          <tr><td>1. no position</td><td>$(0, 0, 0)$: $0 \times 0 - 0 = 0$</td><td>✓</td></tr>
+          <tr><td>2. any size</td><td>$(1, 1, 1)$ is in ($1 \times 1 = 1$). Buy <b>2 lots</b>: $(2, 2, 2)$: $2 \times 2 = 4$, not $2$</td><td><b>✗</b></td></tr>
+        </table>
+        <p>A rule that <b>multiplies</b> payoffs together breaks as soon as you change the size.</p>
+        <p class="answer">Set 2 is NOT a subspace: a curved surface, not flat.</p>
+
+        <figure class="fig plot3d">
+          <div id="l7e1a" class="plot3d-box" role="img" aria-label="Set 1 is a flat plane through the origin, set 2 is a curved surface"></div>
+          <figcaption><b>Sets 1 and 2.</b> Set 1 (purple) is <b>flat</b> and passes through the origin: a subspace. Set 2 (orange) is <b>curved</b>: $(1, 1, 1)$ is on it, but $(2, 2, 2)$ (red) is not. <b>Drag to rotate.</b></figcaption>
+        </figure>
+
+        <!-- SET 3 -->
+        <h4>Set 3: $(1, 0, 0) + c_1(1, 0, -1) + c_2(1, 0, 1)$</h4>
+        <p><b>In words:</b> start holding <b>1 PE</b>, then add <b>any number of short futures</b> ($c_1$) and <b>any number of straddles</b> ($c_2$).</p>
+        <p>It <i>looks</i> like it can't be a subspace, because it starts at $(1, 0, 0)$, not at $0$. But check whether "no position" can be reached:</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Ask for "no position": $(1, 0, 0) + c_1(1, 0, -1) + c_2(1, 0, 1) = (0, 0, 0)$.</p>
+            <p class="k"><span class="kl">Why</span> Check 1 needs $(0, 0, 0)$ inside. If some $c_1, c_2$ reach it, it is inside.</p>
+            <p class="k"><span class="kl">How</span> Write each level separately. Low: $1 + c_1 + c_2 = 0$. Mid: $0 + 0 + 0 = 0$ (always true). High: $0 - c_1 + c_2 = 0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Solve the High equation.</p>
+            <p class="k"><span class="kl">How</span> $-c_1 + c_2 = 0$. Add $c_1$ to both sides: $c_2 = c_1$.</p>
+            <p class="k"><span class="kl">What we have now</span> Both numbers are the same.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $c_2 = c_1$ into the Low equation.</p>
+            <p class="k"><span class="kl">How</span> $1 + c_1 + c_1 = 0$, so $1 + 2c_1 = 0$, so $2c_1 = -1$, so $c_1 = -\tfrac12$. Then $c_2 = -\tfrac12$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Low: $1 - \tfrac12 - \tfrac12 = 0$ ✓. Mid: $0$ ✓. High: $0 + \tfrac12 - \tfrac12 = 0$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> "No position" is reachable: sell half a short future and half a straddle against the 1 PE.</p>
+          </li>
+        </ol>
+        <table>
+          <tr><th>Step</th><th>Work</th></tr>
+          <tr><td>want</td><td>$(1, 0, 0) + c_1(1, 0, -1) + c_2(1, 0, 1) = (0, 0, 0)$</td></tr>
+          <tr><td>Low</td><td>$1 + c_1 + c_2 = 0$</td></tr>
+          <tr><td>High</td><td>$-c_1 + c_2 = 0$, so $c_1 = c_2$</td></tr>
+          <tr><td>solve</td><td>$1 + 2c_1 = 0$, so $c_1 = c_2 = -\tfrac12$</td></tr>
+        </table>
+        <p>It works! The reason: <b>1 PE is itself half a short future plus half a straddle</b>:</p>
+        $$ \tfrac12 (1, 0, -1) + \tfrac12 (1, 0, 1) = (1, 0, 0) $$
+        <p>(In trading terms: (buy PE − sell CE) + (buy PE + buy CE) = 2 PE.) So the starting PE adds nothing new: the set is just <b>all mixes of short futures and straddles</b>. Those are all mixes of PE and CE, which is <b>every payoff with Mid payoff = 0</b>, i.e. all $(b_1, 0, b_3)$.</p>
+        <table>
+          <tr><th>Check</th><th>Reason</th><th>Result</th></tr>
+          <tr><td>1. no position</td><td>$c_1 = c_2 = -\tfrac12$ gives $(0, 0, 0)$</td><td>✓</td></tr>
+          <tr><td>2. any size</td><td>Mid payoff $0$ stays $0$ when scaled</td><td>✓</td></tr>
+          <tr><td>3. combine</td><td>$0 + 0 = 0$ in the Mid spot</td><td>✓</td></tr>
+        </table>
+        <p class="answer">Set 3 IS a subspace: all positions that pay nothing if Nifty ends at 20,000 (the plane $b_2 = 0$).</p>
+
+        <!-- SET 4 -->
+        <h4>Set 4: $(0, 1, 0) + c_1(1, 0, -1) + c_2(1, 0, 1)$</h4>
+        <p><b>In words:</b> start holding a position that pays <b>1 only if Nifty ends Mid</b> (like a butterfly centred at 20,000), then add any short futures and straddles.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Look only at the Mid entry (the middle number).</p>
+            <p class="k"><span class="kl">Why</span> Short futures and straddles <b>both pay 0 at Mid</b>, so they can never change it.</p>
+            <p class="k"><span class="kl">How</span> Mid $= 1 + c_1 \times 0 + c_2 \times 0 = 1 + 0 + 0 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> The Mid payoff is always exactly $1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check 1: can we reach $(0, 0, 0)$?</p>
+            <p class="k"><span class="kl">How</span> $(0, 0, 0)$ needs Mid $= 0$. But Mid is always $1$, and $1 \ne 0$ ✗.</p>
+            <p class="k"><span class="kl">What we have now</span> "No position" is impossible: not a subspace.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Also</span> 2 lots of an allowed position have Mid $= 2 \times 1 = 2$, not $1$, so scaling fails too.</p>
+          </li>
+        </ol>
+        $$ b_2 = 1 + c_1 \cdot 0 + c_2 \cdot 0 = 1 \quad \text{always} $$
+        <table>
+          <tr><th>Check</th><th>Reason</th><th>Result</th></tr>
+          <tr><td>1. no position</td><td>$(0, 0, 0)$ needs Mid payoff $0$, but it is always $1$</td><td><b>✗</b></td></tr>
+        </table>
+        <p class="answer">Set 4 is NOT a subspace: it is the flat plane $b_2 = 1$, shifted away from the origin.</p>
+
+        <figure class="fig plot3d">
+          <div id="l7e1b" class="plot3d-box" role="img" aria-label="Set 3 is the plane b2 = 0 through the origin; set 4 is the parallel plane b2 = 1"></div>
+          <figcaption><b>Sets 3 and 4.</b> Set 3 (green) is the flat plane Mid $= 0$ through the origin: a subspace. Set 4 (red) is the parallel plane Mid $= 1$: flat, but it misses the origin, so not a subspace. The arrows are the short future $(1, 0, -1)$ and the straddle $(1, 0, 1)$; both lie in the green plane. <b>Drag to rotate.</b></figcaption>
+        </figure>
+      </div>
+
+      <div class="box theorem"><span class="label">All answers in one table</span>
+        <table>
+          <tr><th>Set</th><th>Trading meaning</th><th>Shape</th><th>Subspace?</th><th>Why</th></tr>
+          <tr><td>1</td><td>High = Low + Mid</td><td>flat plane through 0</td><td><b>yes</b></td><td>a sum rule survives adding and scaling</td></tr>
+          <tr><td>2</td><td>High = Low × Mid</td><td>curved surface</td><td><b>no</b></td><td>2 lots of $(1,1,1)$ breaks the rule</td></tr>
+          <tr><td>3</td><td>1 PE + any futures and straddles</td><td>plane Mid $= 0$ through 0</td><td><b>yes</b></td><td>1 PE is already a mix of them, so 0 is reachable</td></tr>
+          <tr><td>4</td><td>Mid-only payoff + any futures and straddles</td><td>plane Mid $= 1$</td><td><b>no</b></td><td>Mid payoff is always 1, so "no position" is impossible</td></tr>
+        </table>
+        <p><b>Lesson:</b> a subspace is always <b>flat</b> and always <b>goes through the origin</b>. Sets written as "start point + combinations" (3 and 4) are subspaces only when the start point can be cancelled by the combinations.</p>
+      </div>
+    </div>
+
+
+
+    <div class="worked">
+      <h3>Example 2, drawn in 2D (the same four ideas, flat)</h3>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Scenario = one possible way Nifty ends (here Down or Up). Payoff point (Down, Up) = what a position pays in each scenario, drawn as a dot on a flat graph. Bond = pays 1 in every scenario. Call = pays only if Nifty ends Up. Subspace = contains $(0, 0)$ and stays inside when you resize or combine. Line through $0$ = all multiples of one point. Curve = a bent line.</p>
+      </div>
+      <p>Drop to <b>two scenarios</b>: Nifty ends <b>Down</b> or <b>Up</b>. A payoff is now two numbers, (Down, Up), and every position is one point on a flat graph.</p>
+      <table>
+        <tr><th>Position</th><th>Down</th><th>Up</th><th>Point</th></tr>
+        <tr><td><b>Bond</b> (pays 1 always)</td><td>$1$</td><td>$1$</td><td>$(1, 1)$</td></tr>
+        <tr><td><b>Call</b> (pays only if Up)</td><td>$0$</td><td>$1$</td><td>$(0, 1)$</td></tr>
+      </table>
+      <p>Same subspace test: <b>(1)</b> "no position" $(0, 0)$ is in, <b>(2)</b> any size stays in, <b>(3)</b> combining stays in. In 2D a subspace can only be: the single point $0$, a <b>straight line through $0$</b>, or the whole plane.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">Set 1: what we do</span> Rule "Up = Down" (bonds only). Test 1 bond, 2 bonds, sold 1 bond.</p>
+          <p class="k"><span class="kl">How</span> 1 bond $(1, 1)$: Up $1$ = Down $1$ ✓. 2 bonds $2 \times (1, 1) = (2, 2)$: $2 = 2$ ✓. Sold 1 bond $-1 \times (1, 1) = (-1, -1)$: $-1 = -1$ ✓. No position $(0, 0)$: $0 = 0$ ✓.</p>
+          <p class="k"><span class="kl">What we have now</span> A straight line through $0$: <b>subspace ✓</b>.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Set 2: what we do</span> Rule "Up = Down × Down". Take $(1, 1)$ and buy 2 lots.</p>
+          <p class="k"><span class="kl">How</span> $(1, 1)$: $1 \times 1 = 1$ ✓, allowed. 2 lots: $2 \times (1, 1) = (2, 2)$. Rule needs Up $= 2 \times 2 = 4$, but Up is $2$ ✗.</p>
+          <p class="k"><span class="kl">What we have now</span> The rule wants $(2, 4)$, not $(2, 2)$. A curve: <b>not a subspace ✗</b>.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Set 3: what we do</span> Start with 1 bond $(1, 1)$, add any number $c$ of bonds.</p>
+          <p class="k"><span class="kl">How</span> Position $= (1, 1) + c(1, 1) = (1 + c, 1 + c)$. Choose $c = -1$ (sell 1 bond): $(1 - 1, 1 - 1) = (0, 0)$ ✓.</p>
+          <p class="k"><span class="kl">What we have now</span> Up = Down always, and $0$ is reachable: the same line as set 1. <b>Subspace ✓</b>.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Set 4: what we do</span> Start with 1 call $(0, 1)$, add any number $c$ of bonds.</p>
+          <p class="k"><span class="kl">How</span> Position $= (0, 1) + c(1, 1) = (c, 1 + c)$. Up − Down $= (1 + c) - c = 1$, whatever $c$ is. For $(0, 0)$ we would need Up − Down $= 0 - 0 = 0$, but it is always $1$ ✗.</p>
+          <p class="k"><span class="kl">What we have now</span> The shifted line Up = Down + 1, never through $0$: <b>not a subspace ✗</b>.</p>
+        </li>
+      </ol>
+      <div class="figs" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+        <figure class="fig" style="margin:0">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Set 1: the line Up = Down through the origin"><rect x="0" y="0" width="300" height="300" style="fill:var(--paper)"/><line x1="30.0" y1="294.0" x2="30.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="270.0" x2="294.0" y2="270.0" style="stroke:var(--rule);stroke-width:1"/><line x1="60.0" y1="294.0" x2="60.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="240.0" x2="294.0" y2="240.0" style="stroke:var(--rule);stroke-width:1"/><line x1="90.0" y1="294.0" x2="90.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="210.0" x2="294.0" y2="210.0" style="stroke:var(--rule);stroke-width:1"/><line x1="120.0" y1="294.0" x2="120.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="180.0" x2="294.0" y2="180.0" style="stroke:var(--rule);stroke-width:1"/><line x1="150.0" y1="294.0" x2="150.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="150.0" x2="294.0" y2="150.0" style="stroke:var(--rule);stroke-width:1"/><line x1="180.0" y1="294.0" x2="180.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="120.0" x2="294.0" y2="120.0" style="stroke:var(--rule);stroke-width:1"/><line x1="210.0" y1="294.0" x2="210.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="90.0" x2="294.0" y2="90.0" style="stroke:var(--rule);stroke-width:1"/><line x1="240.0" y1="294.0" x2="240.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="60.0" x2="294.0" y2="60.0" style="stroke:var(--rule);stroke-width:1"/><line x1="270.0" y1="294.0" x2="270.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="30.0" x2="294.0" y2="30.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="150.0" x2="294.0" y2="150.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><line x1="150.0" y1="294.0" x2="150.0" y2="6.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><text x="291.0" y="166" text-anchor="end" style="fill:var(--ink-soft);font:500 12px var(--sans)">Down</text><text x="156" y="12.0" style="fill:var(--ink-soft);font:500 12px var(--sans)">Up</text><text x="90" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">-2</text><text x="144" y="214" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">-2</text><text x="210" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">2</text><text x="144" y="94" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">2</text><text x="270" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">4</text><text x="144" y="34" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">4</text><circle cx="150.0" cy="150.0" r="4" style="fill:var(--ink)"/><line x1="6.0" y1="294.0" x2="294.0" y2="6.0" style="stroke:var(--ex-b);stroke-width:3.5"/><circle cx="180.0" cy="120.0" r="5" style="fill:var(--def-b)"/><text x="190.0" y="134.0" text-anchor="start" style="fill:var(--def-b);font:600 13px var(--sans)">1 bond (1,1)</text><circle cx="210.0" cy="90.0" r="5" style="fill:var(--def-b)"/><text x="192.0" y="104.0" text-anchor="end" style="fill:var(--def-b);font:600 13px var(--sans)">2 bonds (2,2) ✓</text><circle cx="120.0" cy="180.0" r="5" style="fill:var(--def-b)"/><text x="130.0" y="196.0" text-anchor="start" style="fill:var(--def-b);font:600 13px var(--sans)">sold 1 (−1,−1) ✓</text></svg>
+          <figcaption><b>Set 1: Up = Down</b> (bonds only). A straight line through $0$. 1 bond, 2 bonds, selling a bond: all stay on the line. <b>Subspace ✓</b></figcaption>
+        </figure>
+        <figure class="fig" style="margin:0">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Set 2: the curve Up = Down squared"><rect x="0" y="0" width="300" height="300" style="fill:var(--paper)"/><line x1="30.0" y1="294.0" x2="30.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="270.0" x2="294.0" y2="270.0" style="stroke:var(--rule);stroke-width:1"/><line x1="60.0" y1="294.0" x2="60.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="240.0" x2="294.0" y2="240.0" style="stroke:var(--rule);stroke-width:1"/><line x1="90.0" y1="294.0" x2="90.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="210.0" x2="294.0" y2="210.0" style="stroke:var(--rule);stroke-width:1"/><line x1="120.0" y1="294.0" x2="120.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="180.0" x2="294.0" y2="180.0" style="stroke:var(--rule);stroke-width:1"/><line x1="150.0" y1="294.0" x2="150.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="150.0" x2="294.0" y2="150.0" style="stroke:var(--rule);stroke-width:1"/><line x1="180.0" y1="294.0" x2="180.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="120.0" x2="294.0" y2="120.0" style="stroke:var(--rule);stroke-width:1"/><line x1="210.0" y1="294.0" x2="210.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="90.0" x2="294.0" y2="90.0" style="stroke:var(--rule);stroke-width:1"/><line x1="240.0" y1="294.0" x2="240.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="60.0" x2="294.0" y2="60.0" style="stroke:var(--rule);stroke-width:1"/><line x1="270.0" y1="294.0" x2="270.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="30.0" x2="294.0" y2="30.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="150.0" x2="294.0" y2="150.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><line x1="150.0" y1="294.0" x2="150.0" y2="6.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><text x="291.0" y="166" text-anchor="end" style="fill:var(--ink-soft);font:500 12px var(--sans)">Down</text><text x="156" y="12.0" style="fill:var(--ink-soft);font:500 12px var(--sans)">Up</text><text x="90" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">-2</text><text x="144" y="214" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">-2</text><text x="210" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">2</text><text x="144" y="94" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">2</text><text x="270" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">4</text><text x="144" y="34" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">4</text><circle cx="150.0" cy="150.0" r="4" style="fill:var(--ink)"/><polyline points="84.0,4.8 87.0,17.7 90.0,30.0 93.0,41.7 96.0,52.8 99.0,63.3 102.0,73.2 105.0,82.5 108.0,91.2 111.0,99.3 114.0,106.8 117.0,113.7 120.0,120.0 123.0,125.7 126.0,130.8 129.0,135.3 132.0,139.2 135.0,142.5 138.0,145.2 141.0,147.3 144.0,148.8 147.0,149.7 150.0,150.0 153.0,149.7 156.0,148.8 159.0,147.3 162.0,145.2 165.0,142.5 168.0,139.2 171.0,135.3 174.0,130.8 177.0,125.7 180.0,120.0 183.0,113.7 186.0,106.8 189.0,99.3 192.0,91.2 195.0,82.5 198.0,73.2 201.0,63.3 204.0,52.8 207.0,41.7 210.0,30.0 213.0,17.7 216.0,4.8" style="fill:none;stroke:var(--int-b);stroke-width:3.5"/><circle cx="180.0" cy="120.0" r="5" style="fill:var(--def-b)"/><text x="190.0" y="134.0" text-anchor="start" style="fill:var(--def-b);font:600 13px var(--sans)">(1,1) on curve ✓</text><circle cx="210.0" cy="90.0" r="5" style="fill:var(--warn-b)"/><text x="192.0" y="104.0" text-anchor="end" style="fill:var(--warn-b);font:600 13px var(--sans)">2 lots (2,2) ✗</text><circle cx="210.0" cy="30.0" r="5" style="fill:var(--paper);stroke:var(--int-b);stroke-width:2.5"/><text x="200.0" y="34.0" text-anchor="end" style="fill:var(--int-b);font:600 13px var(--sans)">rule needs (2,4)</text></svg>
+          <figcaption><b>Set 2: Up = Down × Down</b>. A curve. $(1, 1)$ is on it, but 2 lots $(2, 2)$ is not: the rule needs $(2, 4)$ there. <b>Not a subspace ✗</b></figcaption>
+        </figure>
+        <figure class="fig" style="margin:0">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Set 3: start at (1,1) plus any bonds gives the line through the origin"><rect x="0" y="0" width="300" height="300" style="fill:var(--paper)"/><line x1="30.0" y1="294.0" x2="30.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="270.0" x2="294.0" y2="270.0" style="stroke:var(--rule);stroke-width:1"/><line x1="60.0" y1="294.0" x2="60.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="240.0" x2="294.0" y2="240.0" style="stroke:var(--rule);stroke-width:1"/><line x1="90.0" y1="294.0" x2="90.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="210.0" x2="294.0" y2="210.0" style="stroke:var(--rule);stroke-width:1"/><line x1="120.0" y1="294.0" x2="120.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="180.0" x2="294.0" y2="180.0" style="stroke:var(--rule);stroke-width:1"/><line x1="150.0" y1="294.0" x2="150.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="150.0" x2="294.0" y2="150.0" style="stroke:var(--rule);stroke-width:1"/><line x1="180.0" y1="294.0" x2="180.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="120.0" x2="294.0" y2="120.0" style="stroke:var(--rule);stroke-width:1"/><line x1="210.0" y1="294.0" x2="210.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="90.0" x2="294.0" y2="90.0" style="stroke:var(--rule);stroke-width:1"/><line x1="240.0" y1="294.0" x2="240.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="60.0" x2="294.0" y2="60.0" style="stroke:var(--rule);stroke-width:1"/><line x1="270.0" y1="294.0" x2="270.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="30.0" x2="294.0" y2="30.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="150.0" x2="294.0" y2="150.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><line x1="150.0" y1="294.0" x2="150.0" y2="6.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><text x="291.0" y="166" text-anchor="end" style="fill:var(--ink-soft);font:500 12px var(--sans)">Down</text><text x="156" y="12.0" style="fill:var(--ink-soft);font:500 12px var(--sans)">Up</text><text x="90" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">-2</text><text x="144" y="214" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">-2</text><text x="210" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">2</text><text x="144" y="94" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">2</text><text x="270" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">4</text><text x="144" y="34" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">4</text><circle cx="150.0" cy="150.0" r="4" style="fill:var(--ink)"/><line x1="6.0" y1="294.0" x2="294.0" y2="6.0" style="stroke:var(--ex-b);stroke-width:3.5"/><circle cx="180.0" cy="120.0" r="6" style="fill:var(--def-b)"/><text x="190.0" y="134.0" text-anchor="start" style="fill:var(--def-b);font:600 13px var(--sans)">start: 1 bond (1,1)</text><path d="M174,110 Q139.0,109.0 144,142" style="fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:5 4"/><text x="136.0" y="114.0" text-anchor="end" style="fill:var(--ink);font:600 13px var(--sans)">sell 1 bond → 0 ✓</text></svg>
+          <figcaption><b>Set 3: start with 1 bond, add any number of bonds.</b> The start is already on the line, so selling 1 bond brings you back to $0$. It is the same line as set 1. <b>Subspace ✓</b></figcaption>
+        </figure>
+        <figure class="fig" style="margin:0">
+          <svg viewBox="0 0 300 300" role="img" aria-label="Set 4: start at (0,1) plus any bonds gives the shifted line Up = Down + 1"><rect x="0" y="0" width="300" height="300" style="fill:var(--paper)"/><line x1="30.0" y1="294.0" x2="30.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="270.0" x2="294.0" y2="270.0" style="stroke:var(--rule);stroke-width:1"/><line x1="60.0" y1="294.0" x2="60.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="240.0" x2="294.0" y2="240.0" style="stroke:var(--rule);stroke-width:1"/><line x1="90.0" y1="294.0" x2="90.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="210.0" x2="294.0" y2="210.0" style="stroke:var(--rule);stroke-width:1"/><line x1="120.0" y1="294.0" x2="120.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="180.0" x2="294.0" y2="180.0" style="stroke:var(--rule);stroke-width:1"/><line x1="150.0" y1="294.0" x2="150.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="150.0" x2="294.0" y2="150.0" style="stroke:var(--rule);stroke-width:1"/><line x1="180.0" y1="294.0" x2="180.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="120.0" x2="294.0" y2="120.0" style="stroke:var(--rule);stroke-width:1"/><line x1="210.0" y1="294.0" x2="210.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="90.0" x2="294.0" y2="90.0" style="stroke:var(--rule);stroke-width:1"/><line x1="240.0" y1="294.0" x2="240.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="60.0" x2="294.0" y2="60.0" style="stroke:var(--rule);stroke-width:1"/><line x1="270.0" y1="294.0" x2="270.0" y2="6.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="30.0" x2="294.0" y2="30.0" style="stroke:var(--rule);stroke-width:1"/><line x1="6.0" y1="150.0" x2="294.0" y2="150.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><line x1="150.0" y1="294.0" x2="150.0" y2="6.0" style="stroke:var(--ink-soft);stroke-width:1.5"/><text x="291.0" y="166" text-anchor="end" style="fill:var(--ink-soft);font:500 12px var(--sans)">Down</text><text x="156" y="12.0" style="fill:var(--ink-soft);font:500 12px var(--sans)">Up</text><text x="90" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">-2</text><text x="144" y="214" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">-2</text><text x="210" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">2</text><text x="144" y="94" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">2</text><text x="270" y="165" text-anchor="middle" style="fill:var(--ink-soft);font:11px var(--sans)">4</text><text x="144" y="34" text-anchor="end" style="fill:var(--ink-soft);font:11px var(--sans)">4</text><circle cx="150.0" cy="150.0" r="4" style="fill:var(--ink)"/><line x1="6.0" y1="294.0" x2="294.0" y2="6.0" style="stroke:var(--ink-soft);stroke-width:1.5;stroke-dasharray:3 4"/><line x1="6.0" y1="264.0" x2="264.0" y2="6.0" style="stroke:var(--warn-b);stroke-width:3.5"/><circle cx="150.0" cy="120.0" r="6" style="fill:var(--warn-b)"/><text x="140.0" y="112.0" text-anchor="end" style="fill:var(--warn-b);font:600 13px var(--sans)">start: 1 call (0,1)</text><circle cx="180.0" cy="90.0" r="5" style="fill:var(--warn-b)"/><text x="170.0" y="82.0" text-anchor="end" style="fill:var(--warn-b);font:600 13px var(--sans)">+1 bond (1,2)</text><text x="290" y="250" text-anchor="end" style="fill:var(--warn-b);font:600 13px var(--sans)">red line never reaches 0 ✗</text></svg>
+          <figcaption><b>Set 4: start with 1 call, add any number of bonds.</b> Adding bonds slides along $(1, 1)$, so you stay on the red line Up = Down + 1: parallel to the dotted line through $0$ but never touching it. <b>Not a subspace ✗</b></figcaption>
+        </figure>
+      </div>
+
+      <table>
+        <tr><th>2D set</th><th>Matches 3D set</th><th>Picture</th><th>Subspace?</th><th>Quick reason</th></tr>
+        <tr><td>Up = Down</td><td>Set 1 (a sum rule)</td><td>line through 0</td><td><b>yes</b></td><td>resizing and combining bonds gives bonds</td></tr>
+        <tr><td>Up = Down × Down</td><td>Set 2 (a product rule)</td><td>curve</td><td><b>no</b></td><td>2 lots of $(1,1)$ is $(2,2)$, but the rule wants $(2,4)$</td></tr>
+        <tr><td>1 bond + any bonds</td><td>Set 3 (start point can be cancelled)</td><td>line through 0</td><td><b>yes</b></td><td>the start point is already on the line</td></tr>
+        <tr><td>1 call + any bonds</td><td>Set 4 (start point can't be cancelled)</td><td>shifted line</td><td><b>no</b></td><td>bonds can never cancel the call's "only if Up" payoff</td></tr>
+      </table>
+      <div class="box intuition"><span class="label">How to spot a subspace on a graph</span>
+        <ul>
+          <li>It must be <b>straight / flat</b> (no curves): scaling a point on a curve jumps off the curve.</li>
+          <li>It must <b>pass through the origin</b>: "no position" has to be allowed.</li>
+          <li>In 3D these become flat <b>planes or lines through the origin</b>, exactly the green and purple shapes in the 3D graphs above.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 3: Union or intersection?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>In $\mathbb{R}^3$, let $P$ = the floor ($z = 0$) and $L$ = the line of all $(0, 0, t)$ (the $z$-axis). Is $P \cup L$ a subspace? What is $P \cap L$?</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$\mathbb{R}^3$ = all lists of 3 numbers $(x, y, z)$. Floor = every point with $z = 0$ (a plane through the origin). z-axis = every point $(0, 0, t)$ (a line through the origin). Union $P \cup L$ = points in $P$ <b>or</b> in $L$. Intersection $P \cap L$ = points in $P$ <b>and</b> in $L$. Subspace = contains $0$, closed under adding and scaling.</p>
+      </div>
+      <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Union: pick $(1, 0, 0)$ from the floor and $(0, 0, 1)$ from the z-axis.</p>
+            <p class="k"><span class="kl">Why</span> If the union were a subspace, the sum of two members would have to be a member.</p>
+            <p class="k"><span class="kl">How</span> $(1, 0, 0)$ has $z = 0$, so it is on the floor. $(0, 0, 1)$ has the form $(0, 0, t)$, so it is on the axis. Sum: $1 + 0 = 1$, $0 + 0 = 0$, $0 + 1 = 1$, giving $(1, 0, 1)$.</p>
+            <p class="k"><span class="kl">Check</span> Floor needs $z = 0$: here $z = 1$ ✗. Axis needs $x = 0$: here $x = 1$ ✗.</p>
+            <p class="k"><span class="kl">What we have now</span> The sum is in neither set. Adding escaped.</p>
+          </li>
+        </ol>
+        <p class="answer">$P \cup L$ is not a subspace (adding escaped).</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Intersection: find points on both.</p>
+            <p class="k"><span class="kl">How</span> On the axis a point looks like $(0, 0, t)$. On the floor its $z$ must be $0$. So $t = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> Only $(0, 0, 0)$ is on both. $\{0\}$ passes every test: $0 + 0 = 0$, $c \times 0 = 0$.</p>
+          </li>
+        </ol>
+        <p class="answer">$P \cap L = \{(0, 0, 0)\}$, which is a subspace.</p>
+      </div>
+    </div>
+
+    <!-- E3 -->
+    <div class="worked">
+      <h3>Example 4: Is b in the column space?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>For the lecture's $A$ (columns $(1,2,3,4)$, $(1,1,1,1)$, $(2,3,4,5)$), solve $Ax = b$ for (a) $b = (3, 5, 7, 9)$ and (b) $b = (0, 1, 1, 0)$.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Column space $C(A)$ = every $b$ you can build as $x_1 \times$ col 1 + $x_2 \times$ col 2 + $x_3 \times$ col 3. Here it is every $b$ that goes up in <b>equal steps</b> (step = next entry minus this entry). Solve $Ax = b$ = find the amounts $x_1, x_2, x_3$. Column 3 = col 1 + col 2, so we may take $x_3 = 0$ and add any nullspace vector $c(1, 1, -1)$ later.</p>
+      </div>
+      <div class="steps">
+        <h4>(a) $b = (3, 5, 7, 9)$</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Measure the steps of $b$.</p>
+            <p class="k"><span class="kl">How</span> $5 - 3 = 2$. $7 - 5 = 2$. $9 - 7 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> Steps $+2, +2, +2$: equal, so $b$ is in $C(A)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Match $x_1(1, 2, 3, 4) + x_2(1, 1, 1, 1)$ to $b$.</p>
+            <p class="k"><span class="kl">Why</span> In that combination every step equals $x_1$ (section 5).</p>
+            <p class="k"><span class="kl">How</span> Step size $2$, so $x_1 = 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use the first entry to get $x_2$.</p>
+            <p class="k"><span class="kl">How</span> $x_1 + x_2 = 3$, so $2 + x_2 = 3$, so $x_2 = 3 - 2 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = (2, 1, 0)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Each row of the original $A$ times $(2, 1, 0)$. Row 1: $1 \cdot 2 + 1 \cdot 1 + 2 \cdot 0 = 2 + 1 = 3$ ✓. Row 2: $4 + 1 + 0 = 5$ ✓. Row 3: $6 + 1 + 0 = 7$ ✓. Row 4: $8 + 1 + 0 = 9$ ✓.</p>
+          </li>
+        </ol>
+        <table>
+          <tr><th>Step</th><th>Work</th><th>Result</th></tr>
+          <tr><td>step size</td><td>each step is $x_1$</td><td>$x_1 = 2$</td></tr>
+          <tr><td>first number</td><td>$x_1 + x_2 = 3$</td><td>$x_2 = 1$</td></tr>
+          <tr><td>check</td><td>$2(1,2,3,4) + (1,1,1,1) = (3, 5, 7, 9)$</td><td>✓</td></tr>
+        </table>
+        <p class="answer">(a) Yes: $x = (2, 1, 0)$ (and also $(2, 1, 0) + c(1, 1, -1)$).</p>
+        <h4>(b) $b = (0, 1, 1, 0)$</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Measure the steps.</p>
+            <p class="k"><span class="kl">How</span> $1 - 0 = 1$. $1 - 1 = 0$. $0 - 1 = -1$.</p>
+            <p class="k"><span class="kl">What we have now</span> Steps $+1, 0, -1$: not equal. So $b$ is not in $C(A)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Try the equations directly (with $x_3 = 0$). Row 1: $x_1 + x_2 = 0$. Row 2: $2x_1 + x_2 = 1$. Row 2 minus row 1: $x_1 = 1 - 0 = 1$. Then $1 + x_2 = 0$, so $x_2 = -1$. Row 3 needs $3x_1 + x_2 = 1$: $3 - 1 = 2 \ne 1$ ✗.</p>
+            <p class="k"><span class="kl">What we have now</span> The equations fight each other: no solution.</p>
+          </li>
+        </ol>
+        <p class="answer">(b) No solution: $(0, 1, 1, 0)$ is not in $C(A)$.</p>
+      </div>
+    </div>
+
+    <!-- E4 -->
+    <div class="worked">
+      <h3>Example 5: Find a nullspace</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Find $N(B)$ for $B = \begin{bmatrix} 1 & 1 & 2 \\ 0 & 1 & 1 \end{bmatrix}$.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Nullspace $N(B)$ = all inputs $x = (x_1, x_2, x_3)$ with $Bx = 0$. Equation = one row of $B$ times $x$, set to 0. Solve from the bottom = start with the last equation (fewest unknowns). Free choice = an unknown we may set to any number $c$. Line = all multiples of one vector.</p>
+      </div>
+      <div class="steps">
+        <p><b>Equations</b> for $Bx = 0$:</p>
+        $$ x_1 + x_2 + 2x_3 = 0, \qquad x_2 + x_3 = 0 $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Let $x_3 = c$ be anything.</p>
+            <p class="k"><span class="kl">Why</span> 2 equations, 3 unknowns: one unknown is left free to choose.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Bottom equation: $x_2 + x_3 = 0$.</p>
+            <p class="k"><span class="kl">How</span> Put $x_3 = c$: $x_2 + c = 0$. Take $c$ from both sides: $x_2 = -c$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Top equation: $x_1 + x_2 + 2x_3 = 0$.</p>
+            <p class="k"><span class="kl">How</span> Put in $x_2 = -c$, $x_3 = c$: $x_1 - c + 2c = 0$, so $x_1 + c = 0$, so $x_1 = -c$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x = (-c, -c, c) = c(-1, -1, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> $c = 1$, $x = (-1, -1, 1)$ in the original $B$. Row 1: $1 \cdot (-1) + 1 \cdot (-1) + 2 \cdot 1 = -1 - 1 + 2 = 0$ ✓. Row 2: $0 \cdot (-1) + 1 \cdot (-1) + 1 \cdot 1 = -1 + 1 = 0$ ✓.</p>
+          </li>
+        </ol>
+        <table>
+          <tr><th>Equation</th><th>Work</th><th>Result</th></tr>
+          <tr><td>$x_2 + x_3 = 0$</td><td>$x_2 = -c$</td><td>$x_2 = -c$</td></tr>
+          <tr><td>$x_1 + x_2 + 2x_3 = 0$</td><td>$x_1 - c + 2c = 0$</td><td>$x_1 = -c$</td></tr>
+        </table>
+        <p class="answer">$N(B)$ = all $c(-1, -1, 1)$: a line in $\mathbb{R}^3$.</p>
+      </div>
+    </div>
+
+    <!-- E5 -->
+    <div class="worked">
+      <h3>Example 6: Solutions of Ax = b are not a subspace</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>For the lecture's $A$, $x = (1, 0, 0)$ and $x = (0, -1, 1)$ both solve $Ax = (1, 2, 3, 4)$. Does their sum?</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Solution = an $x$ with $Ax = b$, here $b = (1, 2, 3, 4)$. Closed under adding = the sum of two members is a member. Subspace = contains $0$, closed under adding and scaling. $Ax$ = $x_1 \times$ col 1 + $x_2 \times$ col 2 + $x_3 \times$ col 3.</p>
+      </div>
+      <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Add the two solutions.</p>
+            <p class="k"><span class="kl">How</span> $1 + 0 = 1$, $0 + (-1) = -1$, $0 + 1 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> Sum $= (1, -1, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Compute $A(1, -1, 1)$ = col 1 − col 2 + col 3, row by row.</p>
+            <p class="k"><span class="kl">How</span> Row 1: $1 - 1 + 2 = 2$. Row 2: $2 - 1 + 3 = 4$. Row 3: $3 - 1 + 4 = 6$. Row 4: $4 - 1 + 5 = 8$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(2, 4, 6, 8) = 2 \times (1, 2, 3, 4) = 2b$, not $b$ ✗.</p>
+          </li>
+        </ol>
+        <p class="answer">No: it gives $2b$, not $b$. The solution set is not closed under adding, so it is not a subspace.</p>
+      </div>
+    </div>
+
+    <!-- E6 -->
+    <div class="worked">
+      <h3>Example 7: Which columns add nothing?</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Columns $(1, 0, 1)$, $(0, 1, 1)$, $(2, 3, 5)$. Is any column redundant? What is $C(A)$? Give a vector in $N(A)$.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Redundant (dependent) column = a column that is a combination of the other columns, so it adds nothing. Combination = $a \times$ col 1 + $b \times$ col 2. Column space $C(A)$ = all combinations of the columns. Plane = a flat 2-direction piece. Nullspace $N(A)$ = all $x$ with $Ax = 0$.</p>
+      </div>
+      <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Try column 3 $= a$ col 1 $+ b$ col 2.</p>
+            <p class="k"><span class="kl">How</span> $a(1, 0, 1) + b(0, 1, 1) = (a + 0,\ 0 + b,\ a + b) = (a, b, a + b)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Match to $(2, 3, 5)$ entry by entry.</p>
+            <p class="k"><span class="kl">How</span> Entry 1: $a = 2$. Entry 2: $b = 3$. Entry 3 must then be $a + b = 2 + 3 = 5$. It is $5$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> Column 3 $= 2 \times$ col 1 $+ 3 \times$ col 2: it adds nothing. $C(A)$ is the plane made by columns 1 and 2.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Turn this into a nullspace vector.</p>
+            <p class="k"><span class="kl">How</span> Move column 3 to the left: $2\,\text{col}_1 + 3\,\text{col}_2 - 1\,\text{col}_3 = 0$. So $x = (2, 3, -1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Rows of the original matrix are $(1, 0, 2)$, $(0, 1, 3)$, $(1, 1, 5)$. Row 1: $2 + 0 - 2 = 0$ ✓. Row 2: $0 + 3 - 3 = 0$ ✓. Row 3: $2 + 3 - 5 = 0$ ✓.</p>
+          </li>
+        </ol>
+        <p class="answer">Column 3 is redundant; $C(A)$ is a plane; $(2, 3, -1) \in N(A)$.</p>
+      </div>
+    </div>
+
+    <!-- E7 -->
+    <div class="worked">
+      <h3>Example 8: Which Nifty CE / PE can be built? (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>At expiry Nifty ends at one of four levels: <b>20,100 / 20,200 / 20,300 / 20,400</b>. Three products are available (payoffs in points ÷ 100):</p>
+        <table>
+          <tr><th>Product</th><th>Payoff rule</th><th>20,100</th><th>20,200</th><th>20,300</th><th>20,400</th></tr>
+          <tr><td>Nifty future (bought at 20,000)</td><td>$(S - 20{,}000)/100$</td><td>$1$</td><td>$2$</td><td>$3$</td><td>$4$</td></tr>
+          <tr><td>Bond</td><td>pays 1 always</td><td>$1$</td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+          <tr><td>Note C (= future + bond)</td><td></td><td>$2$</td><td>$3$</td><td>$4$</td><td>$5$</td></tr>
+        </table>
+        <p>These are exactly the lecture's three columns. Which of these can be built: (a) the <b>20,050 CE</b>, (b) the <b>20,250 CE</b>, (c) the <b>20,250 PE</b>?</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$S$ = where Nifty ends at expiry. CE (call) with strike $K$ = pays $\max(S - K, 0)$. PE (put) = pays $\max(K - S, 0)$. Strike = the level named in the option. Future = pays $S - 20{,}000$ (a straight line). Bond = pays 1 always. Build (replicate) = find lots of the products whose total payoff equals the option's payoff at every level = find $x$ with $Ax = b$. Column space = every payoff you can build. Incomplete market = some payoffs can't be built.</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>Futures and bonds pay in <b>straight lines</b>: the payoff goes up by the same amount for each 100-point step. So anything you build from them also goes up in <b>equal steps</b>. An option has a <b>kink</b> at its strike (flat, then rising), so if the kink falls between the scenarios, it can't be built.</p>
+      </div>
+      <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Compute the 20,050 CE payoff at each level (÷ 100).</p>
+            <p class="k"><span class="kl">How</span> 20,100: $20{,}100 - 20{,}050 = 50$, and $50 \div 100 = 0.5$. 20,200: $150 \div 100 = 1.5$. 20,300: $250 \div 100 = 2.5$. 20,400: $350 \div 100 = 3.5$.</p>
+            <p class="k"><span class="kl">What we have now</span> $b = (0.5, 1.5, 2.5, 3.5)$. Steps $1, 1, 1$: equal.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Compute the 20,250 CE payoff.</p>
+            <p class="k"><span class="kl">How</span> 20,100: $\max(-150, 0) = 0$. 20,200: $\max(-50, 0) = 0$. 20,300: $50 \div 100 = 0.5$. 20,400: $150 \div 100 = 1.5$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(0, 0, 0.5, 1.5)$. Steps $0, 0.5, 1$: not equal.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Compute the 20,250 PE payoff.</p>
+            <p class="k"><span class="kl">How</span> 20,100: $20{,}250 - 20{,}100 = 150$, so $1.5$. 20,200: $50$, so $0.5$. 20,300: $\max(-50, 0) = 0$. 20,400: $0$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(1.5, 0.5, 0, 0)$. Steps $-1, -0.5, 0$: not equal.</p>
+          </li>
+        </ol>
+        <table>
+          <tr><th>Option</th><th>Payoff at 20,100 / 20,200 / 20,300 / 20,400</th><th>Steps</th><th>Equal?</th></tr>
+          <tr><td>(a) 20,050 CE</td><td>$0.5,\ 1.5,\ 2.5,\ 3.5$</td><td>$1, 1, 1$</td><td>yes</td></tr>
+          <tr><td>(b) 20,250 CE</td><td>$0,\ 0,\ 0.5,\ 1.5$</td><td>$0, 0.5, 1$</td><td>no</td></tr>
+          <tr><td>(c) 20,250 PE</td><td>$1.5,\ 0.5,\ 0,\ 0$</td><td>$-1, -0.5, 0$</td><td>no</td></tr>
+        </table>
+        <h4>Build (a)</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find the number of futures $x_1$.</p>
+            <p class="k"><span class="kl">Why</span> Each future adds 1 per 100-point step; the bond adds nothing to the step. So the step size = number of futures.</p>
+            <p class="k"><span class="kl">How</span> Step size $= 1$, so $x_1 = 1$ future.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find the number of bonds $x_2$ from the first level.</p>
+            <p class="k"><span class="kl">How</span> At 20,100: $1 \times x_1 + 1 \times x_2 = 0.5$. So $1 + x_2 = 0.5$, so $x_2 = 0.5 - 1 = -0.5$.</p>
+            <p class="k"><span class="kl">In market words</span> Buy 1 future, <b>borrow</b> half a bond (sell 0.5 bond).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Every level, $1 \times$ future $- 0.5 \times$ bond. 20,100: $1 - 0.5 = 0.5$ ✓. 20,200: $2 - 0.5 = 1.5$ ✓. 20,300: $3 - 0.5 = 2.5$ ✓. 20,400: $4 - 0.5 = 3.5$ ✓.</p>
+          </li>
+        </ol>
+        <h4>Why (b) can't be built</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use the first two levels: $x_1 + x_2 = 0$ and $2x_1 + x_2 = 0$.</p>
+            <p class="k"><span class="kl">How</span> Second minus first: $x_1 = 0 - 0 = 0$. Then $0 + x_2 = 0$, so $x_2 = 0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> 20,300 needs $3x_1 + x_2 = 0.5$. With our numbers: $3 \times 0 + 0 = 0 \ne 0.5$ ✗.</p>
+            <p class="k"><span class="kl">What we have now</span> No mix works. (Adding note C doesn't help: it is just future + bond.) The same happens for (c).</p>
+          </li>
+        </ol>
+        <p><b>Check:</b> $1 \times (1, 2, 3, 4) - 0.5 \times (1, 1, 1, 1) = (0.5, 1.5, 2.5, 3.5)$ ✓.</p>
+        <p class="answer">(a) Yes: 1 future − 0.5 bond. (b) and (c) No: they are outside the column space. This market is incomplete for those options.</p>
+      </div>
+    </div>
+
+    <!-- E8 -->
+    <div class="worked">
+      <h3>Example 9: A zero-payoff portfolio and arbitrage (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>Same three products. Today the future-note trades at price $2$, the bond at $1$, and note C at $3.2$. Find a portfolio that pays <b>nothing in every scenario</b>, and say whether the prices allow free money.</p>
+        <table>
+          <tr><th>Product</th><th>Price today</th><th>Payoff (4 scenarios)</th></tr>
+          <tr><td>Future-note</td><td>$2$</td><td>$(1, 2, 3, 4)$</td></tr>
+          <tr><td>Bond</td><td>$1$</td><td>$(1, 1, 1, 1)$</td></tr>
+          <tr><td>Note C</td><td>$3.2$</td><td>$(2, 3, 4, 5)$</td></tr>
+        </table>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Portfolio = a list of how many of each product you hold (negative = sold). Zero-payoff portfolio = pays 0 at every Nifty level = a vector in the nullspace ($Ax = 0$). Cost today = price × quantity, added up (buying costs, selling pays you). Arbitrage = a trade that pays you today and can never cost you later. Fair price = the price that makes the zero-payoff portfolio cost 0.</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>If a mix of products pays <b>zero</b> in every outcome, it should cost <b>zero</b> today. That mix is a vector in the <b>nullspace</b>.</p>
+      </div>
+      <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Pick the nullspace vector $x = (1, 1, -1)$: buy 1 future-note, buy 1 bond, sell 1 note C.</p>
+            <p class="k"><span class="kl">Why</span> Note C = future-note + bond, so selling C cancels buying the other two.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Payoff at each level, one scenario at a time.</p>
+            <table>
+              <tr><th>Scenario</th><th>+1 future-note</th><th>+1 bond</th><th>−1 note C</th><th>Total</th></tr>
+              <tr><td>20,100</td><td>$1$</td><td>$1$</td><td>$-2$</td><td>$0$</td></tr>
+              <tr><td>20,200</td><td>$2$</td><td>$1$</td><td>$-3$</td><td>$0$</td></tr>
+              <tr><td>20,300</td><td>$3$</td><td>$1$</td><td>$-4$</td><td>$0$</td></tr>
+              <tr><td>20,400</td><td>$4$</td><td>$1$</td><td>$-5$</td><td>$0$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> e.g. 20,100: $1 + 1 = 2$, then $2 - 2 = 0$. Pays nothing at every level.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Price the portfolio today.</p>
+            <p class="k"><span class="kl">How</span> Buy future-note: pay $2$. Buy bond: pay $1$, so $2 + 1 = 3$ paid. Sell note C: receive $3.2$. Net cost: $3 - 3.2 = -0.2$.</p>
+            <p class="k"><span class="kl">What we have now</span> A negative cost means you <b>receive</b> $0.2$ today.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">In market words</span> Receive 0.2 now, owe nothing at expiry whatever Nifty does. Free money: note C is overpriced. Fair price $= 2 + 1 = 3$.</p>
+          </li>
+        </ol>
+        <p><b>Cost today:</b> $2 + 1 - 3.2 = -0.2$. A negative cost means you <b>receive</b> $0.2$ today.</p>
+        <p class="answer">You receive 0.2 today and owe nothing later: an arbitrage. Note C is overpriced; its fair price is $2 + 1 = 3$.</p>
+      </div>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. Is $(2, 2, 2, 2)$ in the column space of the lecture's $A$? Give $x$.</summary>
+      <p>Steps $0, 0, 0$: yes. $x_1 = 0$, $x_2 = 2$: $x = (0, 2, 0)$.</p>
+    </details>
+    <details class="proof"><summary>2. Is $(1, 1, 2, 2)$ in $C(A)$?</summary>
+      <p>Steps $0, 1, 0$: not equal, so no.</p>
+    </details>
+    <details class="proof"><summary>3. Is $(5, 5, -5)$ in $N(A)$ for the lecture's $A$?</summary>
+      <p>Yes: it is $5 \times (1, 1, -1)$.</p>
+    </details>
+    <details class="proof"><summary>4. Where do $C(A)$ and $N(A)$ live if $A$ is $5 \times 7$?</summary>
+      <p>$C(A)$ in $\mathbb{R}^5$ (rows), $N(A)$ in $\mathbb{R}^7$ (columns).</p>
+    </details>
+    <details class="proof"><summary>5. Find $N$ of $\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$.</summary>
+      <p>$x_1 + 2x_2 = 0$, so $x = c(-2, 1)$: a line.</p>
+    </details>
+    <details class="proof"><summary>6. What is $N(I)$ for the $3 \times 3$ identity?</summary>
+      <p>$Ix = x = 0$ only for $x = 0$, so $N(I) = \{0\}$.</p>
+    </details>
+
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="06_transposes-permutations-vector-spaces.html">← 06 Transposes, Permutations, Vector Spaces</a>
+    <a href="08_solving-ax-0-special-solutions.html">Next: 08 Solving Ax = 0 →</a>
+  </nav>
+  </div>
+</main>
+
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script defer src="../assets/replication-lab.js"></script>
+<script>
+// Nullspace line vs shifted solution line of Ax = b.
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var green = c("--ex-b"), red = c("--warn-b"), ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+  function axis(t, lo, hi) {
+    return { title: { text: t, font: { size: 15, color: ink } }, range: [lo, hi], autorange: false,
+      tickmode: "linear", tick0: 0, dtick: 1, tickfont: { size: 12, color: soft },
+      gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 3,
+      showbackground: true, backgroundcolor: paper2, showspikes: false, linecolor: soft, showline: true };
+  }
+  var layout = {
+    margin: { l: 0, r: 0, t: 0, b: 60 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true, uirevision: "keep",
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 12 }, bgcolor: "rgba(0,0,0,0)" },
+    scene: { xaxis: axis("x₁", -3, 3), yaxis: axis("x₂", -3, 3), zaxis: axis("x₃", -3, 3), aspectmode: "cube",
+      dragmode: "turntable", camera: { eye: { x: 0.4, y: 1.8, z: 1.5 }, up: { x: 0, y: 0, z: 1 } } }
+  };
+  var config = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["toImage"] };
+  var t0 = -2.5, t1 = 2.5;
+  var data = [
+    { type: "scatter3d", mode: "lines", name: "N(A): all c(1, 1, −1)", line: { color: green, width: 7 },
+      x: [t0, t1], y: [t0, t1], z: [-t0, -t1] },
+    { type: "scatter3d", mode: "lines", name: "solutions of Ax = (1,2,3,4)", line: { color: red, width: 7, dash: "dash" },
+      x: [1 + t0, 1 + t1 - 1.5], y: [t0, t1 - 1.5], z: [-t0, -(t1 - 1.5)] },
+    { type: "scatter3d", mode: "markers+text", name: "origin (in N(A))", marker: { color: ink, size: 5 },
+      x: [0], y: [0], z: [0], text: ["0"], textposition: "middle right", textfont: { color: ink, size: 13 } },
+    { type: "scatter3d", mode: "markers+text", name: "(1, 1, −1)", marker: { color: green, size: 6 },
+      x: [1], y: [1], z: [-1], text: ["(1, 1, −1)"], textposition: "bottom right", textfont: { color: green, size: 13 } },
+    { type: "scatter3d", mode: "markers+text", name: "solutions (1,0,0), (0,−1,1)", marker: { color: red, size: 6 },
+      x: [1, 0], y: [0, -1], z: [0, 1], text: ["(1, 0, 0)", "(0, −1, 1)"], textposition: ["middle left", "middle left"], textfont: { color: red, size: 13 } }
+  ];
+  Plotly.newPlot("l7plot", data, layout, config);
+
+  // ---- Example 2 plots ----
+  var purple = c("--thm-b"), orange = c("--int-b");
+  function sceneB() {
+    return { xaxis: axis("Low", -3, 3), yaxis: axis("Mid", -3, 3), zaxis: axis("High", -3, 4), aspectmode: "cube",
+      dragmode: "turntable", camera: { eye: { x: 1.7, y: -1.6, z: 0.9 }, up: { x: 0, y: 0, z: 1 } } };
+  }
+  function grid(f) {
+    var xs = [], ys = [], zs = [];
+    for (var i = 0; i <= 16; i++) { var v = -2 + i * 0.25; xs.push(v); ys.push(v); }
+    for (var j = 0; j < ys.length; j++) { var row = []; for (var k = 0; k < xs.length; k++) row.push(f(xs[k], ys[j])); zs.push(row); }
+    return { x: xs, y: ys, z: zs };
+  }
+  function surf(g, color, name) {
+    return { type: "surface", name: name, showlegend: true, showscale: false, opacity: 0.55,
+      colorscale: [[0, color], [1, color]], x: g.x, y: g.y, z: g.z, hoverinfo: "name",
+      contours: { x: { highlight: false }, y: { highlight: false }, z: { highlight: false } } };
+  }
+  var g1 = grid(function (x, y) { return x + y; });
+  var g2 = grid(function (x, y) { var z = x * y; return (z > 4 || z < -3) ? null : z; });
+  var layA = JSON.parse(JSON.stringify(layout)); layA.scene = sceneB();
+  Plotly.newPlot("l7e1a", [surf(g1, purple, "Set 1: High = Low + Mid (flat)"), surf(g2, orange, "Set 2: High = Low × Mid (curved)"),
+    { type: "scatter3d", mode: "markers+text", name: "(1,1,1) on set 2", marker: { color: ink, size: 5 }, x: [1], y: [1], z: [1], text: ["(1,1,1)"], textposition: "middle right", textfont: { size: 13, color: ink } },
+    { type: "scatter3d", mode: "markers+text", name: "(2,2,2) NOT on set 2", marker: { color: red, size: 6 }, x: [2], y: [2], z: [2], text: ["(2,2,2) ✗"], textposition: "middle right", textfont: { size: 13, color: red } },
+    { type: "scatter3d", mode: "markers", showlegend: false, marker: { color: ink, size: 4 }, x: [0], y: [0], z: [0] }], layA, config);
+
+  function vplane(yv, color, name) {
+    return { type: "mesh3d", name: name, showlegend: true, opacity: 0.35, color: color, flatshading: true, hoverinfo: "name",
+      x: [-2.5, 2.5, 2.5, -2.5], y: [yv, yv, yv, yv], z: [-2.5, -2.5, 3.5, 3.5], i: [0, 0], j: [1, 2], k: [2, 3] };
+  }
+  function seg(v, color, name) {
+    return { type: "scatter3d", mode: "lines+markers", name: name, line: { color: color, width: 7 }, marker: { size: [2, 6], color: color },
+      x: [0, v[0]], y: [0, v[1]], z: [0, v[2]] };
+  }
+  var layB = JSON.parse(JSON.stringify(layout)); layB.scene = sceneB(); layB.scene.camera = { eye: { x: 2.1, y: 0.9, z: 0.7 }, up: { x: 0, y: 0, z: 1 } };
+  Plotly.newPlot("l7e1b", [vplane(0, green, "Set 3: Mid = 0 (through origin)"), vplane(1, red, "Set 4: Mid = 1 (shifted)"),
+    seg([1, 0, -1], ink, "short future (1,0,−1)"), seg([1, 0, 1], purple, "straddle (1,0,1)"),
+    { type: "scatter3d", mode: "markers+text", name: "1 PE (1,0,0)", marker: { color: green, size: 6 }, x: [1], y: [0], z: [0], text: ["1 PE"], textposition: "middle right", textfont: { size: 13, color: green } },
+    { type: "scatter3d", mode: "markers+text", name: "Mid-only (0,1,0)", marker: { color: red, size: 6 }, x: [0], y: [1], z: [0], text: ["(0,1,0)"], textposition: "top center", textfont: { size: 13, color: red } },
+    { type: "scatter3d", mode: "markers", showlegend: false, marker: { color: ink, size: 4 }, x: [0], y: [0], z: [0] }], layB, config);
+  document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      setTimeout(function () { document.querySelectorAll(".plot3d-box").forEach(function (el) { Plotly.Plots.resize(el); }); }, 0);
+    });
+  });
+});
+</script>
+</body>
+</html>

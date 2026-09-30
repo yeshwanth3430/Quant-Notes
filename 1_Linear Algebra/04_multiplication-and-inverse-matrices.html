@@ -33,6 +33,7 @@
 
     <nav class="contents"><span class="label">Contents</span>
       <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
         <li><a href="#s1">The lecture in five questions</a></li>
         <li><a href="#s2">When can two matrices be multiplied?</a></li>
         <li><a href="#s3">Four ways to multiply</a></li>
@@ -45,7 +46,49 @@
     </nav>
 
     <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained from the very beginning, with a tiny example and an everyday picture. Each section below repeats the words it uses, so you never have to scroll back.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Matrix</b> $A$</td><td>a table of numbers with rows and columns</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$</td><td>a spreadsheet</td></tr>
+      <tr><td><b>Entry</b></td><td>one number inside a matrix, found by its row and column</td><td>row 2, column 1 of $\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ is $3$</td><td>one cell of the spreadsheet</td></tr>
+      <tr><td><b>Row</b> / <b>column</b></td><td>one line read left→right / one line read top→bottom</td><td>row 1 $= (1, 2)$, column 1 $= (1, 3)$</td><td>row = one trader or scenario; column = one product</td></tr>
+      <tr><td><b>$m \times n$</b> (size, shape)</td><td>$m$ rows, $n$ columns; always rows first</td><td>$2 \times 3$: 2 rows, 3 columns</td><td>2 traders, 3 products</td></tr>
+      <tr><td><b>Square matrix</b></td><td>same number of rows and columns</td><td>$2 \times 2$, $3 \times 3$</td><td>a square grid</td></tr>
+      <tr><td><b>Vector</b></td><td>a list of numbers; a matrix with just one column (or one row)</td><td>$(5, 7)$</td><td>an arrow; a basket of lots</td></tr>
+      <tr><td><b>Zero vector</b> $0$</td><td>a vector with every number 0</td><td>$(0, 0)$</td><td>an empty basket; standing still</td></tr>
+      <tr><td><b>Dot product</b> (row · column)</td><td>multiply matching numbers, then add them all</td><td>$(1, 2) \cdot (5, 7) = 1 \times 5 + 2 \times 7 = 5 + 14 = 19$</td><td>(lots) × (price each), added into one bill</td></tr>
+      <tr><td><b>Product</b> $AB$</td><td>the new matrix you get by multiplying matrix $A$ by matrix $B$</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}\begin{bmatrix} 5 & 6 \\ 7 & 8 \end{bmatrix} = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}$</td><td>all the bills for all traders in all scenarios at once</td></tr>
+      <tr><td><b>$c_{ij}$</b></td><td>the entry of $C = AB$ in row $i$, column $j$</td><td>$c_{12}$ = row 1, column 2</td><td>"cell (1, 2)"</td></tr>
+      <tr><td><b>Inside / outside numbers</b></td><td>in $(m \times n)(n \times p)$: the two $n$'s are inside, $m$ and $p$ outside</td><td>$(2 \times \underline{3})(\underline{3} \times 4)$</td><td>two puzzle pieces whose edges must fit</td></tr>
+      <tr><td><b>Combination</b> (mix)</td><td>multiply each vector by a number, then add</td><td>$5(1, 3) + 7(2, 4) = (19, 43)$</td><td>a recipe: 5 spoons of this + 7 spoons of that</td></tr>
+      <tr><td><b>Column × row</b></td><td>a column times a row: a full table, each entry = (column number) × (row number)</td><td>$\begin{bmatrix} 1 \\ 2 \end{bmatrix}\begin{bmatrix} 3 & 4 \end{bmatrix} = \begin{bmatrix} 3 & 4 \\ 6 & 8 \end{bmatrix}$</td><td>a times table</td></tr>
+      <tr><td><b>Multiple</b></td><td>a vector times one number</td><td>$(3, 6) = 3 \times (1, 2)$</td><td>the same arrow, stretched</td></tr>
+      <tr><td><b>On one line</b></td><td>vectors that are all multiples of one vector</td><td>$(1, 2)$ and $(3, 6)$</td><td>arrows pointing the same way (or exactly backwards)</td></tr>
+      <tr><td><b>Block</b></td><td>a smaller matrix cut out of a bigger one</td><td>top-left $2 \times 2$ corner of a $4 \times 4$</td><td>one tile of a tiled floor</td></tr>
+      <tr><td><b>Identity</b> $I$</td><td>1s on the diagonal, 0s elsewhere; $IA = A$</td><td>$\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$</td><td>"do nothing"</td></tr>
+      <tr><td><b>Diagonal</b></td><td>the entries from top-left to bottom-right</td><td>$1$ and $4$ in $\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$</td><td>the slope of a staircase</td></tr>
+      <tr><td><b>Inverse</b> $A^{-1}$</td><td>the matrix that undoes $A$: $A^{-1}A = I$</td><td>inverse of $\begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}$ is $\begin{bmatrix} \tfrac12 & 0 \\ 0 & \tfrac12 \end{bmatrix}$</td><td>the undo button</td></tr>
+      <tr><td><b>Invertible</b> (non-singular)</td><td>has an inverse</td><td>$\begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix}$</td><td>the undo button works</td></tr>
+      <tr><td><b>Singular</b></td><td>has <b>no</b> inverse</td><td>$\begin{bmatrix} 1 & 3 \\ 2 & 6 \end{bmatrix}$</td><td>a broken undo button: information was lost</td></tr>
+      <tr><td><b>$Ax = b$</b></td><td>"mix the columns of $A$ with amounts $x$ to get $b$"</td><td>$\begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix}\begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} 5 \\ 12 \end{bmatrix}$</td><td>build a wanted payoff from products</td></tr>
+      <tr><td><b>Elimination</b></td><td>subtract a multiple of one row from another row to make a zero</td><td>row 2 − 2 × row 1</td><td>cancelling one unknown at a time</td></tr>
+      <tr><td><b>Pivot</b> (leader)</td><td>the number used to clear the other numbers in its column</td><td>the $1$ at top-left of $\begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix}$</td><td>the leader of its column</td></tr>
+      <tr><td><b>Multiplier</b></td><td>(number to remove) ÷ (pivot)</td><td>remove $2$ under pivot $1$: $2 \div 1 = 2$</td><td>how many copies of the leader row to subtract</td></tr>
+      <tr><td><b>Augmented matrix</b> $[\,A \mid I\,]$</td><td>$A$ with $I$ stuck on its right side</td><td>$\left[\begin{array}{cc|cc} 1 & 3 & 1 & 0 \\ 2 & 7 & 0 & 1 \end{array}\right]$</td><td>the puzzle and its answer sheet side by side</td></tr>
+      <tr><td><b>Gauss–Jordan</b></td><td>elimination downwards (Gauss) and then upwards (Jordan) until the left side is $I$</td><td>$[\,A \mid I\,] \to [\,I \mid A^{-1}\,]$</td><td>tidying the table completely</td></tr>
+      <tr><td><b>Elimination matrix</b> $E$</td><td>one matrix that does all the elimination steps at once</td><td>$EA = I$ means $E = A^{-1}$</td><td>a saved list of all the moves</td></tr>
+      <tr><td><b>Determinant</b> $ad - bc$ (2 × 2)</td><td>one number that is $0$ exactly when there is no inverse</td><td>$1 \times 7 - 3 \times 2 = 1$</td><td>a yes/no light for "can I undo?"</td></tr>
+      <tr><td><b>Order matters</b></td><td>$AB$ is usually not the same as $BA$</td><td>Example 5</td><td>socks then shoes ≠ shoes then socks</td></tr>
+      <tr><td><b>Scenario</b> / <b>payoff</b></td><td>one possible outcome tomorrow / what a product pays in it</td><td>Nifty up: stock pays 3</td><td>a weather forecast / the umbrella's usefulness in it</td></tr>
+      <tr><td><b>CE</b> (call) / <b>PE</b> (put), <b>strike</b></td><td>CE pays $\max(S - K, 0)$, PE pays $\max(K - S, 0)$; $K$ = strike</td><td>strike 2, $S = 3$: CE pays 1, PE pays 0</td><td>CE = bet on up, PE = bet on down</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
     <h2 id="s1">1. The lecture in five questions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Matrix = a table of numbers. Columns = the lines going top to bottom; rows = the lines going left to right. Identity $I$ = the "do nothing" matrix (1s on the diagonal, 0s elsewhere). Inverse $A^{-1}$ = the matrix that undoes $A$. $Ax = 0$ = "some mix of the columns gives all zeros". Gauss–Jordan = elimination down and then up.</p>
+    </div>
     <table>
       <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
       <tr><td>1</td><td>When can we multiply $A$ times $B$?</td><td>When the <b>columns of $A$</b> match the <b>rows of $B$</b> in number.</td></tr>
@@ -57,6 +100,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s2">2. When can two matrices be multiplied?</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$m \times n$ = a matrix with $m$ rows and $n$ columns (rows always said first). Inside numbers = the two middle numbers when you write the sizes side by side, $(m \times \underline{n})(\underline{n} \times p)$. Outside numbers = the first and the last ($m$ and $p$). Dot product = multiply matching numbers and add.</p>
+    </div>
     <div class="box theorem"><span class="label">Shape rule</span>
       $$ \underbrace{A}_{m \times n}\ \underbrace{B}_{n \times p} = \underbrace{C}_{m \times p} $$
       <p>The two <b>inside</b> numbers must match ($n$ and $n$). The answer takes the two <b>outside</b> numbers ($m$ rows, $p$ columns).</p>
@@ -68,9 +114,27 @@
       <tr><td>$2 \times 2$</td><td>$3 \times 2$</td><td>$2$ and $3$</td><td><b>no</b></td><td>—</td></tr>
     </table>
     <p>Why: each row of $A$ gets matched up, number by number, with each column of $B$. So a row of $A$ must be exactly as long as a column of $B$.</p>
+    <p><b>The first line of the table, slowly:</b> $A$ is $2 \times 3$, $B$ is $3 \times 4$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Write the two sizes side by side: $(2 \times 3)(3 \times 4)$.</p>
+        <p class="k"><span class="kl">Why</span> The rule only looks at these four numbers.</p>
+        <p class="k"><span class="kl">How</span> Inside numbers: the $3$ at the end of $A$'s size and the $3$ at the start of $B$'s size. $3 = 3$.</p>
+        <p class="k"><span class="kl">What we have now</span> They match, so $AB$ is allowed. A row of $A$ has 3 numbers, a column of $B$ has 3 numbers: they pair up perfectly.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Read off the size of the answer.</p>
+        <p class="k"><span class="kl">Why</span> One answer entry for each (row of $A$, column of $B$) pair.</p>
+        <p class="k"><span class="kl">How</span> Outside numbers: $2$ (rows of $A$) and $4$ (columns of $B$). $2$ rows × $4$ columns $= 8$ entries.</p>
+        <p class="k"><span class="kl">What we have now</span> $AB$ is $2 \times 4$.</p>
+      </li>
+    </ol>
 
     <!-- ====================================================== -->
     <h2 id="s3">3. Four ways to multiply</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Entry $c_{ij}$ = the number in row $i$, column $j$ of the answer $C = AB$. Dot product (row · column) = multiply matching numbers, then add. Combination (mix) = multiply each vector by a number, then add the results. Column × row = a column times a row, which makes a whole table.</p>
+    </div>
     <p>We use one small example throughout and get the <b>same answer four times</b>:</p>
     $$
     A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}, \qquad
@@ -83,44 +147,110 @@
       <p>The entry in <b>row $i$, column $j$</b> of $AB$ = <b>row $i$ of $A$</b> dotted with <b>column $j$ of $B$</b>: multiply matching numbers and add.</p>
       $$ c_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \dots + a_{in}b_{nj} = \sum_{k=1}^{n} a_{ik}\,b_{kj} $$
     </div>
-    <table>
-      <tr><th>Entry</th><th>Row of $A$ · column of $B$</th><th>Work</th><th>Value</th></tr>
-      <tr><td>$c_{11}$</td><td>$(1, 2) \cdot (5, 7)$</td><td>$1 \times 5 + 2 \times 7$</td><td>$19$</td></tr>
-      <tr><td>$c_{12}$</td><td>$(1, 2) \cdot (6, 8)$</td><td>$1 \times 6 + 2 \times 8$</td><td>$22$</td></tr>
-      <tr><td>$c_{21}$</td><td>$(3, 4) \cdot (5, 7)$</td><td>$3 \times 5 + 4 \times 7$</td><td>$43$</td></tr>
-      <tr><td>$c_{22}$</td><td>$(3, 4) \cdot (6, 8)$</td><td>$3 \times 6 + 4 \times 8$</td><td>$50$</td></tr>
-    </table>
-    $$ AB = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix} $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find $c_{11}$, the top-left entry.</p>
+        <p class="k"><span class="kl">Why</span> Row 1, column 1 of the answer uses row 1 of $A$ and column 1 of $B$.</p>
+        <p class="k"><span class="kl">How</span> Row 1 of $A$ is $(1, 2)$. Column 1 of $B$ is $(5, 7)$. First with first: $1 \times 5 = 5$. Second with second: $2 \times 7 = 14$. Add: $5 + 14 = 19$.</p>
+        <p class="k"><span class="kl">What we have now</span> $c_{11} = 19$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find $c_{12}$, the top-right entry.</p>
+        <p class="k"><span class="kl">Why</span> Row 1 of the answer still uses row 1 of $A$; column 2 uses column 2 of $B$.</p>
+        <p class="k"><span class="kl">How</span> $(1, 2) \cdot (6, 8)$: $1 \times 6 = 6$, $2 \times 8 = 16$, $6 + 16 = 22$.</p>
+        <p class="k"><span class="kl">What we have now</span> $c_{12} = 22$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find $c_{21}$, the bottom-left entry.</p>
+        <p class="k"><span class="kl">Why</span> Row 2 of $A$ with column 1 of $B$.</p>
+        <p class="k"><span class="kl">How</span> $(3, 4) \cdot (5, 7)$: $3 \times 5 = 15$, $4 \times 7 = 28$, $15 + 28 = 43$.</p>
+        <p class="k"><span class="kl">What we have now</span> $c_{21} = 43$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find $c_{22}$, the bottom-right entry.</p>
+        <p class="k"><span class="kl">Why</span> Row 2 of $A$ with column 2 of $B$.</p>
+        <p class="k"><span class="kl">How</span> $(3, 4) \cdot (6, 8)$: $3 \times 6 = 18$, $4 \times 8 = 32$, $18 + 32 = 50$.</p>
+        <p class="k"><span class="kl">What we have now</span> All four entries. The whole table:</p>
+        <table>
+          <tr><th>Entry</th><th>Row of $A$ · column of $B$</th><th>Work</th><th>Value</th></tr>
+          <tr><td>$c_{11}$</td><td>$(1, 2) \cdot (5, 7)$</td><td>$1 \times 5 + 2 \times 7$</td><td>$19$</td></tr>
+          <tr><td>$c_{12}$</td><td>$(1, 2) \cdot (6, 8)$</td><td>$1 \times 6 + 2 \times 8$</td><td>$22$</td></tr>
+          <tr><td>$c_{21}$</td><td>$(3, 4) \cdot (5, 7)$</td><td>$3 \times 5 + 4 \times 7$</td><td>$43$</td></tr>
+          <tr><td>$c_{22}$</td><td>$(3, 4) \cdot (6, 8)$</td><td>$3 \times 6 + 4 \times 8$</td><td>$50$</td></tr>
+        </table>
+        $$ AB = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix} $$
+      </li>
+    </ol>
 
     <h3>Way 2: a column at a time</h3>
     <div class="box definition"><span class="label">Rule</span>
       <p><b>Column $j$ of $AB$</b> = $A$ times <b>column $j$ of $B$</b>. So every column of $AB$ is a <b>mix of the columns of $A$</b>.</p>
     </div>
-    <table>
-      <tr><th>Column of $B$</th><th>Mix of $A$'s columns $(1, 3)$ and $(2, 4)$</th><th>Column of $AB$</th></tr>
-      <tr><td>$(5, 7)$</td><td>$5 \times (1, 3) + 7 \times (2, 4) = (5, 15) + (14, 28)$</td><td>$(19, 43)$</td></tr>
-      <tr><td>$(6, 8)$</td><td>$6 \times (1, 3) + 8 \times (2, 4) = (6, 18) + (16, 32)$</td><td>$(22, 50)$</td></tr>
-    </table>
-    <p>Same answer ✓.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Get column 1 of $AB$ from column 1 of $B$, which is $(5, 7)$.</p>
+        <p class="k"><span class="kl">Why</span> $(5, 7)$ is a recipe: "5 of $A$'s first column plus 7 of $A$'s second column".</p>
+        <p class="k"><span class="kl">How</span> $A$'s columns are $(1, 3)$ and $(2, 4)$. $5 \times (1, 3) = (5, 15)$. $7 \times (2, 4) = (14, 28)$. Add: $(5 + 14,\ 15 + 28) = (19, 43)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Column 1 of $AB$ is $(19, 43)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Get column 2 of $AB$ from column 2 of $B$, which is $(6, 8)$.</p>
+        <p class="k"><span class="kl">Why</span> New recipe: 6 of the first column plus 8 of the second.</p>
+        <p class="k"><span class="kl">How</span> $6 \times (1, 3) = (6, 18)$. $8 \times (2, 4) = (16, 32)$. Add: $(6 + 16,\ 18 + 32) = (22, 50)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Column 2 of $AB$ is $(22, 50)$.</p>
+        <table>
+          <tr><th>Column of $B$</th><th>Mix of $A$'s columns $(1, 3)$ and $(2, 4)$</th><th>Column of $AB$</th></tr>
+          <tr><td>$(5, 7)$</td><td>$5 \times (1, 3) + 7 \times (2, 4) = (5, 15) + (14, 28)$</td><td>$(19, 43)$</td></tr>
+          <tr><td>$(6, 8)$</td><td>$6 \times (1, 3) + 8 \times (2, 4) = (6, 18) + (16, 32)$</td><td>$(22, 50)$</td></tr>
+        </table>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Stand the columns side by side: $\begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}$. Same answer as Way 1 ✓.</p>
+      </li>
+    </ol>
 
     <h3>Way 3: a row at a time</h3>
     <div class="box definition"><span class="label">Rule</span>
       <p><b>Row $i$ of $AB$</b> = <b>row $i$ of $A$</b> times $B$. So every row of $AB$ is a <b>mix of the rows of $B$</b> (as in Lecture 03).</p>
     </div>
-    <table>
-      <tr><th>Row of $A$</th><th>Mix of $B$'s rows $(5, 6)$ and $(7, 8)$</th><th>Row of $AB$</th></tr>
-      <tr><td>$(1, 2)$</td><td>$1 \times (5, 6) + 2 \times (7, 8) = (5, 6) + (14, 16)$</td><td>$(19, 22)$</td></tr>
-      <tr><td>$(3, 4)$</td><td>$3 \times (5, 6) + 4 \times (7, 8) = (15, 18) + (28, 32)$</td><td>$(43, 50)$</td></tr>
-    </table>
-    <p>Same answer ✓.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Get row 1 of $AB$ from row 1 of $A$, which is $(1, 2)$.</p>
+        <p class="k"><span class="kl">Why</span> $(1, 2)$ is a recipe: "1 of $B$'s first row plus 2 of $B$'s second row".</p>
+        <p class="k"><span class="kl">How</span> $B$'s rows are $(5, 6)$ and $(7, 8)$. $1 \times (5, 6) = (5, 6)$. $2 \times (7, 8) = (14, 16)$. Add: $(5 + 14,\ 6 + 16) = (19, 22)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Row 1 of $AB$ is $(19, 22)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Get row 2 of $AB$ from row 2 of $A$, which is $(3, 4)$.</p>
+        <p class="k"><span class="kl">Why</span> New recipe: 3 of the first row of $B$ plus 4 of the second.</p>
+        <p class="k"><span class="kl">How</span> $3 \times (5, 6) = (15, 18)$. $4 \times (7, 8) = (28, 32)$. Add: $(15 + 28,\ 18 + 32) = (43, 50)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Row 2 of $AB$ is $(43, 50)$.</p>
+        <table>
+          <tr><th>Row of $A$</th><th>Mix of $B$'s rows $(5, 6)$ and $(7, 8)$</th><th>Row of $AB$</th></tr>
+          <tr><td>$(1, 2)$</td><td>$1 \times (5, 6) + 2 \times (7, 8) = (5, 6) + (14, 16)$</td><td>$(19, 22)$</td></tr>
+          <tr><td>$(3, 4)$</td><td>$3 \times (5, 6) + 4 \times (7, 8) = (15, 18) + (28, 32)$</td><td>$(43, 50)$</td></tr>
+        </table>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Stack the rows: $\begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}$. Same answer ✓.</p>
+      </li>
+    </ol>
 
     <h3>Way 4: column × row, then add</h3>
-    <p>First, what is a <b>column times a row</b>? A $3 \times 1$ times a $1 \times 2$ gives a full $3 \times 2$ matrix. Every entry is (number from the column) × (number from the row):</p>
-    $$
-    \begin{bmatrix} 2 \\ 3 \\ 4 \end{bmatrix} \begin{bmatrix} 1 & 6 \end{bmatrix}
-    = \begin{bmatrix} 2 \times 1 & 2 \times 6 \\ 3 \times 1 & 3 \times 6 \\ 4 \times 1 & 4 \times 6 \end{bmatrix}
-    = \begin{bmatrix} 2 & 12 \\ 3 & 18 \\ 4 & 24 \end{bmatrix}
-    $$
+    <p>First, what is a <b>column times a row</b>? A $3 \times 1$ times a $1 \times 2$ gives a full $3 \times 2$ matrix (inside numbers $1$ and $1$ match; outside numbers $3$ and $2$). Every entry is (number from the column) × (number from the row):</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Multiply the column $(2, 3, 4)$ by the row $(1, 6)$.</p>
+        <p class="k"><span class="kl">Why</span> Each row of the column (one number) dotted with each column of the row (one number) is just one multiplication.</p>
+        <p class="k"><span class="kl">How</span> Top number $2$: $2 \times 1 = 2$, $2 \times 6 = 12$. Middle number $3$: $3 \times 1 = 3$, $3 \times 6 = 18$. Bottom number $4$: $4 \times 1 = 4$, $4 \times 6 = 24$.</p>
+        <p class="k"><span class="kl">What we have now</span> A $3 \times 2$ table:</p>
+        $$
+        \begin{bmatrix} 2 \\ 3 \\ 4 \end{bmatrix} \begin{bmatrix} 1 & 6 \end{bmatrix}
+        = \begin{bmatrix} 2 \times 1 & 2 \times 6 \\ 3 \times 1 & 3 \times 6 \\ 4 \times 1 & 4 \times 6 \end{bmatrix}
+        = \begin{bmatrix} 2 & 12 \\ 3 & 18 \\ 4 & 24 \end{bmatrix}
+        $$
+      </li>
+    </ol>
     <div class="box intuition"><span class="label">A very special matrix</span>
       <p>Every <b>column</b> is a multiple of $(2, 3, 4)$ and every <b>row</b> is a multiple of $(1, 6)$. All its columns point along one line, and all its rows point along one line. Strang calls this a "minimal" matrix: one column times one row.</p>
     </div>
@@ -129,13 +259,32 @@
       <p>$AB$ = (column 1 of $A$)(row 1 of $B$) + (column 2 of $A$)(row 2 of $B$) + …</p>
     </div>
     <p>For our example:</p>
-    $$
-    \underbrace{\begin{bmatrix} 1 \\ 3 \end{bmatrix} \begin{bmatrix} 5 & 6 \end{bmatrix}}_{\text{col 1 × row 1}}
-    + \underbrace{\begin{bmatrix} 2 \\ 4 \end{bmatrix} \begin{bmatrix} 7 & 8 \end{bmatrix}}_{\text{col 2 × row 2}}
-    = \begin{bmatrix} 5 & 6 \\ 15 & 18 \end{bmatrix} + \begin{bmatrix} 14 & 16 \\ 28 & 32 \end{bmatrix}
-    = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}
-    $$
-    <p>Same answer again ✓.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Column 1 of $A$ times row 1 of $B$: $(1, 3)$ times $(5, 6)$.</p>
+        <p class="k"><span class="kl">Why</span> This is the first "column × row" piece of the rule.</p>
+        <p class="k"><span class="kl">How</span> Top $1$: $1 \times 5 = 5$, $1 \times 6 = 6$. Bottom $3$: $3 \times 5 = 15$, $3 \times 6 = 18$.</p>
+        <p class="k"><span class="kl">What we have now</span> First piece $\begin{bmatrix} 5 & 6 \\ 15 & 18 \end{bmatrix}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Column 2 of $A$ times row 2 of $B$: $(2, 4)$ times $(7, 8)$.</p>
+        <p class="k"><span class="kl">Why</span> The second piece of the rule.</p>
+        <p class="k"><span class="kl">How</span> Top $2$: $2 \times 7 = 14$, $2 \times 8 = 16$. Bottom $4$: $4 \times 7 = 28$, $4 \times 8 = 32$.</p>
+        <p class="k"><span class="kl">What we have now</span> Second piece $\begin{bmatrix} 14 & 16 \\ 28 & 32 \end{bmatrix}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add the two pieces, entry by entry.</p>
+        <p class="k"><span class="kl">Why</span> $A$ has only 2 columns, so there are only 2 pieces.</p>
+        <p class="k"><span class="kl">How</span> Top-left $5 + 14 = 19$. Top-right $6 + 16 = 22$. Bottom-left $15 + 28 = 43$. Bottom-right $18 + 32 = 50$.</p>
+        <p class="k"><span class="kl">Check</span> Same answer again ✓.</p>
+        $$
+        \underbrace{\begin{bmatrix} 1 \\ 3 \end{bmatrix} \begin{bmatrix} 5 & 6 \end{bmatrix}}_{\text{col 1 × row 1}}
+        + \underbrace{\begin{bmatrix} 2 \\ 4 \end{bmatrix} \begin{bmatrix} 7 & 8 \end{bmatrix}}_{\text{col 2 × row 2}}
+        = \begin{bmatrix} 5 & 6 \\ 15 & 18 \end{bmatrix} + \begin{bmatrix} 14 & 16 \\ 28 & 32 \end{bmatrix}
+        = \begin{bmatrix} 19 & 22 \\ 43 & 50 \end{bmatrix}
+        $$
+      </li>
+    </ol>
 
     <table>
       <tr><th>Way</th><th>Think of it as</th><th>Tells you</th></tr>
@@ -144,20 +293,26 @@
       <tr><td>3. Rows</td><td>each row of $A$ × $B$</td><td>rows of $AB$ are mixes of the rows of $B$</td></tr>
       <tr><td>4. Column × row</td><td>sum of (column of $A$)(row of $B$)</td><td>$AB$ is a sum of simple "one column × one row" pieces</td></tr>
     </table>
-    <p>All four do exactly the same multiplications, just grouped differently. That is why they always agree.</p>
+    <p>All four do exactly the same multiplications, just grouped differently. That is why they always agree. (Look: the eight small products $5, 14, 6, 16, 15, 28, 18, 32$ appear in every way.)</p>
 
     <!-- ====================================================== -->
     <h2 id="s4">4. Multiplying by blocks</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Block = a smaller matrix cut out of a bigger one, like one tile of a tiled floor. Block row / block column = a row / column of tiles. Way 1 = entry = row · column (multiply matching things, then add). "Sizes fit" = each pair of blocks being multiplied obeys the shape rule (inside numbers match).</p>
+    </div>
     <p>You can cut big matrices into smaller blocks and multiply the blocks as if they were numbers:</p>
     $$
     \begin{bmatrix} A_1 & A_2 \\ A_3 & A_4 \end{bmatrix}
     \begin{bmatrix} B_1 & B_2 \\ B_3 & B_4 \end{bmatrix}
     = \begin{bmatrix} A_1B_1 + A_2B_3 & A_1B_2 + A_2B_4 \\ A_3B_1 + A_4B_3 & A_3B_2 + A_4B_4 \end{bmatrix}
     $$
-    <p>It is the same pattern as Way 1 (block row × block column), with small matrices in place of numbers. For example, a $20 \times 20$ matrix can be treated as a $2 \times 2$ grid of $10 \times 10$ blocks. The only rule is that the block sizes must fit together.</p>
+    <p>It is the same pattern as Way 1 (block row × block column), with small matrices in place of numbers. For example, a $20 \times 20$ matrix can be treated as a $2 \times 2$ grid of $10 \times 10$ blocks. The only rule is that the block sizes must fit together. Note the order inside each piece: $A_1B_1$, never $B_1A_1$, because for matrices order matters.</p>
 
     <!-- ====================================================== -->
     <h2 id="s5">5. What an inverse is</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Square matrix = same number of rows and columns. Identity $I$ = 1s on the diagonal, 0s elsewhere; multiplying by it changes nothing. Inverse $A^{-1}$ = the matrix that undoes $A$. Invertible (non-singular) = has an inverse. Singular = has no inverse. $Ax = b$ = "$A$ turns the input $x$ into the output $b$".</p>
+    </div>
     <div class="box definition"><span class="label">Definition: Inverse</span>
       <p>For a square matrix $A$, the <b>inverse</b> $A^{-1}$ (if it exists) is the matrix with</p>
       $$ A^{-1}A = I \qquad \text{and} \qquad AA^{-1} = I. $$
@@ -171,29 +326,57 @@
 
     <!-- ====================================================== -->
     <h2 id="s6">6. When there is no inverse</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Singular = has no inverse (the undo button is broken). Multiple = a vector times one number. On one line = all the vectors are multiples of one vector, so they point the same way. Zero vector $0$ = all entries 0. Nonzero $x$ = an input with at least one entry that is not 0. Determinant $ad - bc$ = one number that is 0 exactly when a $2 \times 2$ matrix has no inverse.</p>
+    </div>
     $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 6 \end{bmatrix} $$
     <p>This matrix has <b>no inverse</b>. Here are two ways to see it.</p>
 
     <h3>Reason 1: the columns lie on one line</h3>
-    <p>Column 2 $= (3, 6) = 3 \times (1, 2) =$ 3 × column 1. Both columns point the same way. By Way 2, every column of $A$ × (anything) is a mix of these columns, so it stays on that line. The identity needs the column $(1, 0)$, which is <b>not</b> on the line through $(1, 2)$. So $A \times$ (anything) can never equal $I$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Compare column 2 $= (3, 6)$ with column 1 $= (1, 2)$.</p>
+        <p class="k"><span class="kl">Why</span> If one column is a stretched copy of the other, they point the same way.</p>
+        <p class="k"><span class="kl">How</span> Top: $3 \div 1 = 3$. Bottom: $6 \div 2 = 3$. Same number both times, so $(3, 6) = 3 \times (1, 2)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Column 2 = 3 × column 1. Both columns lie on the line through $(1, 2)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Ask what $A \times (\text{anything})$ can look like.</p>
+        <p class="k"><span class="kl">Why</span> By Way 2, every column of $A \times (\text{anything})$ is a mix of $A$'s columns.</p>
+        <p class="k"><span class="kl">How</span> A mix of two vectors on one line stays on that line: $p(1, 2) + q(3, 6) = (p + 3q)(1, 2)$.</p>
+        <p class="k"><span class="kl">What we have now</span> The identity needs the column $(1, 0)$, which is <b>not</b> on the line through $(1, 2)$ (a multiple of $(1, 2)$ with top $1$ would have bottom $2$, not $0$). So $A \times$ (anything) can never equal $I$.</p>
+      </li>
+    </ol>
 
     <h3>Reason 2: a nonzero input gives output zero (the key reason)</h3>
-    <p>Take $x = (3, -1)$:</p>
-    $$ A\begin{bmatrix} 3 \\ -1 \end{bmatrix} = 3\begin{bmatrix} 1 \\ 2 \end{bmatrix} - 1\begin{bmatrix} 3 \\ 6 \end{bmatrix} = \begin{bmatrix} 3 - 3 \\ 6 - 6 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
-    <p>So $A$ sends $(3, -1)$ to zero, and it also sends $(0, 0)$ to zero. Seeing the output $0$, no undo button can know which input to return. (Same as matrix $C$ in Lecture 02.)</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look for a mix of the columns that cancels to zero.</p>
+        <p class="k"><span class="kl">Why this amount</span> Column 2 = 3 × column 1, so "3 of column 1, minus 1 of column 2" should cancel. That is the input $x = (3, -1)$.</p>
+        <p class="k"><span class="kl">How</span> $3 \times (1, 2) = (3, 6)$. $-1 \times (3, 6) = (-3, -6)$. Add: $(3 - 3,\ 6 - 6) = (0, 0)$.</p>
+        <p class="k"><span class="kl">What we have now</span> $A$ sends the nonzero input $(3, -1)$ to zero:</p>
+        $$ A\begin{bmatrix} 3 \\ -1 \end{bmatrix} = 3\begin{bmatrix} 1 \\ 2 \end{bmatrix} - 1\begin{bmatrix} 3 \\ 6 \end{bmatrix} = \begin{bmatrix} 3 - 3 \\ 6 - 6 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What it means</span> $A$ also sends $(0, 0)$ to zero. Two different inputs give the same output $0$. Seeing the output $0$, no undo button can know which input to return. (Same as matrix $C$ in Lecture 02.)</p>
+      </li>
+    </ol>
     <div class="box theorem"><span class="label">Key test</span>
       <p>If $Ax = 0$ for some <b>nonzero</b> $x$, then $A$ has <b>no inverse</b>.</p>
       <p>Why: if $A^{-1}$ existed, multiply both sides of $Ax = 0$ by it: $A^{-1}Ax = A^{-1}0$, so $x = 0$. But $x$ was not zero, a contradiction.</p>
     </div>
 
     <div class="box pitfall"><span class="label">Quick 2 × 2 check</span>
-      <p>For $\begin{bmatrix} a & b \\ c & d \end{bmatrix}$, compute $ad - bc$ (the determinant, coming later). If it is $0$, there is no inverse. Here $1 \times 6 - 3 \times 2 = 0$.</p>
+      <p>For $\begin{bmatrix} a & b \\ c & d \end{bmatrix}$, compute $ad - bc$ (the determinant, coming later). If it is $0$, there is no inverse. Here $a = 1$, $b = 3$, $c = 2$, $d = 6$: $ad = 1 \times 6 = 6$; $bc = 3 \times 2 = 6$; $ad - bc = 6 - 6 = 0$. No inverse.</p>
     </div>
 
     <!-- ====================================================== -->
     <h2 id="s7">7. Finding the inverse: Gauss–Jordan</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Inverse $A^{-1}$ = the undo matrix, with $AA^{-1} = I$. Augmented matrix $[\,A \mid I\,]$ = $A$ with the identity stuck on its right; every row move is done to both halves. Pivot (leader) = the number used to clear the others in its column. Multiplier = (number to remove) ÷ (pivot). Elimination = subtract a multiple of one row from another. Gauss = clear <b>below</b> the pivots; Jordan = also clear <b>above</b> them. Elimination matrix $E$ = all the moves packed into one matrix.</p>
+    </div>
     $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix} $$
-    <p>Its columns $(1, 2)$ and $(3, 7)$ point in different directions, so an inverse should exist. Call the unknown inverse $\begin{bmatrix} p & r \\ q & s \end{bmatrix}$.</p>
+    <p>Its columns $(1, 2)$ and $(3, 7)$ point in different directions ($3 \div 1 = 3$ but $7 \div 2 = 3.5$), so an inverse should exist. Call the unknown inverse $\begin{bmatrix} p & r \\ q & s \end{bmatrix}$.</p>
 
     <h3>The idea: two systems at once</h3>
     <p>$AA^{-1} = I$ column by column (Way 2) means:</p>
@@ -209,36 +392,66 @@
     </div>
 
     <h3>Step by step</h3>
-    <p><b>Start:</b></p>
-    $$ \left[\begin{array}{cc|cc} 1 & 3 & 1 & 0 \\ 2 & 7 & 0 & 1 \end{array}\right] $$
-    <p><b>Step 1 (downwards):</b> clear the $2$ below the pivot. Row 2 minus 2 × row 1:</p>
-    <table>
-      <tr><th></th><th colspan="2">left ($A$)</th><th colspan="2">right ($I$)</th></tr>
-      <tr><td>Row 2</td><td>$2$</td><td>$7$</td><td>$0$</td><td>$1$</td></tr>
-      <tr><td>minus 2 × row 1</td><td>$-2$</td><td>$-6$</td><td>$-2$</td><td>$0$</td></tr>
-      <tr><td><b>New row 2</b></td><td>$0$</td><td>$1$</td><td>$-2$</td><td>$1$</td></tr>
-    </table>
-    $$ \left[\begin{array}{cc|cc} 1 & 3 & 1 & 0 \\ 0 & 1 & -2 & 1 \end{array}\right] $$
-    <p>Gauss would stop here (a staircase). Jordan keeps going.</p>
-    <p><b>Step 2 (upwards):</b> clear the $3$ <b>above</b> the second pivot. Row 1 minus 3 × row 2:</p>
-    <table>
-      <tr><th></th><th colspan="2">left</th><th colspan="2">right</th></tr>
-      <tr><td>Row 1</td><td>$1$</td><td>$3$</td><td>$1$</td><td>$0$</td></tr>
-      <tr><td>minus 3 × row 2</td><td>$0$</td><td>$-3$</td><td>$+6$</td><td>$-3$</td></tr>
-      <tr><td><b>New row 1</b></td><td>$1$</td><td>$0$</td><td>$7$</td><td>$-3$</td></tr>
-    </table>
-    $$ \left[\begin{array}{cc|cc} 1 & 0 & 7 & -3 \\ 0 & 1 & -2 & 1 \end{array}\right] \qquad\Longrightarrow\qquad A^{-1} = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix} $$
-    <p>(If a pivot were not $1$, a last step would divide that row by its pivot.)</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Write $A$ and $I$ side by side.</p>
+        <p class="k"><span class="kl">Why</span> Every move we make on $A$ must also be made on $I$; keeping them in one table makes sure of that.</p>
+        <p class="k"><span class="kl">How</span> Left half = $A$, right half = $I$:</p>
+        $$ \left[\begin{array}{cc|cc} 1 & 3 & 1 & 0 \\ 2 & 7 & 0 & 1 \end{array}\right] $$
+        <p class="k"><span class="kl">What we have now</span> Goal: turn the left half into $\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Downwards (Gauss): clear the $2$ below the pivot $1$.</p>
+        <p class="k"><span class="kl">Why this amount</span> Multiplier = (number to remove) ÷ (pivot) = $2 \div 1 = 2$. So: row 2 minus 2 × row 1.</p>
+        <p class="k"><span class="kl">How</span> 2 × row 1 $= (2 \times 1,\ 2 \times 3 \mid 2 \times 1,\ 2 \times 0) = (2, 6 \mid 2, 0)$. Row 2 minus it: $2 - 2 = 0$, $7 - 6 = 1$, $0 - 2 = -2$, $1 - 0 = 1$.</p>
+        <table>
+          <tr><th></th><th colspan="2">left ($A$)</th><th colspan="2">right ($I$)</th></tr>
+          <tr><td>Row 2</td><td>$2$</td><td>$7$</td><td>$0$</td><td>$1$</td></tr>
+          <tr><td>minus 2 × row 1</td><td>$-2$</td><td>$-6$</td><td>$-2$</td><td>$0$</td></tr>
+          <tr><td><b>New row 2</b></td><td>$0$</td><td>$1$</td><td>$-2$</td><td>$1$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> A staircase on the left. Gauss would stop here. Jordan keeps going.</p>
+        $$ \left[\begin{array}{cc|cc} 1 & 3 & 1 & 0 \\ 0 & 1 & -2 & 1 \end{array}\right] $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Upwards (Jordan): clear the $3$ <b>above</b> the second pivot (the $1$ in row 2).</p>
+        <p class="k"><span class="kl">Why this amount</span> Multiplier $= 3 \div 1 = 3$. So: row 1 minus 3 × row 2. Row 2 starts with $0$, so the $1$ at the top-left is not disturbed.</p>
+        <p class="k"><span class="kl">How</span> 3 × row 2 $= (0, 3 \mid -6, 3)$. Row 1 minus it: $1 - 0 = 1$, $3 - 3 = 0$, $1 - (-6) = 1 + 6 = 7$, $0 - 3 = -3$.</p>
+        <table>
+          <tr><th></th><th colspan="2">left</th><th colspan="2">right</th></tr>
+          <tr><td>Row 1</td><td>$1$</td><td>$3$</td><td>$1$</td><td>$0$</td></tr>
+          <tr><td>minus 3 × row 2</td><td>$0$</td><td>$-3$</td><td>$+6$</td><td>$-3$</td></tr>
+          <tr><td><b>New row 1</b></td><td>$1$</td><td>$0$</td><td>$7$</td><td>$-3$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> The left half is $I$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Read the inverse from the right half.</p>
+        <p class="k"><span class="kl">Why</span> Both pivots are already $1$, so no dividing is needed. (If a pivot were not $1$, a last step would divide that row by its pivot.)</p>
+        $$ \left[\begin{array}{cc|cc} 1 & 0 & 7 & -3 \\ 0 & 1 & -2 & 1 \end{array}\right] \qquad\Longrightarrow\qquad A^{-1} = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix} $$
+        <p class="k"><span class="kl">What we have now</span> A candidate for $A^{-1}$. Next we check it.</p>
+      </li>
+    </ol>
 
     <h3>Check: $A^{-1}A = I$</h3>
-    <table>
-      <tr><th>Entry</th><th>Row of $A^{-1}$ · column of $A$</th><th>Value</th></tr>
-      <tr><td>(1, 1)</td><td>$7 \times 1 + (-3) \times 2 = 7 - 6$</td><td>$1$</td></tr>
-      <tr><td>(1, 2)</td><td>$7 \times 3 + (-3) \times 7 = 21 - 21$</td><td>$0$</td></tr>
-      <tr><td>(2, 1)</td><td>$-2 \times 1 + 1 \times 2 = -2 + 2$</td><td>$0$</td></tr>
-      <tr><td>(2, 2)</td><td>$-2 \times 3 + 1 \times 7 = -6 + 7$</td><td>$1$</td></tr>
-    </table>
-    <p>We get $I$ ✓.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Multiply $A^{-1} = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}$ by $A = \begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix}$, one entry at a time (Way 1).</p>
+        <p class="k"><span class="kl">Why</span> If the answer is $I$, the undo button really undoes $A$.</p>
+        <p class="k"><span class="kl">How, (1, 1)</span> Row 1 $(7, -3)$ · column 1 $(1, 2)$: $7 \times 1 = 7$, $(-3) \times 2 = -6$, $7 - 6 = 1$.</p>
+        <p class="k"><span class="kl">How, (1, 2)</span> Row 1 $(7, -3)$ · column 2 $(3, 7)$: $7 \times 3 = 21$, $(-3) \times 7 = -21$, $21 - 21 = 0$.</p>
+        <p class="k"><span class="kl">How, (2, 1)</span> Row 2 $(-2, 1)$ · column 1 $(1, 2)$: $(-2) \times 1 = -2$, $1 \times 2 = 2$, $-2 + 2 = 0$.</p>
+        <p class="k"><span class="kl">How, (2, 2)</span> Row 2 $(-2, 1)$ · column 2 $(3, 7)$: $(-2) \times 3 = -6$, $1 \times 7 = 7$, $-6 + 7 = 1$.</p>
+        <table>
+          <tr><th>Entry</th><th>Row of $A^{-1}$ · column of $A$</th><th>Value</th></tr>
+          <tr><td>(1, 1)</td><td>$7 \times 1 + (-3) \times 2 = 7 - 6$</td><td>$1$</td></tr>
+          <tr><td>(1, 2)</td><td>$7 \times 3 + (-3) \times 7 = 21 - 21$</td><td>$0$</td></tr>
+          <tr><td>(2, 1)</td><td>$-2 \times 1 + 1 \times 2 = -2 + 2$</td><td>$0$</td></tr>
+          <tr><td>(2, 2)</td><td>$-2 \times 3 + 1 \times 7 = -6 + 7$</td><td>$1$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> 1s on the diagonal, 0s elsewhere. We get $I$ ✓.</p>
+      </li>
+    </ol>
 
     <div class="box intuition"><span class="label">Why the inverse appears on the right</span>
       <p>All the elimination steps together form one matrix $E$ (Lecture 03). It turned $A$ into $I$, so $EA = I$, which means $E = A^{-1}$. The same steps were done to the right half, which started as $I$, so the right half became $EI = E = A^{-1}$.</p>
@@ -246,24 +459,50 @@
 
     <h3>Using the inverse to solve $Ax = b$</h3>
     <p>Once you have $A^{-1}$, then $x = A^{-1}b$ for <b>any</b> $b$. For $b = (5, 12)$:</p>
-    $$ x = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}\begin{bmatrix} 5 \\ 12 \end{bmatrix} = \begin{bmatrix} 35 - 36 \\ -10 + 12 \end{bmatrix} = \begin{bmatrix} -1 \\ 2 \end{bmatrix} $$
-    <p>Check: $A(-1, 2) = (-1 + 6,\ -2 + 14) = (5, 12)$ ✓.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Compute $x = A^{-1}b$, one entry at a time.</p>
+        <p class="k"><span class="kl">Why</span> Multiply $Ax = b$ on the left by $A^{-1}$: $A^{-1}Ax = A^{-1}b$, and $A^{-1}A = I$, so $x = A^{-1}b$.</p>
+        <p class="k"><span class="kl">How, top</span> Row 1 of $A^{-1}$ is $(7, -3)$. $7 \times 5 = 35$, $(-3) \times 12 = -36$, $35 - 36 = -1$.</p>
+        <p class="k"><span class="kl">How, bottom</span> Row 2 of $A^{-1}$ is $(-2, 1)$. $(-2) \times 5 = -10$, $1 \times 12 = 12$, $-10 + 12 = 2$.</p>
+        $$ x = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}\begin{bmatrix} 5 \\ 12 \end{bmatrix} = \begin{bmatrix} 35 - 36 \\ -10 + 12 \end{bmatrix} = \begin{bmatrix} -1 \\ 2 \end{bmatrix} $$
+        <p class="k"><span class="kl">What we have now</span> $x = (-1, 2)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Put $x$ back into $A$. Top: $1 \times (-1) + 3 \times 2 = -1 + 6 = 5$ ✓. Bottom: $2 \times (-1) + 7 \times 2 = -2 + 14 = 12$ ✓. So $A(-1, 2) = (5, 12)$.</p>
+      </li>
+    </ol>
 
     <div class="box pitfall"><span class="label">Shortcut for 2 × 2 only</span>
       $$ \begin{bmatrix} a & b \\ c & d \end{bmatrix}^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix} $$
-      <p>Swap $a$ and $d$, flip the signs of $b$ and $c$, divide by $ad - bc$. For our $A$: $ad - bc = 7 - 6 = 1$, giving $\begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}$ ✓. If $ad - bc = 0$, you cannot divide, so there is no inverse.</p>
+      <p>Swap $a$ and $d$, flip the signs of $b$ and $c$, divide by $ad - bc$. If $ad - bc = 0$, you cannot divide, so there is no inverse.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Compute $ad - bc$ for our $A = \begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix}$.</p>
+          <p class="k"><span class="kl">How</span> $ad = 1 \times 7 = 7$. $bc = 3 \times 2 = 6$. $7 - 6 = 1$.</p>
+          <p class="k"><span class="kl">What we have now</span> Not zero, so the inverse exists; we divide by $1$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Swap $a$ and $d$, then flip the signs of $b$ and $c$.</p>
+          <p class="k"><span class="kl">How</span> Swap $1$ and $7$: $\begin{bmatrix} 7 & 3 \\ 2 & 1 \end{bmatrix}$. Flip $3 \to -3$ and $2 \to -2$: $\begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}$. Divide by $1$: no change.</p>
+          <p class="k"><span class="kl">Check</span> Same as Gauss–Jordan gave: $\begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}$ ✓.</p>
+        </li>
+      </ol>
     </div>
 
     <!-- ====================================================== -->
     <div class="box finance"><span class="label">In finance</span>
       <ul>
-        <li><b>Multiplication:</b> (holdings of each trader) × (what each asset pays in each scenario) = what each trader receives in each scenario, all in one matrix product. Example 8 works it out.</li>
-        <li><b>Inverse:</b> to build any wanted payoff from some assets, solve $Ax = b$. With $A^{-1}$ computed once, every new payoff is just $x = A^{-1}b$. Example 9 prices two options this way.</li>
+        <li><b>Multiplication:</b> (holdings of each trader) × (what each asset pays in each scenario) = what each trader receives in each scenario, all in one matrix product. Example 9 works it out.</li>
+        <li><b>Inverse:</b> to build any wanted payoff from some assets, solve $Ax = b$. With $A^{-1}$ computed once, every new payoff is just $x = A^{-1}b$. Example 10 prices two options (a CE and a PE) this way.</li>
       </ul>
     </div>
 
     <!-- ====================================================== -->
     <h2 id="s8">8. Summary</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Shape rule = inside numbers of the sizes must match. Entry = one number of the answer, found by row · column. Mix = multiply vectors by numbers and add. Block = a smaller matrix cut from a bigger one. Inverse = the undo matrix. Singular = no inverse. Gauss–Jordan = elimination down and up on $[\,A \mid I\,]$.</p>
+    </div>
     <table>
       <tr><th>Idea</th><th>In one line</th></tr>
       <tr><td>Shape rule</td><td>$(m \times n)(n \times p) = m \times p$. Inside numbers must match.</td></tr>
@@ -285,68 +524,389 @@
 
     <h2>Worked examples</h2>
 
+    <!-- E0 -->
+    <div class="worked">
+      <h3>Example 1 (interactive): Options Replication Lab, multiplication and inverse</h3>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <table>
+          <tr><th>Word</th><th>In simple words</th><th>Example (Nifty)</th></tr>
+          <tr><td><b>Spot</b></td><td>Where Nifty is right now.</td><td>Nifty is at 20,000 today.</td></tr>
+          <tr><td><b>Strike</b></td><td>The Nifty level written on the option.</td><td>20,000.</td></tr>
+          <tr><td><b>CE (call)</b></td><td>Pays if Nifty ends <b>above</b> the strike.</td><td>20,000 CE: ends 20,300 → you get 300. Ends 19,800 → 0.</td></tr>
+          <tr><td><b>PE (put)</b></td><td>Pays if Nifty ends <b>below</b> the strike.</td><td>20,000 PE: ends 19,800 → you get 200. Ends 20,300 → 0.</td></tr>
+          <tr><td><b>Future / Bond</b></td><td>Future pays Nifty's move from the agreed price (can be a loss). Bond pays the same fixed amount always.</td><td>Future bought at 20,000, ends 20,300 → +300. Bond pays 100 at every level.</td></tr>
+          <tr><td><b>Premium</b></td><td>The price you pay today for an option.</td><td>The 20,000 CE costs 150 today.</td></tr>
+          <tr><td><b>Lot size</b></td><td>How many quantity of Nifty one contract covers. Turns points into rupees.</td><td>65: 100 points on 1 lot = 100 × 65 = ₹6,500.</td></tr>
+          <tr><td><b>Payoff matrix $A$</b></td><td>One row per Nifty level, one column per product; each number = what 1 lot pays there.</td><td>Row 19,900 of the starting market: (2, 0, 1).</td></tr>
+          <tr><td><b>Matrix × vector $Ax$</b></td><td>Lots in, payoffs out: what your whole position pays at every level.</td><td>$x = (1,1,1)$ gives $(3, 2, 2)$.</td></tr>
+          <tr><td><b>Row way</b></td><td>One level at a time: multiply a row by the lots, add up.</td><td>At 19,900: $2\times1 + 0\times1 + 1\times1 = 3$.</td></tr>
+          <tr><td><b>Column way</b></td><td>One product at a time: lots × its column, then add the columns.</td><td>$1\times(2,1,0) + 1\times(0,1,2) + 1\times(1,0,0)$.</td></tr>
+          <tr><td><b>Matrix × matrix</b></td><td>Each entry = a row of the first times a column of the second.</td><td>Entry (1,1) of $AA^{-1}$ = row 1 of $A$ × column 1 of $A^{-1}$.</td></tr>
+          <tr><td><b>Identity $I$</b></td><td>1s on the diagonal, 0s elsewhere: "do nothing".</td><td>$I x = x$.</td></tr>
+          <tr><td><b>Inverse $A^{-1}$</b></td><td>The matrix that undoes $A$: $A^{-1}A = AA^{-1} = I$.</td><td>Payoffs in, lots out: $x = A^{-1}b$.</td></tr>
+          <tr><td><b>Gauss–Jordan</b></td><td>Put $I$ next to $A$, row-reduce until the left is $I$; the right is then $A^{-1}$.</td><td>$[A \mid I] \to [I \mid A^{-1}]$.</td></tr>
+          <tr><td><b>Singular</b></td><td>A matrix with no inverse (a column has no pivot).</td><td>A product that is a copy of others, e.g. CE − PE = future.</td></tr>
+          <tr><td><b>Ticket (Arrow–Debreu)</b></td><td>A position that pays 1 at one Nifty level and 0 at all others.</td><td>Pays 1 only if Nifty ends at 20,000.</td></tr>
+          <tr><td><b>State price</b></td><td>Today's price of a ticket.</td><td>The price today of "pays 1 only if Nifty ends at 20,000".</td></tr>
+          <tr><td><b>Arbitrage</b></td><td>Free money: something that never loses but costs zero or less today.</td><td>A ticket with a negative price.</td></tr>
+        </table>
+      </div>
+      <h4>1. The agenda: what question are we solving?</h4>
+      <div class="box finance"><span class="label">The question, as a story</span>
+        <p>Your desk can trade three options. Nifty will expire at 19,900, 20,000 or 20,100 (payoffs in points ÷ 100):</p>
+        <table>
+          <tr><th>Product</th><th>Pays at 19,900</th><th>at 20,000</th><th>at 20,100</th></tr>
+          <tr><td>A = buy 20,100 PE</td><td>2</td><td>1</td><td>0</td></tr>
+          <tr><td>B = buy 19,900 CE</td><td>0</td><td>1</td><td>2</td></tr>
+          <tr><td>C = buy 20,000 PE</td><td>1</td><td>0</td><td>0</td></tr>
+        </table>
+        <p>Three clients walk in, each wanting a different payoff:</p>
+        <table>
+          <tr><th>Client</th><th>Wants at 19,900</th><th>at 20,000</th><th>at 20,100</th></tr>
+          <tr><td>Client 1</td><td>3</td><td>2</td><td>2</td></tr>
+          <tr><td>Client 2 (straddle shape)</td><td>2</td><td>0</td><td>2</td></tr>
+          <tr><td>Client 3 (rally bet)</td><td>0</td><td>1</td><td>3</td></tr>
+        </table>
+        <p><b>The slow way:</b> solve three separate systems of equations, one per client. Every new client means solving again.</p>
+        <p><b>The smart way: make "tickets" first.</b> A ticket pays <b>1 at one Nifty level and 0 at the others</b>. Build one ticket per level from A, B, C, just once:</p>
+        <table>
+          <tr><th>Ticket</th><th>Trade</th><th>Pays at 19,900 / 20,000 / 20,100</th></tr>
+          <tr><td>T1 (for 19,900)</td><td>buy 1 × C</td><td>(1, 0, 0)</td></tr>
+          <tr><td>T2 (for 20,000)</td><td>buy 1 × A, sell 2 × C</td><td>(2, 1, 0) − 2 × (1, 0, 0) = (0, 1, 0)</td></tr>
+          <tr><td>T3 (for 20,100)</td><td>sell ½ × A, buy ½ × B, buy 1 × C</td><td>(−1, −½, 0) + (0, ½, 1) + (1, 0, 0) = (0, 0, 1)</td></tr>
+        </table>
+        <p><b>Now every client is easy.</b> Just read their wish as "how many tickets of each":</p>
+        <ul>
+          <li>Client 1 wants 3 / 2 / 2 → buy 3 × T1 + 2 × T2 + 2 × T3. Adding the trades: <b>buy 1 × A, 1 × B, 1 × C</b>.</li>
+          <li>Client 2 wants 2 / 0 / 2 → 2 × T1 + 0 × T2 + 2 × T3 → <b>sell 1 × A, buy 1 × B, buy 4 × C</b>.</li>
+          <li>Client 3 wants 0 / 1 / 3 → 0 × T1 + 1 × T2 + 3 × T3 → <b>sell ½ × A, buy 1½ × B, buy 1 × C</b>.</li>
+        </ul>
+        <p>No new equations: only "multiply and add". It's like having ₹1, ₹10 and ₹100 coins: once you have them, you can pay any amount.</p>
+        <p class="answer">In maths words: the tickets are the columns of the inverse $A^{-1}$. Finding the tickets = finding $A^{-1}$ (Gauss–Jordan). Building a client from tickets = multiplying $A^{-1}$ by what the client wants. That's what this lab shows, step by step.</p>
+      </div>
+
+      <h4>2. The core maths we use (this lecture)</h4>
+      <table>
+        <tr><th>Maths piece</th><th>What it does</th><th>In the lab</th></tr>
+        <tr><td>Matrix × vector, two ways</td><td>rows way: each entry is a row times the vector; columns way: a mix of the columns</td><td>section 4: your lots → payoffs at every level</td></tr>
+        <tr><td>Matrix × matrix</td><td>entry $(i,j)$ = row $i$ of the first × column $j$ of the second</td><td>sections 8 and 9</td></tr>
+        <tr><td>Identity $I$</td><td>1s on the diagonal: "pays 1 at its own level only"</td><td>the target of Gauss–Jordan</td></tr>
+        <tr><td>Inverse $A^{-1}$</td><td>undoes $A$: $A^{-1}A = I$</td><td>payoffs → lots</td></tr>
+        <tr><td>Gauss–Jordan</td><td>$[A \mid I] \to [I \mid A^{-1}]$ with row moves</td><td>section 5, every step</td></tr>
+        <tr><td>Singular matrix</td><td>no inverse: a column without a pivot</td><td>the lab stops and says why</td></tr>
+      </table>
+
+      <h4>3. How your inputs become maths</h4>
+      <table>
+        <tr><th>You type</th><th>It becomes</th><th>Meaning</th></tr>
+        <tr><td>Nifty levels</td><td>rows of $A$</td><td>one row per possible expiry level</td></tr>
+        <tr><td>Products (buy/sell CE, PE, future, bond, strike)</td><td>columns of $A$</td><td>what 1 lot pays at each level ($\max(S-K,0)$ in points ÷ 100)</td></tr>
+        <tr><td>"Client wants"</td><td>$b$</td><td>the payoff to build; the lab also adds two more example clients for $AX = B$</td></tr>
+        <tr><td>Premiums (typed, or Black–Scholes)</td><td>prices $p$</td><td>used to price the tickets (state prices) and the client's payoff</td></tr>
+        <tr><td>(the output)</td><td>$A^{-1}$</td><td>column $j$ = the recipe for the ticket of level $j$</td></tr>
+      </table>
+
+      <h4>4. Walkthrough: the market the lab starts with</h4>
+      <p>A = buy 20,100 PE, B = buy 19,900 CE, C = buy 20,000 PE. Levels 19,900 / 20,000 / 20,100. Client wants 3 / 2 / 2.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">Payoff matrix</span> A = (2, 1, 0), B = (0, 1, 2), C = (1, 0, 0) as columns.</p>
+          $$ A = \begin{bmatrix} 2 & 0 & 1 \\ 1 & 1 & 0 \\ 0 & 2 & 0 \end{bmatrix} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">Multiply, rows way</span> Lots $x = (1,1,1)$. At 19,900: $2\times1 + 0\times1 + 1\times1 = 3$. At 20,000: $1 + 1 + 0 = 2$. At 20,100: $0 + 2 + 0 = 2$.</p>
+          <p class="k"><span class="kl">Multiply, columns way</span> $1\times(2,1,0) + 1\times(0,1,2) + 1\times(1,0,0) = (3, 2, 2)$. Same answer.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Gauss–Jordan, column 1</span> Divide row 1 by 2: $(1, 0, \tfrac12 \mid \tfrac12, 0, 0)$. Row 2 − row 1: $(0, 1, -\tfrac12 \mid -\tfrac12, 1, 0)$. Row 3 already has 0.</p>
+          <p class="k"><span class="kl">Column 2</span> Pivot is already 1. Row 3 − 2 × row 2: $(0, 0, 1 \mid 1, -2, 1)$.</p>
+          <p class="k"><span class="kl">Column 3</span> Row 1 − ½ × row 3: $(1, 0, 0 \mid 0, 1, -\tfrac12)$. Row 2 + ½ × row 3: $(0, 1, 0 \mid 0, 0, \tfrac12)$.</p>
+          <p class="k"><span class="kl">What we have now</span> The left side is $I$, so</p>
+          $$ A^{-1} = \begin{bmatrix} 0 & 1 & -\tfrac12 \\ 0 & 0 & \tfrac12 \\ 1 & -2 & 1 \end{bmatrix} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">What $A^{-1}$ does for the desk</span> $A^{-1}$ × (what the client wants at each level) = <b>total lots of each product</b>.</p>
+          $$ \underbrace{A^{-1}}_{\text{recipe table}} \times \underbrace{b}_{\text{client wants}} = \underbrace{x}_{\text{lots of A, B, C}} $$
+          <p class="k"><span class="kl">Units</span> The lab does all its maths <b>per 1 quantity</b>: "1" means <b>100 Nifty points on 1 quantity</b>. A real lot is 65 quantity, and every payoff and premium scales by the same 65, so the recipe (lots) does not change. The lot size is only used to turn units into rupees.</p>
+          <table>
+            <tr><th></th><th>What it is</th><th>Example</th></tr>
+            <tr><td><b>Lot size</b></td><td>a fixed number from NSE: how many units of Nifty one contract covers. It turns points into rupees.</td><td>65 quantity per lot (the lab uses 65; you can change it in the "Lot size" box), so 100 points on 1 lot = 100 × 65 = ₹6,500</td></tr>
+            <tr><td><b>$A^{-1}$</b></td><td>a recipe table: how many lots of each product you need. It depends on the options you chose.</td><td>ticket for 20,000 = buy 1 lot 20,100 PE, sell 2 lots 20,000 PE</td></tr>
+          </table>
+          <p class="k"><span class="kl">Step 1: rupees → units</span> $b = \text{rupees wanted} \div (100 \times \text{lot size})$. The client wants ₹19,500 / ₹13,000 / ₹13,000, so $b = (19{,}500 \div 6{,}500,\ 13{,}000 \div 6{,}500,\ 13{,}000 \div 6{,}500) = (3, 2, 2)$.</p>
+          <p class="k"><span class="kl">Step 2: units → lots</span> $x = A^{-1}b = (1, 1, 1)$: 1 lot each of the 20,100 PE, 19,900 CE and 20,000 PE (worked out in the steps below).</p>
+          <p class="k"><span class="kl">Step 3: lots → rupees paid</span> Cost today = lots × premium (points) × lot size. For example, 1 lot of the 20,000 PE at 131.44 points costs $131.44 \times 65 \approx$ ₹8,544.</p>
+          <p class="k"><span class="kl">Bigger client</span> Everything is multiply-and-add, so 10× the money needs 10× the lots: ₹1,95,000 / ₹1,30,000 / ₹1,30,000 → $b = (30, 20, 20)$ → $x = (10, 10, 10)$ lots.</p>
+          <p class="k"><span class="kl">Half lots</span> Real contracts can't be split. If $A^{-1}$ gives ½ lot (like ticket T3), scale the whole order up (double it) or round and accept a small miss.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Read $A^{-1}$ down</span> $A^{-1}$ is read <b>down its columns</b>, not across its rows. Each column is a list of 3 numbers = lots of A, B, C (top = A, middle = B, bottom = C).</p>
+          $$ A^{-1} = \begin{bmatrix} \color{#2f5d8a}{0} & \color{#1f7a4d}{1} & \color{#b42318}{-\tfrac12} \\ \color{#2f5d8a}{0} & \color{#1f7a4d}{0} & \color{#b42318}{\tfrac12} \\ \color{#2f5d8a}{1} & \color{#1f7a4d}{-2} & \color{#b42318}{1} \end{bmatrix} \qquad \begin{matrix} \leftarrow \text{lots of A} \\ \leftarrow \text{lots of B} \\ \leftarrow \text{lots of C} \end{matrix} $$
+          <table>
+            <tr><th></th><th>Column 1 (blue)</th><th>Column 2 (green)</th><th>Column 3 (red)</th></tr>
+            <tr><td>Read top to bottom</td><td>$(0, 0, 1)$</td><td>$(1, 0, -2)$</td><td>$(-\tfrac12, \tfrac12, 1)$</td></tr>
+            <tr><td>As a trade</td><td>0 A, 0 B, buy 1 C</td><td>buy 1 A, 0 B, sell 2 C</td><td>sell ½ A, buy ½ B, buy 1 C</td></tr>
+          </table>
+          <p class="k"><span class="kl">Careful</span> The bottom <b>row</b> $(1, -2, 1)$ is not a trade here. We only use columns.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Find out what each column-trade pays: multiply $A$ by it (lots × each product's payoff, then add).</p>
+          <p class="k"><span class="kl">Column 1</span> $0 \times \text{A} + 0 \times \text{B} + 1 \times \text{C} = 0(2,1,0) + 0(0,1,2) + 1(1,0,0) = (1, 0, 0)$. Pays 1 at 19,900 and 0 elsewhere: <b>ticket T1</b>.</p>
+          <p class="k"><span class="kl">Column 2</span> $1(2,1,0) + 0(0,1,2) - 2(1,0,0) = (2 - 2,\ 1,\ 0) = (0, 1, 0)$. Pays 1 only at 20,000: <b>ticket T2</b>.</p>
+          <p class="k"><span class="kl">Column 3</span> $-\tfrac12(2,1,0) + \tfrac12(0,1,2) + 1(1,0,0) = (-1 + 0 + 1,\ -\tfrac12 + \tfrac12 + 0,\ 0 + 1 + 0) = (0, 0, 1)$. Pays 1 only at 20,100: <b>ticket T3</b>.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Why columns are tickets</span> $A \times A^{-1} = I$. Column $j$ of that product is $A \times$ (column $j$ of $A^{-1}$), and column $j$ of $I$ is "1 in spot $j$, 0 elsewhere". So each column of $A^{-1}$ is a trade that pays 1 at one level only. That's what "inverse" means for the desk.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Build the client from tickets. The client wants 3 at 19,900, 2 at 20,000, 2 at 20,100, so take <b>3 × T1 + 2 × T2 + 2 × T3</b>.</p>
+          <p class="k"><span class="kl">How</span> Add up the lots of each product, one product at a time:</p>
+          <table>
+            <tr><th>Product</th><th>3 × (T1 lots)</th><th>2 × (T2 lots)</th><th>2 × (T3 lots)</th><th>Total lots</th></tr>
+            <tr><td>A</td><td>$3 \times 0 = 0$</td><td>$2 \times 1 = 2$</td><td>$2 \times (-\tfrac12) = -1$</td><td>$0 + 2 - 1 = \mathbf{1}$</td></tr>
+            <tr><td>B</td><td>$3 \times 0 = 0$</td><td>$2 \times 0 = 0$</td><td>$2 \times \tfrac12 = 1$</td><td>$0 + 0 + 1 = \mathbf{1}$</td></tr>
+            <tr><td>C</td><td>$3 \times 1 = 3$</td><td>$2 \times (-2) = -4$</td><td>$2 \times 1 = 2$</td><td>$3 - 4 + 2 = \mathbf{1}$</td></tr>
+          </table>
+          <p class="k"><span class="kl">What we have now</span> Buy 1 × A, 1 × B, 1 × C.</p>
+          <p class="k"><span class="kl">This is $A^{-1}b$</span> What we just did is the multiplication $x = A^{-1}b$: each row of the table is one row of $A^{-1}$ times $b = (3, 2, 2)$. For example, row A: $(0, 1, -\tfrac12) \cdot (3, 2, 2) = 0 + 2 - 1 = 1$.</p>
+          <p class="k"><span class="kl">Check</span> 1 A + 1 B + 1 C pays $(2,1,0) + (0,1,2) + (1,0,0) = (3, 2, 2)$ ✓, what the client wanted.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check $AA^{-1} = I$</span> Entry (1,1): row 1 of $A$ × column 1 of $A^{-1}$ $= 2\times0 + 0\times0 + 1\times1 = 1$ ✓. Entry (1,2): $2\times1 + 0\times0 + 1\times(-2) = 0$ ✓. The lab checks all 9.</p>
+        </li>
+      </ol>
+
+      <h4>5. What each output section shows, and what to look for</h4>
+      <table>
+        <tr><th>Lab section</th><th>What it shows</th><th>What to identify</th></tr>
+        <tr><td>1–3</td><td>the question, the payoffs, the equations</td><td>the matrix $A$ (rows = levels, columns = products)</td></tr>
+        <tr><td>4. Multiplication</td><td>$Ax$ by rows and by columns</td><td>both ways agree; what the position pays</td></tr>
+        <tr><td>5. Gauss–Jordan</td><td>every row move on $[A \mid I]$</td><td>$A^{-1}$, or the column where it fails (singular)</td></tr>
+        <tr><td>6. Meaning of $A^{-1}$</td><td>each column as a trade, checked</td><td>the ticket recipe for each Nifty level</td></tr>
+        <tr><td>7. Solve</td><td>$x = A^{-1}b$ as tickets × client amounts</td><td>the client's recipe</td></tr>
+        <tr><td>8. Check</td><td>all entries of $AA^{-1}$, row × column</td><td>it must be $I$</td></tr>
+        <tr><td>9. Many clients</td><td>$X = A^{-1}B$ for three clients at once</td><td>one multiplication, three recipes</td></tr>
+        <tr><td>10–11</td><td>row/column pictures; price and arbitrage</td><td>the fair price of the client's payoff</td></tr>
+        <tr><td>12. State prices</td><td>each ticket's price today</td><td>any price ≤ 0 means arbitrage</td></tr>
+      </table>
+
+      <h4>6. What the inverse tells you</h4>
+      <table>
+        <tr><th>What you see</th><th>Maths meaning</th><th>Options meaning</th><th>Preset to try</th></tr>
+        <tr><td>Gauss–Jordan reaches $I$</td><td>$A$ is invertible</td><td>complete market with no copies: every payoff has exactly one recipe, and each level has its own ticket</td><td>Lecture example, butterfly, two levels</td></tr>
+        <tr><td>a column with no pivot</td><td>singular, no inverse</td><td>a product is a copy of others (or a level can't be isolated): no tickets, no one-shot recipe</td><td>Put–call parity, incomplete market</td></tr>
+        <tr><td>a state price ≤ 0</td><td>—</td><td>looks like free money. The lab checks what that ticket pays just outside your levels: if it never loses, it is a real arbitrage; if it loses there (usual with Black–Scholes premiums), the model with only 2–3 levels is just too simple</td><td>the starting market (20,000 ticket); or untick auto premiums and type your own</td></tr>
+      </table>
+
+      <h4>7. How this is used with real options</h4>
+      <ul>
+        <li><b>Scenario P&amp;L is a multiplication.</b> Risk systems value a whole book across many Nifty scenarios as (scenario payoff matrix) × (positions), which is $Ax$. Exchange margin systems like SPAN work on the same idea: price the portfolio under a grid of scenarios.</li>
+        <li><b>Tickets and state prices.</b> The columns of $A^{-1}$ are Arrow–Debreu tickets. Their prices (state prices) are the market's price for "Nifty ends exactly here". In practice they are read from butterflies on the option chain. Careful: a ticket built from only 2–3 levels pays "1 or 0" only at those levels and can lose in between or outside them, so a negative state price here is a sign the model is too coarse, not automatic free money.</li>
+        <li><b>Price anything instantly.</b> Once you have state prices $q$, any payoff $b$ costs $q_1b_1 + q_2b_2 + \dots$: one multiplication.</li>
+        <li><b>Many clients, one inverse.</b> $X = A^{-1}B$ builds every client's recipe at once. The inverse depends only on the products, not on the clients.</li>
+        <li><b>Singular = warning.</b> No inverse means redundant products (check parity pricing) or levels you can't isolate (payoffs you can't hedge).</li>
+      </ul>
+
+      <h4>8. Try it</h4>
+      <ul>
+        <li><b>Butterfly</b> preset: a clean inverse; the tickets look like butterflies.</li>
+        <li><b>Two levels</b> preset: a 2×2 inverse, small enough to check by hand.</li>
+        <li><b>Put–call parity</b> preset: Gauss–Jordan stops at the missing pivot.</li>
+        <li>Untick "Auto premiums" and type your own prices: watch the state prices, and try to make one negative.</li>
+      </ul>
+      <div id="replab" data-inv></div>
+    </div>
+
     <!-- E1 -->
     <div class="worked">
-      <h3>Example 1: Multiply, three ways</h3>
+      <h3>Example 2: Multiply, three ways</h3>
       <div class="box example"><span class="label">Problem</span>
         $$ A = \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}, \qquad B = \begin{bmatrix} 1 & 4 \\ 2 & 1 \end{bmatrix}. \quad \text{Find } AB. $$
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Entry $c_{ij}$ = number in row $i$, column $j$ of $AB$. Way 1 = row of $A$ · column of $B$ (multiply matching numbers, add). Way 2 = each column of $AB$ is a mix of $A$'s columns $(2, 0)$ and $(1, 3)$. Way 3 = each row of $AB$ is a mix of $B$'s rows $(1, 4)$ and $(2, 1)$.</p>
+      </div>
       <div class="steps">
         <p><b>Way 1 (entries).</b></p>
-        <table>
-          <tr><th>Entry</th><th>Work</th><th>Value</th></tr>
-          <tr><td>$c_{11}$</td><td>$(2, 1) \cdot (1, 2) = 2 + 2$</td><td>$4$</td></tr>
-          <tr><td>$c_{12}$</td><td>$(2, 1) \cdot (4, 1) = 8 + 1$</td><td>$9$</td></tr>
-          <tr><td>$c_{21}$</td><td>$(0, 3) \cdot (1, 2) = 0 + 6$</td><td>$6$</td></tr>
-          <tr><td>$c_{22}$</td><td>$(0, 3) \cdot (4, 1) = 0 + 3$</td><td>$3$</td></tr>
-        </table>
-        <p><b>Way 2 (columns).</b> Column 1: $1 \times (2, 0) + 2 \times (1, 3) = (4, 6)$. Column 2: $4 \times (2, 0) + 1 \times (1, 3) = (9, 3)$ ✓.</p>
-        <p><b>Way 3 (rows).</b> Row 1: $2 \times (1, 4) + 1 \times (2, 1) = (4, 9)$. Row 2: $0 \times (1, 4) + 3 \times (2, 1) = (6, 3)$ ✓.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> $c_{11}$ = row 1 of $A$ · column 1 of $B$.</p>
+            <p class="k"><span class="kl">How</span> $(2, 1) \cdot (1, 2)$: $2 \times 1 = 2$, $1 \times 2 = 2$, $2 + 2 = 4$.</p>
+            <p class="k"><span class="kl">What we have now</span> $c_{11} = 4$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> $c_{12}$ = row 1 of $A$ · column 2 of $B$.</p>
+            <p class="k"><span class="kl">How</span> $(2, 1) \cdot (4, 1)$: $2 \times 4 = 8$, $1 \times 1 = 1$, $8 + 1 = 9$.</p>
+            <p class="k"><span class="kl">What we have now</span> $c_{12} = 9$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> $c_{21}$ = row 2 of $A$ · column 1 of $B$.</p>
+            <p class="k"><span class="kl">How</span> $(0, 3) \cdot (1, 2)$: $0 \times 1 = 0$, $3 \times 2 = 6$, $0 + 6 = 6$.</p>
+            <p class="k"><span class="kl">What we have now</span> $c_{21} = 6$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> $c_{22}$ = row 2 of $A$ · column 2 of $B$.</p>
+            <p class="k"><span class="kl">How</span> $(0, 3) \cdot (4, 1)$: $0 \times 4 = 0$, $3 \times 1 = 3$, $0 + 3 = 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> All four entries:</p>
+            <table>
+              <tr><th>Entry</th><th>Work</th><th>Value</th></tr>
+              <tr><td>$c_{11}$</td><td>$(2, 1) \cdot (1, 2) = 2 + 2$</td><td>$4$</td></tr>
+              <tr><td>$c_{12}$</td><td>$(2, 1) \cdot (4, 1) = 8 + 1$</td><td>$9$</td></tr>
+              <tr><td>$c_{21}$</td><td>$(0, 3) \cdot (1, 2) = 0 + 6$</td><td>$6$</td></tr>
+              <tr><td>$c_{22}$</td><td>$(0, 3) \cdot (4, 1) = 0 + 3$</td><td>$3$</td></tr>
+            </table>
+          </li>
+        </ol>
+        <p><b>Way 2 (columns).</b></p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Column 1 of $AB$ = 1 of $A$'s column 1 + 2 of $A$'s column 2.</p>
+            <p class="k"><span class="kl">Why</span> Column 1 of $B$ is $(1, 2)$: that is the recipe.</p>
+            <p class="k"><span class="kl">How</span> $1 \times (2, 0) = (2, 0)$. $2 \times (1, 3) = (2, 6)$. Add: $(2 + 2,\ 0 + 6) = (4, 6)$.</p>
+            <p class="k"><span class="kl">What we have now</span> Column 1 $= (4, 6)$, matching $c_{11} = 4$, $c_{21} = 6$ ✓.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Column 2 of $AB$ = 4 of $A$'s column 1 + 1 of $A$'s column 2.</p>
+            <p class="k"><span class="kl">Why</span> Column 2 of $B$ is $(4, 1)$.</p>
+            <p class="k"><span class="kl">How</span> $4 \times (2, 0) = (8, 0)$. $1 \times (1, 3) = (1, 3)$. Add: $(8 + 1,\ 0 + 3) = (9, 3)$.</p>
+            <p class="k"><span class="kl">What we have now</span> Column 2 $= (9, 3)$ ✓.</p>
+          </li>
+        </ol>
+        <p><b>Way 3 (rows).</b></p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 1 of $AB$ = 2 of $B$'s row 1 + 1 of $B$'s row 2.</p>
+            <p class="k"><span class="kl">Why</span> Row 1 of $A$ is $(2, 1)$: that is the recipe.</p>
+            <p class="k"><span class="kl">How</span> $2 \times (1, 4) = (2, 8)$. $1 \times (2, 1) = (2, 1)$. Add: $(2 + 2,\ 8 + 1) = (4, 9)$.</p>
+            <p class="k"><span class="kl">What we have now</span> Row 1 $= (4, 9)$ ✓.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 2 of $AB$ = 0 of $B$'s row 1 + 3 of $B$'s row 2.</p>
+            <p class="k"><span class="kl">Why</span> Row 2 of $A$ is $(0, 3)$.</p>
+            <p class="k"><span class="kl">How</span> $0 \times (1, 4) = (0, 0)$. $3 \times (2, 1) = (6, 3)$. Add: $(0 + 6,\ 0 + 3) = (6, 3)$.</p>
+            <p class="k"><span class="kl">Check</span> Row 2 $= (6, 3)$. All three ways agree ✓.</p>
+          </li>
+        </ol>
         <p class="answer">Answer: $AB = \begin{bmatrix} 4 & 9 \\ 6 & 3 \end{bmatrix}$</p>
       </div>
     </div>
 
     <!-- E2 -->
     <div class="worked">
-      <h3>Example 2: Which products are allowed?</h3>
+      <h3>Example 3: Which products are allowed?</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>$A$ is $2 \times 3$, $B$ is $3 \times 4$, $C$ is $4 \times 2$. Which of $AB$, $BA$, $BC$, $CA$ exist, and what size are they?</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$m \times n$ = $m$ rows, $n$ columns. Inside numbers = the two middle numbers in $(m \times n)(n \times p)$; they must match. Outside numbers = the first and last; they give the size of the answer.</p>
+      </div>
       <div class="steps">
-        <table>
-          <tr><th>Product</th><th>Shapes</th><th>Inside numbers match?</th><th>Result</th></tr>
-          <tr><td>$AB$</td><td>$(2 \times 3)(3 \times 4)$</td><td>$3 = 3$ ✓</td><td>$2 \times 4$</td></tr>
-          <tr><td>$BA$</td><td>$(3 \times 4)(2 \times 3)$</td><td>$4 \ne 2$ ✗</td><td>not allowed</td></tr>
-          <tr><td>$BC$</td><td>$(3 \times 4)(4 \times 2)$</td><td>$4 = 4$ ✓</td><td>$3 \times 2$</td></tr>
-          <tr><td>$CA$</td><td>$(4 \times 2)(2 \times 3)$</td><td>$2 = 2$ ✓</td><td>$4 \times 3$</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Test $AB$: write $(2 \times 3)(3 \times 4)$.</p>
+            <p class="k"><span class="kl">How</span> Inside: $3$ and $3$. Equal ✓. Outside: $2$ and $4$.</p>
+            <p class="k"><span class="kl">What we have now</span> $AB$ exists and is $2 \times 4$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Test $BA$: write $(3 \times 4)(2 \times 3)$.</p>
+            <p class="k"><span class="kl">How</span> Inside: $4$ and $2$. Not equal ✗.</p>
+            <p class="k"><span class="kl">What we have now</span> $BA$ is not allowed: a row of $B$ has 4 numbers, a column of $A$ has only 2, so they cannot pair up.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Test $BC$: write $(3 \times 4)(4 \times 2)$.</p>
+            <p class="k"><span class="kl">How</span> Inside: $4$ and $4$ ✓. Outside: $3$ and $2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $BC$ exists and is $3 \times 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Test $CA$: write $(4 \times 2)(2 \times 3)$.</p>
+            <p class="k"><span class="kl">How</span> Inside: $2$ and $2$ ✓. Outside: $4$ and $3$.</p>
+            <p class="k"><span class="kl">What we have now</span> $CA$ exists and is $4 \times 3$.</p>
+            <table>
+              <tr><th>Product</th><th>Shapes</th><th>Inside numbers match?</th><th>Result</th></tr>
+              <tr><td>$AB$</td><td>$(2 \times 3)(3 \times 4)$</td><td>$3 = 3$ ✓</td><td>$2 \times 4$</td></tr>
+              <tr><td>$BA$</td><td>$(3 \times 4)(2 \times 3)$</td><td>$4 \ne 2$ ✗</td><td>not allowed</td></tr>
+              <tr><td>$BC$</td><td>$(3 \times 4)(4 \times 2)$</td><td>$4 = 4$ ✓</td><td>$3 \times 2$</td></tr>
+              <tr><td>$CA$</td><td>$(4 \times 2)(2 \times 3)$</td><td>$2 = 2$ ✓</td><td>$4 \times 3$</td></tr>
+            </table>
+          </li>
+        </ol>
         <p class="answer">$AB$, $BC$ and $CA$ exist; $BA$ does not.</p>
       </div>
     </div>
 
     <!-- E3 -->
     <div class="worked">
-      <h3>Example 3: Column times row</h3>
+      <h3>Example 4: Column times row</h3>
       <div class="box example"><span class="label">Problem</span>
         $$ \begin{bmatrix} 1 \\ 2 \end{bmatrix}\begin{bmatrix} 3 & 4 \end{bmatrix} = \;? $$
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Column × row = a $2 \times 1$ times a $1 \times 2$; inside numbers $1$ and $1$ match, outside numbers give a $2 \times 2$ answer. Each entry = (number from the column) × (number from the row). Multiple = a vector times one number. Singular = no inverse; for $2 \times 2$ this is when $ad - bc = 0$.</p>
+      </div>
       <div class="steps">
-        <p>Each entry is (column number) × (row number):</p>
-        $$ \begin{bmatrix} 1 \times 3 & 1 \times 4 \\ 2 \times 3 & 2 \times 4 \end{bmatrix} = \begin{bmatrix} 3 & 4 \\ 6 & 8 \end{bmatrix} $$
-        <p>Every row is a multiple of $(3, 4)$: row 2 $= 2 \times$ row 1. Every column is a multiple of $(1, 2)$: column 2 $= \tfrac43 \times$ column 1.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Fill the top row of the answer using the column's top number, $1$.</p>
+            <p class="k"><span class="kl">Why</span> Row 1 of the answer = (row 1 of the column) × (the whole row).</p>
+            <p class="k"><span class="kl">How</span> $1 \times 3 = 3$, $1 \times 4 = 4$.</p>
+            <p class="k"><span class="kl">What we have now</span> Top row $(3, 4)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Fill the bottom row using the column's bottom number, $2$.</p>
+            <p class="k"><span class="kl">How</span> $2 \times 3 = 6$, $2 \times 4 = 8$.</p>
+            <p class="k"><span class="kl">What we have now</span> Bottom row $(6, 8)$:</p>
+            $$ \begin{bmatrix} 1 \times 3 & 1 \times 4 \\ 2 \times 3 & 2 \times 4 \end{bmatrix} = \begin{bmatrix} 3 & 4 \\ 6 & 8 \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we see</span> Every row is a multiple of $(3, 4)$: row 2 $= 2 \times$ row 1, since $2 \times 3 = 6$ and $2 \times 4 = 8$. Every column is a multiple of $(1, 2)$: column 2 $= \tfrac43 \times$ column 1, since $\tfrac43 \times 3 = 4$ and $\tfrac43 \times 6 = 8$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> $ad = 3 \times 8 = 24$. $bc = 4 \times 6 = 24$. $ad - bc = 24 - 24 = 0$: no inverse, as expected for columns on one line.</p>
+          </li>
+        </ol>
         <p class="answer">Answer: $\begin{bmatrix} 3 & 4 \\ 6 & 8 \end{bmatrix}$, a "one column × one row" matrix (no inverse: $3 \times 8 - 4 \times 6 = 0$).</p>
       </div>
     </div>
 
     <!-- E4 -->
     <div class="worked">
-      <h3>Example 4: Is AB the same as BA?</h3>
+      <h3>Example 5: Is AB the same as BA?</h3>
       <div class="box example"><span class="label">Problem</span>
         $$ A = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}, \qquad B = \begin{bmatrix} 1 & 0 \\ 1 & 1 \end{bmatrix} $$
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Way 3 (rows) = each row of the answer is a mix of the rows of the <b>second</b> matrix, using the numbers in the matching row of the <b>first</b> matrix as the recipe. Order matters = swapping the two matrices can change the answer.</p>
+      </div>
       <div class="steps">
-        <p><b>$AB$</b> (rows of $A$ mix rows of $B$): row 1 $= 1 \times (1, 0) + 1 \times (1, 1) = (2, 1)$; row 2 $= 0 \times (1, 0) + 1 \times (1, 1) = (1, 1)$.</p>
-        <p><b>$BA$</b> (rows of $B$ mix rows of $A$): row 1 $= 1 \times (1, 1) + 0 \times (0, 1) = (1, 1)$; row 2 $= 1 \times (1, 1) + 1 \times (0, 1) = (1, 2)$.</p>
+        <p><b>$AB$</b> (rows of $A$ mix rows of $B$; $B$'s rows are $(1, 0)$ and $(1, 1)$):</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 1 of $AB$, recipe = row 1 of $A$ $= (1, 1)$.</p>
+            <p class="k"><span class="kl">How</span> $1 \times (1, 0) = (1, 0)$. $1 \times (1, 1) = (1, 1)$. Add: $(1 + 1,\ 0 + 1) = (2, 1)$.</p>
+            <p class="k"><span class="kl">What we have now</span> Row 1 $= (2, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 2 of $AB$, recipe = row 2 of $A$ $= (0, 1)$.</p>
+            <p class="k"><span class="kl">How</span> $0 \times (1, 0) = (0, 0)$. $1 \times (1, 1) = (1, 1)$. Add: $(1, 1)$.</p>
+            <p class="k"><span class="kl">What we have now</span> $AB = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}$.</p>
+          </li>
+        </ol>
+        <p><b>$BA$</b> (rows of $B$ mix rows of $A$; $A$'s rows are $(1, 1)$ and $(0, 1)$):</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 1 of $BA$, recipe = row 1 of $B$ $= (1, 0)$.</p>
+            <p class="k"><span class="kl">How</span> $1 \times (1, 1) = (1, 1)$. $0 \times (0, 1) = (0, 0)$. Add: $(1, 1)$.</p>
+            <p class="k"><span class="kl">What we have now</span> Row 1 $= (1, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 2 of $BA$, recipe = row 2 of $B$ $= (1, 1)$.</p>
+            <p class="k"><span class="kl">How</span> $1 \times (1, 1) = (1, 1)$. $1 \times (0, 1) = (0, 1)$. Add: $(1 + 0,\ 1 + 1) = (1, 2)$.</p>
+            <p class="k"><span class="kl">What we have now</span> $BA = \begin{bmatrix} 1 & 1 \\ 1 & 2 \end{bmatrix}$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Compare top-left entries: $2$ in $AB$, $1$ in $BA$. Different, so the matrices are different.</p>
+          </li>
+        </ol>
         $$ AB = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix} \ne BA = \begin{bmatrix} 1 & 1 \\ 1 & 2 \end{bmatrix} $$
         <p class="answer">No. Order matters.</p>
       </div>
@@ -354,64 +914,122 @@
 
     <!-- E5 -->
     <div class="worked">
-      <h3>Example 5: Show a matrix has no inverse</h3>
+      <h3>Example 6: Show a matrix has no inverse</h3>
       <div class="box example"><span class="label">Problem</span>
         $$ A = \begin{bmatrix} 2 & 4 \\ 1 & 2 \end{bmatrix} $$
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Singular = no inverse. On one line = one column is a multiple of the other. Nonzero $x$ = an input with at least one entry not 0. Key test = if some nonzero $x$ gives $Ax = 0$, there is no inverse. $ad - bc$ = the $2 \times 2$ yes/no number (0 means no inverse).</p>
+      </div>
       <div class="steps">
-        <p><b>Look at the columns.</b> Column 2 $= (4, 2) = 2 \times (2, 1) = 2 \times$ column 1. They lie on one line.</p>
-        <p><b>Find a nonzero $x$ with $Ax = 0$.</b> "2 of column 1 minus 1 of column 2" should cancel, so try $x = (2, -1)$:</p>
-        $$ 2\begin{bmatrix} 2 \\ 1 \end{bmatrix} - 1\begin{bmatrix} 4 \\ 2 \end{bmatrix} = \begin{bmatrix} 4 - 4 \\ 2 - 2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
-        <p><b>Quick check:</b> $ad - bc = 2 \times 2 - 4 \times 1 = 0$.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Look at the columns: column 1 $= (2, 1)$, column 2 $= (4, 2)$.</p>
+            <p class="k"><span class="kl">How</span> Top: $4 \div 2 = 2$. Bottom: $2 \div 1 = 2$. Same number, so $(4, 2) = 2 \times (2, 1)$.</p>
+            <p class="k"><span class="kl">What we have now</span> Column 2 = 2 × column 1. They lie on one line.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find a nonzero $x$ with $Ax = 0$.</p>
+            <p class="k"><span class="kl">Why this amount</span> "2 of column 1 minus 1 of column 2" should cancel, so try $x = (2, -1)$.</p>
+            <p class="k"><span class="kl">How</span> $2 \times (2, 1) = (4, 2)$. $-1 \times (4, 2) = (-4, -2)$. Add: $(4 - 4,\ 2 - 2) = (0, 0)$.</p>
+            $$ 2\begin{bmatrix} 2 \\ 1 \end{bmatrix} - 1\begin{bmatrix} 4 \\ 2 \end{bmatrix} = \begin{bmatrix} 4 - 4 \\ 2 - 2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
+            <p class="k"><span class="kl">What we have now</span> A nonzero input that $A$ sends to zero: by the key test, no inverse.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> $ad = 2 \times 2 = 4$. $bc = 4 \times 1 = 4$. $ad - bc = 4 - 4 = 0$ ✓.</p>
+          </li>
+        </ol>
         <p class="answer">No inverse: $A(2, -1) = 0$ with $(2, -1) \ne 0$.</p>
       </div>
     </div>
 
     <!-- E6 -->
     <div class="worked">
-      <h3>Example 6: Gauss–Jordan</h3>
+      <h3>Example 7: Gauss–Jordan</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Find the inverse of $A = \begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Augmented matrix $[\,A \mid I\,]$ = $A$ with the identity stuck on the right. Pivot = the leader used to clear its column. Multiplier = (number to remove) ÷ (pivot). Down = clear below a pivot (Gauss); up = clear above it (Jordan). When the left half is $I$, the right half is $A^{-1}$.</p>
+      </div>
       <div class="steps">
-        <p><b>Start with $[\,A \mid I\,]$:</b></p>
-        $$ \left[\begin{array}{cc|cc} 1 & 2 & 1 & 0 \\ 3 & 7 & 0 & 1 \end{array}\right] $$
-        <p><b>Down:</b> row 2 minus 3 × row 1:</p>
-        <table>
-          <tr><th></th><th colspan="2">left</th><th colspan="2">right</th></tr>
-          <tr><td>Row 2</td><td>$3$</td><td>$7$</td><td>$0$</td><td>$1$</td></tr>
-          <tr><td>minus 3 × row 1</td><td>$-3$</td><td>$-6$</td><td>$-3$</td><td>$0$</td></tr>
-          <tr><td><b>New row 2</b></td><td>$0$</td><td>$1$</td><td>$-3$</td><td>$1$</td></tr>
-        </table>
-        <p><b>Up:</b> row 1 minus 2 × row 2:</p>
-        <table>
-          <tr><th></th><th colspan="2">left</th><th colspan="2">right</th></tr>
-          <tr><td>Row 1</td><td>$1$</td><td>$2$</td><td>$1$</td><td>$0$</td></tr>
-          <tr><td>minus 2 × row 2</td><td>$0$</td><td>$-2$</td><td>$+6$</td><td>$-2$</td></tr>
-          <tr><td><b>New row 1</b></td><td>$1$</td><td>$0$</td><td>$7$</td><td>$-2$</td></tr>
-        </table>
-        $$ \left[\begin{array}{cc|cc} 1 & 0 & 7 & -2 \\ 0 & 1 & -3 & 1 \end{array}\right] $$
-        <p><b>Check $AA^{-1}$:</b> $(1 \times 7 + 2 \times (-3),\ 1 \times (-2) + 2 \times 1) = (1, 0)$ and $(3 \times 7 + 7 \times (-3),\ 3 \times (-2) + 7 \times 1) = (0, 1)$ ✓.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Start with $[\,A \mid I\,]$.</p>
+            <p class="k"><span class="kl">Why</span> Every row move then happens to $A$ and $I$ together.</p>
+            $$ \left[\begin{array}{cc|cc} 1 & 2 & 1 & 0 \\ 3 & 7 & 0 & 1 \end{array}\right] $$
+            <p class="k"><span class="kl">What we have now</span> Goal: left half $\to I$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Down: clear the $3$ under the pivot $1$.</p>
+            <p class="k"><span class="kl">Why this amount</span> Multiplier $= 3 \div 1 = 3$: row 2 minus 3 × row 1.</p>
+            <p class="k"><span class="kl">How</span> 3 × row 1 $= (3, 6 \mid 3, 0)$. Row 2 minus it: $3 - 3 = 0$, $7 - 6 = 1$, $0 - 3 = -3$, $1 - 0 = 1$.</p>
+            <table>
+              <tr><th></th><th colspan="2">left</th><th colspan="2">right</th></tr>
+              <tr><td>Row 2</td><td>$3$</td><td>$7$</td><td>$0$</td><td>$1$</td></tr>
+              <tr><td>minus 3 × row 1</td><td>$-3$</td><td>$-6$</td><td>$-3$</td><td>$0$</td></tr>
+              <tr><td><b>New row 2</b></td><td>$0$</td><td>$1$</td><td>$-3$</td><td>$1$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> $\left[\begin{array}{cc|cc} 1 & 2 & 1 & 0 \\ 0 & 1 & -3 & 1 \end{array}\right]$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Up: clear the $2$ above the second pivot $1$.</p>
+            <p class="k"><span class="kl">Why this amount</span> Multiplier $= 2 \div 1 = 2$: row 1 minus 2 × row 2.</p>
+            <p class="k"><span class="kl">How</span> 2 × row 2 $= (0, 2 \mid -6, 2)$. Row 1 minus it: $1 - 0 = 1$, $2 - 2 = 0$, $1 - (-6) = 7$, $0 - 2 = -2$.</p>
+            <table>
+              <tr><th></th><th colspan="2">left</th><th colspan="2">right</th></tr>
+              <tr><td>Row 1</td><td>$1$</td><td>$2$</td><td>$1$</td><td>$0$</td></tr>
+              <tr><td>minus 2 × row 2</td><td>$0$</td><td>$-2$</td><td>$+6$</td><td>$-2$</td></tr>
+              <tr><td><b>New row 1</b></td><td>$1$</td><td>$0$</td><td>$7$</td><td>$-2$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> Left half is $I$; the right half is the inverse:</p>
+            $$ \left[\begin{array}{cc|cc} 1 & 0 & 7 & -2 \\ 0 & 1 & -3 & 1 \end{array}\right] $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Multiply $AA^{-1}$ entry by entry. Row 1 of $A$ is $(1, 2)$; columns of $A^{-1}$ are $(7, -3)$ and $(-2, 1)$.</p>
+            <p class="k"><span class="kl">How, row 1</span> $1 \times 7 + 2 \times (-3) = 7 - 6 = 1$. $1 \times (-2) + 2 \times 1 = -2 + 2 = 0$. Row 1 $= (1, 0)$.</p>
+            <p class="k"><span class="kl">How, row 2</span> Row 2 of $A$ is $(3, 7)$. $3 \times 7 + 7 \times (-3) = 21 - 21 = 0$. $3 \times (-2) + 7 \times 1 = -6 + 7 = 1$. Row 2 $= (0, 1)$.</p>
+            <p class="k"><span class="kl">What we have now</span> $AA^{-1} = I$ ✓.</p>
+          </li>
+        </ol>
         <p class="answer">Answer: $A^{-1} = \begin{bmatrix} 7 & -2 \\ -3 & 1 \end{bmatrix}$</p>
       </div>
     </div>
 
     <!-- E7 -->
     <div class="worked">
-      <h3>Example 7: Solve with the inverse</h3>
+      <h3>Example 8: Solve with the inverse</h3>
       <div class="box example"><span class="label">Problem</span>
-        <p>Use the inverse from Example 6 to solve $x_1 + 2x_2 = 4$, $\ 3x_1 + 7x_2 = 13$.</p>
+        <p>Use the inverse from Example 7 to solve $x_1 + 2x_2 = 4$, $\ 3x_1 + 7x_2 = 13$.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$Ax = b$ = the two equations in matrix form, with $A = \begin{bmatrix} 1 & 2 \\ 3 & 7 \end{bmatrix}$, unknowns $x = (x_1, x_2)$ and right side $b = (4, 13)$. Inverse $A^{-1}$ = the undo matrix, so $x = A^{-1}b$.</p>
       </div>
       <div class="steps">
-        $$ x = A^{-1}b = \begin{bmatrix} 7 & -2 \\ -3 & 1 \end{bmatrix}\begin{bmatrix} 4 \\ 13 \end{bmatrix} = \begin{bmatrix} 28 - 26 \\ -12 + 13 \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \end{bmatrix} $$
-        <p><b>Check:</b> $2 + 2 = 4$ ✓, $\ 6 + 7 = 13$ ✓.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Top entry of $x = A^{-1}b$: row 1 of $A^{-1}$ · $b$.</p>
+            <p class="k"><span class="kl">Why</span> Undoing $A$ on $b$ gives back the inputs.</p>
+            <p class="k"><span class="kl">How</span> $(7, -2) \cdot (4, 13)$: $7 \times 4 = 28$, $(-2) \times 13 = -26$, $28 - 26 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Bottom entry: row 2 of $A^{-1}$ · $b$.</p>
+            <p class="k"><span class="kl">How</span> $(-3, 1) \cdot (4, 13)$: $(-3) \times 4 = -12$, $1 \times 13 = 13$, $-12 + 13 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_2 = 1$.</p>
+            $$ x = A^{-1}b = \begin{bmatrix} 7 & -2 \\ -3 & 1 \end{bmatrix}\begin{bmatrix} 4 \\ 13 \end{bmatrix} = \begin{bmatrix} 28 - 26 \\ -12 + 13 \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Equation 1: $2 + 2 \times 1 = 2 + 2 = 4$ ✓. Equation 2: $3 \times 2 + 7 \times 1 = 6 + 7 = 13$ ✓.</p>
+          </li>
+        </ol>
         <p class="answer">Answer: $x_1 = 2$, $x_2 = 1$</p>
       </div>
     </div>
 
     <!-- E8 -->
     <div class="worked">
-      <h3>Example 8: Two traders, two scenarios (finance)</h3>
+      <h3>Example 9: Two traders, two scenarios (finance)</h3>
       <div class="box finance"><span class="label">Problem</span>
         <p>Tomorrow the market goes <b>up</b> or <b>down</b>. What each asset pays:</p>
         <table>
@@ -424,23 +1042,43 @@
       <div class="box intuition"><span class="label">Story first</span>
         <p>Each trader has a basket of tickets. In each scenario, a trader receives (how many of each ticket) × (what that ticket pays), added up. Doing this for every trader and every scenario at once is exactly a matrix product.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Scenario = one possible outcome tomorrow (up or down). Payoff = what an asset pays in a scenario. Holdings matrix $H$ = one row per trader, one column per asset (how many of each). Payoff matrix $P$ = one row per asset, one column per scenario. Way 3 = each row of $HP$ is a mix of the rows of $P$, with the trader's holdings as the recipe.</p>
+      </div>
       <div class="steps">
         <p><b>Set up.</b> Holdings $H$ (rows = traders, columns = assets) and payoffs $P$ (rows = assets, columns = scenarios):</p>
         $$ H = \begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix} \begin{matrix} \leftarrow \text{A} \\ \leftarrow \text{B} \end{matrix}, \qquad P = \begin{bmatrix} 1 & 1 \\ 3 & 1 \end{bmatrix} \begin{matrix} \leftarrow \text{bond} \\ \leftarrow \text{stock} \end{matrix} $$
         <p><b>Multiply by rows</b> (each trader's row mixes the asset rows of $P$):</p>
-        <table>
-          <tr><th>Trader</th><th>Mix</th><th>(up, down)</th></tr>
-          <tr><td>A</td><td>$2 \times (1, 1) + 1 \times (3, 1) = (2, 2) + (3, 1)$</td><td>$(5, 3)$</td></tr>
-          <tr><td>B</td><td>$1 \times (1, 1) + 3 \times (3, 1) = (1, 1) + (9, 3)$</td><td>$(10, 4)$</td></tr>
-        </table>
-        $$ HP = \begin{bmatrix} 5 & 3 \\ 10 & 4 \end{bmatrix} $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Trader A's row: 2 bonds + 1 stock.</p>
+            <p class="k"><span class="kl">Why</span> Shape check first: $H$ is $2 \times 2$, $P$ is $2 \times 2$, inside numbers $2 = 2$ ✓. A's receipts = 2 × (bond's payoffs) + 1 × (stock's payoffs).</p>
+            <p class="k"><span class="kl">How</span> $2 \times (1, 1) = (2, 2)$. $1 \times (3, 1) = (3, 1)$. Add: $(2 + 3,\ 2 + 1) = (5, 3)$.</p>
+            <p class="k"><span class="kl">What we have now</span> A gets 5 if up, 3 if down.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Trader B's row: 1 bond + 3 stocks.</p>
+            <p class="k"><span class="kl">How</span> $1 \times (1, 1) = (1, 1)$. $3 \times (3, 1) = (9, 3)$. Add: $(1 + 9,\ 1 + 3) = (10, 4)$.</p>
+            <p class="k"><span class="kl">What we have now</span> B gets 10 if up, 4 if down.</p>
+            <table>
+              <tr><th>Trader</th><th>Mix</th><th>(up, down)</th></tr>
+              <tr><td>A</td><td>$2 \times (1, 1) + 1 \times (3, 1) = (2, 2) + (3, 1)$</td><td>$(5, 3)$</td></tr>
+              <tr><td>B</td><td>$1 \times (1, 1) + 3 \times (3, 1) = (1, 1) + (9, 3)$</td><td>$(10, 4)$</td></tr>
+            </table>
+            $$ HP = \begin{bmatrix} 5 & 3 \\ 10 & 4 \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> One entry by Way 1: B if up = row 2 of $H$ · column 1 of $P$ $= (1, 3) \cdot (1, 3) = 1 \times 1 + 3 \times 3 = 1 + 9 = 10$ ✓.</p>
+            <p class="k"><span class="kl">In market words</span> Same as a Nifty desk: rows = traders' lot counts, $P$ = what each contract pays at each Nifty close; one product gives every trader's P&amp;L in every scenario.</p>
+          </li>
+        </ol>
         <p class="answer">Trader A receives 5 (up) or 3 (down). Trader B receives 10 (up) or 4 (down).</p>
       </div>
     </div>
 
     <!-- E9 -->
     <div class="worked">
-      <h3>Example 9: One inverse, many options (finance)</h3>
+      <h3>Example 10: One inverse, many options (finance)</h3>
       <div class="box finance"><span class="label">Problem</span>
         <p>Same market. Today a bond costs $1$ and a stock costs $2$:</p>
         <table>
@@ -453,27 +1091,86 @@
       <div class="box intuition"><span class="label">Story first</span>
         <p>To price any new ticket, build it from bonds and stocks, then add up their prices. Building it means solving $Mx = \text{payoff}$. If we compute $M^{-1}$ <b>once</b>, every new ticket takes just one multiplication.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Call (CE) = pays $\max(S - K, 0)$: stock price minus strike, or 0 if that is negative. Put (PE) = pays $\max(K - S, 0)$. Strike $K$ = the fixed price in the contract (here 2). $M$ = asset matrix: columns = bond, stock; rows = up, down. Recipe $x$ = (number of bonds, number of stocks); a negative number means borrow / sell. $M^{-1}$ = the undo matrix, so recipe $= M^{-1} \times$ payoff.</p>
+      </div>
       <div class="steps">
         <p><b>Step 1. The asset matrix</b> (columns = bond, stock; rows = up, down) and its inverse with the 2 × 2 shortcut:</p>
-        $$ M = \begin{bmatrix} 1 & 3 \\ 1 & 1 \end{bmatrix}, \quad ad - bc = 1 - 3 = -2, \quad M^{-1} = \frac{1}{-2}\begin{bmatrix} 1 & -3 \\ -1 & 1 \end{bmatrix} = \begin{bmatrix} -0.5 & 1.5 \\ 0.5 & -0.5 \end{bmatrix} $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Write $M$ and find $ad - bc$.</p>
+            <p class="k"><span class="kl">Why</span> If $ad - bc = 0$ there is no inverse and the method fails.</p>
+            <p class="k"><span class="kl">How</span> $M = \begin{bmatrix} 1 & 3 \\ 1 & 1 \end{bmatrix}$: $a = 1$, $b = 3$, $c = 1$, $d = 1$. $ad = 1 \times 1 = 1$. $bc = 3 \times 1 = 3$. $ad - bc = 1 - 3 = -2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $-2 \ne 0$: the inverse exists.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Swap $a$ and $d$, flip signs of $b$ and $c$, divide by $-2$.</p>
+            <p class="k"><span class="kl">How</span> Swap $1$ and $1$: no change. Flip: $3 \to -3$, $1 \to -1$, giving $\begin{bmatrix} 1 & -3 \\ -1 & 1 \end{bmatrix}$. Divide each by $-2$: $1 \div (-2) = -0.5$, $-3 \div (-2) = 1.5$, $-1 \div (-2) = 0.5$, $1 \div (-2) = -0.5$.</p>
+            $$ M = \begin{bmatrix} 1 & 3 \\ 1 & 1 \end{bmatrix}, \quad ad - bc = 1 - 3 = -2, \quad M^{-1} = \frac{1}{-2}\begin{bmatrix} 1 & -3 \\ -1 & 1 \end{bmatrix} = \begin{bmatrix} -0.5 & 1.5 \\ 0.5 & -0.5 \end{bmatrix} $$
+            <p class="k"><span class="kl">Check</span> $M^{-1}M$, row 1: $-0.5 \times 1 + 1.5 \times 1 = -0.5 + 1.5 = 1$; $-0.5 \times 3 + 1.5 \times 1 = -1.5 + 1.5 = 0$. Row 2: $0.5 \times 1 + (-0.5) \times 1 = 0$; $0.5 \times 3 + (-0.5) \times 1 = 1.5 - 0.5 = 1$. We get $I$ ✓.</p>
+          </li>
+        </ol>
         <p><b>Step 2. What the options pay.</b> The stock is $3$ (up) or $1$ (down).</p>
-        <table>
-          <tr><th>Option</th><th>Up ($S = 3$)</th><th>Down ($S = 1$)</th><th>Payoff</th></tr>
-          <tr><td>Call, strike 2: $\max(S - 2, 0)$</td><td>$1$</td><td>$0$</td><td>$(1, 0)$</td></tr>
-          <tr><td>Put, strike 2: $\max(2 - S, 0)$</td><td>$0$</td><td>$1$</td><td>$(0, 1)$</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Call (CE), strike 2, in each scenario.</p>
+            <p class="k"><span class="kl">How</span> Up: $\max(3 - 2, 0) = \max(1, 0) = 1$. Down: $\max(1 - 2, 0) = \max(-1, 0) = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> Call payoff $(1, 0)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put (PE), strike 2, in each scenario.</p>
+            <p class="k"><span class="kl">How</span> Up: $\max(2 - 3, 0) = \max(-1, 0) = 0$. Down: $\max(2 - 1, 0) = \max(1, 0) = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> Put payoff $(0, 1)$.</p>
+            <table>
+              <tr><th>Option</th><th>Up ($S = 3$)</th><th>Down ($S = 1$)</th><th>Payoff</th></tr>
+              <tr><td>Call, strike 2: $\max(S - 2, 0)$</td><td>$1$</td><td>$0$</td><td>$(1, 0)$</td></tr>
+              <tr><td>Put, strike 2: $\max(2 - S, 0)$</td><td>$0$</td><td>$1$</td><td>$(0, 1)$</td></tr>
+            </table>
+          </li>
+        </ol>
         <p><b>Step 3. Recipes</b> $x = M^{-1} \times$ payoff (bonds, stocks):</p>
-        <table>
-          <tr><th>Option</th><th>$M^{-1} \times$ payoff</th><th>Recipe</th><th>Check (up, down)</th></tr>
-          <tr><td>Call $(1, 0)$</td><td>$(-0.5,\ 0.5)$</td><td>borrow 0.5, buy 0.5 stock</td><td>$(-0.5 + 1.5,\ -0.5 + 0.5) = (1, 0)$ ✓</td></tr>
-          <tr><td>Put $(0, 1)$</td><td>$(1.5,\ -0.5)$</td><td>1.5 bonds, sell 0.5 stock</td><td>$(1.5 - 1.5,\ 1.5 - 0.5) = (0, 1)$ ✓</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Call recipe $= M^{-1}(1, 0)$.</p>
+            <p class="k"><span class="kl">How</span> Top: $-0.5 \times 1 + 1.5 \times 0 = -0.5$. Bottom: $0.5 \times 1 + (-0.5) \times 0 = 0.5$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(-0.5, 0.5)$: borrow 0.5 (bonds $-0.5$), buy 0.5 stock.</p>
+            <p class="k"><span class="kl">Check</span> Up: $-0.5 \times 1 + 0.5 \times 3 = -0.5 + 1.5 = 1$ ✓. Down: $-0.5 \times 1 + 0.5 \times 1 = -0.5 + 0.5 = 0$ ✓.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put recipe $= M^{-1}(0, 1)$.</p>
+            <p class="k"><span class="kl">How</span> Top: $-0.5 \times 0 + 1.5 \times 1 = 1.5$. Bottom: $0.5 \times 0 + (-0.5) \times 1 = -0.5$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(1.5, -0.5)$: 1.5 bonds, sell 0.5 stock.</p>
+            <p class="k"><span class="kl">Check</span> Up: $1.5 \times 1 - 0.5 \times 3 = 1.5 - 1.5 = 0$ ✓. Down: $1.5 \times 1 - 0.5 \times 1 = 1.5 - 0.5 = 1$ ✓.</p>
+            <table>
+              <tr><th>Option</th><th>$M^{-1} \times$ payoff</th><th>Recipe</th><th>Check (up, down)</th></tr>
+              <tr><td>Call $(1, 0)$</td><td>$(-0.5,\ 0.5)$</td><td>borrow 0.5, buy 0.5 stock</td><td>$(-0.5 + 1.5,\ -0.5 + 0.5) = (1, 0)$ ✓</td></tr>
+              <tr><td>Put $(0, 1)$</td><td>$(1.5,\ -0.5)$</td><td>1.5 bonds, sell 0.5 stock</td><td>$(1.5 - 1.5,\ 1.5 - 0.5) = (0, 1)$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
         <p><b>Step 4. Prices</b> (bond $1$, stock $2$):</p>
-        <table>
-          <tr><th>Option</th><th>Cost of recipe</th><th>Price</th></tr>
-          <tr><td>Call</td><td>$-0.5 \times 1 + 0.5 \times 2$</td><td>$0.5$</td></tr>
-          <tr><td>Put</td><td>$1.5 \times 1 - 0.5 \times 2$</td><td>$0.5$</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Price the call recipe.</p>
+            <p class="k"><span class="kl">Why</span> Same payoff tomorrow in every scenario means same price today; otherwise free money.</p>
+            <p class="k"><span class="kl">How</span> $-0.5 \times 1 = -0.5$ (borrowing gives cash). $0.5 \times 2 = 1$. Total: $-0.5 + 1 = 0.5$.</p>
+            <p class="k"><span class="kl">What we have now</span> Call = 0.5.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Price the put recipe.</p>
+            <p class="k"><span class="kl">How</span> $1.5 \times 1 = 1.5$. $-0.5 \times 2 = -1$ (selling gives cash). Total: $1.5 - 1 = 0.5$.</p>
+            <p class="k"><span class="kl">What we have now</span> Put = 0.5.</p>
+            <table>
+              <tr><th>Option</th><th>Cost of recipe</th><th>Price</th></tr>
+              <tr><td>Call</td><td>$-0.5 \times 1 + 0.5 \times 2$</td><td>$0.5$</td></tr>
+              <tr><td>Put</td><td>$1.5 \times 1 - 0.5 \times 2$</td><td>$0.5$</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Call − put should equal stock − strike × bond (put–call parity): $0.5 - 0.5 = 0$ and $2 - 2 \times 1 = 0$ ✓.</p>
+            <p class="k"><span class="kl">In market words</span> On Nifty this is a CE and a PE at the same strike: once $M^{-1}$ is known, any new strike's CE or PE is priced with one more multiplication.</p>
+          </li>
+        </ol>
         <p class="answer">Call = 0.5 and put = 0.5, both from the same $M^{-1}$.</p>
       </div>
     </div>
@@ -482,22 +1179,88 @@
     <h2>Practice problems</h2>
     <p>Answers are hidden. Click a problem to check your work.</p>
     <details class="proof"><summary>1. Compute $\begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}\begin{bmatrix} 3 & 1 \\ 4 & 2 \end{bmatrix}$.</summary>
-      <p>Row 1: $1 \times (3, 1) + 0 \times (4, 2) = (3, 1)$. Row 2: $2 \times (3, 1) + 1 \times (4, 2) = (10, 4)$. Answer $\begin{bmatrix} 3 & 1 \\ 10 & 4 \end{bmatrix}$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Row 1 of the answer: recipe $(1, 0)$ mixes the rows $(3, 1)$ and $(4, 2)$ (Way 3).</p>
+          <p class="k"><span class="kl">How</span> $1 \times (3, 1) = (3, 1)$. $0 \times (4, 2) = (0, 0)$. Add: $(3, 1)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Row 1 $= (3, 1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Row 2: recipe $(2, 1)$.</p>
+          <p class="k"><span class="kl">How</span> $2 \times (3, 1) = (6, 2)$. $1 \times (4, 2) = (4, 2)$. Add: $(6 + 4,\ 2 + 2) = (10, 4)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Answer $\begin{bmatrix} 3 & 1 \\ 10 & 4 \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> Entry (2, 1) by Way 1: $(2, 1) \cdot (3, 4) = 2 \times 3 + 1 \times 4 = 6 + 4 = 10$ ✓.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>2. What size is $AB$ if $A$ is $3 \times 5$ and $B$ is $5 \times 2$?</summary>
-      <p>$3 \times 2$ (outside numbers).</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Write $(3 \times 5)(5 \times 2)$.</p>
+          <p class="k"><span class="kl">How</span> Inside: $5 = 5$ ✓, allowed. Outside: $3$ and $2$.</p>
+          <p class="k"><span class="kl">What we have now</span> $3 \times 2$ (outside numbers).</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>3. Compute $\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}\begin{bmatrix} 2 & 5 \end{bmatrix}$.</summary>
-      <p>$\begin{bmatrix} 2 & 5 \\ 2 & 5 \\ 2 & 5 \end{bmatrix}$: every row is $(2, 5)$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Column × row: each row of the answer = (column number) × $(2, 5)$.</p>
+          <p class="k"><span class="kl">How</span> Every column number is $1$: $1 \times 2 = 2$, $1 \times 5 = 5$, three times.</p>
+          <p class="k"><span class="kl">What we have now</span> $\begin{bmatrix} 2 & 5 \\ 2 & 5 \\ 2 & 5 \end{bmatrix}$: every row is $(2, 5)$.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>4. Does $\begin{bmatrix} 3 & 6 \\ 1 & 2 \end{bmatrix}$ have an inverse? Give a reason.</summary>
-      <p>No. Column 2 $= 2 \times$ column 1, so $x = (2, -1)$ gives $Ax = (6 - 6, 2 - 2) = 0$. Also $3 \times 2 - 6 \times 1 = 0$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Compare the columns $(3, 1)$ and $(6, 2)$.</p>
+          <p class="k"><span class="kl">How</span> $6 \div 3 = 2$ and $2 \div 1 = 2$: column 2 $= 2 \times$ column 1.</p>
+          <p class="k"><span class="kl">What we have now</span> Columns on one line, so try $x = (2, -1)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">How</span> $2 \times (3, 1) = (6, 2)$. $-1 \times (6, 2) = (-6, -2)$. Add: $(6 - 6,\ 2 - 2) = (0, 0)$.</p>
+          <p class="k"><span class="kl">What we have now</span> No. A nonzero $x$ gives $Ax = 0$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> $ad - bc = 3 \times 2 - 6 \times 1 = 6 - 6 = 0$ ✓.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>5. Find the inverse of $\begin{bmatrix} 1 & 1 \\ 2 & 3 \end{bmatrix}$ by Gauss–Jordan.</summary>
-      <p>Row 2 − 2 × row 1: $[0\ 1 \mid -2\ 1]$. Row 1 − row 2: $[1\ 0 \mid 3\ {-1}]$. So $A^{-1} = \begin{bmatrix} 3 & -1 \\ -2 & 1 \end{bmatrix}$. Check: $(1)(3) + (1)(-2) = 1$, $(1)(-1) + (1)(1) = 0$ ✓.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Start with $\left[\begin{array}{cc|cc} 1 & 1 & 1 & 0 \\ 2 & 3 & 0 & 1 \end{array}\right]$. Down: row 2 − 2 × row 1.</p>
+          <p class="k"><span class="kl">Why this amount</span> Multiplier $= 2 \div 1 = 2$.</p>
+          <p class="k"><span class="kl">How</span> 2 × row 1 $= (2, 2 \mid 2, 0)$. Row 2 minus it: $2 - 2 = 0$, $3 - 2 = 1$, $0 - 2 = -2$, $1 - 0 = 1$.</p>
+          <p class="k"><span class="kl">What we have now</span> Row 2 $= [0\ 1 \mid -2\ 1]$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Up: row 1 − 1 × row 2.</p>
+          <p class="k"><span class="kl">Why this amount</span> Clear the $1$ above pivot $1$: $1 \div 1 = 1$.</p>
+          <p class="k"><span class="kl">How</span> $1 - 0 = 1$, $1 - 1 = 0$, $1 - (-2) = 3$, $0 - 1 = -1$.</p>
+          <p class="k"><span class="kl">What we have now</span> Row 1 $= [1\ 0 \mid 3\ {-1}]$. So $A^{-1} = \begin{bmatrix} 3 & -1 \\ -2 & 1 \end{bmatrix}$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> $AA^{-1}$ row 1: $1 \times 3 + 1 \times (-2) = 1$; $1 \times (-1) + 1 \times 1 = 0$. Row 2: $2 \times 3 + 3 \times (-2) = 6 - 6 = 0$; $2 \times (-1) + 3 \times 1 = -2 + 3 = 1$. We get $I$ ✓.</p>
+        </li>
+      </ol>
     </details>
     <details class="proof"><summary>6. Use the 2 × 2 shortcut to invert $\begin{bmatrix} 4 & 3 \\ 1 & 1 \end{bmatrix}$.</summary>
-      <p>$ad - bc = 4 - 3 = 1$. Swap $4$ and $1$, flip signs of $3$ and $1$: $\begin{bmatrix} 1 & -3 \\ -1 & 4 \end{bmatrix}$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Compute $ad - bc$.</p>
+          <p class="k"><span class="kl">How</span> $ad = 4 \times 1 = 4$. $bc = 3 \times 1 = 3$. $4 - 3 = 1$.</p>
+          <p class="k"><span class="kl">What we have now</span> Not zero; divide by $1$ (no change).</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Swap $4$ and $1$, flip signs of $3$ and $1$.</p>
+          <p class="k"><span class="kl">How</span> Swap: $\begin{bmatrix} 1 & 3 \\ 1 & 4 \end{bmatrix}$. Flip: $\begin{bmatrix} 1 & -3 \\ -1 & 4 \end{bmatrix}$.</p>
+          <p class="k"><span class="kl">Check</span> Row 1 of $A$ times the columns: $4 \times 1 + 3 \times (-1) = 1$; $4 \times (-3) + 3 \times 4 = -12 + 12 = 0$. Row 2: $1 \times 1 + 1 \times (-1) = 0$; $1 \times (-3) + 1 \times 4 = 1$. We get $I$ ✓.</p>
+        </li>
+      </ol>
     </details>
 
   </div>
@@ -509,5 +1272,7 @@
   </nav>
   </div>
 </main>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script defer src="../assets/replication-lab.js"></script>
 </body>
 </html>

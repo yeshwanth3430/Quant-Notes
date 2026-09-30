@@ -33,6 +33,7 @@
 
     <nav class="contents"><span class="label">Contents</span>
       <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
         <li><a href="#s1">The lecture in five questions</a></li>
         <li><a href="#s2">Row swaps: PA = LU</a></li>
         <li><a href="#s3">Transpose, symmetric matrices</a></li>
@@ -45,7 +46,52 @@
     </nav>
 
     <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained from the very beginning, with a tiny example and an everyday picture. Each section repeats the words it uses.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Vector</b></td><td>a list of numbers written in a column</td><td>$(3, 2)$</td><td>an arrow from home; or one option's payoff in each Nifty scenario</td></tr>
+      <tr><td><b>Component</b> (entry of a vector)</td><td>one number in the list</td><td>in $(3, 2, 0)$ the components are $3$, $2$, $0$</td><td>one box in a row of boxes</td></tr>
+      <tr><td><b>Zero vector</b> $0$</td><td>a vector whose numbers are all 0</td><td>$(0, 0, 0)$</td><td>staying at home; "no trade", which pays nothing</td></tr>
+      <tr><td><b>Origin</b></td><td>the point where every coordinate is 0: the tip of the zero vector</td><td>$(0, 0)$ in the plane</td><td>the centre of a map, where the axes cross</td></tr>
+      <tr><td><b>Matrix</b>, $m \times n$</td><td>a table of numbers with $m$ rows and $n$ columns</td><td>$\begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix}$ is $3 \times 2$</td><td>a spreadsheet: rows = days, columns = stocks</td></tr>
+      <tr><td><b>Entry</b> $A_{ij}$</td><td>the number in row $i$, column $j$ of $A$</td><td>above, $A_{31} = 4$ (row 3, column 1)</td><td>the seat "row 3, seat 1" in a cinema</td></tr>
+      <tr><td><b>Main diagonal</b></td><td>the entries $A_{11}, A_{22}, A_{33}, \dots$ from top-left going down-right</td><td>in $\begin{bmatrix} 3 & 1 \\ 1 & 2 \end{bmatrix}$: $3$ and $2$</td><td>the mirror line of a square table</td></tr>
+      <tr><td><b>Identity</b> $I$</td><td>1s on the main diagonal, 0s everywhere else</td><td>$\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$</td><td>"do nothing": $IA = A$</td></tr>
+      <tr><td><b>Elimination</b></td><td>subtract a multiple of one row from a lower row to make a 0</td><td>row 3 − 2 × row 1</td><td>cancelling one unknown at a time</td></tr>
+      <tr><td><b>Pivot</b> (leader)</td><td>the number used to clear the entries below it</td><td>the $1$ at the top-left of $\begin{bmatrix} 1 & 2 \\ 2 & 7 \end{bmatrix}$</td><td>the leader of its column</td></tr>
+      <tr><td><b>Multiplier</b></td><td>(number to remove) ÷ (pivot)</td><td>remove $2$ under pivot $1$: $2 \div 1 = 2$</td><td>how many copies of the leader row to take away</td></tr>
+      <tr><td><b>Row swap</b> (row exchange)</td><td>trade the places of two rows</td><td>row 1 ↔ row 2</td><td>reordering the equations; the answers don't change</td></tr>
+      <tr><td><b>Permutation matrix</b> $P$</td><td>the identity with its rows put in a new order; $PA$ reorders the rows of $A$ the same way</td><td>$\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$ swaps rows 1 and 2</td><td>a seating plan that tells each row where to sit</td></tr>
+      <tr><td><b>$n!$</b> ("$n$ factorial")</td><td>$n \times (n-1) \times \dots \times 2 \times 1$: the number of ways to line up $n$ things</td><td>$3! = 3 \times 2 \times 1 = 6$</td><td>how many ways 3 friends can stand in a queue</td></tr>
+      <tr><td><b>Inverse</b> $A^{-1}$</td><td>the matrix that undoes $A$: $A^{-1}A = I$</td><td>a swap undoes itself: $P^{-1} = P$ for one swap</td><td>walking back the way you came</td></tr>
+      <tr><td><b>$L$</b> (lower triangular)</td><td>1s on the diagonal, the multipliers below it, 0s above</td><td>$\begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}$</td><td>the diary of elimination steps</td></tr>
+      <tr><td><b>$U$</b> (upper triangular)</td><td>the staircase left after elimination: 0s below the diagonal</td><td>$\begin{bmatrix} 1 & 2 \\ 0 & 3 \end{bmatrix}$</td><td>the tidied table</td></tr>
+      <tr><td><b>$PA = LU$</b></td><td>swap rows first ($P$), then factor as usual into $L$ times $U$</td><td>$P = I$ when no swap is needed</td><td>put the queue in a good order, then do the usual work</td></tr>
+      <tr><td><b>Transpose</b> $A^T$</td><td>flip across the main diagonal: row $i$ becomes column $i$; $(A^T)_{ij} = A_{ji}$</td><td>$\begin{bmatrix} 1 & 2 \end{bmatrix}^T = \begin{bmatrix} 1 \\ 2 \end{bmatrix}$</td><td>turning a spreadsheet on its side</td></tr>
+      <tr><td><b>Symmetric</b></td><td>transposing changes nothing: $A^T = A$, i.e. $A_{ij} = A_{ji}$</td><td>$\begin{bmatrix} 2 & 5 \\ 5 & 1 \end{bmatrix}$</td><td>a face that looks the same in a mirror</td></tr>
+      <tr><td><b>Dot product</b> $u \cdot v$</td><td>multiply matching numbers, then add</td><td>$(1, 2) \cdot (3, 4) = 3 + 8 = 11$</td><td>price list · quantity list = total bill</td></tr>
+      <tr><td><b>$R^TR$</b></td><td>the transpose of $R$ times $R$; its entries are dot products of columns of $R$</td><td>always square and symmetric</td><td>a table of "how much each pair of stocks moves together"</td></tr>
+      <tr><td><b>Scaling</b> (multiply by a number)</td><td>multiply every component by the same number</td><td>$-5 \times (3, 2) = (-15, -10)$</td><td>buying 5 lots, or selling (negative lots)</td></tr>
+      <tr><td><b>Linear combination</b> (mix)</td><td>scale some vectors, then add them</td><td>$2(1, 0) + 3(0, 1) = (2, 3)$</td><td>a recipe: 2 spoons of this + 3 spoons of that</td></tr>
+      <tr><td><b>Closed</b></td><td>doing the operation never takes you outside the collection</td><td>whole numbers are closed under adding</td><td>a room you can't walk out of</td></tr>
+      <tr><td><b>$\mathbb{R}^n$</b></td><td>all vectors with $n$ real numbers</td><td>$\mathbb{R}^2$ = all $(x, y)$</td><td>every possible payoff over $n$ scenarios</td></tr>
+      <tr><td><b>Vector space</b></td><td>a collection of vectors closed under adding and scaling</td><td>$\mathbb{R}^2$; a line through the origin</td><td>a room you can't leave by adding or stretching</td></tr>
+      <tr><td><b>Subspace</b></td><td>a vector space sitting inside a bigger one; always contains $0$</td><td>the line $y = 3x$ inside $\mathbb{R}^2$</td><td>a smaller room inside the house</td></tr>
+      <tr><td><b>Line / plane through the origin</b></td><td>all multiples of one vector / all mixes of two vectors pointing different ways</td><td>all $c(1, 2)$ is a line</td><td>a stick / a sheet of paper, pinned at the origin</td></tr>
+      <tr><td><b>Column space</b> $C(A)$</td><td>all linear combinations of the columns of $A$</td><td>columns $(1, 0), (0, 1)$: $C(A) = \mathbb{R}^2$</td><td>every payoff you can build from the products</td></tr>
+      <tr><td><b>$Ax = b$</b></td><td>"mix the columns of $A$ with amounts $x$ to get exactly $b$"</td><td>$\begin{bmatrix} 1 & 3 \\ 2 & 3 \end{bmatrix}\begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 4 \\ 5 \end{bmatrix}$</td><td>can I build the client's payoff?</td></tr>
+      <tr><td><b>CE / PE</b></td><td>call option (pays $\max(S - K, 0)$) / put option (pays $\max(K - S, 0)$), $S$ = Nifty at expiry, $K$ = strike</td><td>20,000 CE at $S = 20{,}100$ pays $100$</td><td>a bet on up / a bet on down</td></tr>
+      <tr><td><b>Lot</b></td><td>one unit of a contract; negative lots = you sold (wrote) it</td><td>$-1$ lot CE = sold 1 CE</td><td>how many tickets you hold</td></tr>
+      <tr><td><b>$\cap$ / $\cup$</b></td><td>in <b>both</b> collections / in <b>at least one</b></td><td>$\{1, 2\} \cap \{2, 3\} = \{2\}$; $\{1, 2\} \cup \{2, 3\} = \{1, 2, 3\}$</td><td>friends of both of us / friends of either of us</td></tr>
+      <tr><td><b>Incomplete market</b></td><td>some payoffs are not in the column space of the assets</td><td>2 assets, 3 scenarios</td><td>a menu that can't cook every dish</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
     <h2 id="s1">1. The lecture in five questions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Row swap = trade the places of two rows. $P$ = permutation matrix, the identity with its rows reordered. $L$, $U$ = the lower and upper triangular factors from elimination. Transpose $A^T$ = rows become columns. Symmetric = $A^T = A$. Vector space = a collection of vectors you cannot leave by adding or multiplying by numbers. Column space = all mixes of a matrix's columns. Subspace = a vector space inside a bigger one.</p>
+    </div>
     <table>
       <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
       <tr><td>1</td><td>What if elimination needs row swaps?</td><td>Swap first, then factor: <b>$PA = LU$</b>.</td></tr>
@@ -57,6 +103,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s2">2. Row swaps: PA = LU</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Pivot (leader) = the number we use to clear the entries under it; it must not be $0$, because we divide by it. Multiplier = (number to remove) ÷ (pivot). Row swap = trade the places of two rows. Identity $I$ = 1s on the diagonal, 0s elsewhere. Permutation matrix $P$ = $I$ with its rows reordered; $PA$ reorders the rows of $A$ the same way. $L$ = lower triangular (1s on the diagonal, multipliers below). $U$ = upper triangular staircase left after elimination. $n!$ = $n \times (n - 1) \times \dots \times 1$. Transpose $P^T$ = rows of $P$ become columns. Inverse $P^{-1}$ = the matrix that undoes $P$.</p>
+    </div>
     <p>Lecture 05 gave $A = LU$ when <b>no</b> row swaps are needed. If a $0$ lands in a pivot spot, we must swap rows. The fix: do all the swaps <b>first</b> (with a permutation matrix $P$), then factor as usual.</p>
     <div class="box theorem"><span class="label">Elimination with row swaps</span>
       $$ PA = LU $$
@@ -65,17 +114,58 @@
 
     <div class="box example"><span class="label">Example: one swap, then LU</span>
       $$ A = \begin{bmatrix} 0 & 1 & 1 \\ 1 & 2 & 1 \\ 2 & 7 & 9 \end{bmatrix} $$
-      <p><b>Problem:</b> the first pivot spot holds $0$. Row 2 has a $1$ there, so swap rows 1 and 2:</p>
-      $$ P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad PA = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 2 & 7 & 9 \end{bmatrix} $$
-      <p><b>Now eliminate $PA$</b> (Part 1 of Lecture 05: find $U$, write down the multipliers):</p>
-      <table>
-        <tr><th>Step</th><th>Work</th><th>Multiplier</th></tr>
-        <tr><td>(row 2, col 1)</td><td>already $0$</td><td>$0$</td></tr>
-        <tr><td>(row 3, col 1): row 3 − 2 × row 1</td><td>$(2, 7, 9) - (2, 4, 2) = (0, 3, 7)$</td><td>$2$</td></tr>
-        <tr><td>(row 3, col 2): row 3 − 3 × row 2</td><td>$(0, 3, 7) - (0, 3, 3) = (0, 0, 4)$</td><td>$3$</td></tr>
-      </table>
-      $$ L = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 2 & 3 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 4 \end{bmatrix} $$
-      <p><b>Check row 3 of $LU$:</b> $2 \times (1, 2, 1) + 3 \times (0, 1, 1) + 1 \times (0, 0, 4) = (2,\ 4 + 3,\ 2 + 3 + 4) = (2, 7, 9)$ ✓, row 3 of $PA$.</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Look at the first pivot spot: row 1, column 1.</p>
+          <p class="k"><span class="kl">Why</span> Elimination divides by the pivot to find each multiplier. Dividing by $0$ is impossible.</p>
+          <p class="k"><span class="kl">How</span> The number there is $0$. Look down column 1: row 2 has a $1$, row 3 has a $2$. The first non-zero one below is the $1$ in row 2.</p>
+          <p class="k"><span class="kl">What we have now</span> Plan: swap rows 1 and 2, so the $1$ becomes the pivot.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Build $P$, the matrix that does this swap.</p>
+          <p class="k"><span class="kl">Why</span> Whatever we do to the rows of $I$, multiplying by the result does to the rows of $A$.</p>
+          <p class="k"><span class="kl">How</span> Start from $I$ with rows $(1, 0, 0)$, $(0, 1, 0)$, $(0, 0, 1)$. Swap its rows 1 and 2: rows become $(0, 1, 0)$, $(1, 0, 0)$, $(0, 0, 1)$.</p>
+          <p class="k"><span class="kl">What we have now</span> The permutation matrix below.</p>
+          $$ P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Compute $PA$.</p>
+          <p class="k"><span class="kl">Why</span> This is the matrix we will actually eliminate.</p>
+          <p class="k"><span class="kl">How</span> Row 1 of $P$ is $(0, 1, 0)$: "take 1 of row 2 of $A$" $= (1, 2, 1)$. Row 2 of $P$ is $(1, 0, 0)$: "take row 1 of $A$" $= (0, 1, 1)$. Row 3 of $P$ is $(0, 0, 1)$: "take row 3 of $A$" $= (2, 7, 9)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Rows 1 and 2 of $A$ have traded places.</p>
+          $$ PA = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 2 & 7 & 9 \end{bmatrix} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Pivot = the $1$ at the top-left of $PA$. Clear column 1 below it.</p>
+          <p class="k"><span class="kl">Why</span> We want zeros under every pivot: that makes the staircase $U$.</p>
+          <p class="k"><span class="kl">How</span> Row 2 already has $0$ in column 1: multiplier $0 \div 1 = 0$, nothing to do. Row 3 has $2$: multiplier $2 \div 1 = 2$. Two copies of row 1: $2 \times (1, 2, 1) = (2, 4, 2)$. Take them away: $(2 - 2,\ 7 - 4,\ 9 - 2) = (0, 3, 7)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Rows $(1, 2, 1)$, $(0, 1, 1)$, $(0, 3, 7)$. Multipliers so far: $\ell_{21} = 0$, $\ell_{31} = 2$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Pivot = the $1$ in row 2, column 2. Clear the $3$ under it.</p>
+          <p class="k"><span class="kl">Why</span> Column 2 also needs a zero below its pivot.</p>
+          <p class="k"><span class="kl">How</span> Multiplier $3 \div 1 = 3$. Three copies of row 2: $3 \times (0, 1, 1) = (0, 3, 3)$. Take them away: $(0 - 0,\ 3 - 3,\ 7 - 3) = (0, 0, 4)$.</p>
+          <p class="k"><span class="kl">What we have now</span> The staircase is done. Multiplier $\ell_{32} = 3$. All the work in one table:</p>
+          <table>
+            <tr><th>Step</th><th>Work</th><th>Multiplier</th></tr>
+            <tr><td>(row 2, col 1)</td><td>already $0$</td><td>$0$</td></tr>
+            <tr><td>(row 3, col 1): row 3 − 2 × row 1</td><td>$(2, 7, 9) - (2, 4, 2) = (0, 3, 7)$</td><td>$2$</td></tr>
+            <tr><td>(row 3, col 2): row 3 − 3 × row 2</td><td>$(0, 3, 7) - (0, 3, 3) = (0, 0, 4)$</td><td>$3$</td></tr>
+          </table>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Write down $L$ and $U$.</p>
+          <p class="k"><span class="kl">Why</span> $U$ is the staircase; $L$ remembers the multipliers, each in the spot it cleared.</p>
+          <p class="k"><span class="kl">How</span> $L$: 1s on the diagonal, $0$ at (2, 1), $2$ at (3, 1), $3$ at (3, 2), 0s above. $U$: the three final rows.</p>
+          <p class="k"><span class="kl">What we have now</span> The two factors:</p>
+          $$ L = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 2 & 3 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 4 \end{bmatrix} $$
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> Row 3 of $LU$ = $2 \times$ (row 1 of $U$) $+ 3 \times$ (row 2 of $U$) $+ 1 \times$ (row 3 of $U$).</p>
+          <p class="k"><span class="kl">How</span> $2 \times (1, 2, 1) = (2, 4, 2)$. $3 \times (0, 1, 1) = (0, 3, 3)$. $1 \times (0, 0, 4) = (0, 0, 4)$. Add: $(2 + 0 + 0,\ 4 + 3 + 0,\ 2 + 3 + 4) = (2, 7, 9)$.</p>
+          <p class="k"><span class="kl">What we have now</span> $(2, 7, 9)$ is row 3 of $PA$ ✓. Rows 1 and 2 of $LU$ are just rows 1 and 2 of $U$: $(1, 2, 1)$ and $(0, 1, 1)$, matching $PA$ ✓. So $PA = LU$.</p>
+        </li>
+      </ol>
     </div>
 
     <div class="box intuition"><span class="label">Real computers swap even more</span>
@@ -90,8 +180,52 @@
       <tr><td>$P^{-1} = P^T$</td><td>Equivalently $P^TP = I$: transposing a permutation undoes it.</td></tr>
     </table>
 
+    <h4>Counting the 3 × 3 permutation matrices</h4>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Choose which row of $I$ goes on top.</p>
+        <p class="k"><span class="kl">Why</span> A permutation matrix is just the 3 rows of $I$ in some order, so counting orders counts matrices.</p>
+        <p class="k"><span class="kl">How</span> Any of the 3 rows can go first: 3 choices.</p>
+        <p class="k"><span class="kl">What we have now</span> 3 ways to fill the top.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Choose the middle row.</p>
+        <p class="k"><span class="kl">Why</span> One row is already used, so fewer are left.</p>
+        <p class="k"><span class="kl">How</span> 2 rows are left: 2 choices. Each of the 3 tops pairs with each of these 2: $3 \times 2 = 6$.</p>
+        <p class="k"><span class="kl">What we have now</span> 6 ways to fill top and middle.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put in the bottom row.</p>
+        <p class="k"><span class="kl">Why</span> Only one row is left, so there is no choice.</p>
+        <p class="k"><span class="kl">How</span> 1 choice: $3 \times 2 \times 1 = 6 = 3!$.</p>
+        <p class="k"><span class="kl">What we have now</span> Six permutation matrices. Listed by the order of the rows of $I$: (1,2,3) = $I$, (2,1,3), (3,2,1), (1,3,2), (2,3,1), (3,1,2).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Same rule for 4 rows: $4 \times 3 \times 2 \times 1 = 24 = 4!$ ✓, matching the table.</p>
+      </li>
+    </ol>
+
+    <h4>Checking $P^TP = I$ for the swap above</h4>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Transpose the $P$ from the example.</p>
+        <p class="k"><span class="kl">Why</span> We want to see that $P^T$ undoes $P$.</p>
+        <p class="k"><span class="kl">How</span> Rows of $P$: $(0, 1, 0)$, $(1, 0, 0)$, $(0, 0, 1)$. They become columns: column 1 $= (0, 1, 0)$, column 2 $= (1, 0, 0)$, column 3 $= (0, 0, 1)$. Read across: row 1 of $P^T$ $= (0, 1, 0)$, row 2 $= (1, 0, 0)$, row 3 $= (0, 0, 1)$.</p>
+        <p class="k"><span class="kl">What we have now</span> $P^T = P$ here (one swap is its own mirror image).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Multiply $P^TP$, i.e. apply the swap twice.</p>
+        <p class="k"><span class="kl">Why</span> If the answer is $I$, then $P^T$ is the inverse.</p>
+        <p class="k"><span class="kl">How</span> $P$ swaps rows 1 and 2 of whatever comes after it. Apply it to $P$ itself: rows $(0, 1, 0)$ and $(1, 0, 0)$ trade places, giving $(1, 0, 0)$, $(0, 1, 0)$, $(0, 0, 1)$.</p>
+        <p class="k"><span class="kl">What we have now</span> That is $I$ ✓. Swapping twice puts everything back.</p>
+      </li>
+    </ol>
+
     <!-- ====================================================== -->
     <h2 id="s3">3. Transpose, symmetric matrices</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Matrix = a table of numbers; $3 \times 2$ means 3 rows and 2 columns. Entry $A_{ij}$ = the number in row $i$, column $j$. Main diagonal = the entries $A_{11}, A_{22}, \dots$ from top-left going down-right. Transpose $A^T$ = flip across the main diagonal, so row $i$ becomes column $i$. Symmetric = transposing changes nothing ($A^T = A$). Mirror pair = the two entries $A_{ij}$ and $A_{ji}$, which sit opposite each other across the diagonal. Permutation $P$ = $I$ with rows reordered; inverse = the matrix that undoes it.</p>
+    </div>
     <div class="box definition"><span class="label">Definition: Transpose</span>
       <p>Flip the matrix across its main diagonal: <b>rows become columns</b>. The entry in row $i$, column $j$ of $A^T$ is the entry in row $j$, column $i$ of $A$:</p>
       $$ (A^T)_{ij} = A_{ji} $$
@@ -102,12 +236,72 @@
     R^T = \begin{bmatrix} 1 & 2 & 4 \\ 3 & 3 & 1 \end{bmatrix} \ (2 \times 3)
     $$
     <p>Column 1 of $R$, $(1, 2, 4)$, became row 1 of $R^T$. A tall matrix lies down on its side.</p>
+    <h4>Transposing R entry by entry</h4>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find the shape of $R^T$.</p>
+        <p class="k"><span class="kl">Why</span> Rows become columns, so the two numbers in the shape trade places.</p>
+        <p class="k"><span class="kl">How</span> $R$ is $3 \times 2$ (3 rows, 2 columns). Swap: $2 \times 3$.</p>
+        <p class="k"><span class="kl">What we have now</span> An empty table with 2 rows and 3 columns to fill.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Fill row 1 of $R^T$.</p>
+        <p class="k"><span class="kl">Why</span> The rule $(R^T)_{1j} = R_{j1}$: row 1 of $R^T$ reads down column 1 of $R$.</p>
+        <p class="k"><span class="kl">How</span> One entry at a time, using the table below.</p>
+        <table>
+          <tr><th>Entry of $R^T$</th><th>Rule</th><th>Look up in $R$</th><th>Value</th></tr>
+          <tr><td>(1, 1)</td><td>$R_{11}$</td><td>row 1, col 1</td><td>$1$</td></tr>
+          <tr><td>(1, 2)</td><td>$R_{21}$</td><td>row 2, col 1</td><td>$2$</td></tr>
+          <tr><td>(1, 3)</td><td>$R_{31}$</td><td>row 3, col 1</td><td>$4$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Row 1 of $R^T$ $= (1, 2, 4)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Fill row 2 of $R^T$.</p>
+        <p class="k"><span class="kl">Why</span> $(R^T)_{2j} = R_{j2}$: row 2 of $R^T$ reads down column 2 of $R$.</p>
+        <p class="k"><span class="kl">How</span> Same lookup, column 2 this time.</p>
+        <table>
+          <tr><th>Entry of $R^T$</th><th>Rule</th><th>Look up in $R$</th><th>Value</th></tr>
+          <tr><td>(2, 1)</td><td>$R_{12}$</td><td>row 1, col 2</td><td>$3$</td></tr>
+          <tr><td>(2, 2)</td><td>$R_{22}$</td><td>row 2, col 2</td><td>$3$</td></tr>
+          <tr><td>(2, 3)</td><td>$R_{32}$</td><td>row 3, col 2</td><td>$1$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Row 2 of $R^T$ $= (3, 3, 1)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Transpose back: columns of $R^T$ are $(1, 3)$, $(2, 3)$, $(4, 1)$, which are exactly the rows of $R$ ✓. Flipping twice gives the start: $(R^T)^T = R$.</p>
+      </li>
+    </ol>
 
     <div class="box definition"><span class="label">Definition: Symmetric</span>
       <p>A matrix is <b>symmetric</b> if transposing does not change it: $A^T = A$. The entry at (row $i$, col $j$) equals the entry at (row $j$, col $i$). It is a mirror image across the diagonal.</p>
       $$ S = \begin{bmatrix} 3 & \color{#2e7d4f}{1} & \color{#2f5d8a}{7} \\ \color{#2e7d4f}{1} & 2 & \color{#b42318}{9} \\ \color{#2f5d8a}{7} & \color{#b42318}{9} & 4 \end{bmatrix} $$
       <p>Matching colours are mirror pairs. The diagonal ($3, 2, 4$) can be anything.</p>
     </div>
+    <h4>Checking that S is symmetric</h4>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> List the entries <b>above</b> the diagonal.</p>
+        <p class="k"><span class="kl">Why</span> Each has one mirror partner below the diagonal. Diagonal entries are their own mirror, so they never need checking.</p>
+        <p class="k"><span class="kl">How</span> In a $3 \times 3$ matrix they are (1, 2), (1, 3), (2, 3).</p>
+        <p class="k"><span class="kl">What we have now</span> Three pairs to compare.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Compare each with its partner, one pair at a time.</p>
+        <p class="k"><span class="kl">Why</span> Symmetric means $S_{ij} = S_{ji}$ for every pair.</p>
+        <p class="k"><span class="kl">How</span> See the table.</p>
+        <table>
+          <tr><th>Above</th><th>Value</th><th>Mirror below</th><th>Value</th><th>Equal?</th></tr>
+          <tr><td>(1, 2)</td><td>$1$</td><td>(2, 1)</td><td>$1$</td><td>✓</td></tr>
+          <tr><td>(1, 3)</td><td>$7$</td><td>(3, 1)</td><td>$7$</td><td>✓</td></tr>
+          <tr><td>(2, 3)</td><td>$9$</td><td>(3, 2)</td><td>$9$</td><td>✓</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> All three pairs match.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Transpose $S$: row 1 becomes column 1, $(3, 1, 7)$, which is already column 1 of $S$. Same for rows 2 and 3. So $S^T = S$: symmetric ✓.</p>
+      </li>
+    </ol>
     <table>
       <tr><th>Matrix</th><th>$A^T$ gives</th><th>Special property</th></tr>
       <tr><td>Symmetric</td><td>the <b>same</b> matrix</td><td>$A^T = A$ (easy to spot: mirror across the diagonal)</td></tr>
@@ -116,17 +310,55 @@
 
     <!-- ====================================================== -->
     <h2 id="s4">4. RᵀR is always symmetric</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Rectangular = rows and columns are different in number. Transpose $R^T$ = rows of $R$ become columns. Dot product = multiply matching numbers, then add: $(1, 2) \cdot (3, 4) = 3 + 8 = 11$. Matrix product: entry $(i, j)$ of $AB$ = (row $i$ of $A$) · (column $j$ of $B$). Symmetric = equal to its own transpose, so each entry equals its mirror across the diagonal. "Reverse the order" rule = $(AB)^T = B^TA^T$.</p>
+    </div>
     <p>$R$ above is rectangular and nowhere near symmetric. But multiply it by its transpose:</p>
     $$ R^TR = \begin{bmatrix} 1 & 2 & 4 \\ 3 & 3 & 1 \end{bmatrix}\begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix} $$
     <p>Each entry is (row of $R^T$) · (column of $R$), which is (column of $R$) · (column of $R$):</p>
-    <table>
-      <tr><th>Entry</th><th>Which columns of $R$</th><th>Work</th><th>Value</th></tr>
-      <tr><td>(1, 1)</td><td>col 1 · col 1</td><td>$1 \cdot 1 + 2 \cdot 2 + 4 \cdot 4$</td><td>$21$</td></tr>
-      <tr><td>(1, 2)</td><td>col 1 · col 2</td><td>$1 \cdot 3 + 2 \cdot 3 + 4 \cdot 1$</td><td>$13$</td></tr>
-      <tr><td>(2, 1)</td><td>col 2 · col 1</td><td>$3 \cdot 1 + 3 \cdot 2 + 1 \cdot 4$</td><td>$13$</td></tr>
-      <tr><td>(2, 2)</td><td>col 2 · col 2</td><td>$3 \cdot 3 + 3 \cdot 3 + 1 \cdot 1$</td><td>$19$</td></tr>
-    </table>
-    $$ R^TR = \begin{bmatrix} 21 & \color{#2e7d4f}{13} \\ \color{#2e7d4f}{13} & 19 \end{bmatrix} \quad \text{symmetric ✓} $$
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Find the shape of the answer.</p>
+        <p class="k"><span class="kl">Why</span> A $(2 \times 3)$ times a $(3 \times 2)$ gives (outer numbers) $2 \times 2$; the inner 3s must match, and they do.</p>
+        <p class="k"><span class="kl">How</span> $R^T$ is $2 \times 3$, $R$ is $3 \times 2$. Outer numbers: $2$ and $2$.</p>
+        <p class="k"><span class="kl">What we have now</span> Four entries to find: (1, 1), (1, 2), (2, 1), (2, 2).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Entry (1, 1) = (row 1 of $R^T$) · (column 1 of $R$).</p>
+        <p class="k"><span class="kl">Why</span> Row 1 of $R^T$ <i>is</i> column 1 of $R$, so this is col 1 · col 1.</p>
+        <p class="k"><span class="kl">How</span> $(1, 2, 4) \cdot (1, 2, 4)$: $1 \cdot 1 = 1$, $2 \cdot 2 = 4$, $4 \cdot 4 = 16$. Add: $1 + 4 + 16 = 21$.</p>
+        <p class="k"><span class="kl">What we have now</span> Top-left $= 21$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Entry (1, 2) = col 1 · col 2.</p>
+        <p class="k"><span class="kl">Why</span> Row 1 of $R^T$ is col 1 of $R$; the second column of $R$ is col 2.</p>
+        <p class="k"><span class="kl">How</span> $(1, 2, 4) \cdot (3, 3, 1)$: $1 \cdot 3 = 3$, $2 \cdot 3 = 6$, $4 \cdot 1 = 4$. Add: $3 + 6 + 4 = 13$.</p>
+        <p class="k"><span class="kl">What we have now</span> Top-right $= 13$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Entry (2, 1) = col 2 · col 1.</p>
+        <p class="k"><span class="kl">Why</span> Row 2 of $R^T$ is col 2 of $R$; then column 1 of $R$.</p>
+        <p class="k"><span class="kl">How</span> $(3, 3, 1) \cdot (1, 2, 4)$: $3 \cdot 1 = 3$, $3 \cdot 2 = 6$, $1 \cdot 4 = 4$. Add: $3 + 6 + 4 = 13$.</p>
+        <p class="k"><span class="kl">What we have now</span> Bottom-left $= 13$: the same three products as step 3, just multiplied the other way round.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Entry (2, 2) = col 2 · col 2.</p>
+        <p class="k"><span class="kl">Why</span> Row 2 of $R^T$ with column 2 of $R$.</p>
+        <p class="k"><span class="kl">How</span> $(3, 3, 1) \cdot (3, 3, 1)$: $3 \cdot 3 = 9$, $3 \cdot 3 = 9$, $1 \cdot 1 = 1$. Add: $9 + 9 + 1 = 19$.</p>
+        <p class="k"><span class="kl">What we have now</span> Bottom-right $= 19$. All four entries together:</p>
+        <table>
+          <tr><th>Entry</th><th>Which columns of $R$</th><th>Work</th><th>Value</th></tr>
+          <tr><td>(1, 1)</td><td>col 1 · col 1</td><td>$1 \cdot 1 + 2 \cdot 2 + 4 \cdot 4$</td><td>$21$</td></tr>
+          <tr><td>(1, 2)</td><td>col 1 · col 2</td><td>$1 \cdot 3 + 2 \cdot 3 + 4 \cdot 1$</td><td>$13$</td></tr>
+          <tr><td>(2, 1)</td><td>col 2 · col 1</td><td>$3 \cdot 1 + 3 \cdot 2 + 1 \cdot 4$</td><td>$13$</td></tr>
+          <tr><td>(2, 2)</td><td>col 2 · col 2</td><td>$3 \cdot 3 + 3 \cdot 3 + 1 \cdot 1$</td><td>$19$</td></tr>
+        </table>
+        $$ R^TR = \begin{bmatrix} 21 & \color{#2e7d4f}{13} \\ \color{#2e7d4f}{13} & 19 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> The only mirror pair is (1, 2) and (2, 1): $13$ and $13$, equal. So $R^TR$ is symmetric ✓.</p>
+      </li>
+    </ol>
     <p>The two 13s match because (col 1 · col 2) and (col 2 · col 1) are the same dot product, just in the other order.</p>
 
     <div class="box theorem"><span class="label">Proof in two lines</span>
@@ -134,10 +366,50 @@
       $$ (R^TR)^T = R^T\,(R^T)^T = R^T R $$
       <p>Transposing twice gives back $R$. So $R^TR$ equals its own transpose: it is symmetric.</p>
     </div>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Transpose the product $R^TR$.</p>
+        <p class="k"><span class="kl">Why</span> "Symmetric" means "equal to its own transpose", so we compute the transpose and compare.</p>
+        <p class="k"><span class="kl">How</span> Reverse-the-order rule with $A = R^T$ and $B = R$: $(AB)^T = B^TA^T = R^T\,(R^T)^T$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(R^TR)^T = R^T\,(R^T)^T$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Simplify $(R^T)^T$.</p>
+        <p class="k"><span class="kl">Why</span> Flipping across the diagonal twice puts every entry back where it started.</p>
+        <p class="k"><span class="kl">How</span> $(R^T)^T = R$, so $R^T\,(R^T)^T = R^TR$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(R^TR)^T = R^TR$: symmetric, for <b>any</b> $R$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> With our numbers: the transpose of $\begin{bmatrix} 21 & 13 \\ 13 & 19 \end{bmatrix}$ swaps the two 13s, which changes nothing ✓.</p>
+      </li>
+    </ol>
     <p>The same goes for $RR^T$ (here $3 \times 3$): $\begin{bmatrix} 10 & 11 & 7 \\ 11 & 13 & 11 \\ 7 & 11 & 17 \end{bmatrix}$, also a mirror image.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Compute $RR^T$ entry by entry.</p>
+        <p class="k"><span class="kl">Why</span> Entry $(i, j)$ of $RR^T$ = (row $i$ of $R$) · (column $j$ of $R^T$) = (row $i$ of $R$) · (row $j$ of $R$).</p>
+        <p class="k"><span class="kl">How</span> Rows of $R$: $(1, 3)$, $(2, 3)$, $(4, 1)$. Six different pairs:</p>
+        <table>
+          <tr><th>Entry</th><th>Rows of $R$</th><th>Work</th><th>Value</th></tr>
+          <tr><td>(1, 1)</td><td>row 1 · row 1</td><td>$1 \cdot 1 + 3 \cdot 3 = 1 + 9$</td><td>$10$</td></tr>
+          <tr><td>(1, 2) = (2, 1)</td><td>row 1 · row 2</td><td>$1 \cdot 2 + 3 \cdot 3 = 2 + 9$</td><td>$11$</td></tr>
+          <tr><td>(1, 3) = (3, 1)</td><td>row 1 · row 3</td><td>$1 \cdot 4 + 3 \cdot 1 = 4 + 3$</td><td>$7$</td></tr>
+          <tr><td>(2, 2)</td><td>row 2 · row 2</td><td>$2 \cdot 2 + 3 \cdot 3 = 4 + 9$</td><td>$13$</td></tr>
+          <tr><td>(2, 3) = (3, 2)</td><td>row 2 · row 3</td><td>$2 \cdot 4 + 3 \cdot 1 = 8 + 3$</td><td>$11$</td></tr>
+          <tr><td>(3, 3)</td><td>row 3 · row 3</td><td>$4 \cdot 4 + 1 \cdot 1 = 16 + 1$</td><td>$17$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> The $3 \times 3$ matrix above.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Mirror pairs: (1, 2) and (2, 1) both $11$; (1, 3) and (3, 1) both $7$; (2, 3) and (3, 2) both $11$ ✓. Symmetric.</p>
+      </li>
+    </ol>
 
     <!-- ====================================================== -->
     <h2 id="s5">5. Vector spaces</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Vector = a list of numbers. Component = one number in that list. Adding vectors = add matching components: $(3, 2) + (5, 6) = (8, 8)$. Scaling (multiply by a number) = multiply every component: $-5 \times (3, 2) = (-15, -10)$. Linear combination = scale some vectors, then add. Closed = you can never leave the collection by doing that operation. $\mathbb{R}^n$ = all vectors with $n$ real numbers. Zero vector = all components 0. Origin = the point $(0, 0, \dots)$.</p>
+    </div>
     <p>Now the big step: from single vectors to <b>spaces</b> of vectors.</p>
     <div class="box definition"><span class="label">Definition: Vector space</span>
       <p>A <b>vector space</b> is a collection of vectors where you can always:</p>
@@ -162,6 +434,17 @@
     <div class="box theorem"><span class="label">Every vector space contains zero</span>
       <p>Take any vector $v$ in the space. Multiplying by $0$ is allowed, so $0 \times v = 0$ must be in the space. (Or add $v$ and $-v$.) A space with the origin removed is <b>not</b> a vector space.</p>
     </div>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Take one vector from the space, say $v = (3, 2)$, and multiply it by $0$.</p>
+        <p class="k"><span class="kl">Why</span> A vector space must allow multiplying by <b>any</b> number, and $0$ is a number.</p>
+        <p class="k"><span class="kl">How</span> $0 \times 3 = 0$ and $0 \times 2 = 0$, so $0 \times (3, 2) = (0, 0)$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(0, 0)$ must be in the space.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Other route: $(3, 2) + (-3, -2) = (3 - 3,\ 2 - 2) = (0, 0)$. Same answer ✓.</p>
+      </li>
+    </ol>
 
     <h3>Something that is NOT a vector space</h3>
     <p>Take only the top-right quarter of the plane: vectors with both components $\ge 0$.</p>
@@ -170,6 +453,29 @@
       <tr><td>Add two of them</td><td>$(3, 2) + (5, 6) = (8, 8)$</td><td>yes ✓</td></tr>
       <tr><td>Multiply by a number</td><td>$-5 \times (3, 2) = (-15, -10)$</td><td><b>no</b> ✗ (it lands in the bottom-left)</td></tr>
     </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Check the zero vector is inside.</p>
+        <p class="k"><span class="kl">Why</span> Every vector space contains $0$; if it is missing we can stop right away.</p>
+        <p class="k"><span class="kl">How</span> $(0, 0)$: is $0 \ge 0$? Yes. Is $0 \ge 0$? Yes.</p>
+        <p class="k"><span class="kl">What we have now</span> $(0, 0)$ is inside. No verdict yet.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add two members: $(3, 2) + (5, 6)$.</p>
+        <p class="k"><span class="kl">Why</span> Rule 1: adding must never lead outside.</p>
+        <p class="k"><span class="kl">How</span> First components: $3 + 5 = 8$. Second: $2 + 6 = 8$. Result $(8, 8)$. Both $\ge 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> Inside ✓. (In general: positive + positive is positive.)</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Multiply a member by a negative number: $-5 \times (3, 2)$.</p>
+        <p class="k"><span class="kl">Why</span> Rule 2: multiplying by <b>any</b> number, including negatives, must stay inside.</p>
+        <p class="k"><span class="kl">How</span> $-5 \times 3 = -15$. $-5 \times 2 = -10$. Result $(-15, -10)$. Is $-15 \ge 0$? No.</p>
+        <p class="k"><span class="kl">What we have now</span> Outside ✗: it lands in the bottom-left quarter.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> One failure is enough. The quarter plane is <b>not closed</b> under scaling, so it is not a vector space.</p>
+      </li>
+    </ol>
     <p>Multiplying by a negative number escapes, so the quarter plane is <b>not closed</b> and not a vector space.</p>
 
     <figure class="fig" style="max-width:360px;margin:20px auto">
@@ -190,6 +496,9 @@
 
     <!-- ====================================================== -->
     <h2 id="s6">6. Subspaces</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Vector space = a collection of vectors closed under adding and scaling (you can't leave it). Subspace = a vector space sitting inside a bigger one. Multiple of $v$ = $c \times v$ for some number $c$. Origin = the zero point $(0, 0)$. Line through the origin = all multiples of one non-zero vector. Plane through the origin = all mixes of two vectors pointing in different directions. $\{0\}$ = the collection holding only the zero vector. $\mathbb{R}^1$ = numbers on a single axis (vectors with <b>one</b> component).</p>
+    </div>
     <div class="box definition"><span class="label">Definition: Subspace</span>
       <p>A <b>subspace</b> is a vector space that sits <b>inside</b> a bigger one. It must pass the same test: adding or multiplying by any number never leads outside it.</p>
     </div>
@@ -197,6 +506,36 @@
     <h3>A line through the origin is a subspace</h3>
     <p>Put one vector $v$ in. Then all its multiples ($2v$, $\tfrac12 v$, $-v$, $0v$, …) must come in too. That fills a whole <b>line</b> through the origin. Adding two points on that line stays on the line ✓.</p>
     <p>A line that <b>misses the origin</b> is <b>not</b> a subspace: $0 \times v = 0$ would be off the line.</p>
+    <h4>Checking with numbers: the line y = 2x, and the line y = 2x + 1</h4>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Pick two points on the line $y = 2x$: $(1, 2)$ and $(3, 6)$.</p>
+        <p class="k"><span class="kl">Why</span> To test adding we need two members.</p>
+        <p class="k"><span class="kl">How</span> $(1, 2)$: is $2 = 2 \times 1$? Yes. $(3, 6)$: is $6 = 2 \times 3$? Yes.</p>
+        <p class="k"><span class="kl">What we have now</span> Two members of the line.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add them.</p>
+        <p class="k"><span class="kl">Why</span> Rule 1: the sum must stay on the line.</p>
+        <p class="k"><span class="kl">How</span> $(1 + 3,\ 2 + 6) = (4, 8)$. Is $8 = 2 \times 4$? Yes.</p>
+        <p class="k"><span class="kl">What we have now</span> The sum is on the line ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Scale $(1, 2)$ by $-3$.</p>
+        <p class="k"><span class="kl">Why</span> Rule 2: every multiple must stay on the line, negatives too.</p>
+        <p class="k"><span class="kl">How</span> $-3 \times (1, 2) = (-3, -6)$. Is $-6 = 2 \times (-3)$? Yes.</p>
+        <p class="k"><span class="kl">What we have now</span> On the line ✓. (Scale by $0$: $(0, 0)$, and $0 = 2 \times 0$ ✓.) The line $y = 2x$ is a subspace.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Now test the shifted line $y = 2x + 1$ with the zero vector.</p>
+        <p class="k"><span class="kl">Why</span> Every subspace must contain $(0, 0)$; this is the quickest test.</p>
+        <p class="k"><span class="kl">How</span> Put $x = 0$: the line needs $y = 2 \times 0 + 1 = 1$. But the zero vector has $y = 0$, and $0 \ne 1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(0, 0)$ is not on it ✗.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Adding fails too: $(0, 1)$ and $(1, 3)$ are on $y = 2x + 1$ ($1 = 0 + 1$, $3 = 2 + 1$). Their sum $(1, 4)$ needs $4 = 2 \times 1 + 1 = 3$: no ✗. Not a subspace.</p>
+      </li>
+    </ol>
 
     <figure class="fig" style="max-width:360px;margin:20px auto">
       <svg viewBox="0 0 300 240" role="img" aria-label="A line through the origin is a subspace; a shifted line is not">
@@ -223,9 +562,29 @@
       <li><b>The zero vector alone</b> is a subspace: $0 + 0 = 0$ and $17 \times 0 = 0$, so you never leave it.</li>
       <li><b>A line in $\mathbb{R}^2$ is not $\mathbb{R}^1$.</b> It looks like a line, but its vectors have 2 components.</li>
     </ul>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Test $\{0\}$ (only the zero vector) by adding.</p>
+        <p class="k"><span class="kl">Why</span> Rule 1: the sum of any two members must be a member.</p>
+        <p class="k"><span class="kl">How</span> The only member is $(0, 0)$. $(0, 0) + (0, 0) = (0 + 0,\ 0 + 0) = (0, 0)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Still inside ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Test by scaling, say by $17$.</p>
+        <p class="k"><span class="kl">Why</span> Rule 2: any multiple must be a member.</p>
+        <p class="k"><span class="kl">How</span> $17 \times (0, 0) = (17 \times 0,\ 17 \times 0) = (0, 0)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Still inside ✓.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Any number works the same way, since (anything) $\times\ 0 = 0$. So $\{0\}$ is the smallest subspace.</p>
+      </li>
+    </ol>
 
     <!-- ====================================================== -->
     <h2 id="s7">7. The column space</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Column of $A$ = one vertical list of numbers in the matrix. Linear combination (mix) = $x_1 \times$ (col 1) $+ x_2 \times$ (col 2), for any numbers $x_1, x_2$. Column space $C(A)$ = every mix of the columns. Subspace = a vector space inside a bigger one (closed under adding and scaling). Plane through the origin = the flat sheet made by mixing two vectors that point in different directions. $Ax$ = the mix of the columns of $A$ with amounts $x$. $Ax = b$ has a solution = some amounts $x$ build exactly $b$. Independent columns = no column is a mix of the others.</p>
+    </div>
     <p>The most important way to get a subspace out of a matrix: take its columns and <b>all their combinations</b>.</p>
     $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix}, \qquad \text{column 1} = \begin{bmatrix} 1 \\ 2 \\ 4 \end{bmatrix}, \quad \text{column 2} = \begin{bmatrix} 3 \\ 3 \\ 1 \end{bmatrix} $$
     <div class="box definition"><span class="label">Definition: Column space C(A)</span>
@@ -243,13 +602,47 @@
       <tr><td>$0$</td><td>$0$</td><td>$(0, 0, 0)$</td></tr>
       <tr><td>$2$</td><td>$-1$</td><td>$(2 - 3,\ 4 - 3,\ 8 - 1) = (-1, 1, 7)$</td></tr>
     </table>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Build the mix with $x_1 = 1$, $x_2 = 1$.</p>
+        <p class="k"><span class="kl">Why</span> Every such mix is, by definition, a member of $C(A)$.</p>
+        <p class="k"><span class="kl">How</span> $1 \times (1, 2, 4) = (1, 2, 4)$. $1 \times (3, 3, 1) = (3, 3, 1)$. Add component by component: $(1 + 3,\ 2 + 3,\ 4 + 1) = (4, 5, 5)$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(4, 5, 5)$ is in $C(A)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Build the mix with $x_1 = 2$, $x_2 = -1$.</p>
+        <p class="k"><span class="kl">Why</span> Negative amounts are allowed too ("sell" column 2).</p>
+        <p class="k"><span class="kl">How</span> $2 \times (1, 2, 4) = (2, 4, 8)$. $-1 \times (3, 3, 1) = (-3, -3, -1)$. Add: $(2 - 3,\ 4 - 3,\ 8 - 1) = (-1, 1, 7)$.</p>
+        <p class="k"><span class="kl">What we have now</span> $(-1, 1, 7)$ is in $C(A)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Add these two members: $(4, 5, 5) + (-1, 1, 7)$.</p>
+        <p class="k"><span class="kl">Why</span> To see "a mix of mixes is still a mix", i.e. $C(A)$ is closed under adding.</p>
+        <p class="k"><span class="kl">How</span> $(4 - 1,\ 5 + 1,\ 5 + 7) = (3, 6, 12)$. The amounts add too: $x_1 = 1 + 2 = 3$, $x_2 = 1 + (-1) = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> Prediction: $(3, 6, 12) = 3 \times$ col 1 $+ 0 \times$ col 2.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> $3 \times (1, 2, 4) = (3, 6, 12)$ ✓. The sum is again a mix of the columns, so it stays in $C(A)$.</p>
+      </li>
+    </ol>
 
     <h3>What shape is it?</h3>
     <p>The two columns point in <b>different directions</b> (neither is a multiple of the other). All their combinations fill a <b>plane through the origin</b> inside $\mathbb{R}^3$. It is not all of $\mathbb{R}^3$: two vectors can only make a flat sheet.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Test whether col 2 is a multiple of col 1.</p>
+        <p class="k"><span class="kl">Why</span> If it were, all mixes would lie on one line. If not, they fill a plane.</p>
+        <p class="k"><span class="kl">How</span> To turn col 1's first number $1$ into col 2's first number $3$, multiply by $3$. Try that on the second numbers: $3 \times 2 = 6$, but col 2 has $3$. $6 \ne 3$.</p>
+        <p class="k"><span class="kl">What we have now</span> No single number works, so the columns point in different directions.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check</span> Two different directions through the origin make a flat sheet: $C(A)$ is a plane in $\mathbb{R}^3$ (the purple sheet below).</p>
+      </li>
+    </ol>
 
     <figure class="fig plot3d">
       <div id="l6plot" class="plot3d-box" role="img" aria-label="The column space: a plane through the origin"></div>
-      <figcaption>The column space of $A$ (purple): the plane made by column 1 (blue) and column 2 (green). $(4, 5, 5)$ = col 1 + col 2 lies on it ✓. The point $(1, 0, 0)$ (red) is <b>off</b> the plane, so $Ax = (1, 0, 0)$ has no solution (Example 7). <b>Drag to rotate.</b></figcaption>
+      <figcaption>The column space of $A$ (purple): the plane made by column 1 (blue) and column 2 (green). $(4, 5, 5)$ = col 1 + col 2 lies on it ✓. The point $(1, 0, 0)$ (red) is <b>off</b> the plane, so $Ax = (1, 0, 0)$ has no solution (Example 8). <b>Drag to rotate.</b></figcaption>
     </figure>
 
     <div class="box theorem"><span class="label">Why the column space matters</span>
@@ -269,13 +662,16 @@
     <!-- ====================================================== -->
     <div class="box finance"><span class="label">In finance</span>
       <ul>
-        <li><b>Symmetric matrices everywhere:</b> put daily returns in a matrix $R$ (rows = days, columns = assets). Then $R^TR$ is symmetric. Its diagonal measures how much each asset moves; its off-diagonal measures how two assets move together. This is the idea behind the <b>covariance matrix</b> (Example 8).</li>
-        <li><b>Column space = what you can build:</b> the columns of a payoff matrix are the assets. Every payoff you can create by buying them is in the column space. If a payoff is outside it, you cannot replicate it: the market is <b>incomplete</b> (Example 9).</li>
+        <li><b>Symmetric matrices everywhere:</b> put daily returns in a matrix $R$ (rows = days, columns = assets). Then $R^TR$ is symmetric. Its diagonal measures how much each asset moves; its off-diagonal measures how two assets move together. This is the idea behind the <b>covariance matrix</b> (Example 9).</li>
+        <li><b>Column space = what you can build:</b> the columns of a payoff matrix are the assets. Every payoff you can create by buying them is in the column space. If a payoff is outside it, you cannot replicate it: the market is <b>incomplete</b> (Example 10).</li>
       </ul>
     </div>
 
     <!-- ====================================================== -->
     <h2 id="s8">8. Summary</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$P$ = permutation matrix (rows of $I$ reordered). $L$, $U$ = lower and upper triangular factors from elimination. $n!$ = number of ways to order $n$ rows. Transpose = rows become columns. Symmetric = unchanged by transposing. Vector space = closed under adding and scaling. Subspace = a vector space inside a bigger one. Column space $C(A)$ = all mixes of the columns of $A$.</p>
+    </div>
     <table>
       <tr><th>Idea</th><th>In one line</th></tr>
       <tr><td>$PA = LU$</td><td>With row swaps: reorder rows with $P$ first, then $L$ and $U$ as usual.</td></tr>
@@ -296,9 +692,144 @@
 
     <h2>Worked examples</h2>
 
+    <!-- E0 -->
+    <div class="worked">
+      <h3>Example 1 (interactive): Options Replication Lab, transposes, permutations, vector spaces</h3>
+      <div class="box theorem"><span class="label">Note: what this lecture teaches, in one look</span>
+        <table>
+          <tr><th>Idea</th><th>What it does</th><th>Example (A pays (2, 1), B pays (1, 2))</th></tr>
+          <tr><td><b>Permutation $P$</b></td><td>Reorders rows (Nifty levels) or columns (products). The answer never changes. In elimination its purpose is to swap rows to get a <b>nonzero pivot</b> ($PA = LU$). Undo by flipping: $P^{-1} = P^T$.</td><td>List 20,000 before 19,900: lots still 1 A + 1 B.</td></tr>
+          <tr><td><b>Transpose $A^T$</b></td><td>Flips rows ↔ columns: a <b>per Nifty level</b> table becomes a <b>per product</b> table. Nothing is calculated.</td><td>Row of $A^T$: A pays (2, 1).</td></tr>
+          <tr><td><b>$A^TA$ diagonal</b></td><td>A <b>single product</b> compared with itself: its payoffs squared and added. It measures the product's own size. It is <b>not P&amp;L</b>, not points, not ₹ (P&amp;L would need prices).</td><td>A with A: 2×2 + 1×1 = 5.</td></tr>
+          <tr><td><b>$A^TA$ off the diagonal</b></td><td>A <b>pair of products</b>: payoffs multiplied level by level and added. It measures their <b>overlap</b> (paying in the same scenarios); 0 = they never pay together. Always a mirror (symmetric).</td><td>A with B: 2×1 + 1×2 = 4.</td></tr>
+          <tr><td><b>Column space</b></td><td><b>Can</b> the client's payoff be built? Inside → a recipe (lots); outside → impossible.</td><td>Client (3, 3) → inside → 1 A + 1 B.</td></tr>
+          <tr><td><b>Vector space</b></td><td>Once you have recipes, <b>add, scale, reverse and net</b> them by doing the same to the lots, with no new solving. (Buy-only breaks this.)</td><td>10× the client (30, 30) → 10 A + 10 B.</td></tr>
+        </table>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <table>
+          <tr><th>Word</th><th>In simple words</th><th>Example (Nifty)</th></tr>
+          <tr><td><b>CE / PE</b></td><td>CE pays if Nifty ends <b>above</b> the strike; PE pays if it ends <b>below</b>.</td><td>20,000 PE: ends 19,900 → 100 points; ends 20,100 → 0.</td></tr>
+          <tr><td><b>Payoff matrix $A$</b></td><td>Rows = Nifty levels, columns = products; each number = what 1 lot pays there.</td><td>Row 19,900 of the starting market: (2, 0, 1).</td></tr>
+          <tr><td><b>Permutation $P$</b></td><td>The identity with its rows shuffled: it reorders things.</td><td>Reverse the levels: 20,100, 20,000, 19,900.</td></tr>
+          <tr><td><b>$PA$ / $AP$</b></td><td>$P$ on the left reorders rows (Nifty levels); on the right it reorders columns (products).</td><td>$PA$ = same equations in a new order.</td></tr>
+          <tr><td><b>$PA = LU$</b></td><td>Elimination with a row swap first, when a pivot spot is 0.</td><td>A product that pays 0 at the first level.</td></tr>
+          <tr><td><b>Transpose $A^T$</b></td><td>Flip the table: rows become columns.</td><td>$A$ per Nifty level → $A^T$ per product.</td></tr>
+          <tr><td><b>$(AB)^T = B^TA^T$</b></td><td>Transpose of a product = transposes in reverse order.</td><td>Used to show $A^TA$ is symmetric.</td></tr>
+          <tr><td><b>Symmetric</b></td><td>Equal to its own transpose: the table is a mirror across the diagonal.</td><td>$A^TA$: (A, B) = (B, A).</td></tr>
+          <tr><td><b>$A^TA$</b></td><td>Every pair of products' payoff lists multiplied and added up: their overlap.</td><td>A and B overlap 1 in the starting market.</td></tr>
+          <tr><td><b>Price per level $q$</b></td><td>Today's price of "1 unit if Nifty ends at this level".</td><td>$q = (30, 40, 30)$.</td></tr>
+          <tr><td><b>Vector space / subspace</b></td><td>A collection you can add and scale without leaving; always contains 0.</td><td>All buildable payoffs.</td></tr>
+          <tr><td><b>Column space $C(A)$</b></td><td>Every payoff your products can build.</td><td>1 A + 1 B pays (2, 2, 2): in $C(A)$.</td></tr>
+          <tr><td><b>Long-only</b></td><td>Allowed to buy, never to sell (lots ≥ 0).</td><td>Not a subspace: can't scale by −1.</td></tr>
+        </table>
+      </div>
+      <h4>1. The agenda: what question are we solving?</h4>
+      <div class="box finance"><span class="label">The question, as a story</span>
+        <p>Same desk, same three options: A = buy 20,100 PE, B = buy 19,900 CE, C = buy 20,000 PE, and a client who wants 3 / 2 / 2 at 19,900 / 20,000 / 20,100. We already know the recipe: 1 lot of each.</p>
+        <p>This lecture asks four new questions about the <b>same</b> table:</p>
+        <table>
+          <tr><th>Question</th><th>Tool</th></tr>
+          <tr><td>If I list the Nifty levels or the products in a different order, does anything change?</td><td>permutations $P$</td></tr>
+          <tr><td>Can I read the table "per product" instead of "per Nifty level"?</td><td>transpose $A^T$</td></tr>
+          <tr><td>Which products pay in the same scenarios (overlap)?</td><td>symmetric $A^TA$</td></tr>
+          <tr><td>Which payoffs can I build at all, and what if I'm not allowed to sell?</td><td>vector spaces, column space</td></tr>
+        </table>
+      </div>
+
+      <div class="box theorem"><span class="label">Quick reference: column space vs vector space</span>
+        <table>
+          <tr><th></th><th>Column space</th><th>Vector space</th></tr>
+          <tr><td><b>Question it answers</b></td><td>Can this client's payoff be built from my products? If yes, with which lots?</td><td>Once I have some recipes, can I combine or resize them without solving again?</td></tr>
+          <tr><td><b>Definition</b></td><td>All combinations of the columns of a matrix: all the payoffs you can build from your available products.</td><td>A collection where adding or scaling never takes you outside it.</td></tr>
+          <tr><td><b>What you get</b></td><td>Inside → a recipe (lots). Outside → impossible.</td><td>New clients made by adding or scaling old ones: just add or scale the lots.</td></tr>
+          <tr><td><b>Example (A pays (2, 1), B pays (1, 2))</b></td><td>Client wants (3, 3) → inside → 1 A + 1 B.</td><td>Client wants 10× that, (30, 30) → 10 A + 10 B, no new solving.</td></tr>
+        </table>
+        <p><b>Reusing recipes</b> (client 1 = (3, 3) = 1 A + 1 B, client 2 = (4, 2) = 2 A):</p>
+        <table>
+          <tr><th>New client</th><th>Do this with the lots</th><th>Recipe</th><th>Check</th></tr>
+          <tr><td>both together: (7, 5)</td><td>add the two recipes</td><td>3 A + 1 B</td><td>(3×2 + 1, 3×1 + 2) = (7, 5) ✓</td></tr>
+          <tr><td>10× client 1: (30, 30)</td><td>multiply by 10</td><td>10 A + 10 B</td><td>(20 + 10, 10 + 20) = (30, 30) ✓</td></tr>
+          <tr><td>close client 1: (−3, −3)</td><td>multiply by −1 (do the opposite)</td><td>sell 1 A, sell 1 B</td><td>(−2 − 1, −1 − 2) = (−3, −3) ✓</td></tr>
+          <tr><td>client 1 minus client 2: (−1, 1)</td><td>subtract the recipes</td><td>sell 1 A, buy 1 B</td><td>(−2 + 1, −1 + 2) = (−1, 1) ✓</td></tr>
+        </table>
+        <p class="answer">Column space: <b>can</b> I build it, and how. Vector space: once I can build some payoffs, I can <b>add, scale, reverse and net</b> them just by doing the same to the lots. (With "buy only", reversing and netting break, so it is not a vector space.)</p>
+      </div>
+
+      <h4>2. The core maths we use (this lecture)</h4>
+      <table>
+        <tr><th>Maths piece</th><th>What it does</th><th>In the lab</th></tr>
+        <tr><td>Permutation $P$</td><td>reorders rows ($PA$) or columns ($AP$); $P^{-1} = P^T$</td><td>section 4</td></tr>
+        <tr><td>$PA = LU$</td><td>elimination with a row swap</td><td>section 4, if your market needs it</td></tr>
+        <tr><td>Transpose $A^T$</td><td>rows ↔ columns; $(A^T)^T = A$</td><td>section 5</td></tr>
+        <tr><td>$x \cdot (A^Tq) = (Ax) \cdot q$</td><td>the same total, added by columns or by rows</td><td>section 6</td></tr>
+        <tr><td>$A^TA$ is symmetric</td><td>$(A^TA)^T = A^TA$</td><td>section 7</td></tr>
+        <tr><td>Subspace</td><td>closed under adding and scaling, contains 0</td><td>section 8</td></tr>
+      </table>
+
+      <h4>3. How your inputs become maths</h4>
+      <table>
+        <tr><th>You type</th><th>It becomes</th><th>Meaning</th></tr>
+        <tr><td>Nifty levels</td><td>rows of $A$ (columns of $A^T$)</td><td>scenarios</td></tr>
+        <tr><td>Products</td><td>columns of $A$ (rows of $A^T$)</td><td>what 1 lot pays in each scenario</td></tr>
+        <tr><td>"Client wants"</td><td>$b$</td><td>tested against the column space</td></tr>
+        <tr><td>Premiums</td><td>$A^Tq$ = premiums gives the price per level $q$</td><td>used to value the position two ways</td></tr>
+      </table>
+
+      <h4>4. Walkthrough: the market the lab starts with</h4>
+      <table>
+        <tr><th>Step</th><th>What we do</th><th>Result</th></tr>
+        <tr><td>Permute rows</td><td>list the levels as 20,100 / 20,000 / 19,900: $PA$ has rows (0, 2, 0), (1, 1, 0), (2, 0, 1); client becomes (2, 2, 3)</td><td>lots still (1, 1, 1). Check row 1: $0 + 2 + 0 = 2$ ✓</td></tr>
+        <tr><td>Permute columns</td><td>swap A and B: $AP$ has columns B, A, C</td><td>same trades, lots listed as (B, A, C) = (1, 1, 1)</td></tr>
+        <tr><td>Transpose</td><td>$A^T = \begin{bmatrix} 2 & 1 & 0 \\ 0 & 1 & 2 \\ 1 & 0 & 0 \end{bmatrix}$</td><td>row 1 = what A pays at the three levels</td></tr>
+        <tr><td>Value two ways</td><td>with prices per level $q = (30, 40, 30)$: products cost $A^Tq$ = (100, 100, 30)</td><td>by products $100 + 100 + 30 = 230$; by levels $3 \times 30 + 2 \times 40 + 2 \times 30 = 230$ ✓</td></tr>
+        <tr><td>$A^TA$</td><td>A·A $= 4 + 1 + 0 = 5$; A·B $= 0 + 1 + 0 = 1$; A·C $= 2 + 0 + 0 = 2$; B·B $= 5$; B·C $= 0$; C·C $= 1$</td><td>$\begin{bmatrix} 5 & 1 & 2 \\ 1 & 5 & 0 \\ 2 & 0 & 1 \end{bmatrix}$: a mirror ✓. B and C overlap 0: they never pay in the same scenario.</td></tr>
+        <tr><td>Subspace</td><td>1 A + 1 B pays (2, 2, 2); 3 A pays (6, 3, 0); no trade pays (0, 0, 0)</td><td>all buildable ✓. But selling 1 A, (−2, −1, 0), is not allowed if you can only buy: long-only is not a subspace.</td></tr>
+      </table>
+
+      <h4>5. What each output section shows, and what to look for</h4>
+      <table>
+        <tr><th>Lab section</th><th>What it shows</th><th>What to identify</th></tr>
+        <tr><td>1–3</td><td>the question, the payoffs, the equations</td><td>the matrix $A$</td></tr>
+        <tr><td>4. Permutations</td><td>$P$, $PA$, $Pb$, $AP$; whether your market needs $PA = LU$</td><td>order never changes the recipe</td></tr>
+        <tr><td>5. Transpose</td><td>$A$ next to $A^T$, each row of $A^T$ as a product</td><td>per-level view vs per-product view</td></tr>
+        <tr><td>6. Value two ways</td><td>lots × premiums vs payoff × price per level</td><td>the two totals match</td></tr>
+        <tr><td>7. $A^TA$</td><td>every overlap worked out, mirror checks</td><td>which products pay in the same scenarios</td></tr>
+        <tr><td>8. Vector spaces</td><td>add / scale / zero tests; your client; long-only counterexample</td><td>is the client's payoff in $C(A)$?</td></tr>
+        <tr><td>9–10</td><td>pictures; price and arbitrage</td><td>the fair price</td></tr>
+      </table>
+
+      <h4>6. What this can tell you</h4>
+      <table>
+        <tr><th>What you see</th><th>Maths meaning</th><th>Options meaning</th></tr>
+        <tr><td>same lots after reordering</td><td>$PAx = Pb$ has the same $x$</td><td>the order of scenarios or strikes in your sheet is irrelevant</td></tr>
+        <tr><td>a swap is needed</td><td>$PA = LU$</td><td>a product pays 0 at the first level; just process the levels in another order</td></tr>
+        <tr><td>0 off the diagonal of $A^TA$</td><td>orthogonal columns</td><td>two products never pay in the same scenario (no overlap)</td></tr>
+        <tr><td>client not in $C(A)$</td><td>$b \notin C(A)$</td><td>the payoff can't be built from these products</td></tr>
+        <tr><td>long-only</td><td>not a subspace</td><td>with a no-short-selling rule, linear algebra alone can't describe what you can build</td></tr>
+      </table>
+
+      <h4>7. How this is used with real options</h4>
+      <ul>
+        <li><b>Permutations:</b> an option chain can be sorted by strike, by expiry or by volume; risk numbers must not depend on that order. Solvers also swap rows on purpose (partial pivoting) to avoid dividing by tiny numbers.</li>
+        <li><b>Transpose:</b> the same data is used "per product" (the option chain) and "per scenario" (a risk or P&amp;L grid). Pricing from state prices is $A^Tq$.</li>
+        <li><b>Symmetric matrices:</b> covariance and correlation matrices are symmetric, like $A^TA$. $A^TA$ is exactly what least-squares hedging (the closest hedge) uses.</li>
+        <li><b>Vector spaces:</b> the payoffs you can hedge are the column space of your instruments. Short-selling limits (long-only funds, margin rules) break the "subspace" property.</li>
+      </ul>
+
+      <h4>8. Try it</h4>
+      <ul>
+        <li>Make product A a 20,000 CE: it pays 0 at 19,900, so a <b>swap</b> is needed and section 4 shows $PA = LU$.</li>
+        <li><b>Butterfly</b> preset: look at which products overlap in $A^TA$.</li>
+        <li><b>Incomplete market</b> preset: the client's payoff is <b>not</b> in the column space.</li>
+        <li>Type your own premiums: section 6 still gives the same total both ways.</li>
+      </ul>
+      <div id="replab" data-tpv></div>
+    </div>
+
     <!-- E1 -->
     <div class="worked">
-      <h3>Example 1: Subspaces made by two options (Nifty CE and PE)</h3>
+      <h3>Example 2: Subspaces made by two options (Nifty CE and PE)</h3>
       <div class="box finance"><span class="label">Problem</span>
         <p>At expiry, Nifty ends in one of three scenarios:</p>
         <table>
@@ -319,14 +850,40 @@
         </ol>
       </div>
 
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>CE (call) = pays $\max(S - \text{strike}, 0)$: money only if Nifty ends <b>above</b> the strike. PE (put) = pays $\max(\text{strike} - S, 0)$: money only if Nifty ends <b>below</b> the strike. $S$ = Nifty at expiry. $\max(a, 0)$ = "$a$ if $a$ is positive, otherwise 0". Lot = one contract; negative lots = you sold (wrote) it. Payoff vector = the list (Low, Mid, High) of what a position pays in each scenario. Subspace = a collection of payoff vectors closed under adding and scaling (buying/selling any amount). Span / subspace generated by = every mix of the given vectors. $\cap$ = in both; $\cup$ = in at least one. Strangle = 1 CE + 1 PE held together.</p>
+      </div>
+
       <h4>Step 0: how the payoffs are worked out</h4>
-      <table>
-        <tr><th>Scenario</th><th>Nifty $S$</th><th>CE: $\max(S - 20{,}000, 0)$</th><th>÷100</th><th>PE: $\max(20{,}200 - S, 0)$</th><th>÷100</th></tr>
-        <tr><td>Low</td><td>19,800</td><td>$\max(-200, 0) = 0$</td><td>$0$</td><td>$\max(400, 0) = 400$</td><td>$4$</td></tr>
-        <tr><td>Mid</td><td>20,100</td><td>$\max(100, 0) = 100$</td><td>$1$</td><td>$\max(100, 0) = 100$</td><td>$1$</td></tr>
-        <tr><td>High</td><td>20,300</td><td>$\max(300, 0) = 300$</td><td>$3$</td><td>$\max(-100, 0) = 0$</td><td>$0$</td></tr>
-      </table>
-      <p>So the CE is the vector $x_1 = (0, 1, 3)$ and the PE is $x_2 = (4, 1, 0)$, read as (Low, Mid, High).</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> CE payoff in each scenario: $\max(S - 20{,}000,\ 0)$.</p>
+          <p class="k"><span class="kl">Why</span> A call pays the amount Nifty ends above the strike, and nothing if it ends below.</p>
+          <p class="k"><span class="kl">How</span> Low: $19{,}800 - 20{,}000 = -200$; $\max(-200, 0) = 0$. Mid: $20{,}100 - 20{,}000 = 100$; $\max(100, 0) = 100$. High: $20{,}300 - 20{,}000 = 300$; $\max(300, 0) = 300$.</p>
+          <p class="k"><span class="kl">What we have now</span> CE pays $0$, $100$, $300$ points.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> PE payoff in each scenario: $\max(20{,}200 - S,\ 0)$.</p>
+          <p class="k"><span class="kl">Why</span> A put pays the amount Nifty ends below the strike, and nothing if it ends above.</p>
+          <p class="k"><span class="kl">How</span> Low: $20{,}200 - 19{,}800 = 400$; $\max(400, 0) = 400$. Mid: $20{,}200 - 20{,}100 = 100$; $\max(100, 0) = 100$. High: $20{,}200 - 20{,}300 = -100$; $\max(-100, 0) = 0$.</p>
+          <p class="k"><span class="kl">What we have now</span> PE pays $400$, $100$, $0$ points.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Divide every payoff by 100.</p>
+          <p class="k"><span class="kl">Why</span> Small numbers are easier to draw and add.</p>
+          <p class="k"><span class="kl">How</span> CE: $0 \div 100 = 0$, $100 \div 100 = 1$, $300 \div 100 = 3$. PE: $400 \div 100 = 4$, $100 \div 100 = 1$, $0 \div 100 = 0$. All in one table:</p>
+          <table>
+            <tr><th>Scenario</th><th>Nifty $S$</th><th>CE: $\max(S - 20{,}000, 0)$</th><th>÷100</th><th>PE: $\max(20{,}200 - S, 0)$</th><th>÷100</th></tr>
+            <tr><td>Low</td><td>19,800</td><td>$\max(-200, 0) = 0$</td><td>$0$</td><td>$\max(400, 0) = 400$</td><td>$4$</td></tr>
+            <tr><td>Mid</td><td>20,100</td><td>$\max(100, 0) = 100$</td><td>$1$</td><td>$\max(100, 0) = 100$</td><td>$1$</td></tr>
+            <tr><td>High</td><td>20,300</td><td>$\max(300, 0) = 300$</td><td>$3$</td><td>$\max(-100, 0) = 0$</td><td>$0$</td></tr>
+          </table>
+          <p class="k"><span class="kl">What we have now</span> The CE is the vector $x_1 = (0, 1, 3)$ and the PE is $x_2 = (4, 1, 0)$, read as (Low, Mid, High).</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> Sense test: the CE should pay more the higher Nifty goes ($0 \to 1 \to 3$ ✓); the PE should pay more the lower it goes ($4 \leftarrow 1 \leftarrow 0$ ✓).</p>
+        </li>
+      </ol>
 
       <h4>Every word and symbol, in plain English</h4>
       <table>
@@ -344,6 +901,17 @@
       <p>On the 3D graph the axes are the three scenarios: <b>$x$ = Low payoff</b>, <b>$y$ = Mid payoff</b>, <b>$z$ = High payoff</b>. Every portfolio is one point.</p>
 
       <h4>Stage 1: one option makes a line</h4>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Work out what $c$ lots of the CE pay.</p>
+          <p class="k"><span class="kl">Why</span> Holding $c$ lots means getting $c$ times the payoff of one lot, in every scenario.</p>
+          <p class="k"><span class="kl">How</span> Multiply each number of $(0, 1, 3)$ by $c$. For $c = 2$: $(2 \times 0,\ 2 \times 1,\ 2 \times 3) = (0, 2, 6)$. For $c = 0.5$: $(0,\ 0.5,\ 1.5)$. For $c = -1$: $(0, -1, -3)$.</p>
+          <p class="k"><span class="kl">What we have now</span> The rows of the table below.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> Every result has the form $(0, c, 3c)$: first number $0$, third number = $3 \times$ second. Same direction every time, so they sit on one line through the origin ✓.</p>
+        </li>
+      </ol>
       <table>
         <tr><th>Lots of CE</th><th>Payoff (Low, Mid, High)</th><th>Where it sits on the graph</th></tr>
         <tr><td>$1$ (buy 1)</td><td>$(0, 1, 3)$</td><td>the tip of the arrow $x_1$</td></tr>
@@ -367,6 +935,23 @@
 
       <h4>Stage 2: two options fill a sheet</h4>
       <p>Hold $a$ lots of CE and $b$ lots of PE. Each portfolio pays $a(0, 1, 3) + b(4, 1, 0) = (4b,\ a + b,\ 3a)$:</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Scale each option by its lots.</p>
+          <p class="k"><span class="kl">Why</span> $a$ lots of CE pay $a$ times the CE payoff; $b$ lots of PE pay $b$ times the PE payoff.</p>
+          <p class="k"><span class="kl">How</span> $a \times (0, 1, 3) = (0, a, 3a)$. $b \times (4, 1, 0) = (4b, b, 0)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Two payoff vectors, one per option.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Add them, scenario by scenario.</p>
+          <p class="k"><span class="kl">Why</span> In each scenario you collect from both options.</p>
+          <p class="k"><span class="kl">How</span> Low: $0 + 4b = 4b$. Mid: $a + b$. High: $3a + 0 = 3a$.</p>
+          <p class="k"><span class="kl">What we have now</span> The portfolio pays $(4b,\ a + b,\ 3a)$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check</span> One cell of the table: $a = 2$, $b = 1$ gives $(4 \times 1,\ 2 + 1,\ 3 \times 2) = (4, 3, 6)$ ✓, matching the table.</p>
+        </li>
+      </ol>
       <table>
         <tr><th></th><th>$b = -1$ (sell 1 PE)</th><th>$b = 0$</th><th>$b = 1$ (buy 1 PE)</th></tr>
         <tr><td>$a = 2$</td><td>$(-4, 1, 6)$</td><td>$(0, 2, 6)$</td><td>$(4, 3, 6)$</td></tr>
@@ -404,34 +989,108 @@
         <h4>Part 1a: V₁ = trade only the CE</h4>
         <p><b>The question asks:</b> what payoffs can you make with any number of lots of the 20,000 CE, and nothing else?</p>
         <p>From Stage 1: $c$ lots pay $(0,\ c,\ 3c)$.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Write every CE-only payoff: $c \times (0, 1, 3) = (0, c, 3c)$.</p>
+            <p class="k"><span class="kl">Why</span> A CE-only trader can only choose how many lots $c$ (any number, negative = sell).</p>
+            <p class="k"><span class="kl">How</span> Low: $c \times 0 = 0$. Mid: $c \times 1 = c$. High: $c \times 3 = 3c$.</p>
+            <p class="k"><span class="kl">What we have now</span> $V_1$ = all $(0, c, 3c)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check $V_1$ is a subspace, with numbers.</p>
+            <p class="k"><span class="kl">Why</span> A subspace must be closed under adding and scaling.</p>
+            <p class="k"><span class="kl">How</span> Add $c = 1$ and $c = 2$: $(0, 1, 3) + (0, 2, 6) = (0, 3, 9)$, which is $c = 3$ ✓. Scale $c = 1$ by $-2$: $(0, -2, -6)$, which is $c = -2$ ✓. $c = 0$ gives $(0, 0, 0)$ ✓.</p>
+            <p class="k"><span class="kl">In market words</span> Adding CE positions or resizing one is still "some lots of CE".</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> The Low number is $0$ for every $c$, so a CE-only trader never gets anything if Nifty ends Low.</p>
+          </li>
+        </ol>
         <p class="answer">$V_1$ = a line through the origin and $(0, 1, 3)$. A CE-only trader <b>always gets 0 if Nifty ends Low</b>.</p>
 
         <h4>Part 1b: V₂ = trade only the PE</h4>
-        <table>
-          <tr><th>Lots of PE</th><th>Low</th><th>Mid</th><th>High</th></tr>
-          <tr><td>$1$</td><td>$4$</td><td>$1$</td><td>$0$</td></tr>
-          <tr><td>$2$</td><td>$8$</td><td>$2$</td><td>$0$</td></tr>
-          <tr><td>$-1$ (sell)</td><td>$-4$</td><td>$-1$</td><td>$0$</td></tr>
-          <tr><td>any $d$</td><td>$4d$</td><td>$d$</td><td>$0$</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Write $d$ lots of PE: $d \times (4, 1, 0)$.</p>
+            <p class="k"><span class="kl">Why</span> A PE-only trader can only choose the number of lots $d$.</p>
+            <p class="k"><span class="kl">How</span> Low: $d \times 4 = 4d$. Mid: $d \times 1 = d$. High: $d \times 0 = 0$. For $d = 2$: $(8, 2, 0)$. For $d = -1$: $(-4, -1, 0)$.</p>
+            <p class="k"><span class="kl">What we have now</span> $V_2$ = all $(4d, d, 0)$:</p>
+            <table>
+              <tr><th>Lots of PE</th><th>Low</th><th>Mid</th><th>High</th></tr>
+              <tr><td>$1$</td><td>$4$</td><td>$1$</td><td>$0$</td></tr>
+              <tr><td>$2$</td><td>$8$</td><td>$2$</td><td>$0$</td></tr>
+              <tr><td>$-1$ (sell)</td><td>$-4$</td><td>$-1$</td><td>$0$</td></tr>
+              <tr><td>any $d$</td><td>$4d$</td><td>$d$</td><td>$0$</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Closed: $(4, 1, 0) + (-4, -1, 0) = (0, 0, 0)$, which is $d = 0$ ✓; $2 \times (4, 1, 0) = (8, 2, 0)$, which is $d = 2$ ✓. High is always $0$.</p>
+          </li>
+        </ol>
         <p class="answer">$V_2$ = a line through the origin and $(4, 1, 0)$. A PE-only trader <b>always gets 0 if Nifty ends High</b>.</p>
 
         <h4>Part 1c: V₁ ∩ V₂ = what both traders can make</h4>
         <p>A payoff in both must pay <b>0 when Low</b> (CE-only rule) <b>and</b> 0 when High (PE-only rule). A PE-only payoff pays $4d$ when Low, so $4d = 0$ gives $d = 0$: no PE, hence the payoff is $(0, 0, 0)$.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Take a payoff that is in both: it equals $(0, c, 3c)$ for some $c$ <b>and</b> $(4d, d, 0)$ for some $d$.</p>
+            <p class="k"><span class="kl">Why</span> $\cap$ means "in both", so it must have both shapes at once.</p>
+            <p class="k"><span class="kl">How</span> Set them equal, one scenario at a time. Low: $0 = 4d$.</p>
+            <p class="k"><span class="kl">What we have now</span> $4d = 0$, so $d = 0 \div 4 = 0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Use the High scenario.</p>
+            <p class="k"><span class="kl">Why</span> It pins down $c$.</p>
+            <p class="k"><span class="kl">How</span> High: $3c = 0$, so $c = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> $c = 0$ and $d = 0$: the payoff is $(0, 0, 0)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Mid: $c = d$ gives $0 = 0$ ✓. And $(0, 0, 0)$ really is in both ("no trade" is in every subspace).</p>
+          </li>
+        </ol>
         <p class="answer">$V_1 \cap V_2 = \{(0, 0, 0)\}$: the only thing both can do is "no trade".</p>
 
         <!-- PART 2 -->
         <h4>Part 2a: V₃ = trade CE and PE together</h4>
         <p><b>The question asks:</b> what payoffs can you make mixing both options?</p>
-        <table>
-          <tr><th>Lots CE ($a$)</th><th>Lots PE ($b$)</th><th>Work</th><th>Payoff (Low, Mid, High)</th><th>Strategy name</th></tr>
-          <tr><td>$1$</td><td>$0$</td><td>$(0, 1, 3)$</td><td>$(0, 1, 3)$</td><td>long call</td></tr>
-          <tr><td>$0$</td><td>$1$</td><td>$(4, 1, 0)$</td><td>$(4, 1, 0)$</td><td>long put</td></tr>
-          <tr><td>$1$</td><td>$1$</td><td>$(0, 1, 3) + (4, 1, 0)$</td><td>$(4, 2, 3)$</td><td><b>long strangle</b></td></tr>
-          <tr><td>$2$</td><td>$1$</td><td>$(0, 2, 6) + (4, 1, 0)$</td><td>$(4, 3, 6)$</td><td>strangle, more upside</td></tr>
-          <tr><td>$1$</td><td>$-1$</td><td>$(0, 1, 3) + (-4, -1, 0)$</td><td>$(-4, 0, 3)$</td><td>buy call, sell put (bullish)</td></tr>
-          <tr><td>any $a$</td><td>any $b$</td><td>—</td><td>$(4b,\ a + b,\ 3a)$</td><td></td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Compute the long strangle: $a = 1$ CE, $b = 1$ PE.</p>
+            <p class="k"><span class="kl">Why</span> It is the simplest mix that uses both options.</p>
+            <p class="k"><span class="kl">How</span> Add scenario by scenario: Low $0 + 4 = 4$; Mid $1 + 1 = 2$; High $3 + 0 = 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> Strangle $= (4, 2, 3)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Compute $a = 2$, $b = 1$.</p>
+            <p class="k"><span class="kl">Why</span> To see what extra CE does.</p>
+            <p class="k"><span class="kl">How</span> 2 CE: $(0, 2, 6)$. Add 1 PE $(4, 1, 0)$: $(0 + 4,\ 2 + 1,\ 6 + 0) = (4, 3, 6)$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(4, 3, 6)$: more upside.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Compute $a = 1$, $b = -1$ (buy CE, sell PE).</p>
+            <p class="k"><span class="kl">Why</span> Selling is allowed: negative lots.</p>
+            <p class="k"><span class="kl">How</span> Sold PE $= -1 \times (4, 1, 0) = (-4, -1, 0)$. Add CE: $(0 - 4,\ 1 - 1,\ 3 + 0) = (-4, 0, 3)$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(-4, 0, 3)$: lose if Low, gain if High (bullish). All cases together:</p>
+            <table>
+              <tr><th>Lots CE ($a$)</th><th>Lots PE ($b$)</th><th>Work</th><th>Payoff (Low, Mid, High)</th><th>Strategy name</th></tr>
+              <tr><td>$1$</td><td>$0$</td><td>$(0, 1, 3)$</td><td>$(0, 1, 3)$</td><td>long call</td></tr>
+              <tr><td>$0$</td><td>$1$</td><td>$(4, 1, 0)$</td><td>$(4, 1, 0)$</td><td>long put</td></tr>
+              <tr><td>$1$</td><td>$1$</td><td>$(0, 1, 3) + (4, 1, 0)$</td><td>$(4, 2, 3)$</td><td><b>long strangle</b></td></tr>
+              <tr><td>$2$</td><td>$1$</td><td>$(0, 2, 6) + (4, 1, 0)$</td><td>$(4, 3, 6)$</td><td>strangle, more upside</td></tr>
+              <tr><td>$1$</td><td>$-1$</td><td>$(0, 1, 3) + (-4, -1, 0)$</td><td>$(-4, 0, 3)$</td><td>buy call, sell put (bullish)</td></tr>
+              <tr><td>any $a$</td><td>any $b$</td><td>—</td><td>$(4b,\ a + b,\ 3a)$</td><td></td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check $V_3$ is closed under adding.</p>
+            <p class="k"><span class="kl">Why</span> A subspace must be.</p>
+            <p class="k"><span class="kl">How</span> Strangle + bullish: $(4, 2, 3) + (-4, 0, 3) = (0, 2, 6)$. The lots add too: $a = 1 + 1 = 2$, $b = 1 + (-1) = 0$, and $(4 \times 0,\ 2 + 0,\ 3 \times 2) = (0, 2, 6)$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> The sum is again a CE + PE portfolio.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Formula check for the strangle: $(4 \times 1,\ 1 + 1,\ 3 \times 1) = (4, 2, 3)$ ✓.</p>
+          </li>
+        </ol>
         <figure class="fig" style="max-width:360px;margin:16px auto">
       <svg viewBox="0 0 300 260" role="img" aria-label="Walk one step along x1 then one along x2 to reach (2,5,3)">
         <defs>
@@ -455,18 +1114,41 @@
         <h4>Part 2b: is V₃ the same as V₁ ∪ V₂?</h4>
         <p><b>The question asks:</b> $V_1 \cup V_2$ = payoffs of traders who use <b>only one</b> option. Can they make everything a mixing trader can?</p>
         <p>Take the <b>long strangle</b>: 1 CE + 1 PE.</p>
-        <table>
-          <tr><th>Scenario</th><th>1 CE</th><th>1 PE</th><th>Strangle pays</th></tr>
-          <tr><td>Low</td><td>$0$</td><td>$4$</td><td>$4$</td></tr>
-          <tr><td>Mid</td><td>$1$</td><td>$1$</td><td>$2$</td></tr>
-          <tr><td>High</td><td>$3$</td><td>$0$</td><td>$3$</td></tr>
-        </table>
-        <table>
-          <tr><th>Can this trader make $(4, 2, 3)$?</th><th>Why</th><th>Answer</th></tr>
-          <tr><td>CE + PE trader ($V_3$)</td><td>buy 1 of each</td><td>yes</td></tr>
-          <tr><td>CE-only trader ($V_1$)</td><td>always 0 when Low, but the strangle pays 4</td><td>no</td></tr>
-          <tr><td>PE-only trader ($V_2$)</td><td>always 0 when High, but the strangle pays 3</td><td>no</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Write the strangle's payoff, scenario by scenario.</p>
+            <p class="k"><span class="kl">Why</span> This is the test payoff: a mixing trader can make it for sure.</p>
+            <p class="k"><span class="kl">How</span> Add the two option columns:</p>
+            <table>
+              <tr><th>Scenario</th><th>1 CE</th><th>1 PE</th><th>Strangle pays</th></tr>
+              <tr><td>Low</td><td>$0$</td><td>$4$</td><td>$4$</td></tr>
+              <tr><td>Mid</td><td>$1$</td><td>$1$</td><td>$2$</td></tr>
+              <tr><td>High</td><td>$3$</td><td>$0$</td><td>$3$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> $(4, 2, 3)$ is in $V_3$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Can the CE-only trader make it? Try $(0, c, 3c) = (4, 2, 3)$.</p>
+            <p class="k"><span class="kl">Why</span> If some $c$ works, the strangle is in $V_1$.</p>
+            <p class="k"><span class="kl">How</span> Low: $0 = 4$? Impossible, whatever $c$ is.</p>
+            <p class="k"><span class="kl">What we have now</span> $(4, 2, 3) \notin V_1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Can the PE-only trader make it? Try $(4d, d, 0) = (4, 2, 3)$.</p>
+            <p class="k"><span class="kl">Why</span> If some $d$ works, the strangle is in $V_2$.</p>
+            <p class="k"><span class="kl">How</span> High: $0 = 3$? Impossible.</p>
+            <p class="k"><span class="kl">What we have now</span> $(4, 2, 3) \notin V_2$. Summary:</p>
+            <table>
+              <tr><th>Can this trader make $(4, 2, 3)$?</th><th>Why</th><th>Answer</th></tr>
+              <tr><td>CE + PE trader ($V_3$)</td><td>buy 1 of each</td><td>yes</td></tr>
+              <tr><td>CE-only trader ($V_1$)</td><td>always 0 when Low, but the strangle pays 4</td><td>no</td></tr>
+              <tr><td>PE-only trader ($V_2$)</td><td>always 0 when High, but the strangle pays 3</td><td>no</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> $V_1 \cup V_2$ is not even closed: $(0, 1, 3) \in V_1$ and $(4, 1, 0) \in V_2$, but their sum $(4, 2, 3)$ is in neither. So $V_1 \cup V_2$ is not a subspace, and cannot equal $V_3$.</p>
+          </li>
+        </ol>
         <p class="answer">No, $V_3 \ne V_1 \cup V_2$. A strangle profits from a big move <b>either way</b>, which neither option alone can do.</p>
         <div class="box pitfall"><span class="label">One option at a time vs mixing</span>
           <div class="figs">
@@ -518,13 +1200,42 @@
         <h4>Part 2c: S = a subspace inside V₃ without "1 CE" or "1 PE"</h4>
         <p><b>The question asks:</b> find a set of portfolios, closed under buying/selling any amount, that sits inside $V_3$ but never equals exactly 1 CE or exactly 1 PE.</p>
         <p><b>Idea:</b> trade only in <b>strangle lots</b> (1 CE glued to 1 PE). $t$ strangles pay $t(4, 2, 3) = (4t,\ 2t,\ 3t)$:</p>
-        <table>
-          <tr><th>Check</th><th>Reason</th><th>OK?</th></tr>
-          <tr><td>$S$ is a subspace</td><td>buying or selling strangles still gives "some number of strangles"; 0 strangles is allowed</td><td>✓</td></tr>
-          <tr><td>$S$ is inside $V_3$</td><td>a strangle is a mix of CE and PE</td><td>✓</td></tr>
-          <tr><td>1 CE $= (0, 1, 3)$ is not in $S$</td><td>CE pays 0 when Low; strangles pay $4t$ when Low, which is 0 only for $t = 0$ (no trade)</td><td>✓</td></tr>
-          <tr><td>1 PE $= (4, 1, 0)$ is not in $S$</td><td>PE pays 0 when High; strangles pay $3t$ when High, which is 0 only for $t = 0$</td><td>✓</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Define $S$ = all $t \times (4, 2, 3) = (4t, 2t, 3t)$.</p>
+            <p class="k"><span class="kl">Why</span> All multiples of one vector always make a line through the origin, which is a subspace.</p>
+            <p class="k"><span class="kl">How</span> $t = 2$: $(8, 4, 6)$. $t = -1$: $(-4, -2, -3)$. $t = 0$: $(0, 0, 0)$.</p>
+            <p class="k"><span class="kl">What we have now</span> A candidate line.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Check $S$ is closed.</p>
+            <p class="k"><span class="kl">Why</span> A subspace must survive adding and scaling.</p>
+            <p class="k"><span class="kl">How</span> $(8, 4, 6) + (-4, -2, -3) = (4, 2, 3)$, which is $t = 2 + (-1) = 1$ ✓. $5 \times (4, 2, 3) = (20, 10, 15)$, which is $t = 5$ ✓.</p>
+            <p class="k"><span class="kl">In market words</span> Buying or selling strangles still gives "some number of strangles".</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Is 1 CE $= (0, 1, 3)$ in $S$? Need $(4t, 2t, 3t) = (0, 1, 3)$.</p>
+            <p class="k"><span class="kl">Why</span> The question forbids $S$ from containing it.</p>
+            <p class="k"><span class="kl">How</span> Low: $4t = 0$, so $t = 0$. Then Mid: $2 \times 0 = 0$, but we need $1$. $0 \ne 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> 1 CE $\notin S$ ✓.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Is 1 PE $= (4, 1, 0)$ in $S$? Need $(4t, 2t, 3t) = (4, 1, 0)$.</p>
+            <p class="k"><span class="kl">Why</span> It must not contain the PE either.</p>
+            <p class="k"><span class="kl">How</span> High: $3t = 0$, so $t = 0$. Then Low: $4 \times 0 = 0$, but we need $4$. $0 \ne 4$.</p>
+            <p class="k"><span class="kl">What we have now</span> 1 PE $\notin S$ ✓. All checks:</p>
+            <table>
+              <tr><th>Check</th><th>Reason</th><th>OK?</th></tr>
+              <tr><td>$S$ is a subspace</td><td>buying or selling strangles still gives "some number of strangles"; 0 strangles is allowed</td><td>✓</td></tr>
+              <tr><td>$S$ is inside $V_3$</td><td>a strangle is a mix of CE and PE</td><td>✓</td></tr>
+              <tr><td>1 CE $= (0, 1, 3)$ is not in $S$</td><td>CE pays 0 when Low; strangles pay $4t$ when Low, which is 0 only for $t = 0$ (no trade)</td><td>✓</td></tr>
+              <tr><td>1 PE $= (4, 1, 0)$ is not in $S$</td><td>PE pays 0 when High; strangles pay $3t$ when High, which is 0 only for $t = 0$</td><td>✓</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> $S$ is inside $V_3$: $t$ strangles $= t$ CE $+ t$ PE, i.e. $a = b = t$ in $(4b, a + b, 3a) = (4t, 2t, 3t)$ ✓.</p>
+          </li>
+        </ol>
         <p class="answer">$S$ = all "strangle-only" portfolios: the line through $(4, 2, 3)$.</p>
         <figure class="fig plot3d">
           <div id="l6ex1a" class="plot3d-box" role="img" aria-label="CE line, PE line, their plane and the strangle line"></div>
@@ -535,14 +1246,31 @@
         <h4>Part 3: portfolios that pay nothing if Nifty ends High</h4>
         <p><b>The question asks:</b> which CE + PE portfolios have High payoff $= 0$? (The $xy$-plane is "third number = 0".)</p>
         <p>When High, each CE pays $3$ and each PE pays $0$. So $a$ CE + $b$ PE pays $3a$ when High:</p>
-        <table>
-          <tr><th>Lots CE</th><th>Lots PE</th><th>Payoff</th><th>High payoff $3a$</th><th>Zero when High?</th></tr>
-          <tr><td>$1$</td><td>$0$</td><td>$(0, 1, 3)$</td><td>$3$</td><td>no</td></tr>
-          <tr><td>$1$</td><td>$1$</td><td>$(4, 2, 3)$</td><td>$3$</td><td>no</td></tr>
-          <tr><td>$0$</td><td>$1$</td><td>$(4, 1, 0)$</td><td>$0$</td><td>yes</td></tr>
-          <tr><td>$0$</td><td>$2$</td><td>$(8, 2, 0)$</td><td>$0$</td><td>yes</td></tr>
-          <tr><td>$0$</td><td>$-1$</td><td>$(-4, -1, 0)$</td><td>$0$</td><td>yes</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Write the High payoff of $a$ CE + $b$ PE.</p>
+            <p class="k"><span class="kl">Why</span> The $xy$-plane means "third number (High) = 0".</p>
+            <p class="k"><span class="kl">How</span> High: CE pays $3$ per lot, PE pays $0$ per lot. Total $3 \times a + 0 \times b = 3a$.</p>
+            <p class="k"><span class="kl">What we have now</span> High payoff $= 3a$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Set it to zero: $3a = 0$.</p>
+            <p class="k"><span class="kl">Why</span> We want portfolios that pay nothing when High.</p>
+            <p class="k"><span class="kl">How</span> Divide both sides by 3: $a = 0$. $b$ does not appear, so $b$ can be anything.</p>
+            <p class="k"><span class="kl">What we have now</span> Portfolios with no CE and any PE: $(4b, b, 0)$, which is exactly $V_2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Try a few lots in the table: those with $a = 0$ pay $0$ when High, those with $a = 1$ pay $3$.</p>
+            <table>
+              <tr><th>Lots CE</th><th>Lots PE</th><th>Payoff</th><th>High payoff $3a$</th><th>Zero when High?</th></tr>
+              <tr><td>$1$</td><td>$0$</td><td>$(0, 1, 3)$</td><td>$3$</td><td>no</td></tr>
+              <tr><td>$1$</td><td>$1$</td><td>$(4, 2, 3)$</td><td>$3$</td><td>no</td></tr>
+              <tr><td>$0$</td><td>$1$</td><td>$(4, 1, 0)$</td><td>$0$</td><td>yes</td></tr>
+              <tr><td>$0$</td><td>$2$</td><td>$(8, 2, 0)$</td><td>$0$</td><td>yes</td></tr>
+              <tr><td>$0$</td><td>$-1$</td><td>$(-4, -1, 0)$</td><td>$0$</td><td>yes</td></tr>
+            </table>
+          </li>
+        </ol>
         <p>High payoff is 0 exactly when you hold <b>no CE</b>. That leaves "PE only", which is $V_2$.</p>
         <p class="answer">$V_3 \cap \{xy\text{-plane}\} = V_2$: to get nothing if Nifty ends High, trade only the PE.</p>
         <figure class="fig plot3d">
@@ -567,77 +1295,228 @@
 
     <!-- E2 -->
     <div class="worked">
-      <h3>Example 2: PA = LU with a 2 × 2</h3>
+      <h3>Example 3: PA = LU with a 2 × 2</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Factor $A = \begin{bmatrix} 0 & 2 \\ 3 & 4 \end{bmatrix}$ as $PA = LU$.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Pivot = the number used to clear below it; it can't be $0$. Row swap = trade two rows. $P$ = permutation matrix ($I$ with rows reordered). Multiplier = (number to remove) ÷ (pivot). $L$ = lower triangular, 1s on the diagonal and multipliers below. $U$ = upper triangular staircase. $I$ = identity, "do nothing".</p>
+      </div>
       <div class="steps">
-        <p><b>Problem:</b> the first pivot spot is $0$. Row 2 has a $3$ there, so swap the rows:</p>
-        $$ P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad PA = \begin{bmatrix} 3 & 4 \\ 0 & 2 \end{bmatrix} $$
-        <p><b>Eliminate $PA$:</b> it is already a staircase (the spot below the pivot is $0$), so the multiplier is $0$.</p>
-        $$ L = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 3 & 4 \\ 0 & 2 \end{bmatrix} $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Look at the first pivot spot (row 1, column 1).</p>
+            <p class="k"><span class="kl">Why</span> We will divide by it; it must not be $0$.</p>
+            <p class="k"><span class="kl">How</span> It holds $0$. Below it, row 2 has a $3$.</p>
+            <p class="k"><span class="kl">What we have now</span> Plan: swap rows 1 and 2.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Build $P$ and compute $PA$.</p>
+            <p class="k"><span class="kl">Why</span> $P$ does the swap for us: swap the rows of $I$.</p>
+            <p class="k"><span class="kl">How</span> Rows of $I$: $(1, 0)$, $(0, 1)$. Swapped: $(0, 1)$, $(1, 0)$. Then $PA$: row 1 = "take row 2 of $A$" $= (3, 4)$; row 2 = "take row 1 of $A$" $= (0, 2)$.</p>
+            <p class="k"><span class="kl">What we have now</span> The swapped matrix:</p>
+            $$ P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad PA = \begin{bmatrix} 3 & 4 \\ 0 & 2 \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Eliminate $PA$: clear under the pivot $3$.</p>
+            <p class="k"><span class="kl">Why</span> We need zeros under each pivot to get $U$.</p>
+            <p class="k"><span class="kl">How</span> The number under it is already $0$. Multiplier $= 0 \div 3 = 0$. Nothing to subtract.</p>
+            <p class="k"><span class="kl">What we have now</span> $U = PA$, and $L$ has $0$ below its diagonal, so $L = I$:</p>
+            $$ L = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}, \qquad U = \begin{bmatrix} 3 & 4 \\ 0 & 2 \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> $LU = IU = U = \begin{bmatrix} 3 & 4 \\ 0 & 2 \end{bmatrix} = PA$ ✓.</p>
+          </li>
+        </ol>
         <p class="answer">$PA = LU$ with $L = I$ and $U = PA$.</p>
       </div>
     </div>
 
     <!-- E3 -->
     <div class="worked">
-      <h3>Example 3: Transpose</h3>
+      <h3>Example 4: Transpose</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Find the transpose of $A = \begin{bmatrix} 1 & 0 & 5 \\ 2 & 7 & 3 \end{bmatrix}$. What is the entry in row 3, column 2 of $A^T$?</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Transpose $A^T$ = flip across the main diagonal: row $i$ of $A$ becomes column $i$ of $A^T$. Entry $(i, j)$ = the number in row $i$, column $j$. The rule $(A^T)_{ij} = A_{ji}$ says: to read $A^T$ at (row $i$, col $j$), look in $A$ at (row $j$, col $i$). $2 \times 3$ = 2 rows, 3 columns.</p>
+      </div>
       <div class="steps">
         <p><b>Rows become columns:</b> row 1 $(1, 0, 5)$ becomes column 1; row 2 $(2, 7, 3)$ becomes column 2.</p>
-        $$ A^T = \begin{bmatrix} 1 & 2 \\ 0 & 7 \\ 5 & 3 \end{bmatrix} \quad (2 \times 3 \to 3 \times 2) $$
-        <p><b>Entry (3, 2) of $A^T$</b> $=$ entry (2, 3) of $A = 3$ ✓.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find the shape of $A^T$.</p>
+            <p class="k"><span class="kl">Why</span> Rows and columns trade places, so the shape numbers swap.</p>
+            <p class="k"><span class="kl">How</span> $A$ is $2 \times 3$, so $A^T$ is $3 \times 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> A table with 3 rows and 2 columns to fill.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Fill column 1 of $A^T$ with row 1 of $A$.</p>
+            <p class="k"><span class="kl">Why</span> Row 1 becomes column 1.</p>
+            <p class="k"><span class="kl">How</span> Row 1 of $A$ is $(1, 0, 5)$. Write it downwards: $(A^T)_{11} = 1$, $(A^T)_{21} = 0$, $(A^T)_{31} = 5$.</p>
+            <p class="k"><span class="kl">What we have now</span> Column 1 $= (1, 0, 5)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Fill column 2 of $A^T$ with row 2 of $A$.</p>
+            <p class="k"><span class="kl">Why</span> Row 2 becomes column 2.</p>
+            <p class="k"><span class="kl">How</span> Row 2 of $A$ is $(2, 7, 3)$. Downwards: $(A^T)_{12} = 2$, $(A^T)_{22} = 7$, $(A^T)_{32} = 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> The full transpose:</p>
+            $$ A^T = \begin{bmatrix} 1 & 2 \\ 0 & 7 \\ 5 & 3 \end{bmatrix} \quad (2 \times 3 \to 3 \times 2) $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Read entry (3, 2) of $A^T$.</p>
+            <p class="k"><span class="kl">Why</span> The question asks for it.</p>
+            <p class="k"><span class="kl">How</span> Row 3 of $A^T$ is $(5, 3)$; its column-2 number is $3$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(A^T)_{32} = 3$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> The rule says $(A^T)_{32} = A_{23}$: row 2, column 3 of $A$ is $3$ ✓.</p>
+          </li>
+        </ol>
         <p class="answer">$A^T$ as above; $(A^T)_{32} = 3$.</p>
       </div>
     </div>
 
     <!-- E4 -->
     <div class="worked">
-      <h3>Example 4: Symmetric or not?</h3>
+      <h3>Example 5: Symmetric or not?</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Which are symmetric? (a) $\begin{bmatrix} 2 & 5 \\ 5 & 1 \end{bmatrix}$ &nbsp; (b) $\begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix}$ &nbsp; (c) $\begin{bmatrix} 4 & 0 & 6 \\ 0 & 1 & 2 \\ 6 & 2 & 9 \end{bmatrix}$</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Symmetric = equal to its own transpose, $A^T = A$. Main diagonal = entries from top-left going down-right. Mirror pair = entry (row $i$, col $j$) and entry (row $j$, col $i$), opposite each other across the diagonal. Symmetric means every mirror pair is equal.</p>
+      </div>
       <div class="steps">
         <p><b>Test:</b> compare each entry above the diagonal with its mirror below.</p>
-        <table>
-          <tr><th>Matrix</th><th>Mirror pairs</th><th>Symmetric?</th></tr>
-          <tr><td>(a)</td><td>$5$ and $5$</td><td>yes</td></tr>
-          <tr><td>(b)</td><td>$2$ and $3$</td><td>no</td></tr>
-          <tr><td>(c)</td><td>$0 = 0$, $\ 6 = 6$, $\ 2 = 2$</td><td>yes</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> (a): one mirror pair, (1, 2) and (2, 1).</p>
+            <p class="k"><span class="kl">Why</span> A $2 \times 2$ has only one entry above the diagonal.</p>
+            <p class="k"><span class="kl">How</span> (1, 2) $= 5$. (2, 1) $= 5$. $5 = 5$.</p>
+            <p class="k"><span class="kl">What we have now</span> (a) is symmetric.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> (b): the same pair.</p>
+            <p class="k"><span class="kl">Why</span> Same size, same single test.</p>
+            <p class="k"><span class="kl">How</span> (1, 2) $= 2$. (2, 1) $= 3$. $2 \ne 3$.</p>
+            <p class="k"><span class="kl">What we have now</span> (b) is not symmetric (one mismatch is enough).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> (c): three pairs, (1, 2), (1, 3), (2, 3) against their mirrors.</p>
+            <p class="k"><span class="kl">Why</span> A $3 \times 3$ has three entries above the diagonal.</p>
+            <p class="k"><span class="kl">How</span> (1, 2) $= 0$, (2, 1) $= 0$ ✓. (1, 3) $= 6$, (3, 1) $= 6$ ✓. (2, 3) $= 2$, (3, 2) $= 2$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> (c) is symmetric.</p>
+            <table>
+              <tr><th>Matrix</th><th>Mirror pairs</th><th>Symmetric?</th></tr>
+              <tr><td>(a)</td><td>$5$ and $5$</td><td>yes</td></tr>
+              <tr><td>(b)</td><td>$2$ and $3$</td><td>no</td></tr>
+              <tr><td>(c)</td><td>$0 = 0$, $\ 6 = 6$, $\ 2 = 2$</td><td>yes</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Transpose (b): $\begin{bmatrix} 1 & 3 \\ 2 & 1 \end{bmatrix}$, which differs from (b) in the off-diagonal spots ✓, so (b) really is not symmetric.</p>
+          </li>
+        </ol>
         <p class="answer">(a) and (c) are symmetric.</p>
       </div>
     </div>
 
     <!-- E5 -->
     <div class="worked">
-      <h3>Example 5: Compute RᵀR</h3>
+      <h3>Example 6: Compute RᵀR</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>For $R = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 1 & 0 \end{bmatrix}$, compute $R^TR$ and check it is symmetric.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$R^T$ = transpose of $R$ (rows become columns). $R^TR$ = $R^T$ times $R$; its entry $(i, j)$ is (column $i$ of $R$) · (column $j$ of $R$). Dot product = multiply matching numbers, then add. Symmetric = each entry equals its mirror across the diagonal.</p>
+      </div>
       <div class="steps">
         <p>Columns of $R$: col 1 $= (1, 0, 1)$, col 2 $= (2, 1, 0)$. Each entry is a dot product of two columns:</p>
-        <table>
-          <tr><th>Entry</th><th>Work</th><th>Value</th></tr>
-          <tr><td>(1, 1) col 1 · col 1</td><td>$1 + 0 + 1$</td><td>$2$</td></tr>
-          <tr><td>(1, 2) col 1 · col 2</td><td>$2 + 0 + 0$</td><td>$2$</td></tr>
-          <tr><td>(2, 1) col 2 · col 1</td><td>$2 + 0 + 0$</td><td>$2$</td></tr>
-          <tr><td>(2, 2) col 2 · col 2</td><td>$4 + 1 + 0$</td><td>$5$</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find the shape: $R^T$ is $2 \times 3$, $R$ is $3 \times 2$.</p>
+            <p class="k"><span class="kl">Why</span> The outer numbers give the size of the answer.</p>
+            <p class="k"><span class="kl">How</span> Outer numbers $2$ and $2$.</p>
+            <p class="k"><span class="kl">What we have now</span> A $2 \times 2$ answer: four entries.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Entry (1, 1) = col 1 · col 1.</p>
+            <p class="k"><span class="kl">Why</span> Row 1 of $R^T$ is col 1 of $R$.</p>
+            <p class="k"><span class="kl">How</span> $(1, 0, 1) \cdot (1, 0, 1)$: $1 \cdot 1 = 1$, $0 \cdot 0 = 0$, $1 \cdot 1 = 1$. Add: $1 + 0 + 1 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> Top-left $= 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Entry (1, 2) = col 1 · col 2.</p>
+            <p class="k"><span class="kl">Why</span> Row 1 of $R^T$ with column 2 of $R$.</p>
+            <p class="k"><span class="kl">How</span> $(1, 0, 1) \cdot (2, 1, 0)$: $1 \cdot 2 = 2$, $0 \cdot 1 = 0$, $1 \cdot 0 = 0$. Add: $2 + 0 + 0 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> Top-right $= 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Entry (2, 1) = col 2 · col 1.</p>
+            <p class="k"><span class="kl">Why</span> Row 2 of $R^T$ is col 2 of $R$; then column 1 of $R$.</p>
+            <p class="k"><span class="kl">How</span> $(2, 1, 0) \cdot (1, 0, 1)$: $2 \cdot 1 = 2$, $1 \cdot 0 = 0$, $0 \cdot 1 = 0$. Add: $2$.</p>
+            <p class="k"><span class="kl">What we have now</span> Bottom-left $= 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Entry (2, 2) = col 2 · col 2.</p>
+            <p class="k"><span class="kl">Why</span> Row 2 of $R^T$ with column 2 of $R$.</p>
+            <p class="k"><span class="kl">How</span> $(2, 1, 0) \cdot (2, 1, 0)$: $2 \cdot 2 = 4$, $1 \cdot 1 = 1$, $0 \cdot 0 = 0$. Add: $4 + 1 + 0 = 5$.</p>
+            <p class="k"><span class="kl">What we have now</span> Bottom-right $= 5$. All together:</p>
+            <table>
+              <tr><th>Entry</th><th>Work</th><th>Value</th></tr>
+              <tr><td>(1, 1) col 1 · col 1</td><td>$1 + 0 + 1$</td><td>$2$</td></tr>
+              <tr><td>(1, 2) col 1 · col 2</td><td>$2 + 0 + 0$</td><td>$2$</td></tr>
+              <tr><td>(2, 1) col 2 · col 1</td><td>$2 + 0 + 0$</td><td>$2$</td></tr>
+              <tr><td>(2, 2) col 2 · col 2</td><td>$4 + 1 + 0$</td><td>$5$</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Mirror pair (1, 2) and (2, 1): $2 = 2$ ✓. Symmetric.</p>
+          </li>
+        </ol>
         <p class="answer">$R^TR = \begin{bmatrix} 2 & 2 \\ 2 & 5 \end{bmatrix}$, symmetric ✓</p>
       </div>
     </div>
 
     <!-- E6 -->
     <div class="worked">
-      <h3>Example 6: Subspace or not?</h3>
+      <h3>Example 7: Subspace or not?</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>Which are subspaces of $\mathbb{R}^2$? (a) the line $y = 3x$ &nbsp; (b) the line $y = 3x + 1$ &nbsp; (c) the quarter plane $x \ge 0, y \ge 0$ &nbsp; (d) just $(0, 0)$</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Subspace of $\mathbb{R}^2$ = a collection of 2-number vectors that contains $(0, 0)$ and is closed: adding two members, or multiplying a member by any number, gives a member. Line $y = 3x$ = all points whose second number is 3 times the first. Quarter plane = points with both numbers $\ge 0$. One failure of any test is enough to say "not a subspace".</p>
+      </div>
       <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> (a) $y = 3x$: test zero, adding, scaling.</p>
+            <p class="k"><span class="kl">Why</span> Those are the three things a subspace needs.</p>
+            <p class="k"><span class="kl">How</span> Zero: $0 = 3 \times 0$ ✓. Add $(1, 3) + (2, 6) = (3, 9)$; $9 = 3 \times 3$ ✓. Scale $-2 \times (1, 3) = (-2, -6)$; $-6 = 3 \times (-2)$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> (a) passes: subspace.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> (b) $y = 3x + 1$: test zero first.</p>
+            <p class="k"><span class="kl">Why</span> Quickest test; if it fails we are done.</p>
+            <p class="k"><span class="kl">How</span> At $x = 0$ the line has $y = 3 \times 0 + 1 = 1$. The zero vector has $y = 0$. $0 \ne 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> (b) fails: not a subspace.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> (c) quarter plane: zero, then scaling by $-1$.</p>
+            <p class="k"><span class="kl">Why</span> Zero is in, so we need a harder test; negatives are the weak spot.</p>
+            <p class="k"><span class="kl">How</span> $(0, 0)$: both $\ge 0$ ✓. $(1, 1)$ is inside. $-1 \times (1, 1) = (-1, -1)$; is $-1 \ge 0$? No.</p>
+            <p class="k"><span class="kl">What we have now</span> (c) fails: not a subspace.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> (d) just $(0, 0)$: adding and scaling.</p>
+            <p class="k"><span class="kl">Why</span> It contains zero by definition; check closure.</p>
+            <p class="k"><span class="kl">How</span> $(0, 0) + (0, 0) = (0, 0)$ ✓. $c \times (0, 0) = (0, 0)$ for any $c$ ✓.</p>
+            <p class="k"><span class="kl">What we have now</span> (d) passes: subspace.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> The results match the pictures: (a) and (d) go through the origin and can't be escaped; (b) misses the origin; (c) can be escaped by flipping signs. Summary:</p>
+          </li>
+        </ol>
         <table>
           <tr><th></th><th>Contains $(0, 0)$?</th><th>Adding and multiplying stay inside?</th><th>Subspace?</th></tr>
           <tr><td>(a)</td><td>yes</td><td>yes: multiples/sums of points with $y = 3x$ still have $y = 3x$</td><td><b>yes</b></td></tr>
@@ -651,9 +1530,12 @@
 
     <!-- E7 -->
     <div class="worked">
-      <h3>Example 7: Is b in the column space?</h3>
+      <h3>Example 8: Is b in the column space?</h3>
       <div class="box example"><span class="label">Problem</span>
         <p>$A = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix}$. Is (a) $b = (4, 5, 5)$ and (b) $b = (1, 0, 0)$ in $C(A)$?</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Column space $C(A)$ = every mix $x_1 \times$ (col 1) $+ x_2 \times$ (col 2). "$b$ is in $C(A)$" = some amounts $x_1, x_2$ build exactly $b$ = $Ax = b$ has a solution. eq 1, eq 2, eq 3 = the three equations, one per row (one per component of $b$). Check = put the found amounts into the equation we did not use.</p>
       </div>
       <div class="steps">
         <p><b>Question:</b> can we find $x_1, x_2$ with $x_1(1, 2, 4) + x_2(3, 3, 1) = b$? That is three equations:</p>
@@ -661,28 +1543,62 @@
         <p>Use the first two to find $x_1, x_2$, then <b>check</b> the third.</p>
 
         <h4>(a) $b = (4, 5, 5)$</h4>
-        <table>
-          <tr><th>Step</th><th>Work</th><th>Result</th></tr>
-          <tr><td>eq 2 − eq 1</td><td>$(2x_1 + 3x_2) - (x_1 + 3x_2) = 5 - 4$</td><td>$x_1 = 1$</td></tr>
-          <tr><td>eq 1</td><td>$1 + 3x_2 = 4$</td><td>$x_2 = 1$</td></tr>
-          <tr><td>check eq 3</td><td>$4(1) + 1 = 5$</td><td>$5 = 5$ ✓</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Subtract eq 1 from eq 2.</p>
+            <p class="k"><span class="kl">Why</span> Both have $3x_2$, so subtracting removes $x_2$ and leaves only $x_1$.</p>
+            <p class="k"><span class="kl">How</span> Left: $(2x_1 + 3x_2) - (x_1 + 3x_2) = x_1$. Right: $5 - 4 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = 1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $x_1 = 1$ into eq 1.</p>
+            <p class="k"><span class="kl">Why</span> eq 1 then has only $x_2$ unknown.</p>
+            <p class="k"><span class="kl">How</span> $1 + 3x_2 = 4$. Take 1 from both sides: $3x_2 = 3$. Divide by 3: $x_2 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = 1$, $x_2 = 1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> eq 3: $4 \times 1 + 1 = 5$, and $b_3 = 5$. $5 = 5$ ✓. All three equations hold.</p>
+            <table>
+              <tr><th>Step</th><th>Work</th><th>Result</th></tr>
+              <tr><td>eq 2 − eq 1</td><td>$(2x_1 + 3x_2) - (x_1 + 3x_2) = 5 - 4$</td><td>$x_1 = 1$</td></tr>
+              <tr><td>eq 1</td><td>$1 + 3x_2 = 4$</td><td>$x_2 = 1$</td></tr>
+              <tr><td>check eq 3</td><td>$4(1) + 1 = 5$</td><td>$5 = 5$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
         <p class="answer">(a) Yes: $b$ = col 1 + col 2.</p>
 
         <h4>(b) $b = (1, 0, 0)$</h4>
-        <table>
-          <tr><th>Step</th><th>Work</th><th>Result</th></tr>
-          <tr><td>eq 2 − eq 1</td><td>$x_1 = 0 - 1$</td><td>$x_1 = -1$</td></tr>
-          <tr><td>eq 1</td><td>$-1 + 3x_2 = 1 \Rightarrow 3x_2 = 2$</td><td>$x_2 = \tfrac23$</td></tr>
-          <tr><td>check eq 3</td><td>$4(-1) + \tfrac23 = -\tfrac{10}{3}$</td><td>$-\tfrac{10}{3} \ne 0$ ✗</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Subtract eq 1 from eq 2.</p>
+            <p class="k"><span class="kl">Why</span> Same trick: the $3x_2$ cancels.</p>
+            <p class="k"><span class="kl">How</span> Left: $x_1$. Right: $0 - 1 = -1$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = -1$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $x_1 = -1$ into eq 1.</p>
+            <p class="k"><span class="kl">Why</span> To find $x_2$.</p>
+            <p class="k"><span class="kl">How</span> $-1 + 3x_2 = 1$. Add 1 to both sides: $3x_2 = 2$. Divide by 3: $x_2 = \tfrac23$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_1 = -1$, $x_2 = \tfrac23$. These are the <b>only</b> amounts that fit eq 1 and eq 2.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> eq 3: $4 \times (-1) + \tfrac23 = -4 + \tfrac23 = -\tfrac{12}{3} + \tfrac23 = -\tfrac{10}{3}$. But $b_3 = 0$. $-\tfrac{10}{3} \ne 0$ ✗. No amounts satisfy all three.</p>
+            <table>
+              <tr><th>Step</th><th>Work</th><th>Result</th></tr>
+              <tr><td>eq 2 − eq 1</td><td>$x_1 = 0 - 1$</td><td>$x_1 = -1$</td></tr>
+              <tr><td>eq 1</td><td>$-1 + 3x_2 = 1 \Rightarrow 3x_2 = 2$</td><td>$x_2 = \tfrac23$</td></tr>
+              <tr><td>check eq 3</td><td>$4(-1) + \tfrac23 = -\tfrac{10}{3}$</td><td>$-\tfrac{10}{3} \ne 0$ ✗</td></tr>
+            </table>
+          </li>
+        </ol>
         <p class="answer">(b) No: $(1, 0, 0)$ is off the plane, so $Ax = (1, 0, 0)$ has no solution.</p>
       </div>
     </div>
 
     <!-- E8 -->
     <div class="worked">
-      <h3>Example 8: Returns matrix → a symmetric "co-movement" matrix (finance)</h3>
+      <h3>Example 9: Returns matrix → a symmetric "co-movement" matrix (finance)</h3>
       <div class="box finance"><span class="label">Problem</span>
         <p>Two stocks, three days. Daily returns (in %):</p>
         <table>
@@ -696,22 +1612,54 @@
       <div class="box intuition"><span class="label">Story first</span>
         <p>Each stock's column is its "diary" of daily moves. Dotting a diary with itself measures <b>how much that stock moves</b>. Dotting two different diaries measures <b>how much they move together</b>. Stock A with B and B with A give the same answer, so the table is a mirror image.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Return = how much a stock went up that day, in %. $R$ = the returns table: rows = days, columns = stocks. $R^T$ = its transpose. $R^TR$ entry (A, B) = (column A) · (column B), a dot product: multiply day by day, then add. Symmetric = mirror entries are equal. Covariance matrix = the same idea after subtracting each stock's average and dividing by the number of days; it measures risk.</p>
+      </div>
       <div class="steps">
-        <p>$R = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 1 & 0 \end{bmatrix}$, the same as Example 5, so</p>
+        <p>$R = \begin{bmatrix} 1 & 2 \\ 0 & 1 \\ 1 & 0 \end{bmatrix}$, the same as Example 6, so</p>
         $$ R^TR = \begin{bmatrix} 2 & 2 \\ 2 & 5 \end{bmatrix} $$
-        <table>
-          <tr><th>Entry</th><th>Work</th><th>Meaning</th></tr>
-          <tr><td>(A, A) $= 2$</td><td>$1^2 + 0^2 + 1^2$</td><td>how much A moves</td></tr>
-          <tr><td>(B, B) $= 5$</td><td>$2^2 + 1^2 + 0^2$</td><td>how much B moves (more than A)</td></tr>
-          <tr><td>(A, B) $=$ (B, A) $= 2$</td><td>$1 \cdot 2 + 0 \cdot 1 + 1 \cdot 0$</td><td>how much they move together</td></tr>
-        </table>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Build $R$ from the table.</p>
+            <p class="k"><span class="kl">Why</span> Each stock's diary of daily moves becomes one column.</p>
+            <p class="k"><span class="kl">How</span> Column A = days 1, 2, 3 of stock A = $(1, 0, 1)$. Column B = $(2, 1, 0)$.</p>
+            <p class="k"><span class="kl">What we have now</span> The $3 \times 2$ matrix $R$ above.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Entry (A, A) = column A · column A.</p>
+            <p class="k"><span class="kl">Why</span> A diary dotted with itself adds up the squared moves: how much A moves.</p>
+            <p class="k"><span class="kl">How</span> $1 \times 1 = 1$, $0 \times 0 = 0$, $1 \times 1 = 1$. Add: $1 + 0 + 1 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> (A, A) $= 2$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Entry (B, B) = column B · column B.</p>
+            <p class="k"><span class="kl">Why</span> How much B moves.</p>
+            <p class="k"><span class="kl">How</span> $2 \times 2 = 4$, $1 \times 1 = 1$, $0 \times 0 = 0$. Add: $4 + 1 + 0 = 5$.</p>
+            <p class="k"><span class="kl">What we have now</span> (B, B) $= 5$: B moves more than A.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Entry (A, B) = column A · column B.</p>
+            <p class="k"><span class="kl">Why</span> Big when both move up on the same days: how much they move together.</p>
+            <p class="k"><span class="kl">How</span> Day 1: $1 \times 2 = 2$. Day 2: $0 \times 1 = 0$. Day 3: $1 \times 0 = 0$. Add: $2 + 0 + 0 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> (A, B) $= 2$. (B, A) multiplies the same pairs in the other order, so it is also $2$.</p>
+            <table>
+              <tr><th>Entry</th><th>Work</th><th>Meaning</th></tr>
+              <tr><td>(A, A) $= 2$</td><td>$1^2 + 0^2 + 1^2$</td><td>how much A moves</td></tr>
+              <tr><td>(B, B) $= 5$</td><td>$2^2 + 1^2 + 0^2$</td><td>how much B moves (more than A)</td></tr>
+              <tr><td>(A, B) $=$ (B, A) $= 2$</td><td>$1 \cdot 2 + 0 \cdot 1 + 1 \cdot 0$</td><td>how much they move together</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> Same numbers as Example 6 ($2, 2, 2, 5$) ✓, and the mirror pair (A, B) = (B, A) = 2 ✓: symmetric.</p>
+          </li>
+        </ol>
         <p class="answer">$R^TR$ is symmetric. With averages subtracted and scaled, this becomes the covariance matrix used in portfolio risk.</p>
       </div>
     </div>
 
     <!-- E9 -->
     <div class="worked">
-      <h3>Example 9: Can the market build this payoff? (finance)</h3>
+      <h3>Example 10: Can the market build this payoff? (finance)</h3>
       <div class="box finance"><span class="label">Problem</span>
         <p>Tomorrow the stock ends at <b>1</b> (low), <b>2</b> (middle) or <b>3</b> (high). Only two assets exist:</p>
         <table>
@@ -724,13 +1672,56 @@
       <div class="box intuition"><span class="label">Story first</span>
         <p>Two kinds of ticket, three kinds of weather. Mixing two tickets can only reach a flat sheet (a plane) of payoffs inside 3D. Some payoffs are on the sheet, some are not.</p>
       </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Payoff vector = (pays if low, pays if middle, pays if high). Bond = pays 1 always. $x$ bonds and $y$ stocks = the amounts we choose. Column space = every payoff $x \times$ bond $+ y \times$ stock. Call option with strike 2 = pays $\max(S - 2, 0)$: $0$, $0$, $1$. Incomplete market = some payoffs can't be built from the assets.</p>
+      </div>
       <div class="steps">
         <p><b>Question:</b> is the payoff in the column space of $\begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix}$? Solve $x(1, 1, 1) + y(1, 2, 3) =$ payoff, using the first two rows, then check the third.</p>
         <h4>(a) $(3, 5, 7)$</h4>
         <p>Middle − low: $y = 5 - 3 = 2$. Low: $x + 2 = 3$, so $x = 1$. Check high: $1 + 3(2) = 7$ ✓.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Write the three equations for $x$ bonds and $y$ stocks.</p>
+            <p class="k"><span class="kl">Why</span> In each scenario, the portfolio must pay exactly the target.</p>
+            <p class="k"><span class="kl">How</span> Low: $x + y = 3$. Middle: $x + 2y = 5$. High: $x + 3y = 7$.</p>
+            <p class="k"><span class="kl">What we have now</span> Three equations, two unknowns.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Middle − low.</p>
+            <p class="k"><span class="kl">Why</span> The $x$ (bond pays 1 in both) cancels.</p>
+            <p class="k"><span class="kl">How</span> Left: $(x + 2y) - (x + y) = y$. Right: $5 - 3 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> $y = 2$ stocks.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $y = 2$ into the low equation.</p>
+            <p class="k"><span class="kl">Why</span> To find $x$.</p>
+            <p class="k"><span class="kl">How</span> $x + 2 = 3$. Take 2 from both sides: $x = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> 1 bond, 2 stocks.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> High: $1 + 3 \times 2 = 1 + 6 = 7$ ✓. The payoff is in the column space.</p>
+          </li>
+        </ol>
         <p class="answer">(a) Yes: 1 bond + 2 stocks.</p>
         <h4>(b) Call $(0, 0, 1)$</h4>
         <p>Middle − low: $y = 0$. Low: $x + 0 = 0$, so $x = 0$. Check high: $0 + 0 = 0 \ne 1$ ✗.</p>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Equations: low $x + y = 0$, middle $x + 2y = 0$, high $x + 3y = 1$.</p>
+            <p class="k"><span class="kl">Why</span> The call pays $0$, $0$, $1$.</p>
+            <p class="k"><span class="kl">How</span> Middle − low: $y = 0 - 0 = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> $y = 0$ stocks.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Put $y = 0$ into low.</p>
+            <p class="k"><span class="kl">Why</span> To find $x$.</p>
+            <p class="k"><span class="kl">How</span> $x + 0 = 0$, so $x = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> The only fit for low and middle is "no trade".</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check</span> High: $0 + 3 \times 0 = 0$, but the call needs $1$. $0 \ne 1$ ✗. The call is not in the column space.</p>
+          </li>
+        </ol>
         <p class="answer">(b) No: the call is outside the column space. This market is <b>incomplete</b>; you would need a third asset to build it.</p>
       </div>
     </div>
@@ -753,7 +1744,7 @@
     <details class="proof"><summary>5. What is the column space of $\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$?</summary>
       <p>Column 2 $= 2 \times$ column 1, so all combinations are multiples of $(1, 2)$: the line through $(1, 2)$.</p>
     </details>
-    <details class="proof"><summary>6. Is $(2, 4, 6)$ in the column space of the market in Example 9?</summary>
+    <details class="proof"><summary>6. Is $(2, 4, 6)$ in the column space of the market in Example 10?</summary>
       <p>Middle − low: $y = 2$. Low: $x + 2 = 2$, so $x = 0$. High: $0 + 6 = 6$ ✓. Yes: 2 stocks.</p>
     </details>
 
@@ -762,12 +1753,13 @@
 
   <nav class="pager">
     <a href="05_factorization-into-a-lu.html">← 05 Factorization into A = LU</a>
-    <span class="off">Next: Column Space and Nullspace</span>
+    <a href="07_column-space-and-nullspace.html">Next: 07 Column Space and Nullspace →</a>
   </nav>
   </div>
 </main>
 
 <script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script defer src="../assets/replication-lab.js"></script>
 <script>
 // 3D figure for section 7: the column space of A is a plane through the origin.
 window.addEventListener("load", function () {
@@ -824,7 +1816,7 @@ window.addEventListener("load", function () {
   );
   Plotly.newPlot("l6plot", data, layout, config);
 
-  // Example 1 (Examples tab): CE x1 = (0,1,3), PE x2 = (4,1,0). Axes: x = Low, y = Mid, z = High.
+  // Example 2 (Examples tab): CE x1 = (0,1,3), PE x2 = (4,1,0). Axes: x = Low, y = Mid, z = High.
   var orange = c("--int-b"), grey = c("--ink-soft");
   function line(v, t0, t1, color, name, dash) {
     return { type: "scatter3d", mode: "lines", name: name, line: { color: color, width: 5, dash: dash || "solid" },

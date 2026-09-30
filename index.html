@@ -17,16 +17,34 @@
   <div class="crumbs"><b>Quant Notes</b></div>
   <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
 </header>
-<main class="page wide">
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Home sections">
+    <span class="tabs-title">Quant Notes</span>
+    <button role="tab" data-tab="subjects" aria-selected="true">Subjects</button>
+    <button role="tab" data-tab="log" aria-selected="false">Study log</button>
+  </nav>
+  <div class="tab-body">
   <p class="meta">Class notebook</p>
   <h1>Quant Notes</h1>
   <p class="subtitle">The mathematics of quantitative finance, one subject at a time. Built up lecture by lecture.</p>
+
+  <section class="tab-panel" data-panel="subjects">
+  <nav class="contents"><span class="label">Subjects</span>
+    <ol>
+      <li><a href="1_Linear%20Algebra/index.html">Linear Algebra</a></li>
+      <li><a href="2_Single%20Variable%20Calculus/index.html">Single Variable Calculus</a></li>
+      <li><a href="3_Multivariable%20Calculus/index.html">Multivariable Calculus</a></li>
+      <li><a href="4_Probability/index.html">Probability</a></li>
+      <li><a href="5_Differential%20Equations/index.html">Differential Equations</a></li>
+      <li><a href="6_Mathematics%20With%20Applications%20In%20Finance/index.html">Maths in Finance</a></li>
+    </ol>
+  </nav>
   <div class="grid">
     <a class="card" href="1_Linear%20Algebra/index.html">
       <span class="num">01</span>
       <h3>Linear Algebra</h3>
       <p>Vectors, matrices, elimination, vector spaces, orthogonality, determinants, eigenvalues, SVD — the language of portfolios and factor models.</p>
-      <div class="count">3 units · 32 lectures · 6 written</div>
+      <div class="count">3 units · 32 lectures · 11 written</div>
     </a>
     <a class="card" href="2_Single%20Variable%20Calculus/index.html">
       <span class="num">02</span>
@@ -58,6 +76,115 @@
       <p>Stochastic processes, Itô calculus, Black–Scholes, portfolio theory, time series — where it all comes together.</p>
       <div class="count">No notes yet</div>
     </a>
+  </div>
+  </section>
+
+  <section class="tab-panel" data-panel="log" hidden>
+  <h2 id="log" style="margin-top:8px">Study log</h2>
+  <p class="subtitle" style="margin-bottom:16px">What was completed, day by day. Newest first.</p>
+  <nav class="contents" id="logdays"><span class="label">Days</span><ol></ol></nav>
+  <div id="progress" class="log-progress"></div>
+  <div id="studylog" class="log"></div>
+  <script>
+  // ---- Study log data: add one entry per completed item (newest dates can go anywhere; the page sorts them). ----
+  var SUBJECTS = [
+    { key: "LA", name: "Linear Algebra", folder: "1_Linear%20Algebra", total: 32 },
+    { key: "SVC", name: "Single Variable Calculus", folder: "2_Single%20Variable%20Calculus", total: 0 },
+    { key: "MVC", name: "Multivariable Calculus", folder: "3_Multivariable%20Calculus", total: 0 },
+    { key: "PR", name: "Probability", folder: "4_Probability", total: 0 },
+    { key: "DE", name: "Differential Equations", folder: "5_Differential%20Equations", total: 0 },
+    { key: "FIN", name: "Mathematics with Applications in Finance", folder: "6_Mathematics%20With%20Applications%20In%20Finance", total: 0 }
+  ];
+  var LOG = [
+    { date: "2026-09-27", subj: "", kind: "setup", title: "Notebook created: home page, six subject pages, shared style" },
+    { date: "2026-09-27", subj: "LA", kind: "plan", title: "Course outline added: Units I–III (32 lectures + reviews and exams)" },
+    { date: "2026-09-27", subj: "LA", kind: "lecture", num: "01", title: "The Geometry of Linear Equations", file: "01_geometry-of-linear-equations.html" },
+    { date: "2026-09-27", subj: "LA", kind: "lecture", num: "02", title: "An Overview of Key Ideas", file: "02_overview-of-key-ideas.html" },
+    { date: "2026-09-27", subj: "LA", kind: "lecture", num: "03", title: "Elimination with Matrices", file: "03_elimination-with-matrices.html" },
+    { date: "2026-09-27", subj: "LA", kind: "lecture", num: "04", title: "Multiplication and Inverse Matrices", file: "04_multiplication-and-inverse-matrices.html" },
+    { date: "2026-09-27", subj: "LA", kind: "lecture", num: "05", title: "Factorization into A = LU", file: "05_factorization-into-a-lu.html" },
+    { date: "2026-09-28", subj: "LA", kind: "lecture", num: "06", title: "Transposes, Permutations, Vector Spaces", file: "06_transposes-permutations-vector-spaces.html" },
+    { date: "2026-09-28", subj: "LA", kind: "lecture", num: "07", title: "Column Space and Nullspace", file: "07_column-space-and-nullspace.html" },
+    { date: "2026-09-28", subj: "LA", kind: "extra", title: "Options Replication Lab (interactive): Nifty CE/PE, elimination steps, row/column pictures, arbitrage check", file: "01_geometry-of-linear-equations.html#examples" },
+    { date: "2026-09-28", subj: "LA", kind: "extra", title: "Lab upgraded: elimination matrices (Lecture 03) and time to expiry with Black–Scholes", file: "03_elimination-with-matrices.html#examples" },
+    { date: "2026-09-28", subj: "LA", kind: "lecture", num: "08", title: "Solving Ax = 0: Pivot Variables, Special Solutions", file: "08_solving-ax-0-special-solutions.html" },
+    { date: "2026-09-28", subj: "LA", kind: "lecture", num: "09", title: "Solving Ax = b: Row Reduced Form R", file: "09_solving-ax-b-row-reduced-form.html" },
+    { date: "2026-09-28", subj: "LA", kind: "extra", title: "Lecture 09: every solution narrated like to a child, step by step (what we do / why / how / what we have now)", file: "09_solving-ax-b-row-reduced-form.html" },
+    { date: "2026-09-28", subj: "LA", kind: "lecture", num: "10", title: "Independence, Basis and Dimension", file: "10_independence-basis-dimension.html" },
+    { date: "2026-09-28", subj: "LA", kind: "extra", title: "Lectures 01–08 rewritten in the child-style format: 'Every word, from zero' glossary, 'Words used here' boxes, every solution as what / why / how / what we have now steps", file: "01_geometry-of-linear-equations.html" },
+    { date: "2026-09-28", subj: "LA", kind: "lecture", num: "11", title: "The Four Fundamental Subspaces", file: "11_four-fundamental-subspaces.html" },
+    { date: "2026-09-28", subj: "", kind: "setup", title: "All 3D graphs now drawn inside a cube frame with x, y, z axes through the origin (shared script, applies to every lecture and the lab)" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 07: new interactive Example 1, Replication Lab in column-space/nullspace mode (starts on the put–call parity market): summary note at the top, column space complete (arrows → walks → shading → client, check) then nullspace complete (find, check, price → arbitrage 10, lots-space picture, many recipes), side-by-side table; old examples renumbered", file: "07_column-space-and-nullspace.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 example: summary note at the top (permutations, transpose, AᵀA diagonal = single product size, not P&L; off-diagonal = pair overlap; column space; vector space)", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 example: quick-reference box 'column space vs vector space' (question, definition, what you get, reuse-recipes table) and live lab part 8c 'Reuse your recipes' (10×, + 1 lot, close, half the client, each with a check)", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab section 8 reordered: 8a column space complete (definition, remember box, how the diagram forms: arrows → walks table → shading → client inside/outside, diagram, level check), then 8b vector space complete (definition, how the line forms from one product's multiples, why B is off it, diagram, rules, buy-only)", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab section 8: definitions table (vector space vs column space), 'Remember this' box, and two live diagrams: picture 1 a vector space (multiples of one product on a line), picture 2 your column space with products, shaded buildable region, client inside (recipe path) or outside (gap)", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab section 8 (vector spaces) rewritten step by step: build one payoff level by level, rule 1 add, rule 2 scale (incl. selling), rule 3 zero, what it tells us / not, can your market build every payoff (client check), buy-only table", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab section 7 rewritten in the user's style: A compared with A (level by level, add, what 5 means and what it is not), A compared with B (what 4 means), the difference table and 'think of it this way', other pairs, full AᵀA, mirror", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab: diagonal of AᵀA explained with a size table (each product with itself, what size means, why square, biggest/smallest in your market) and the mirror with a both-ways-round table and why", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab section 7 (AᵀA) rewritten: level-by-level overlap table per pair (0 unless both pay), plain meaning (big / small / no overlap), then AᵀA; removed the confusing 'out of' and % numbers", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab sections 5–7 simplified: two small tables + 2 lines for transpose; one table with totals across (by products) and down (by levels) for pricing two ways; plain % alike for AᵀA", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab sections 5–7 rewritten: transpose as two labelled tables; price two ways with a q table, side-by-side totals and a grid of pieces (rows = by products, columns = by levels); AᵀA with a % alike reading", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab: added the purpose of permutations (rearrange rows to obtain a nonzero pivot) as the first step of section 4", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06 lab rewritten in What / How / Why steps with your own numbers: reading the payoffs and equations, permutations (shopping-list idea), transpose (per level vs per product, symmetric coincidence), value two ways (how q comes from premiums), AᵀA overlaps, vector spaces", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-30", subj: "LA", kind: "extra", title: "Lecture 06: new interactive Example 1, Replication Lab in transpose/permutation/vector-space mode (reorder levels and products, PA = LU, A transposed per product, value two ways x·(Aᵀq) = (Ax)·q, symmetric AᵀA overlaps, column space tests and long-only counterexample) with a full guide; old examples renumbered 2–10", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 05 lab simplified: Part 1 U = eliminate table (client carried along) → simplified equations → bottom-up solve table → graph meaning; Part 2 L = multipliers table → undo-the-moves table → check. Repeats and formatting glitches removed", file: "05_factorization-into-a-lu.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 05 lab: added 4c 'U = the simplified equations' (client's numbers carried through the same moves, solved bottom-up per 1 lot) and 5b 'L = the record of the row moves' (undo the moves to rebuild each original equation, right side included)", file: "05_factorization-into-a-lu.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 05 lab reordered: Part 1 U completely (products graph, build U, what U tells you, U pictures), then Part 2 L completely (build L from multipliers, what L tells you, L picture, check LU = A), then D, solve + client picture, many clients", file: "05_factorization-into-a-lu.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 05 lab: the U/L pictures moved into the lab itself as section 5b, drawn live from your inputs (payoff graphs, the bend with a ruler, U staircase, L rebuilding each level, your client and the recipe), each with steps using your numbers", file: "05_factorization-into-a-lu.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 05 example: new 'See U and L in pictures' with 5 graphs (payoff hockey sticks and kinks; the bend drawn with a ruler for A, B, C; U as a staircase of bars; L rebuilding each real level from view pieces; the client's bend giving 1 lot of C)", file: "05_factorization-into-a-lu.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 05 lab: what U and L mean for the payoff graph (U rows = views of the graph where products disappear one by one, last view = the bend at the middle level; L = translation from views back to real Nifty levels; c = client seen through the views), in the walkthrough and live in the lab", file: "05_factorization-into-a-lu.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 05: new interactive Example 1, Replication Lab in LU mode (build U while recording multipliers in L, each factor on its own, PA = LU when a swap is needed, LDU, solve by Lc = b then Ux = c, many clients from one factorization) with a full guide; old examples renumbered 2–10", file: "05_factorization-into-a-lu.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Replication Lab: new Lot size box (default 65); question, payoff table, recipe cost and units now also shown in ₹ per lot. Lecture 04 example updated to lot size 65 (₹6,500 per unit)", file: "04_multiplication-and-inverse-matrices.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 04 lab: added 'what A⁻¹ does for the desk' (A⁻¹ × client wants = total lots; units = 100 points per lot; lot size vs A⁻¹; rupees → units → lots → cost; scaling; half lots)", file: "04_multiplication-and-inverse-matrices.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 04 lab output, sections 6–7 rewritten step by step: A⁻¹ swaps rows/columns (levels ↔ products), labelled column table, each column's payoff worked out level by level = one ticket per Nifty level, client built from tickets with a per-product table and check", file: "04_multiplication-and-inverse-matrices.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 04 lab walkthrough: after A⁻¹, explained step by step (read columns not rows, what each column pays, why columns are tickets, building the client from tickets = A⁻¹b)", file: "04_multiplication-and-inverse-matrices.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 04 lab: question rewritten as a story (3 options, 3 clients, build one ticket per Nifty level, then every client is multiply-and-add)", file: "04_multiplication-and-inverse-matrices.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 04: new interactive Example 1, Replication Lab in inverse mode (Ax both ways, Gauss–Jordan for A⁻¹, tickets per Nifty level, x = A⁻¹b, AA⁻¹ = I, many clients AX = B, state prices) with a full guide; old examples renumbered 2–10", file: "04_multiplication-and-inverse-matrices.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 01 lab: new section 7b, how each plane (or line) of the row picture is built: its equation, where it crosses each axis, a table of points with checks at every level", file: "01_geometry-of-linear-equations.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 01 lab: new guide (agenda, row/column pictures and Ax = b, inputs → matrix, walkthrough, the three pictures you can get, real options uses)", file: "01_geometry-of-linear-equations.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 03 lab: new guide (agenda, core maths, inputs → matrix, full walkthrough with E and EA = U, what each output means, three outcomes, real options uses)", file: "03_elimination-with-matrices.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Replication Lab: row and column picture captions rewritten as simple steps using your own numbers (levels, targets, answer)", file: "01_geometry-of-linear-equations.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Replication Lab: Nifty levels are now editable in the 'Client wants' row too (synced with the Expiry levels row)", file: "01_geometry-of-linear-equations.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Lecture 01 lab: removed the long intro paragraphs ('You set the market…' with its 7-step list, and 'It also diagnoses the tricky cases…')", file: "01_geometry-of-linear-equations.html#examples" },
+    { date: "2026-09-29", subj: "LA", kind: "extra", title: "Replication Lab word boxes (Lectures 01 and 03) rewritten as simple tables: word, one plain sentence, a Nifty example with numbers", file: "01_geometry-of-linear-equations.html#examples" },
+    { date: "2026-09-28", subj: "", kind: "setup", title: "All graphs relabelled from Lecture 01 on: coordinates written at every corner (8 in 3D, 4 in 2D), axes named 'x-axis · …', 2D graphs framed as squares" },
+    { date: "2026-09-28", subj: "LA", kind: "extra", title: "Lecture 08 rewritten in full detail: entry-by-entry elimination, every step checked, 'Every word, from zero' glossary and word boxes", file: "08_solving-ax-0-special-solutions.html" },
+    { date: "2026-09-28", subj: "LA", kind: "extra", title: "Lecture 07: fruit-shop explanation, 2D and 3D subspace graphs, Nifty 'safe trading rules' example", file: "07_column-space-and-nullspace.html" },
+    { date: "2026-09-28", subj: "LA", kind: "extra", title: "Lecture 06: subspace example rewritten with Nifty CE/PE, live 'watch it form' graphs and lots slider", file: "06_transposes-permutations-vector-spaces.html#examples" },
+    { date: "2026-09-28", subj: "", kind: "setup", title: "Home page: Subjects / Study log sidebar, day-by-day timeline and progress bars" }
+  ];
+  (function () {
+    var byKey = {}; SUBJECTS.forEach(function (s) { byKey[s.key] = s; });
+    var KIND = { lecture: "Lecture", extra: "Extra", plan: "Plan", setup: "Setup" };
+    // progress bars
+    var ph = SUBJECTS.map(function (s) {
+      var done = LOG.filter(function (e) { return e.subj === s.key && e.kind === "lecture"; }).length;
+      var pct = s.total ? Math.round(done / s.total * 100) : 0;
+      return '<div class="log-bar"><div class="log-bar-top"><a href="' + s.folder + '/index.html">' + s.name + '</a><span>' +
+        (s.total ? done + ' / ' + s.total + ' lectures · ' + pct + '%' : 'not started') + '</span></div><div class="log-track"><div class="log-fill" style="width:' + pct + '%"></div></div></div>';
+    }).join("");
+    document.getElementById("progress").innerHTML = ph;
+    // timeline grouped by date
+    var dates = {}; LOG.forEach(function (e) { (dates[e.date] = dates[e.date] || []).push(e); });
+    var days = Object.keys(dates).sort().reverse(), first = Object.keys(dates).sort()[0], daysList = [];
+    var h = days.map(function (d) {
+      var dt = new Date(d + "T00:00:00"), dayNo = Math.round((dt - new Date(first + "T00:00:00")) / 864e5) + 1;
+      var label = dt.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+      var items = dates[d].map(function (e) {
+        var s = byKey[e.subj], link = e.file && s ? s.folder + "/" + e.file : null;
+        var t = (e.num ? '<span class="log-num">' + e.num + '</span> ' : '') + (link ? '<a href="' + link + '">' + e.title + '</a>' : e.title);
+        return '<li><span class="log-kind log-' + e.kind + '">' + KIND[e.kind] + '</span>' + (s ? '<span class="log-subj">' + s.name + '</span>' : '') + '<span class="log-title">' + t + '</span></li>';
+      }).join("");
+      var nLec = dates[d].filter(function (e) { return e.kind === "lecture"; }).length;
+      daysList.push('<li><a href="#day-' + d + '">Day ' + dayNo + ' · ' + dt.toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + '</a></li>');
+      return '<section class="log-day" id="day-' + d + '"><div class="log-date"><b>Day ' + dayNo + '</b> · ' + label + (nLec ? ' · ' + nLec + ' lecture' + (nLec > 1 ? 's' : '') : '') + '</div><ul>' + items + '</ul></section>';
+    }).join("");
+    document.getElementById("studylog").innerHTML = h;
+    document.querySelector("#logdays ol").innerHTML = daysList.join("");
+  })();
+  </script>
+  </section>
   </div>
 </main>
 </body>

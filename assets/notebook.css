@@ -289,3 +289,48 @@ figure.fig.plot3d { max-width: 760px; margin: 20px auto; }
 .mixer label { display: flex; align-items: center; gap: 12px; margin: 4px 0; flex-wrap: wrap; }
 .mixer input[type=range] { flex: 1; min-width: 160px; accent-color: var(--accent); }
 .mixer-out { margin: 8px 0 0; font-family: var(--serif); }
+
+/* Options Replication Lab */
+.lab-controls { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 16px; margin: 12px 0 20px; font: 500 14px/1.6 var(--sans); }
+.lab-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 8px 0; }
+.lab-controls input[type=number], .lab-controls input[type=text] { width: 7em; padding: 3px 6px; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); font: inherit; }
+.lab-controls select { padding: 3px 6px; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); font: inherit; max-width: 100%; }
+.lab-table { font-size: 14px; }
+.lab-table td, .lab-table th { vertical-align: middle; }
+.lab-btn { border: 1px solid var(--rule); background: var(--paper); color: var(--ink); border-radius: 8px; padding: 4px 12px; font: 600 14px var(--sans); cursor: pointer; }
+.lab-btn:hover { border-color: var(--accent); color: var(--accent); }
+.lab-lvl { white-space: nowrap; }
+.lab-warn { color: var(--warn-b); font-family: var(--sans); }
+#labout h4 { margin-top: 28px; }
+.lab-emat { background: var(--paper-2); border-left: 3px solid var(--accent); padding: 6px 12px; border-radius: 0 6px 6px 0; }
+
+/* Study log (home page) */
+.log-progress { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px 24px; margin-bottom: 28px; font-family: var(--sans); }
+.log-bar-top { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
+.log-bar-top a { color: var(--ink); font-weight: 600; }
+.log-bar-top span { color: var(--ink-soft); white-space: nowrap; }
+.log-track { height: 8px; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px; margin-top: 4px; overflow: hidden; }
+.log-fill { height: 100%; background: var(--accent); }
+.log { border-left: 2px solid var(--rule); margin-left: 6px; }
+.log-day { position: relative; padding: 0 0 20px 22px; }
+.log-day::before { content: ""; position: absolute; left: -7px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+.log-date { font: 500 14px/1.4 var(--sans); color: var(--ink-soft); margin-bottom: 8px; }
+.log-date b { color: var(--ink); }
+.log-day ul { list-style: none; margin: 0; padding: 0; }
+.log-day li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--rule); font: 15px/1.5 var(--sans); }
+.log-kind { font: 700 11px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; padding: 4px 7px; border-radius: 5px; background: var(--paper-2); color: var(--ink-soft); }
+.log-lecture { background: var(--def-bg); color: var(--def-b); }
+.log-extra { background: var(--fin-bg); color: var(--fin-b); }
+.log-plan { background: var(--int-bg); color: var(--int-b); }
+.log-subj { font-size: 13px; color: var(--ink-soft); }
+.log-num { font: 600 13px var(--mono); color: var(--accent); }
+.log-title { flex: 1; min-width: 200px; }
+
+/* child-style solving: each step says what / why / how / what we have now */
+.kid-step > li { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 14px 10px 44px; }
+.kid-step > li::before { left: 12px; top: 12px; }
+.kid-step p.k { margin: 4px 0; position: relative; padding-left: 142px; }
+.kid-step p.k .kl { position: absolute; left: 0; top: 3px; width: 132px; }
+@media (max-width: 600px) { .kid-step p.k { padding-left: 0; } .kid-step p.k .kl { position: static; display: block; } }
+.kid-step .kl { display: inline-block; font: 600 11px/1.6 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.kid-step table { margin: 6px 0; }

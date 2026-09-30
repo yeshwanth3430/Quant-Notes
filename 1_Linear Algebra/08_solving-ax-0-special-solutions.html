@@ -1,0 +1,1252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solving Ax = 0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css">
+<script src="../assets/notebook.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant Notes</a> / <a href="index.html">Linear Algebra</a> / <b>Solving Ax = 0: Pivot Variables, Special Solutions</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lecture 08</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Unit I · Lecture 08</p>
+  <h1>Solving Ax = 0: Pivot Variables, Special Solutions</h1>
+  <p class="subtitle">The recipe for finding the whole nullspace of any matrix, even a rectangular one: eliminate, split the columns into pivot and free, and read off the special solutions.</p>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#s0">Every word, from zero</a></li>
+        <li><a href="#s1">The lecture in five questions</a></li>
+        <li><a href="#s2">The example matrix, and what to expect</a></li>
+        <li><a href="#s3">Elimination on a rectangular matrix</a></li>
+        <li><a href="#s4">Rank, pivot columns, free columns</a></li>
+        <li><a href="#s5">The special solutions</a></li>
+        <li><a href="#s6">The whole nullspace</a></li>
+        <li><a href="#s7">Reduced row echelon form R</a></li>
+        <li><a href="#s8">Reading N straight from R</a></li>
+        <li><a href="#s9">Second example: the transpose</a></li>
+        <li><a href="#s10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 id="s0">0. Every word, from zero</h2>
+    <p>Read this first. Every word used in this lecture is explained here from the very beginning, with a tiny example and an everyday picture. Each section below also repeats the words it uses, so you never have to scroll back.</p>
+    <table>
+      <tr><th>Word</th><th>Plain meaning</th><th>Tiny example</th><th>Everyday picture</th></tr>
+      <tr><td><b>Number list (vector)</b></td><td>a few numbers written in order, in a column</td><td>$\begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix}$ = "1, then 2, then 3"</td><td>a bill: how much at shop 1, shop 2, shop 3</td></tr>
+      <tr><td><b>Matrix</b></td><td>a table of numbers with rows and columns</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ has 2 rows, 2 columns</td><td>a spreadsheet</td></tr>
+      <tr><td><b>Row</b></td><td>one line of the table, read left to right</td><td>row 1 above is $(1, 2)$</td><td>one scenario (e.g. "Nifty ends at 20,000")</td></tr>
+      <tr><td><b>Column</b></td><td>one line of the table, read top to bottom</td><td>column 1 above is $(1, 3)$</td><td>one product (e.g. "20,000 CE"): what it pays in each scenario</td></tr>
+      <tr><td><b>$m \times n$</b></td><td>"$m$ rows by $n$ columns"</td><td>our $A$ is $3 \times 4$: 3 rows, 4 columns</td><td>3 scenarios, 4 products</td></tr>
+      <tr><td><b>Unknown</b> $x_1, x_2, \dots$</td><td>a number we don't know yet and want to find</td><td>in $x_1 + 2 = 5$, the unknown is $x_1 = 3$</td><td>how many lots of each product to buy</td></tr>
+      <tr><td><b>Equation</b></td><td>a sentence "left side = right side" that must be true</td><td>$x_1 + x_2 = 0$</td><td>"in this scenario, my total must be 0"</td></tr>
+      <tr><td><b>$Ax$</b></td><td>multiply the matrix by the list $x$: take $x_1$ of column 1 + $x_2$ of column 2 + …</td><td>$\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}\begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 3 \\ 7 \end{bmatrix}$</td><td>the total payoff of a basket of products</td></tr>
+      <tr><td><b>$Ax = 0$</b></td><td>find all lists $x$ that make every row add up to 0</td><td>for $\begin{bmatrix} 1 & 1 \end{bmatrix}$: $x = (1, -1)$ works</td><td>a basket of products that pays <b>nothing</b> in every scenario</td></tr>
+      <tr><td><b>Solution</b></td><td>a list $x$ that makes all the equations true</td><td>$(1, -1)$ solves $x_1 + x_2 = 0$</td><td>a basket that passes every scenario's test</td></tr>
+      <tr><td><b>Zero vector</b> $0$</td><td>the list of all zeros</td><td>$(0, 0, 0, 0)$</td><td>"buy nothing": it always pays nothing</td></tr>
+      <tr><td><b>Combination</b> (linear combination)</td><td>multiply lists by numbers, then add them</td><td>$2(1, 0) + 3(0, 1) = (2, 3)$</td><td>mixing products in a basket</td></tr>
+      <tr><td><b>Nullspace</b> $N(A)$</td><td>the collection of <b>all</b> solutions of $Ax = 0$</td><td>for $\begin{bmatrix} 1 & 1 \end{bmatrix}$: all $c(1, -1)$</td><td>every basket that pays nothing</td></tr>
+      <tr><td><b>Subspace</b></td><td>a collection you can't leave by adding members or multiplying them by numbers; always contains 0</td><td>a line or plane through the origin</td><td>"any size, any mix" stays allowed</td></tr>
+      <tr><td><b>Elimination</b></td><td>subtract a multiple of one row from a row below, to make zeros</td><td>row 2 − 3 × row 1</td><td>cancelling out one unknown at a time</td></tr>
+      <tr><td><b>Pivot</b></td><td>the first non-zero number in a row after elimination; it's used to clear the numbers below it</td><td>the $1$ in $\begin{bmatrix} \boxed{1} & 2 \\ 3 & 4 \end{bmatrix}$</td><td>a "leader" for its column</td></tr>
+      <tr><td><b>Multiplier</b></td><td>(number to remove) ÷ (pivot): how many times to subtract the pivot row</td><td>to remove 3 under pivot 1: $3 \div 1 = 3$</td><td>how many copies of the leader row to take away</td></tr>
+      <tr><td><b>Echelon form</b> $U$</td><td>"staircase" shape after elimination: zeros below every pivot</td><td>$\begin{bmatrix} 1 & 2 & 2 \\ 0 & 0 & 3 \end{bmatrix}$</td><td>stairs going down to the right</td></tr>
+      <tr><td><b>Zero row</b></td><td>a row that became all zeros</td><td>$(0, 0, 0, 0)$</td><td>a scenario that was a copy of others: it adds no new test</td></tr>
+      <tr><td><b>Rank</b> $r$</td><td>how many pivots there are</td><td>$\begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$ has rank 1</td><td>how many truly different products (or scenarios) there are</td></tr>
+      <tr><td><b>Pivot column / pivot variable</b></td><td>a column that has a pivot; its unknown is <b>forced</b> by the equations</td><td>column 1 above</td><td>an original product</td></tr>
+      <tr><td><b>Free column / free variable</b></td><td>a column with no pivot; its unknown can be <b>chosen freely</b></td><td>column 2 of $\begin{bmatrix} 1 & 2 \end{bmatrix}$</td><td>a copy product: you choose how much, the rest adjusts</td></tr>
+      <tr><td><b>Back substitution</b></td><td>solve the last equation first, then go upwards, plugging in what you know</td><td>$2x_3 = 4 \Rightarrow x_3 = 2$, then use it above</td><td>solving from the bottom of the staircase up</td></tr>
+      <tr><td><b>Special solution</b></td><td>a solution made by setting one free variable to 1 and the other free variables to 0</td><td>for $\begin{bmatrix} 1 & 2 \end{bmatrix}$: $x_2 = 1 \Rightarrow x_1 = -2$: $(-2, 1)$</td><td>a basic "copy trade": buy the copy, sell what it copies</td></tr>
+      <tr><td><b>Identity</b> $I$</td><td>a square matrix with 1s on the diagonal, 0s elsewhere; multiplying by it changes nothing</td><td>$\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$</td><td>"do nothing"</td></tr>
+      <tr><td><b>Reduced row echelon form</b> $R$</td><td>the cleanest staircase: pivots are 1, zeros above <b>and</b> below each pivot</td><td>$\begin{bmatrix} 1 & 2 & 0 \\ 0 & 0 & 1 \end{bmatrix}$</td><td>a fully tidied table</td></tr>
+      <tr><td><b>$F$</b> (free part)</td><td>the numbers of $R$ sitting in the pivot rows and the free columns</td><td>in the $R$ above: $F = \begin{bmatrix} 2 \\ 0 \end{bmatrix}$</td><td>the recipe: how each copy product is built from the originals</td></tr>
+      <tr><td><b>Nullspace matrix</b> $N$</td><td>a matrix whose columns are all the special solutions</td><td>$N = \begin{bmatrix} -F \\ I \end{bmatrix}$</td><td>the full list of basic copy trades</td></tr>
+      <tr><td><b>Transpose</b> $A^T$</td><td>flip the table: rows become columns</td><td>$\begin{bmatrix} 1 & 2 \end{bmatrix}^T = \begin{bmatrix} 1 \\ 2 \end{bmatrix}$</td><td>swap the roles of products and scenarios</td></tr>
+      <tr><td><b>Leader</b></td><td>another name for a pivot: the number we use to clear the numbers under (or above) it</td><td>the boxed $\boxed{1}$ in row 1</td><td>the team captain of its column</td></tr>
+      <tr><td><b>Row swap</b></td><td>exchange two rows, allowed because it only changes the order of the equations</td><td>put row 3 where row 2 was</td><td>reordering the pages of a list: nothing is lost</td></tr>
+      <tr><td><b>Row · x</b> ("multiply and add")</td><td>multiply each number of a row by the matching entry of $x$, then add the results</td><td>$(1, 2) \cdot (3, 4) = 1 \times 3 + 2 \times 4 = 11$</td><td>the total payoff of a basket in one scenario</td></tr>
+      <tr><td><b>Check in the original $A$</b></td><td>multiply every row of the <b>starting</b> matrix by the answer; each must give 0</td><td>$(1, 1) \cdot (1, -1) = 1 - 1 = 0$ ✓</td><td>testing the basket in every scenario, using the real product list</td></tr>
+      <tr><td><b>Scale</b></td><td>multiply every entry of a list by the same number</td><td>$4 \times (-\tfrac14, 1) = (-1, 4)$</td><td>buying 4 times as many of everything</td></tr>
+      <tr><td><b>CE / PE</b></td><td>call option / put option on Nifty. A CE pays $\max(S - K, 0)$, a PE pays $\max(K - S, 0)$, where $S$ = Nifty at expiry, $K$ = strike</td><td>19,800 CE at $S = 20{,}000$ pays $200$ points</td><td>a CE gains when Nifty rises, a PE when it falls</td></tr>
+      <tr><td><b>Strike</b> $K$</td><td>the fixed Nifty level written in the option</td><td>the 19,800 in "19,800 CE"</td><td>the line the option measures from</td></tr>
+      <tr><td><b>Deep in the money (ITM)</b></td><td>an option whose strike is so far away that it pays something in every scenario we look at</td><td>19,800 CE when Nifty is always 19,900 or more</td><td>it behaves like a straight line: no bend</td></tr>
+      <tr><td><b>Bond</b></td><td>pays a fixed amount, whatever Nifty does</td><td>pays 100 points in every scenario</td><td>a fixed deposit</td></tr>
+      <tr><td><b>Future</b></td><td>a contract that pays (Nifty at expiry − agreed level); costs 0 to enter</td><td>future @ 20,000 pays $-100$ at 19,900</td><td>a bet that moves one-for-one with Nifty</td></tr>
+      <tr><td><b>Lot</b></td><td>one unit of a product that you buy (+) or sell (−)</td><td>$-1$ = sell 1 lot</td><td>one packet</td></tr>
+      <tr><td><b>Payoff</b></td><td>what a product pays at expiry, in each scenario</td><td>CE pays $(1, 2, 3)$ in the 3 scenarios</td><td>the money you get tomorrow</td></tr>
+      <tr><td><b>Arbitrage</b></td><td>a trade that pays you money today and never costs anything later (or costs nothing today and can only win)</td><td>receive 4 today, pay 0 in every scenario</td><td>free money: a price mistake</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 id="s1">1. The lecture in five questions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Nullspace $N(A)$ = the collection of all lists $x$ with $Ax = 0$ (every row adds up to 0). Elimination = subtract a multiple of one row from a row below to make zeros. Back substitution = solve the bottom equation first, then go up. Pivot = the first non-zero number of a row after elimination. Free variable = an unknown with no pivot in its column, which you may choose. Rank $r$ = how many pivots. $n$ = how many columns (unknowns). Reduced form $R$ = the tidiest staircase (pivots 1, zeros above and below). $F$ = the numbers of $R$ in the pivot rows and free columns. $I$ = identity (1s on the diagonal, 0s elsewhere).</p>
+    </div>
+    <p>Lecture 07 defined the nullspace $N(A)$ = all $x$ with $Ax = 0$. This lecture answers: <b>how do we actually compute it?</b> The answer is an algorithm that works for <b>any</b> matrix, square or rectangular.</p>
+    <table>
+      <tr><th>#</th><th>Question</th><th>Short answer</th></tr>
+      <tr><td>1</td><td>How do we find <b>all</b> solutions of $Ax = 0$?</td><td>Elimination, then back substitution with the <b>free variables</b> set to 1s and 0s.</td></tr>
+      <tr><td>2</td><td>What if a pivot spot is 0 and nothing below helps?</td><td>Don't stop: that column is <b>free</b>. Move to the next column.</td></tr>
+      <tr><td>3</td><td>What is the <b>rank</b>?</td><td>The number of pivots = the number of truly independent equations.</td></tr>
+      <tr><td>4</td><td>How many special solutions?</td><td>One per free column: $n - r$ (columns minus rank).</td></tr>
+      <tr><td>5</td><td>What is the reduced form $R$ for?</td><td>It makes the special solutions readable at a glance: $N = \begin{bmatrix} -F \\ I \end{bmatrix}$.</td></tr>
+    </table>
+    <div class="box intuition"><span class="label">The story behind the whole lecture</span>
+      <p>Think of the columns of $A$ as <b>products you can trade</b>, and the rows as <b>scenarios</b> (for example Nifty expiry levels). $Ax = 0$ asks: <b>which mixes of products pay exactly nothing in every scenario?</b> Such a mix exists only when some products are <b>copies</b> of others. This lecture is the systematic way to find every copy and every zero-payoff mix.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s2">2. The example matrix, and what to expect</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Matrix = a table (rows × columns). Row = one equation (one scenario). Column = one unknown's numbers (one product). Unknown $x_j$ = how much of column $j$ we use. $Ax = 0$ = "find amounts that make every row add to zero". Solution = amounts that work. Nullspace = the collection of all solutions.</p>
+    </div>
+    <p>Three equations, four unknowns (3 rows, 4 columns):</p>
+    $$ A = \begin{bmatrix} 1 & 2 & 2 & 2 \\ 2 & 4 & 6 & 8 \\ 3 & 6 & 8 & 10 \end{bmatrix}, \qquad
+       Ax = 0 \iff
+       \begin{aligned}
+         x_1 + 2x_2 + 2x_3 + 2x_4 &= 0 \\
+         2x_1 + 4x_2 + 6x_3 + 8x_4 &= 0 \\
+         3x_1 + 6x_2 + 8x_3 + 10x_4 &= 0
+       \end{aligned} $$
+
+    <h3>Two things to spot before any work</h3>
+    <table>
+      <tr><th>Look at</th><th>Check</th><th>So</th></tr>
+      <tr><td>the <b>columns</b></td><td>column 2 $= (2, 4, 6)$, and $2 \times$ column 1 $= 2 \times (1, 2, 3) = (2, 4, 6)$ ✓</td><td>column 2 points the same way as column 1: it adds nothing new</td></tr>
+      <tr><td>the <b>rows</b></td><td>row 1 + row 2 $= (1+2,\ 2+4,\ 2+6,\ 2+8) = (3, 6, 8, 10) =$ row 3 ✓</td><td>equation 3 is just equation 1 + equation 2: not a new condition</td></tr>
+    </table>
+    <p>Elimination will <b>discover both facts on its own</b>, which matters for big matrices where you can't spot them by eye.</p>
+
+    <h3>How many solutions to expect?</h3>
+    <p>4 unknowns but at most 3 conditions (really only 2, since equation 3 is a copy). Fewer real conditions than unknowns means there is <b>room left over</b>: infinitely many solutions. The job is to <b>describe them all</b> neatly.</p>
+
+    <div class="box pitfall"><span class="label">What elimination keeps and what it changes</span>
+      <table>
+        <tr><th></th><th>Changes?</th><th>Why</th></tr>
+        <tr><td>the <b>solutions</b> $x$ (the nullspace)</td><td><b>no</b></td><td>subtracting a multiple of one true equation from another gives another true equation, and you can undo it by adding back</td></tr>
+        <tr><td>the right side</td><td>no</td><td>it is all zeros, and $0 - 3 \times 0 = 0$; so we don't even write it</td></tr>
+        <tr><td>the <b>columns</b> (the column space)</td><td><b>yes</b></td><td>the column entries themselves change during elimination</td></tr>
+      </table>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s3">3. Elimination on a rectangular matrix</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Elimination = subtract a multiple of one row from a row below to create zeros. Pivot = the first non-zero entry used to clear the numbers below it. Multiplier = (number to remove) ÷ (pivot). Echelon form $U$ = staircase shape with zeros under the pivots. Zero row = a row that became all zeros because it was a copy of other rows.</p>
+    </div>
+    <p>Same method as Lecture 03, with one new rule: <b>if a column has no usable pivot, skip it and keep going.</b> We go one small move at a time. Each step says <b>what</b> we do, <b>why</b>, <b>how</b> (the actual numbers), and <b>what we have now</b>.</p>
+
+    <h3>Step 1: clear column 1</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look at column 1. Pick the top number, the $1$ in row 1, as our <b>leader</b> (pivot).</p>
+        <p class="k"><span class="kl">Why</span> We want zeros under the leader. Then rows 2 and 3 no longer contain $x_1$, and a row with fewer unknowns is easier to solve.</p>
+        <p class="k"><span class="kl">What we have now</span> Leader $= 1$. Under it sit a $2$ (row 2) and a $3$ (row 3). Both must become $0$.</p>
+        <table>
+          <tr><th>Row</th><th>Number to remove</th><th>Multiplier = number ÷ pivot</th><th>Operation</th></tr>
+          <tr><td>2</td><td>$2$</td><td>$2 \div 1 = 2$</td><td>row 2 − 2 × row 1</td></tr>
+          <tr><td>3</td><td>$3$</td><td>$3 \div 1 = 3$</td><td>row 3 − 3 × row 1</td></tr>
+        </table>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Turn the $2$ in row 2 into $0$.</p>
+        <p class="k"><span class="kl">Why this amount</span> Ask: "how many leaders make 2?" $2 \div 1 = 2$. So we take away <b>2 copies of row 1</b> from row 2.</p>
+        <p class="k"><span class="kl">How</span> First make 2 copies of row 1: $2 \times (1, 2, 2, 2) = (2, 4, 4, 4)$. Then take them away, box by box:</p>
+        <table>
+          <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>col 4</th></tr>
+          <tr><td>Row 2</td><td>$2$</td><td>$4$</td><td>$6$</td><td>$8$</td></tr>
+          <tr><td>minus 2 × row 1 $= (2, 4, 4, 4)$</td><td>$-2$</td><td>$-4$</td><td>$-4$</td><td>$-4$</td></tr>
+          <tr><td><b>New row 2</b></td><td>$2-2=\mathbf{0}$</td><td>$4-4=\mathbf{0}$</td><td>$6-4=\mathbf{2}$</td><td>$8-4=\mathbf{4}$</td></tr>
+        </table>
+        <p class="k"><span class="kl">Why no right side</span> The right side of $Ax = 0$ is all zeros, and $0 - 2 \times 0 = 0$. It stays $0$, so we don't write it.</p>
+        <p class="k"><span class="kl">What we have now</span> Row 2 $= (0, 0, 2, 4)$. The $x_1$ is gone from it. (Bonus: $x_2$ vanished too.)</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Turn the $3$ in row 3 into $0$.</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many leaders make 3?" $3 \div 1 = 3$. Take away <b>3 copies of row 1</b>.</p>
+        <p class="k"><span class="kl">How</span> 3 copies of row 1: $3 \times (1, 2, 2, 2) = (3, 6, 6, 6)$. Take them away, box by box:</p>
+        <table>
+          <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>col 4</th></tr>
+          <tr><td>Row 3</td><td>$3$</td><td>$6$</td><td>$8$</td><td>$10$</td></tr>
+          <tr><td>minus 3 × row 1 $= (3, 6, 6, 6)$</td><td>$-3$</td><td>$-6$</td><td>$-6$</td><td>$-6$</td></tr>
+          <tr><td><b>New row 3</b></td><td>$3-3=\mathbf{0}$</td><td>$6-6=\mathbf{0}$</td><td>$8-6=\mathbf{2}$</td><td>$10-6=\mathbf{4}$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Column 1 is cleaned: $(1, 0, 0)$ going down. The table is:</p>
+        $$ \begin{bmatrix} \boxed{1} & 2 & 2 & 2 \\ 0 & \color{#b42318}{0} & 2 & 4 \\ 0 & \color{#b42318}{0} & 2 & 4 \end{bmatrix} $$
+        <p class="k"><span class="kl">Notice</span> Column 2 was wiped out <b>completely</b> in the same moves that cleared column 1. That happened because column 2 is exactly $2 \times$ column 1, so whatever cancels column 1 also cancels column 2.</p>
+      </li>
+    </ol>
+
+    <h3>Step 2: column 2 has no pivot, so skip it</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look for the next leader in row 2, column 2 (one row down, one column right).</p>
+        <p class="k"><span class="kl">What we see</span> Row 2 has a $0$ there, and row 3 under it also has a $0$.</p>
+        <table>
+          <tr><th>Check</th><th>Result</th><th>What to do</th></tr>
+          <tr><td>Is the pivot spot non-zero?</td><td>No, it is $0$</td><td>look below for a row to swap</td></tr>
+          <tr><td>Is anything below it non-zero?</td><td>No, row 3 also has $0$ there</td><td>no swap can help</td></tr>
+          <tr><td>Square matrix (Lecture 03)?</td><td>we would say "singular, stuck"</td><td>—</td></tr>
+          <tr><td><b>Rectangular matrix (now)</b></td><td>column 2 simply has no pivot</td><td><b>skip it</b>: look for the pivot in column 3, still in row 2</td></tr>
+        </table>
+        <p class="k"><span class="kl">Why we skip</span> A leader can't be $0$: we would have to divide by it ("how many 0s make 2?" has no answer). There's no row below with a non-zero number to swap in. So column 2 gets <b>no leader</b>, and $x_2$ will be a <b>free</b> variable.</p>
+        <p class="k"><span class="kl">What we have now</span> Column 2 is marked "free". We stay in row 2 and move right to column 3.</p>
+        <div class="box intuition"><span class="label">What a skipped column means</span>
+          <p>A column with no pivot is a <b>combination of the earlier columns</b>. It brings no new direction. In the story: that product is a <b>copy</b> of products already on the list (here, "2 lots of product 1").</p>
+        </div>
+      </li>
+    </ol>
+
+    <h3>Step 3: the second pivot is in column 3</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Row 2, column 3 holds a $2$. It is not zero, so it becomes leader number 2.</p>
+        <p class="k"><span class="kl">Why</span> It is the first non-zero number in row 2, reading left to right.</p>
+        <p class="k"><span class="kl">What we have now</span> Leader $= 2$. Under it (row 3, column 3) sits another $2$, which must become $0$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Turn the $2$ in row 3, column 3 into $0$.</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many leaders make 2?" $2 \div 2 = 1$. Take away <b>1 copy of row 2</b>.</p>
+        <p class="k"><span class="kl">How</span> 1 copy of row 2 is just row 2: $(0, 0, 2, 4)$. Take it away, box by box:</p>
+        <table>
+          <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>col 4</th></tr>
+          <tr><td>Row 3</td><td>$0$</td><td>$0$</td><td>$2$</td><td>$4$</td></tr>
+          <tr><td>minus 1 × row 2</td><td>$0$</td><td>$0$</td><td>$-2$</td><td>$-4$</td></tr>
+          <tr><td><b>New row 3</b></td><td>$0-0=\mathbf{0}$</td><td>$0-0=\mathbf{0}$</td><td>$2-2=\mathbf{0}$</td><td>$4-4=\mathbf{0}$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Row 3 is all zeros: a <b>zero row</b>.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look for a third leader in row 3, column 4.</p>
+        <p class="k"><span class="kl">What we see</span> Row 3 is all zeros now, and there is no row below it.</p>
+        <p class="k"><span class="kl">Why we stop</span> There is nothing left to use as a leader, so column 4 gets <b>no pivot</b>: $x_4$ is free too.</p>
+        <p class="k"><span class="kl">What we have now</span> The finished staircase, leaders boxed:</p>
+        $$ U = \begin{bmatrix} \boxed{1} & 2 & 2 & 2 \\ 0 & 0 & \boxed{2} & 4 \\ 0 & 0 & 0 & 0 \end{bmatrix} $$
+      </li>
+    </ol>
+    <div class="box definition"><span class="label">Definition: Echelon form (staircase form)</span>
+      <p>$U$ is in <b>echelon form</b>: each pivot sits to the <b>right</b> of the pivot above it, and everything below the "staircase" is zero. Some steps are wider than one column (here the step from column 1 jumps to column 3), so it is not a neat triangle.</p>
+    </div>
+    <div class="box intuition"><span class="label">Where the zero row came from</span>
+      <p>Row 3 of $A$ was row 1 + row 2. Elimination subtracted exactly those multiples and was left with nothing: a zero row means "this equation was a copy". It says $0 = 0$, always true, so it adds no condition.</p>
+    </div>
+
+    <!-- ====================================================== -->
+<h2 id="s4">4. Rank, pivot columns, free columns</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Pivot = first non-zero entry of a row in $U$. Rank $r$ = how many pivots. Pivot column = a column that got a pivot; its unknown is a pivot variable (forced). Free column = a column with no pivot; its unknown is a free variable (you choose it). $n$ = number of columns (unknowns).</p>
+    </div>
+    <div class="box definition"><span class="label">Definition: Rank</span>
+      <p>The <b>rank</b> $r$ of a matrix is the <b>number of pivots</b>. Here $r = 2$.</p>
+    </div>
+    <p>The rank is the most important number about a matrix. It says three equivalent things:</p>
+    <table>
+      <tr><th>Rank $r = 2$ means…</th><th>Here</th></tr>
+      <tr><td>number of <b>independent equations</b></td><td>3 equations, but only 2 are new (row 3 = row 1 + row 2)</td></tr>
+      <tr><td>number of <b>independent columns</b></td><td>4 columns, but only 2 bring new directions (columns 1 and 3)</td></tr>
+      <tr><td>in the story: number of truly <b>different products</b></td><td>the other 2 products are copies</td></tr>
+    </table>
+
+    <h3>Label every column</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Count the leaders (pivots) in $U$.</p>
+        <p class="k"><span class="kl">How</span> Row 1 has the boxed $1$: that is 1. Row 2 has the boxed $2$: $1 + 1 = 2$. Row 3 is all zeros: no leader, still $2$.</p>
+        <p class="k"><span class="kl">What we have now</span> Rank $r = 2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Go through the columns one by one and ask "does this column hold a leader?"</p>
+        <p class="k"><span class="kl">Why</span> A column with a leader gives a <b>pivot variable</b> (forced by the equations). A column without one gives a <b>free variable</b> (our choice).</p>
+        <table>
+          <tr><th>Column</th><th>Has a pivot?</th><th>Type</th><th>Its unknown is a…</th></tr>
+          <tr><td>1</td><td>yes (the 1)</td><td><b>pivot column</b></td><td>pivot variable $x_1$</td></tr>
+          <tr><td>2</td><td>no</td><td><b>free column</b></td><td>free variable $x_2$</td></tr>
+          <tr><td>3</td><td>yes (the 2)</td><td><b>pivot column</b></td><td>pivot variable $x_3$</td></tr>
+          <tr><td>4</td><td>no</td><td><b>free column</b></td><td>free variable $x_4$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Pivot variables: $x_1, x_3$. Free variables: $x_2, x_4$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Count the free variables with a formula, and check it against the table.</p>
+        <p class="k"><span class="kl">How</span> Every column is either pivot or free. Columns $n = 4$, pivot columns $r = 2$, so free columns $= n - r = 4 - 2 = 2$. The table also shows 2 free columns (2 and 4) ✓.</p>
+        <table>
+          <tr><th>Count</th><th>Formula</th><th>Here</th></tr>
+          <tr><td>unknowns (columns)</td><td>$n$</td><td>$4$</td></tr>
+          <tr><td>pivot variables</td><td>$r$</td><td>$2$</td></tr>
+          <tr><td>free variables</td><td>$n - r$</td><td>$4 - 2 = 2$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> 2 free variables, so we will build 2 special solutions.</p>
+      </li>
+    </ol>
+    <div class="box intuition"><span class="label">Why "free" and "pivot"</span>
+      <ul>
+        <li><b>Free variables</b> ($x_2$, $x_4$): you may choose <b>any values you like</b>. No equation pins them down.</li>
+        <li><b>Pivot variables</b> ($x_1$, $x_3$): once the free ones are chosen, the equations <b>force</b> these, by back substitution. Each pivot row controls exactly one pivot variable.</li>
+      </ul>
+      <p>Trading version: you may hold <b>any amount</b> of the copy products; then the amounts of the original products are forced if the total is to pay zero.</p>
+    </div>
+
+    <!-- ====================================================== -->
+<h2 id="s5">5. The special solutions</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Free variable = an unknown you may set to any value. Pivot variable = an unknown the equations force. Back substitution = solve the bottom equation first, then move up plugging in. Special solution = set one free variable to 1, the other free ones to 0, and solve for the rest. Checking "in the original $A$" = multiply each row of $A$ by the solution and confirm you get 0.</p>
+    </div>
+    <p>We solve $Ux = 0$ instead of $Ax = 0$ (same solutions, easier to read). The zero row drops out, leaving two equations:</p>
+    $$
+    \begin{aligned}
+      x_1 + 2x_2 + 2x_3 + 2x_4 &= 0 &&\text{(row 1 of } U\text{)} \\
+      2x_3 + 4x_4 &= 0 &&\text{(row 2 of } U\text{)}
+    \end{aligned}
+    $$
+    <div class="box theorem"><span class="label">Recipe for a special solution</span>
+      <ol>
+        <li>Pick <b>one</b> free variable and set it to $1$.</li>
+        <li>Set <b>all other</b> free variables to $0$.</li>
+        <li>Back-substitute (bottom row first) to find the pivot variables.</li>
+      </ol>
+      <p>Do this once for each free variable.</p>
+    </div>
+
+    <h3>Special solution 1: $x_2 = 1$, $x_4 = 0$</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Choose the free variables: $x_2 = 1$ and $x_4 = 0$.</p>
+        <p class="k"><span class="kl">Why</span> The recipe: one free variable is $1$, every other free variable is $0$. This one "switches on" column 2 only.</p>
+        <p class="k"><span class="kl">What we have now</span> Known: $x_2 = 1$, $x_4 = 0$. Unknown: the pivot variables $x_1$ and $x_3$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Solve the <b>bottom</b> equation first: row 2 of $U$, $2x_3 + 4x_4 = 0$.</p>
+        <p class="k"><span class="kl">Why bottom first</span> Once $x_4$ is known, it has only one unknown ($x_3$), so we can answer it straight away.</p>
+        <p class="k"><span class="kl">How</span> Put $x_4 = 0$ in: $4 \times 0 = 0$, so the equation becomes $2x_3 + 0 = 0$, i.e. $2x_3 = 0$.</p>
+        <p class="k"><span class="kl">How, next</span> "2 times what is 0?" Divide both sides by 2: $x_3 = 0 \div 2 = 0$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_3 = 0$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Go <b>up</b> to row 1 of $U$: $x_1 + 2x_2 + 2x_3 + 2x_4 = 0$.</p>
+        <p class="k"><span class="kl">How</span> Put in what we know, one term at a time: $2x_2 = 2 \times 1 = 2$; $\ 2x_3 = 2 \times 0 = 0$; $\ 2x_4 = 2 \times 0 = 0$. So the equation becomes $x_1 + 2 + 0 + 0 = 0$, i.e. $x_1 + 2 = 0$.</p>
+        <p class="k"><span class="kl">How, next</span> "What plus 2 gives 0?" Take 2 away from both sides: $x_1 = 0 - 2 = -2$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_1 = -2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put the four numbers together in order $x_1, x_2, x_3, x_4$.</p>
+        $$ s_1 = \begin{bmatrix} -2 \\ 1 \\ 0 \\ 0 \end{bmatrix} \quad \begin{matrix} \leftarrow \text{found in step 3} \\ \leftarrow \text{chosen in step 1} \\ \leftarrow \text{found in step 2} \\ \leftarrow \text{chosen in step 1} \end{matrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check in the original $A$</span> Multiply each row of $A$ (not $U$) by $s_1$ and add. Every row must give $0$.</p>
+        <table>
+          <tr><th>Row of $A$</th><th>Row · $s_1$</th><th>Result</th></tr>
+          <tr><td>$(1, 2, 2, 2)$</td><td>$1(-2) + 2(1) + 2(0) + 2(0) = -2 + 2 + 0 + 0$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(2, 4, 6, 8)$</td><td>$2(-2) + 4(1) + 6(0) + 8(0) = -4 + 4 + 0 + 0$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(3, 6, 8, 10)$</td><td>$3(-2) + 6(1) + 8(0) + 10(0) = -6 + 6 + 0 + 0$</td><td>$0$ ✓</td></tr>
+        </table>
+        <p class="k"><span class="kl">In market words</span> $-2 \times$ column 1 $+ 1 \times$ column 2 $= 0$, i.e. column 2 $= 2 \times$ column 1. The special solution <b>records the copy</b>: "hold 1 of the copy product, sell 2 of the original: pays nothing".</p>
+      </li>
+    </ol>
+
+    <h3>Special solution 2: $x_2 = 0$, $x_4 = 1$</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Choose the free variables the other way round: $x_2 = 0$ and $x_4 = 1$.</p>
+        <p class="k"><span class="kl">Why</span> Now we "switch on" column 4 only, to see how column 4 is copied.</p>
+        <p class="k"><span class="kl">What we have now</span> Known: $x_2 = 0$, $x_4 = 1$. Unknown: $x_1$ and $x_3$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Bottom equation first: row 2 of $U$, $2x_3 + 4x_4 = 0$.</p>
+        <p class="k"><span class="kl">How</span> Put $x_4 = 1$ in: $4 \times 1 = 4$, so $2x_3 + 4 = 0$.</p>
+        <p class="k"><span class="kl">How, next</span> "What plus 4 gives 0?" Take 4 away from both sides: $2x_3 = 0 - 4 = -4$.</p>
+        <p class="k"><span class="kl">How, last</span> "2 times what is $-4$?" Divide both sides by 2: $x_3 = -4 \div 2 = -2$. Check: $2 \times (-2) = -4$ ✓.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_3 = -2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Go up to row 1 of $U$: $x_1 + 2x_2 + 2x_3 + 2x_4 = 0$.</p>
+        <p class="k"><span class="kl">How</span> One term at a time: $2x_2 = 2 \times 0 = 0$; $\ 2x_3 = 2 \times (-2) = -4$; $\ 2x_4 = 2 \times 1 = 2$. So $x_1 + 0 - 4 + 2 = 0$.</p>
+        <p class="k"><span class="kl">How, next</span> Tidy the plain numbers: $-4 + 2 = -2$. So $x_1 - 2 = 0$.</p>
+        <p class="k"><span class="kl">How, last</span> "What minus 2 gives 0?" Add 2 to both sides: $x_1 = 0 + 2 = 2$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_1 = 2$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put the four numbers together in order.</p>
+        $$ s_2 = \begin{bmatrix} 2 \\ 0 \\ -2 \\ 1 \end{bmatrix} \quad \begin{matrix} \leftarrow \text{found in step 3} \\ \leftarrow \text{chosen in step 1} \\ \leftarrow \text{found in step 2} \\ \leftarrow \text{chosen in step 1} \end{matrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check in the original $A$</span> Each row of $A$ times $s_2$, added up, must be $0$.</p>
+        <table>
+          <tr><th>Row of $A$</th><th>Row · $s_2$</th><th>Result</th></tr>
+          <tr><td>$(1, 2, 2, 2)$</td><td>$1(2) + 2(0) + 2(-2) + 2(1) = 2 + 0 - 4 + 2$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(2, 4, 6, 8)$</td><td>$2(2) + 4(0) + 6(-2) + 8(1) = 4 + 0 - 12 + 8$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(3, 6, 8, 10)$</td><td>$3(2) + 6(0) + 8(-2) + 10(1) = 6 + 0 - 16 + 10$</td><td>$0$ ✓</td></tr>
+        </table>
+        <p class="k"><span class="kl">In market words</span> $2 \times$ column 1 $- 2 \times$ column 3 $+ 1 \times$ column 4 $= 0$, i.e. column 4 $= 2 \times$ column 3 $- 2 \times$ column 1. Column 4 is also a copy, built from columns 1 and 3.</p>
+      </li>
+    </ol>
+
+<div class="box intuition"><span class="label">Why the 1s and 0s pattern</span>
+      <ul>
+        <li>Setting a free variable to $0$ in one solution and $1$ in the other makes the special solutions <b>genuinely different</b>: no multiple of $s_1$ (which has $x_4 = 0$) can ever have $x_4 = 1$.</li>
+        <li>Setting all free variables to $0$ would force all pivot variables to $0$ too, giving only $x = 0$: no information. That's why exactly one free variable is 1.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s6">6. The whole nullspace</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Nullspace = every solution of $Ax = 0$. Combination = multiply lists by numbers and add ($c\,s_1 + d\,s_2$). Special solutions $s_1, s_2$ = the basic solutions from section 5. Subspace = a collection you can't leave by adding or scaling; it always contains the zero list.</p>
+    </div>
+    <div class="box theorem"><span class="label">The nullspace = all combinations of the special solutions</span>
+      $$ x = c \begin{bmatrix} -2 \\ 1 \\ 0 \\ 0 \end{bmatrix} + d \begin{bmatrix} 2 \\ 0 \\ -2 \\ 1 \end{bmatrix} = \begin{bmatrix} -2c + 2d \\ c \\ -2d \\ d \end{bmatrix} \quad \text{for any numbers } c, d $$
+      <p><b>One special solution per free variable</b>, so $n - r = 2$ of them. Together they fill a 2-dimensional flat piece (a "plane") inside $\mathbb{R}^4$.</p>
+    </div>
+
+    <h3>Why combinations are solutions</h3>
+    <p>If $As_1 = 0$ and $As_2 = 0$, then $A(c\,s_1 + d\,s_2) = c\,As_1 + d\,As_2 = c \cdot 0 + d \cdot 0 = 0$. So every combination solves $Ax = 0$ (the nullspace is a subspace, Lecture 07).</p>
+
+    <h3>Why there are no other solutions</h3>
+    <p>Take <b>any</b> solution $x$. Read off its free entries: say $x_2 = c$ and $x_4 = d$. Now look at $c\,s_1 + d\,s_2$: it has the <b>same</b> free entries ($c$ and $d$). Both are solutions with the same free values, and the free values <b>force</b> the pivot values, so the two vectors are identical.</p>
+    <div class="box example"><span class="label">Example: recover c and d from a solution</span>
+      <p>Is $x = (-8, 3, 2, -1)$ a solution, and which combination is it?</p>
+      <ol class="step-list kid-step">
+        <li>
+          <p class="k"><span class="kl">What we do</span> Read the free entries of $x$: entry 2 and entry 4.</p>
+          <p class="k"><span class="kl">Why</span> In $c\,s_1 + d\,s_2$, entry 2 is $c \times 1 + d \times 0 = c$ and entry 4 is $c \times 0 + d \times 1 = d$. So the free entries <b>are</b> $c$ and $d$.</p>
+          <p class="k"><span class="kl">How</span> $x_2 = 3$, so $c = 3$. $\ x_4 = -1$, so $d = -1$.</p>
+          <p class="k"><span class="kl">What we have now</span> $c = 3$, $d = -1$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">What we do</span> Build $c\,s_1 + d\,s_2 = 3\,s_1 - 1\,s_2$.</p>
+          <p class="k"><span class="kl">How</span> $3 \times (-2, 1, 0, 0) = (-6, 3, 0, 0)$. $\ -1 \times (2, 0, -2, 1) = (-2, 0, 2, -1)$.</p>
+          <p class="k"><span class="kl">How, next</span> Add box by box: $(-6 - 2,\ 3 + 0,\ 0 + 2,\ 0 - 1) = (-8, 3, 2, -1)$.</p>
+          <p class="k"><span class="kl">What we have now</span> Exactly the given $x$ ✓. So $x = 3\,s_1 - s_2$.</p>
+        </li>
+        <li>
+          <p class="k"><span class="kl">Check in the original $A$</span> Row by row, multiply and add:</p>
+          <table>
+            <tr><th>Row of $A$</th><th>Row · $x$</th><th>Result</th></tr>
+            <tr><td>$(1, 2, 2, 2)$</td><td>$1(-8) + 2(3) + 2(2) + 2(-1) = -8 + 6 + 4 - 2$</td><td>$0$ ✓</td></tr>
+            <tr><td>$(2, 4, 6, 8)$</td><td>$2(-8) + 4(3) + 6(2) + 8(-1) = -16 + 12 + 12 - 8$</td><td>$0$ ✓</td></tr>
+            <tr><td>$(3, 6, 8, 10)$</td><td>$3(-8) + 6(3) + 8(2) + 10(-1) = -24 + 18 + 16 - 10$</td><td>$0$ ✓</td></tr>
+          </table>
+        </li>
+      </ol>
+    </div>
+    <div class="box finance"><span class="label">Market meaning</span>
+      <p>Every trade that pays nothing in every scenario is a mix of the <b>basic copy trades</b> (the special solutions). If each basic copy trade costs 0 today, every zero-payoff trade costs 0 and there is no arbitrage. So you only need to check $n - r$ trades, not infinitely many.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s7">7. Reduced row echelon form R</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$U$ = staircase form (zeros below pivots). $R$ (reduced row echelon form) = the tidiest form: pivots equal 1 and zeros above and below each pivot. Identity $I$ = 1s on the diagonal, 0s elsewhere. $F$ = the numbers of $R$ in the pivot rows and free columns. "Allowed move" = one that doesn't change the solutions.</p>
+    </div>
+    <p>$U$ is good; $R$ is the cleanest possible form. Two extra moves, both allowed because they don't change the solutions:</p>
+    <table>
+      <tr><th>Move</th><th>Rule</th><th>Why allowed</th></tr>
+      <tr><td>1</td><td>clear the numbers <b>above</b> each pivot (elimination upwards)</td><td>subtracting a multiple of one equation from another</td></tr>
+      <tr><td>2</td><td>divide each pivot row by its pivot, so every pivot is <b>1</b></td><td>dividing both sides of an equation by a non-zero number</td></tr>
+    </table>
+
+    <h3>Move 1: clear above the pivot in column 3</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Start from $U$ and look <b>above</b> the second leader (the $2$ in row 2, column 3). Row 1 has a $2$ there.</p>
+        $$ U = \begin{bmatrix} \boxed{1} & 2 & 2 & 2 \\ 0 & 0 & \boxed{2} & 4 \\ 0 & 0 & 0 & 0 \end{bmatrix} $$
+        <p class="k"><span class="kl">Why</span> In $R$ every leader must be the only non-zero number in its column. Then each pivot variable sits alone in its own equation, and we can read it off without back substitution.</p>
+        <p class="k"><span class="kl">What we have now</span> The number to remove is the $2$ in row 1, column 3.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Turn that $2$ into $0$ using row 2.</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many leaders make 2?" $2 \div 2 = 1$. Take away <b>1 copy of row 2</b> from row 1.</p>
+        <p class="k"><span class="kl">How</span> 1 copy of row 2 is $(0, 0, 2, 4)$. Take it away, box by box:</p>
+        <table>
+          <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th><th>col 4</th></tr>
+          <tr><td>Row 1</td><td>$1$</td><td>$2$</td><td>$2$</td><td>$2$</td></tr>
+          <tr><td>minus 1 × row 2</td><td>$0$</td><td>$0$</td><td>$-2$</td><td>$-4$</td></tr>
+          <tr><td><b>New row 1</b></td><td>$1-0=\mathbf{1}$</td><td>$2-0=\mathbf{2}$</td><td>$2-2=\mathbf{0}$</td><td>$2-4=\mathbf{-2}$</td></tr>
+        </table>
+        <p class="k"><span class="kl">Careful</span> $2 - 4$ goes below zero: start at 2, step 4 down, land on $-2$.</p>
+        <p class="k"><span class="kl">What we have now</span> Row 1 $= (1, 2, 0, -2)$. Column 3 now has zeros above its leader.</p>
+      </li>
+    </ol>
+    <h3>Move 2: make the second pivot 1</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Divide row 2 by its leader, $2$.</p>
+        <p class="k"><span class="kl">Why</span> In $R$ every leader must be $1$. Dividing a whole equation by the same non-zero number keeps it true ($2x_3 + 4x_4 = 0$ and $x_3 + 2x_4 = 0$ have the same solutions).</p>
+        <p class="k"><span class="kl">How</span> Box by box: $0 \div 2 = 0$, $\ 0 \div 2 = 0$, $\ 2 \div 2 = 1$, $\ 4 \div 2 = 2$. So $(0, 0, 2, 4) \div 2 = (0, 0, 1, 2)$.</p>
+        <p class="k"><span class="kl">What we have now</span> Row 2 $= (0, 0, 1, 2)$. Row 1's leader is already $1$, so nothing to do there.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Final picture</span> Leaders boxed, both equal to $1$, zeros above and below them:</p>
+        $$ R = \begin{bmatrix} \boxed{1} & 2 & 0 & -2 \\ 0 & 0 & \boxed{1} & 2 \\ 0 & 0 & 0 & 0 \end{bmatrix} $$
+      </li>
+    </ol>
+<div class="box definition"><span class="label">Definition: Reduced row echelon form (rref)</span>
+      <p>$R$ has: every pivot equal to <b>1</b>; <b>zeros above and below</b> every pivot; any zero rows at the bottom. MATLAB: <code>rref(A)</code>. Python: <code>sympy.Matrix(A).rref()</code>.</p>
+    </div>
+    <p>$A$, $U$ and $R$ all have the <b>same nullspace</b>. Every move was a legal operation on the equations.</p>
+
+    <h3>What R shows at a glance</h3>
+    <table>
+      <tr><th>Part of $R$</th><th>What you see</th><th>Meaning</th></tr>
+      <tr><td>pivot rows 1–2, pivot columns 1, 3</td><td>$\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} = I$</td><td>the independent part</td></tr>
+      <tr><td>pivot rows, free columns 2, 4</td><td>$F = \begin{bmatrix} 2 & -2 \\ 0 & 2 \end{bmatrix}$</td><td>how each free column is built from the pivot columns</td></tr>
+      <tr><td>row 3</td><td>zeros</td><td>row 3 of $A$ was a copy of other rows</td></tr>
+    </table>
+    <div class="box intuition"><span class="label">F is a recipe book</span>
+      <p>Each column of $F$ says how to build a free column from the pivot columns of $A$. Column 2 of $R$ is $(2, 0)$: column 2 of $A$ $= 2 \times$ col 1 $+ 0 \times$ col 3 ✓. Column 4 of $R$ is $(-2, 2)$: column 4 of $A$ $= -2 \times$ col 1 $+ 2 \times$ col 3 $= (-2 + 4,\ -4 + 12,\ -6 + 16) = (2, 8, 10)$ ✓.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s8">8. Reading N straight from R</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>$x_{\text{pivot}}$ = the list of pivot variables; $x_{\text{free}}$ = the list of free variables. $F$ = the free part of $R$. $I$ = identity (1s on the diagonal). Nullspace matrix $N$ = the matrix whose columns are the special solutions. Block multiplication = multiply matrices piece by piece, treating each block like a number.</p>
+    </div>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Write $Rx = 0$ as equations, one per non-zero row of $R$.</p>
+        <p class="k"><span class="kl">How</span> Row 1 of $R$ is $(1, 2, 0, -2)$: $1x_1 + 2x_2 + 0x_3 - 2x_4 = 0$, i.e. $x_1 + 2x_2 - 2x_4 = 0$. Row 2 is $(0, 0, 1, 2)$: $x_3 + 2x_4 = 0$. Row 3 is zeros: $0 = 0$, no condition.</p>
+        <p class="k"><span class="kl">What we have now</span> Two equations, and each has exactly <b>one</b> pivot variable in it ($x_1$ in the first, $x_3$ in the second).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Move the free variables ($x_2$, $x_4$) to the right side.</p>
+        <p class="k"><span class="kl">Why</span> Then each pivot variable stands alone on the left: "pivot variable = something made of free variables".</p>
+        <p class="k"><span class="kl">How</span> In $x_1 + 2x_2 - 2x_4 = 0$, take $2x_2$ away from both sides and add $2x_4$ to both sides.</p>
+        $$ x_1 = -2x_2 + 2x_4 $$
+        <p class="k"><span class="kl">How, next</span> In $x_3 + 2x_4 = 0$, take $2x_4$ away from both sides.</p>
+        $$ x_3 = -2x_4 $$
+        <p class="k"><span class="kl">What we have now</span> The numbers of $F$ ($2, -2$ in row 1; $0, 2$ in row 2) appear with their <b>signs flipped</b>, because they moved to the other side of the equals sign. No back substitution is needed any more: each pivot variable is given directly.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Plug in the two free choices.</p>
+        <p class="k"><span class="kl">How, for $s_1$</span> $x_2 = 1$, $x_4 = 0$. Then $x_1 = -2(1) + 2(0) = -2 + 0 = -2$ and $x_3 = -2(0) = 0$.</p>
+        <p class="k"><span class="kl">How, for $s_2$</span> $x_2 = 0$, $x_4 = 1$. Then $x_1 = -2(0) + 2(1) = 0 + 2 = 2$ and $x_3 = -2(1) = -2$.</p>
+        <table>
+          <tr><th>Special solution</th><th>Free values</th><th>Pivot values $= -F \times$ free</th><th>Result</th></tr>
+          <tr><td>$s_1$</td><td>$x_2 = 1,\ x_4 = 0$</td><td>$x_1 = -2(1) + 2(0) = -2$; $\ x_3 = -2(0) = 0$</td><td>$(-2, 1, 0, 0)$ ✓</td></tr>
+          <tr><td>$s_2$</td><td>$x_2 = 0,\ x_4 = 1$</td><td>$x_1 = -2(0) + 2(1) = 2$; $\ x_3 = -2(1) = -2$</td><td>$(2, 0, -2, 1)$ ✓</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> The same two special solutions as section 5, found with no back substitution.</p>
+      </li>
+    </ol>
+
+<div class="box theorem"><span class="label">The general pattern</span>
+      <p>Imagine the pivot columns moved to the front (just for thinking). Then $R$ looks like</p>
+      $$ R = \begin{bmatrix} I & F \\ 0 & 0 \end{bmatrix}, \qquad x = \begin{bmatrix} x_{\text{pivot}} \\ x_{\text{free}} \end{bmatrix} $$
+      <p>Multiplying by blocks, $Rx = 0$ says</p>
+      $$ I\,x_{\text{pivot}} + F\,x_{\text{free}} = 0 \quad\Longrightarrow\quad x_{\text{pivot}} = -F\,x_{\text{free}} $$
+      <p>Choose $x_{\text{free}}$ = the columns of the identity (one free variable 1, the rest 0). Then all special solutions appear together as the columns of the <b>nullspace matrix</b>:</p>
+      $$ N = \begin{bmatrix} -F \\ I \end{bmatrix} $$
+      <p><b>Check by blocks:</b> $RN = \begin{bmatrix} I & F \end{bmatrix}\begin{bmatrix} -F \\ I \end{bmatrix} = I(-F) + F\,I = -F + F = 0$ ✓.</p>
+    </div>
+    <p>For our $A$, step by step:</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Cut $F$ out of $R$: keep the pivot rows (1 and 2) and the free columns (2 and 4).</p>
+        <p class="k"><span class="kl">How</span> Row 1, column 2 of $R$ is $2$; row 1, column 4 is $-2$; row 2, column 2 is $0$; row 2, column 4 is $2$.</p>
+        $$ F = \begin{bmatrix} 2 & -2 \\ 0 & 2 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Flip every sign of $F$ to get $-F$.</p>
+        <p class="k"><span class="kl">Why</span> $x_{\text{pivot}} = -F\,x_{\text{free}}$: the numbers moved across the equals sign.</p>
+        <p class="k"><span class="kl">How</span> $2 \to -2$, $\ -2 \to 2$, $\ 0 \to 0$, $\ 2 \to -2$.</p>
+        $$ -F = \begin{bmatrix} -2 & 2 \\ 0 & -2 \end{bmatrix} $$
+        <p class="k"><span class="kl">What we have now</span> Row 1 of $-F$ gives $x_1$, row 2 gives $x_3$ (the pivot variables).</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Put the identity $I = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$ in the free rows (rows 2 and 4 of $N$), and $-F$ in the pivot rows (rows 1 and 3 of $N$).</p>
+        <p class="k"><span class="kl">Why</span> The free rows hold our choices: column 1 of $N$ has $x_2 = 1, x_4 = 0$; column 2 has $x_2 = 0, x_4 = 1$.</p>
+        <p class="k"><span class="kl">How</span> Row 1 of $N$ = row 1 of $-F$ $= (-2, 2)$. Row 2 = row 1 of $I$ $= (1, 0)$. Row 3 = row 2 of $-F$ $= (0, -2)$. Row 4 = row 2 of $I$ $= (0, 1)$.</p>
+        $$ N = \begin{bmatrix} -2 & 2 \\ 1 & 0 \\ 0 & -2 \\ 0 & 1 \end{bmatrix} \qquad (\text{columns} = s_1, s_2) $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check in the original $A$</span> $AN$ must be all zeros. Each box is (row of $A$) · (column of $N$):</p>
+        <table>
+          <tr><th>Row of $A$</th><th>· column 1 of $N$ $= (-2, 1, 0, 0)$</th><th>· column 2 of $N$ $= (2, 0, -2, 1)$</th></tr>
+          <tr><td>$(1, 2, 2, 2)$</td><td>$-2 + 2 + 0 + 0 = 0$ ✓</td><td>$2 + 0 - 4 + 2 = 0$ ✓</td></tr>
+          <tr><td>$(2, 4, 6, 8)$</td><td>$-4 + 4 + 0 + 0 = 0$ ✓</td><td>$4 + 0 - 12 + 8 = 0$ ✓</td></tr>
+          <tr><td>$(3, 6, 8, 10)$</td><td>$-6 + 6 + 0 + 0 = 0$ ✓</td><td>$6 + 0 - 16 + 10 = 0$ ✓</td></tr>
+        </table>
+      </li>
+    </ol>
+    <p>This is exactly what MATLAB's <code>null(A, 'r')</code> (or the teaching code <code>nulbasis(A)</code>) computes: find $R$, flip the signs of $F$, place the identity in the free rows.</p>
+
+    <!-- ====================================================== -->
+    <h2 id="s9">9. Second example: the transpose</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Transpose $A^T$ = the table flipped so rows become columns (row 1 of $A$ is column 1 of $A^T$). Row swap = exchange two rows when a pivot spot is 0 but a lower row has a non-zero number there. Rank = number of pivots. Free column, special solution, $R$, $F$, $N$: same meanings as in sections 4–8.</p>
+    </div>
+    <p>Rows of $A$ become columns:</p>
+    $$ A^T = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 6 \\ 2 & 6 & 8 \\ 2 & 8 & 10 \end{bmatrix} \quad (4 \times 3) $$
+    <p><b>Predict first:</b> column 3 $= (3, 6, 8, 10)$ and column 1 + column 2 $= (1 + 2,\ 2 + 4,\ 2 + 6,\ 2 + 8) = (3, 6, 8, 10)$ ✓. So column 3 should turn out <b>free</b>, and columns 1, 2 pivot: expect rank 2 and $3 - 2 = 1$ special solution.</p>
+
+    <h3>Elimination</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Leader of column 1 = the $1$ in row 1. Under it sit $2$, $2$, $2$ (rows 2, 3, 4).</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many leaders make 2?" $2 \div 1 = 2$. So from each of rows 2, 3, 4 we take away <b>2 copies of row 1</b>. Two copies: $2 \times (1, 2, 3) = (2, 4, 6)$.</p>
+        <p class="k"><span class="kl">How</span> Box by box, for each row:</p>
+        <table>
+          <tr><th>Step</th><th>Work, box by box</th><th>New row</th></tr>
+          <tr><td>row 2 − 2 × row 1</td><td>$(2-2,\ 4-4,\ 6-6)$</td><td>$(0, 0, 0)$</td></tr>
+          <tr><td>row 3 − 2 × row 1</td><td>$(2-2,\ 6-4,\ 8-6)$</td><td>$(0, 2, 2)$</td></tr>
+          <tr><td>row 4 − 2 × row 1</td><td>$(2-2,\ 8-4,\ 10-6)$</td><td>$(0, 4, 4)$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Column 1 is cleaned:</p>
+        $$ \begin{bmatrix} \boxed{1} & 2 & 3 \\ 0 & \color{#b42318}{0} & 0 \\ 0 & 2 & 2 \\ 0 & 4 & 4 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look for the next leader in row 2, column 2.</p>
+        <p class="k"><span class="kl">What we see</span> Row 2 has a $0$ there. But row 3, below it, has a $2$.</p>
+        <p class="k"><span class="kl">Why a swap, not a skip</span> A $0$ can't be a leader. But this time a lower row has a non-zero number in the same column, so we can <b>swap</b> rows 2 and 3. Swapping only changes the order of the equations, not their solutions.</p>
+        <p class="k"><span class="kl">How</span> Old row 3 $(0, 2, 2)$ moves up to row 2; old row 2 $(0, 0, 0)$ moves down to row 3.</p>
+        <p class="k"><span class="kl">What we have now</span> Leader number 2 is the $2$ in row 2, column 2:</p>
+        $$ \begin{bmatrix} \boxed{1} & 2 & 3 \\ 0 & \boxed{2} & 2 \\ 0 & 0 & 0 \\ 0 & 4 & 4 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Clear the $4$ in row 4, column 2 (row 3 already has $0$ there).</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many leaders make 4?" $4 \div 2 = 2$. Take away <b>2 copies of row 2</b>: $2 \times (0, 2, 2) = (0, 4, 4)$.</p>
+        <table>
+          <tr><th>Step</th><th>Work, box by box</th><th>New row</th></tr>
+          <tr><td>row 4 − 2 × row 2 (multiplier $4 \div 2$)</td><td>$(0-0,\ 4-4,\ 4-4)$</td><td>$(0, 0, 0)$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Rows 3 and 4 are both zero rows.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Look for a leader in column 3, row 3.</p>
+        <p class="k"><span class="kl">What we see</span> Row 3 is all zeros, and row 4 below it is all zeros too.</p>
+        <p class="k"><span class="kl">Why</span> Nothing non-zero to use, no swap can help: column 3 has <b>no pivot</b>, so $x_3$ is free.</p>
+        <p class="k"><span class="kl">What we have now</span> Two leaders, so rank 2, and one free variable ($3 - 2 = 1$), as predicted.</p>
+        $$ U = \begin{bmatrix} \boxed{1} & 2 & 3 \\ 0 & \boxed{2} & 2 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \qquad r = 2, \quad \text{free: } x_3 $$
+      </li>
+    </ol>
+
+    <h3>Special solution ($x_3 = 1$)</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Set the only free variable to $1$: $x_3 = 1$.</p>
+        <p class="k"><span class="kl">Why</span> One free variable, so one special solution. There are no other free variables to set to $0$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Bottom equation first: row 2 of $U$, $2x_2 + 2x_3 = 0$.</p>
+        <p class="k"><span class="kl">How</span> Put $x_3 = 1$ in: $2 \times 1 = 2$, so $2x_2 + 2 = 0$.</p>
+        <p class="k"><span class="kl">How, next</span> Take 2 away from both sides: $2x_2 = -2$.</p>
+        <p class="k"><span class="kl">How, last</span> Divide both sides by 2: $x_2 = -2 \div 2 = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> $x_2 = -1$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Go up to row 1 of $U$: $x_1 + 2x_2 + 3x_3 = 0$.</p>
+        <p class="k"><span class="kl">How</span> One term at a time: $2x_2 = 2 \times (-1) = -2$; $\ 3x_3 = 3 \times 1 = 3$. So $x_1 - 2 + 3 = 0$.</p>
+        <p class="k"><span class="kl">How, next</span> Tidy: $-2 + 3 = 1$, so $x_1 + 1 = 0$.</p>
+        <p class="k"><span class="kl">How, last</span> Take 1 away from both sides: $x_1 = -1$.</p>
+        <p class="k"><span class="kl">What we have now</span> The special solution $(-1, -1, 1)$, and the whole nullspace is every multiple of it:</p>
+        $$ N(A^T) = \Big\{\, c \begin{bmatrix} -1 \\ -1 \\ 1 \end{bmatrix} \Big\} \quad \text{a line in } \mathbb{R}^3 $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">Check in the original $A^T$</span> Each of the 4 rows of $A^T$ times $(-1, -1, 1)$ must give $0$:</p>
+        <table>
+          <tr><th>Row of $A^T$</th><th>Row · $(-1, -1, 1)$</th><th>Result</th></tr>
+          <tr><td>$(1, 2, 3)$</td><td>$1(-1) + 2(-1) + 3(1) = -1 - 2 + 3$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(2, 4, 6)$</td><td>$2(-1) + 4(-1) + 6(1) = -2 - 4 + 6$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(2, 6, 8)$</td><td>$2(-1) + 6(-1) + 8(1) = -2 - 6 + 8$</td><td>$0$ ✓</td></tr>
+          <tr><td>$(2, 8, 10)$</td><td>$2(-1) + 8(-1) + 10(1) = -2 - 8 + 10$</td><td>$0$ ✓</td></tr>
+        </table>
+        <p class="k"><span class="kl">Same check, by columns</span> $-(\text{col } 1) - (\text{col } 2) + (\text{col } 3) = -(1,2,2,2) - (2,4,6,8) + (3,6,8,10) = (0,0,0,0)$ ✓. It records "column 3 = column 1 + column 2".</p>
+      </li>
+    </ol>
+    <p>Remember: the nullspace is the <b>whole line</b> $c(-1, -1, 1)$, not just the one vector. (Later, a "basis" for it is just that one vector.)</p>
+
+    <h3>On to R</h3>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">What we do</span> Clear the $2$ <b>above</b> leader 2 (row 1, column 2).</p>
+        <p class="k"><span class="kl">Why this amount</span> "How many leaders make 2?" $2 \div 2 = 1$. Take away <b>1 copy of row 2</b> from row 1.</p>
+        <table>
+          <tr><th>Move</th><th>Work, box by box</th><th>New row</th></tr>
+          <tr><td>row 1 − 1 × row 2 (clear above the pivot 2)</td><td>$(1-0,\ 2-2,\ 3-2)$</td><td>$(1, 0, 1)$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> Row 1 $= (1, 0, 1)$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Make leader 2 equal to $1$: divide row 2 by 2.</p>
+        <p class="k"><span class="kl">How</span> $0 \div 2 = 0$, $\ 2 \div 2 = 1$, $\ 2 \div 2 = 1$.</p>
+        <table>
+          <tr><th>Move</th><th>Work</th><th>New row</th></tr>
+          <tr><td>row 2 ÷ 2 (make the pivot 1)</td><td>$(0, 2, 2) \div 2$</td><td>$(0, 1, 1)$</td></tr>
+        </table>
+        <p class="k"><span class="kl">What we have now</span> The reduced form:</p>
+        $$ R = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} = \begin{bmatrix} I & F \\ 0 & 0 \end{bmatrix} $$
+      </li>
+      <li>
+        <p class="k"><span class="kl">What we do</span> Read $F$ and build $N$.</p>
+        <p class="k"><span class="kl">How</span> $F$ = pivot rows (1, 2), free column (3) $= (1, 1)$. Flip the signs: $-F = (-1, -1)$. Put $I = 1$ in the free row (row 3).</p>
+        $$ F = \begin{bmatrix} 1 \\ 1 \end{bmatrix}, \quad N = \begin{bmatrix} -F \\ I \end{bmatrix} = \begin{bmatrix} -1 \\ -1 \\ 1 \end{bmatrix} $$
+        <p class="k"><span class="kl">What we have now</span> The same special solution as by back substitution ✓ (already checked in $A^T$ above).</p>
+      </li>
+    </ol>
+
+<div class="box theorem"><span class="label">A great fact: rank of A = rank of Aᵀ</span>
+      <p>$A$ ($3 \times 4$) and $A^T$ ($4 \times 3$) both have rank 2. In general: <b>the number of independent columns always equals the number of independent rows</b>. In the story: the number of truly different products equals the number of truly different scenarios they can tell apart.</p>
+    </div>
+    <table>
+      <tr><th></th><th>$A$ ($3 \times 4$)</th><th>$A^T$ ($4 \times 3$)</th></tr>
+      <tr><td>rank $r$</td><td>$2$</td><td>$2$</td></tr>
+      <tr><td>free variables $n - r$</td><td>$4 - 2 = 2$</td><td>$3 - 2 = 1$</td></tr>
+      <tr><td>nullspace</td><td>a plane in $\mathbb{R}^4$</td><td>a line in $\mathbb{R}^3$</td></tr>
+      <tr><td>row swap needed?</td><td>no</td><td>yes</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <div class="box finance"><span class="label">In finance</span>
+      <ul>
+        <li>Put the payoffs of the products you can trade into the columns of $A$ (rows = Nifty expiry scenarios). A vector in the <b>nullspace</b> is a <b>trade that pays exactly 0 in every scenario</b>.</li>
+        <li><b>Rank</b> = how many truly different payoff directions the market offers. <b>Free columns</b> = redundant products, each copyable from the pivot products; $F$ in $R$ is the copying recipe.</li>
+        <li><b>Special solutions</b> = the basic "buy the copy, sell the recipe" trades, one per redundant product. Every zero-payoff trade is a mix of them. Each should cost 0 today; if one doesn't, that is <b>arbitrage</b>. Example 1 does this with Nifty options (CE + PE = 4 bonds, CE − PE = 2 futures).</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 id="s10">10. Summary</h2>
+    <div class="box intuition"><span class="label">Words used here</span>
+      <p>Pivot = first non-zero number of a row after elimination (the leader). Echelon form $U$ = staircase with zeros below the pivots. Rank $r$ = how many pivots. Pivot variable = unknown of a pivot column (forced). Free variable = unknown of a column with no pivot (your choice). Special solution = one free variable 1, the others 0, then solve. Nullspace = all solutions of $Ax = 0$. $R$ = tidiest staircase (pivots 1, zeros above and below). $F$ = numbers of $R$ in pivot rows and free columns. $N$ = matrix whose columns are the special solutions. $A^T$ = $A$ flipped (rows become columns).</p>
+    </div>
+    <table>
+      <tr><th>Idea</th><th>In one line</th></tr>
+      <tr><td>Elimination (rectangular)</td><td>If a column has no usable pivot, skip it and continue with the next column in the same row.</td></tr>
+      <tr><td>Echelon form $U$</td><td>Staircase of pivots; zero rows (copied equations) at the bottom.</td></tr>
+      <tr><td>Rank $r$</td><td>Number of pivots = independent equations = independent columns.</td></tr>
+      <tr><td>Pivot / free variables</td><td>$r$ pivot variables (forced), $n - r$ free variables (your choice).</td></tr>
+      <tr><td>Special solution</td><td>One free variable = 1, the other free ones = 0, back-substitute. It records how a free column is copied.</td></tr>
+      <tr><td>Nullspace</td><td>All combinations of the $n - r$ special solutions, and nothing else.</td></tr>
+      <tr><td>Reduced form $R$</td><td>Pivots 1, zeros above and below: $R = \begin{bmatrix} I & F \\ 0 & 0 \end{bmatrix}$.</td></tr>
+      <tr><td>Nullspace matrix</td><td>$N = \begin{bmatrix} -F \\ I \end{bmatrix}$, because $x_{\text{pivot}} = -F\,x_{\text{free}}$.</td></tr>
+      <tr><td>Rank of $A^T$</td><td>Always equal to the rank of $A$.</td></tr>
+    </table>
+    <dl class="vocab">
+      <dt>Pivot column</dt><dd>A column that gets a pivot in elimination: an independent product.</dd>
+      <dt>Free column</dt><dd>A column with no pivot: a combination (copy) of earlier columns.</dd>
+      <dt>Rank</dt><dd>The number of pivots.</dd>
+      <dt>Special solution</dt><dd>The nullspace vector with one free variable 1 and the others 0.</dd>
+      <dt>Echelon form $U$</dt><dd>Staircase form after elimination downwards.</dd>
+      <dt>Reduced row echelon form $R$</dt><dd>Pivots 1, zeros above and below each pivot.</dd>
+      <dt>Nullspace matrix $N$</dt><dd>The matrix whose columns are the special solutions: $RN = 0$.</dd>
+    </dl>
+  </div>
+  </section>
+
+  <!-- ================= EXAMPLES ================= -->
+  <section class="tab-panel" data-panel="examples" hidden>
+  <div class="notes">
+
+    <h2>Worked examples</h2>
+
+    <!-- E1 -->
+    <div class="worked">
+      <h3>Example 1: Which Nifty products are copies of each other? (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>At expiry Nifty ends at <b>19,900</b>, <b>20,000</b> or <b>20,100</b>. Four products are available (payoffs in points ÷ 100):</p>
+        <table>
+          <tr><th>Product</th><th>Payoff rule</th><th>19,900</th><th>20,000</th><th>20,100</th><th>Price today</th></tr>
+          <tr><td><b>1.</b> 19,800 CE (deep in the money)</td><td>$\max(S - 19{,}800, 0)$</td><td>$1$</td><td>$2$</td><td>$3$</td><td>$205$</td></tr>
+          <tr><td><b>2.</b> 20,200 PE (deep in the money)</td><td>$\max(20{,}200 - S, 0)$</td><td>$3$</td><td>$2$</td><td>$1$</td><td>$195$</td></tr>
+          <tr><td><b>3.</b> Bond (pays 100 points)</td><td>$100$</td><td>$1$</td><td>$1$</td><td>$1$</td><td>$99$</td></tr>
+          <tr><td><b>4.</b> Nifty future @ 20,000</td><td>$S - 20{,}000$</td><td>$-1$</td><td>$0$</td><td>$1$</td><td>$0$</td></tr>
+        </table>
+        <p>(a) Find the rank and the free (redundant) products. (b) Find all trades that pay <b>0 in every scenario</b>. (c) Do today's prices allow arbitrage?</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>Four products, but only three scenarios. Some product must be a <b>copy</b> of others: you could build its payoff from the rest. The nullspace finds every "buy the copy, sell the original" trade, and the prices tell you whether the copy is fairly priced.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>CE (call) = option that pays $\max(S - K, 0)$; PE (put) = option that pays $\max(K - S, 0)$; $S$ = Nifty at expiry, $K$ = strike. Deep in the money = pays something in every scenario here, so its payoff is a straight line. Bond = pays the same fixed amount always. Future = pays (Nifty − 20,000), costs 0 to enter. Lot = one unit; $+$ = buy, $-$ = sell. Column = one product's payoffs. Row = one scenario (one Nifty level). $x$ = how many lots of each product. $Ax = 0$ = the basket pays 0 at every Nifty level. Pivot = leader used to clear numbers below it. Rank = how many pivots. Free product = a column with no pivot (a copy). Special solution = one free product set to 1 lot, the other free ones to 0. $R$, $F$, $N = \begin{bmatrix} -F \\ I \end{bmatrix}$ as in the Notes. Arbitrage = money today with nothing to pay later.</p>
+      </div>
+      <div class="steps">
+        <h4>Set up</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Write the problem as one table: each <b>column</b> is a product, each <b>row</b> is a Nifty level.</p>
+            <p class="k"><span class="kl">Why</span> Row 1 says "at 19,900, (lots of CE)×1 + (lots of PE)×3 + (bonds)×1 + (futures)×(−1) is the basket's payoff". $Ax = 0$ asks for baskets whose payoff is $0$ at every level.</p>
+            $$ A = \begin{bmatrix} 1 & 3 & 1 & -1 \\ 2 & 2 & 1 & 0 \\ 3 & 1 & 1 & 1 \end{bmatrix}, \qquad Ax = 0 \text{ means the portfolio } x \text{ pays 0 everywhere} $$
+          </li>
+        </ol>
+        <h4>(a) Elimination</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Leader = the $1$ at the top of column 1 (CE). Clear the $2$ under it (row 2).</p>
+            <p class="k"><span class="kl">Why this amount</span> "How many leaders make 2?" $2 \div 1 = 2$. Take away 2 copies of row 1.</p>
+            <p class="k"><span class="kl">How</span> Two copies of row 1: $2 \times (1, 3, 1, -1) = (2, 6, 2, -2)$. Take them away, box by box:</p>
+            <table>
+              <tr><th></th><th>CE</th><th>PE</th><th>bond</th><th>future</th></tr>
+              <tr><td>Row 2</td><td>$2$</td><td>$2$</td><td>$1$</td><td>$0$</td></tr>
+              <tr><td>take away 2 × row 1</td><td>$-2$</td><td>$-6$</td><td>$-2$</td><td>$+2$</td></tr>
+              <tr><td><b>New row 2</b></td><td>$2-2=\mathbf{0}$</td><td>$2-6=\mathbf{-4}$</td><td>$1-2=\mathbf{-1}$</td><td>$0-(-2)=\mathbf{2}$</td></tr>
+            </table>
+            <p class="k"><span class="kl">Careful</span> In the future column, taking away $-2$ is the same as adding $2$: $0 + 2 = 2$.</p>
+            <p class="k"><span class="kl">What we have now</span> Row 2 $= (0, -4, -1, 2)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Clear the $3$ in row 3, column 1.</p>
+            <p class="k"><span class="kl">Why this amount</span> $3 \div 1 = 3$ copies of row 1.</p>
+            <p class="k"><span class="kl">How</span> Three copies: $3 \times (1, 3, 1, -1) = (3, 9, 3, -3)$. Take them away:</p>
+            <table>
+              <tr><th></th><th>CE</th><th>PE</th><th>bond</th><th>future</th></tr>
+              <tr><td>Row 3</td><td>$3$</td><td>$1$</td><td>$1$</td><td>$1$</td></tr>
+              <tr><td>take away 3 × row 1</td><td>$-3$</td><td>$-9$</td><td>$-3$</td><td>$+3$</td></tr>
+              <tr><td><b>New row 3</b></td><td>$3-3=\mathbf{0}$</td><td>$1-9=\mathbf{-8}$</td><td>$1-3=\mathbf{-2}$</td><td>$1+3=\mathbf{4}$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> Row 3 $= (0, -8, -2, 4)$. Column 1 is cleaned.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Next leader: the $-4$ in row 2, column 2 (PE). Clear the $-8$ under it.</p>
+            <p class="k"><span class="kl">Why this amount</span> "How many $-4$'s make $-8$?" $-8 \div -4 = 2$ (minus divided by minus is plus). Take away 2 copies of the new row 2: $2 \times (0, -4, -1, 2) = (0, -8, -2, 4)$.</p>
+            <table>
+              <tr><th></th><th>CE</th><th>PE</th><th>bond</th><th>future</th></tr>
+              <tr><td>Row 3</td><td>$0$</td><td>$-8$</td><td>$-2$</td><td>$4$</td></tr>
+              <tr><td>take away 2 × row 2</td><td>$0$</td><td>$+8$</td><td>$+2$</td><td>$-4$</td></tr>
+              <tr><td><b>New row 3</b></td><td>$\mathbf{0}$</td><td>$-8+8=\mathbf{0}$</td><td>$-2+2=\mathbf{0}$</td><td>$4-4=\mathbf{0}$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> Row 3 is a zero row: the 20,100 scenario adds no new test.</p>
+            $$ U = \begin{bmatrix} \boxed{1} & 3 & 1 & -1 \\ 0 & \boxed{-4} & -1 & 2 \\ 0 & 0 & 0 & 0 \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Count leaders and label the products.</p>
+            <p class="k"><span class="kl">How</span> Leaders sit in column 1 (CE) and column 2 (PE): that is 2. Columns 3 (bond) and 4 (future) have none: $4 - 2 = 2$ free products.</p>
+            <p class="k"><span class="kl">In market words</span> Only 2 directions for 3 scenarios! All four payoffs are <b>straight lines</b> in Nifty (no strike falls between 19,900 and 20,100, so no option "kinks" inside the range). Straight lines are built from just a level and a slope, so two products are enough.</p>
+          </li>
+        </ol>
+        <p class="answer">Rank $r = 2$. Pivot products: the CE and the PE. Free (redundant) products: the bond and the future.</p>
+
+        <h4>(b) Reduced form and special solutions</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Make leader 2 equal to $1$: divide row 2 by $-4$.</p>
+            <p class="k"><span class="kl">How</span> Box by box: $0 \div (-4) = 0$; $\ -4 \div (-4) = 1$; $\ -1 \div (-4) = \tfrac14$ (minus over minus is plus); $\ 2 \div (-4) = -\tfrac12$.</p>
+            <table>
+              <tr><th>Move</th><th>Work</th><th>Result</th></tr>
+              <tr><td>row 2 ÷ (−4)</td><td>$(0,-4,-1,2) \div (-4)$</td><td>$(0, 1, \tfrac14, -\tfrac12)$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> Row 2 $= (0, 1, \tfrac14, -\tfrac12)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Clear the $3$ <b>above</b> leader 2 (row 1, PE column).</p>
+            <p class="k"><span class="kl">Why this amount</span> "How many 1's make 3?" $3 \div 1 = 3$. Take away 3 copies of the new row 2: $3 \times (0, 1, \tfrac14, -\tfrac12) = (0, 3, \tfrac34, -\tfrac32)$.</p>
+            <table>
+              <tr><th>Move</th><th>Work</th><th>Result</th></tr>
+              <tr><td>row 1 − 3 × row 2</td><td>$(1,3,1,-1) - (0,3,\tfrac34,-\tfrac32)$</td><td>$(1, 0, \tfrac14, \tfrac12)$</td></tr>
+            </table>
+            <p class="k"><span class="kl">Box by box</span> $1 - 0 = 1$; $\ 3 - 3 = 0$; $\ 1 - \tfrac34 = \tfrac44 - \tfrac34 = \tfrac14$; $\ -1 - (-\tfrac32) = -1 + \tfrac32 = \tfrac12$.</p>
+            <p class="k"><span class="kl">What we have now</span> The reduced form, and its free part $F$ (pivot rows 1–2, free columns bond and future):</p>
+            $$ R = \begin{bmatrix} 1 & 0 & \tfrac14 & \tfrac12 \\ 0 & 1 & \tfrac14 & -\tfrac12 \\ 0 & 0 & 0 & 0 \end{bmatrix}, \qquad F = \begin{bmatrix} \tfrac14 & \tfrac12 \\ \tfrac14 & -\tfrac12 \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Read the special solutions from $N = \begin{bmatrix} -F \\ I \end{bmatrix}$.</p>
+            <p class="k"><span class="kl">How, first</span> Bond $= 1$, future $= 0$. CE and PE are minus column 1 of $F$: $-\tfrac14$ and $-\tfrac14$. So $(-\tfrac14, -\tfrac14, 1, 0)$.</p>
+            <p class="k"><span class="kl">How, second</span> Bond $= 0$, future $= 1$. CE and PE are minus column 2 of $F$: $-\tfrac12$ and $-(-\tfrac12) = \tfrac12$. So $(-\tfrac12, \tfrac12, 0, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Scale each one to whole lots.</p>
+            <p class="k"><span class="kl">Why</span> Any multiple of a zero-payoff trade still pays zero ($4 \times 0 = 0$), and you can't trade a quarter lot.</p>
+            <p class="k"><span class="kl">How</span> First: $4 \times (-\tfrac14, -\tfrac14, 1, 0) = (-1, -1, 4, 0)$. Second: $2 \times (-\tfrac12, \tfrac12, 0, 1) = (-1, 1, 0, 2)$.</p>
+            <table>
+              <tr><th>Free choice</th><th>Special solution</th><th>Whole lots</th><th>In trading words</th></tr>
+              <tr><td>bond = 1, future = 0</td><td>$(-\tfrac14, -\tfrac14, 1, 0)$</td><td>$(-1, -1, 4, 0)$</td><td>sell 1 CE, sell 1 PE, buy 4 bonds</td></tr>
+              <tr><td>bond = 0, future = 1</td><td>$(-\tfrac12, \tfrac12, 0, 1)$</td><td>$(-1, 1, 0, 2)$</td><td>sell 1 CE, buy 1 PE, buy 2 futures</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check in the original $A$</span> Row by row = Nifty level by Nifty level. Each basket must pay $0$:</p>
+            <table>
+              <tr><th>Nifty</th><th>−CE − PE + 4 bonds</th><th>−CE + PE + 2 futures</th></tr>
+              <tr><td>19,900</td><td>$-1 - 3 + 4 = 0$</td><td>$-1 + 3 - 2 = 0$</td></tr>
+              <tr><td>20,000</td><td>$-2 - 2 + 4 = 0$</td><td>$-2 + 2 + 0 = 0$</td></tr>
+              <tr><td>20,100</td><td>$-3 - 1 + 4 = 0$</td><td>$-3 + 1 + 2 = 0$</td></tr>
+            </table>
+            <p class="k"><span class="kl">In market words</span> <b>CE + PE = 4 bonds</b> (a deep-ITM "strangle" pays a fixed 400 points) and <b>CE − PE = 2 futures</b> (a version of put–call parity). Every zero-payoff trade is $c \times$ first $+ \ d \times$ second.</p>
+          </li>
+        </ol>
+
+        <h4>(c) Arbitrage check</h4>
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Price the first basket today: sell 1 CE, sell 1 PE, buy 4 bonds.</p>
+            <p class="k"><span class="kl">Why</span> It pays $0$ tomorrow in every scenario, so its fair price today is $0$. Anything else is a price mistake.</p>
+            <p class="k"><span class="kl">How</span> Selling gives money (minus cost), buying costs money (plus cost). CE: $-205$. PE: $-195$. Bonds: $4 \times 99 = 396$. Add: $-205 - 195 = -400$; then $-400 + 396 = -4$.</p>
+            <p class="k"><span class="kl">What we have now</span> Cost $-4$: you <b>receive 4</b> today and owe nothing later.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Price the second basket: sell 1 CE, buy 1 PE, buy 2 futures.</p>
+            <p class="k"><span class="kl">How</span> CE: $-205$. PE: $+195$. Futures: $2 \times 0 = 0$. Add: $-205 + 195 = -10$; then $-10 + 0 = -10$.</p>
+            <p class="k"><span class="kl">What we have now</span> Cost $-10$: you <b>receive 10</b> today and owe nothing later.</p>
+            <table>
+              <tr><th>Zero-payoff trade</th><th>Cost today</th><th>Verdict</th></tr>
+              <tr><td>−CE − PE + 4 bonds</td><td>$-205 - 195 + 4 \times 99 = -4$</td><td>you <b>receive 4</b> today and owe nothing later</td></tr>
+              <tr><td>−CE + PE + 2 futures</td><td>$-205 + 195 + 0 = -10$</td><td>you <b>receive 10</b> today and owe nothing later</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find the fair prices that would make both costs $0$.</p>
+            <p class="k"><span class="kl">How</span> First basket: $-\text{CE} - \text{PE} + 396 = 0$, so $\text{CE} + \text{PE} = 396$. Second: $-\text{CE} + \text{PE} + 0 = 0$, so $\text{CE} = \text{PE}$.</p>
+            <p class="k"><span class="kl">How, next</span> Two equal numbers adding to 396: each is $396 \div 2 = 198$.</p>
+            <p class="k"><span class="kl">What we have now</span> Fair: CE $= 198$ and PE $= 198$. Today both trade higher (205 and 195 sum to 400, not 396).</p>
+          </li>
+        </ol>
+        <p class="answer">Both special trades have non-zero cost, so these prices allow arbitrage: the CE and PE are too expensive relative to the bond and future. Fair prices need $\text{CE} + \text{PE} = 396$ and $\text{CE} - \text{PE} = 0$, i.e. both at 198.</p>
+      </div>
+<figure class="fig plot3d">
+        <div id="l8plot" class="plot3d-box" role="img" aria-label="All four product payoff arrows lie in one plane"></div>
+        <figcaption><b>Why rank 2:</b> the four payoff arrows (axes = payoff at 19,900, 20,000, 20,100) all lie in one plane (purple). Two arrows already span it, so the other two are copies. The 20,000 CE (red, dashed) has a kink inside the range and sticks <b>out</b> of the plane (Example 6). <b>Drag to rotate.</b></figcaption>
+      </figure>
+    </div>
+
+    <!-- E2 -->
+    <div class="worked">
+      <h3>Example 2: A small nullspace, start to finish</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Find the rank and the nullspace of $A = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 7 \end{bmatrix}$.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Rank = how many pivots (leaders). Pivot = first non-zero number of a row after elimination. Free variable = unknown whose column has no pivot; we choose it. Special solution = one free variable 1, the rest 0, solve for the others. Nullspace = all $x$ with $Ax = 0$. Back substitution = bottom equation first, then up.</p>
+      </div>
+      <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Leader = the $1$ in row 1, column 1. Clear the $2$ under it.</p>
+            <p class="k"><span class="kl">Why this amount</span> $2 \div 1 = 2$: take away 2 copies of row 1. Two copies: $2 \times (1, 2, 3) = (2, 4, 6)$.</p>
+            <table>
+              <tr><th></th><th>col 1</th><th>col 2</th><th>col 3</th></tr>
+              <tr><td>Row 2</td><td>$2$</td><td>$4$</td><td>$7$</td></tr>
+              <tr><td>minus 2 × row 1</td><td>$-2$</td><td>$-4$</td><td>$-6$</td></tr>
+              <tr><td><b>New row 2</b></td><td>$2-2=\mathbf{0}$</td><td>$4-4=\mathbf{0}$</td><td>$7-6=\mathbf{1}$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> Row 2 $= (0, 0, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Look for leader 2 in row 2, column 2.</p>
+            <p class="k"><span class="kl">What we see</span> It is $0$ and there is no row below to swap in, so column 2 has no pivot: $x_2$ is free. Move right: row 2, column 3 is $1$, that is leader 2.</p>
+            <p class="k"><span class="kl">What we have now</span> Two leaders, so rank 2; one free variable ($3 - 2 = 1$).</p>
+            $$ U = \begin{bmatrix} \boxed{1} & 2 & 3 \\ 0 & 0 & \boxed{1} \end{bmatrix}, \quad r = 2, \quad \text{free: } x_2 $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Special solution: set $x_2 = 1$. Solve the bottom row of $U$ first: $x_3 = 0$.</p>
+            <p class="k"><span class="kl">Why</span> Row 2 of $U$ is $0x_1 + 0x_2 + 1x_3 = 0$, which just says $x_3 = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> $x_2 = 1$, $x_3 = 0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Go up to row 1 of $U$: $x_1 + 2x_2 + 3x_3 = 0$.</p>
+            <p class="k"><span class="kl">How</span> $2x_2 = 2 \times 1 = 2$; $\ 3x_3 = 3 \times 0 = 0$. So $x_1 + 2 + 0 = 0$, i.e. $x_1 + 2 = 0$.</p>
+            <p class="k"><span class="kl">How, next</span> Take 2 away from both sides: $x_1 = -2$.</p>
+            <p class="k"><span class="kl">What we have now</span> Special solution $(-2, 1, 0)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check in the original $A$</span> Row by row:</p>
+            <table>
+              <tr><th>Row of $A$</th><th>Row · $(-2, 1, 0)$</th><th>Result</th></tr>
+              <tr><td>$(1, 2, 3)$</td><td>$1(-2) + 2(1) + 3(0) = -2 + 2 + 0$</td><td>$0$ ✓</td></tr>
+              <tr><td>$(2, 4, 7)$</td><td>$2(-2) + 4(1) + 7(0) = -4 + 4 + 0$</td><td>$0$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
+        <p class="answer">$N(A) = \{ c(-2, 1, 0) \}$: a line. Check: $-2(1,2) + (2,4) = 0$ ✓.</p>
+      </div>
+    </div>
+
+    <!-- E3 -->
+    <div class="worked">
+      <h3>Example 3: Get to R</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>Find $R$ for $A = \begin{bmatrix} 1 & 1 & 2 \\ 2 & 3 & 5 \\ 1 & 2 & 3 \end{bmatrix}$ and the special solutions.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$R$ (reduced row echelon form) = staircase with every pivot equal to 1 and zeros above and below each pivot. Pivot = leader used to clear its column. Multiplier = (number to remove) ÷ (pivot). $F$ = numbers of $R$ in the pivot rows and free columns. $N = \begin{bmatrix} -F \\ I \end{bmatrix}$ = the special solutions as columns.</p>
+      </div>
+      <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Leader = the $1$ in row 1. Clear the $2$ in row 2.</p>
+            <p class="k"><span class="kl">Why this amount</span> $2 \div 1 = 2$: take away $2 \times (1, 1, 2) = (2, 2, 4)$.</p>
+            <p class="k"><span class="kl">How</span> Box by box: $2 - 2 = 0$, $\ 3 - 2 = 1$, $\ 5 - 4 = 1$.</p>
+            <table>
+              <tr><th>Step</th><th>Work</th><th>New row</th></tr>
+              <tr><td>row 2 − 2 × row 1</td><td>$(2,3,5) - (2,2,4)$</td><td>$(0,1,1)$</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Clear the $1$ in row 3, column 1.</p>
+            <p class="k"><span class="kl">Why this amount</span> $1 \div 1 = 1$: take away 1 copy of row 1, $(1, 1, 2)$.</p>
+            <p class="k"><span class="kl">How</span> $1 - 1 = 0$, $\ 2 - 1 = 1$, $\ 3 - 2 = 1$.</p>
+            <table>
+              <tr><th>Step</th><th>Work</th><th>New row</th></tr>
+              <tr><td>row 3 − 1 × row 1</td><td>$(1,2,3) - (1,1,2)$</td><td>$(0,1,1)$</td></tr>
+            </table>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Leader 2 = the $1$ in row 2, column 2. Clear the $1$ under it.</p>
+            <p class="k"><span class="kl">Why this amount</span> $1 \div 1 = 1$: take away 1 copy of row 2, $(0, 1, 1)$.</p>
+            <p class="k"><span class="kl">How</span> $0 - 0 = 0$, $\ 1 - 1 = 0$, $\ 1 - 1 = 0$.</p>
+            <table>
+              <tr><th>Step</th><th>Work</th><th>New row</th></tr>
+              <tr><td>row 3 − row 2</td><td>$(0,1,1) - (0,1,1)$</td><td>$(0,0,0)$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> A zero row. No leader left for column 3, so $x_3$ is free.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Clear the $1$ <b>above</b> leader 2 (row 1, column 2).</p>
+            <p class="k"><span class="kl">Why this amount</span> $1 \div 1 = 1$: take away 1 copy of row 2.</p>
+            <p class="k"><span class="kl">How</span> $1 - 0 = 1$, $\ 1 - 1 = 0$, $\ 2 - 1 = 1$.</p>
+            <table>
+              <tr><th>Step</th><th>Work</th><th>New row</th></tr>
+              <tr><td>row 1 − row 2 (clear above)</td><td>$(1,1,2) - (0,1,1)$</td><td>$(1,0,1)$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> Both leaders are already $1$, so no dividing is needed:</p>
+            $$ R = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 0 \end{bmatrix}, \quad F = \begin{bmatrix} 1 \\ 1 \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Build $N$: flip the signs of $F$ and put $1$ in the free row (row 3).</p>
+            <p class="k"><span class="kl">How</span> $-F = (-1, -1)$, then the free entry $x_3 = 1$: $N = (-1, -1, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check in the original $A$</span> Row by row:</p>
+            <table>
+              <tr><th>Row of $A$</th><th>Row · $(-1, -1, 1)$</th><th>Result</th></tr>
+              <tr><td>$(1, 1, 2)$</td><td>$-1 - 1 + 2$</td><td>$0$ ✓</td></tr>
+              <tr><td>$(2, 3, 5)$</td><td>$-2 - 3 + 5$</td><td>$0$ ✓</td></tr>
+              <tr><td>$(1, 2, 3)$</td><td>$-1 - 2 + 3$</td><td>$0$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
+        <p class="answer">One special solution: $N = \begin{bmatrix} -1 \\ -1 \\ 1 \end{bmatrix}$ (column 3 = column 1 + column 2).</p>
+      </div>
+    </div>
+
+    <!-- E4 -->
+    <div class="worked">
+      <h3>Example 4: Read N straight from R</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>$R = \begin{bmatrix} 1 & 0 & 3 & -1 \\ 0 & 1 & 2 & 4 \end{bmatrix}$. Write the special solutions without any calculation.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>Pivot column = a column of $R$ holding a leading 1 (with zeros elsewhere). Free column = a column with no leading 1. $F$ = the numbers of $R$ in the pivot rows and free columns. $-F$ = $F$ with every sign flipped. $I$ = identity (1s on the diagonal, 0s elsewhere). $N = \begin{bmatrix} -F \\ I \end{bmatrix}$ = special solutions as columns.</p>
+      </div>
+      <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Find the pivot and free columns.</p>
+            <p class="k"><span class="kl">How</span> Column 1 is $(1, 0)$ and column 2 is $(0, 1)$: leaders, so pivot columns. Columns 3 and 4 have no leader: free.</p>
+            <p class="k"><span class="kl">What we have now</span> Pivot variables $x_1, x_2$; free variables $x_3, x_4$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Cut out $F$ (rows 1–2, columns 3–4) and flip its signs.</p>
+            <p class="k"><span class="kl">How</span> $F = \begin{bmatrix} 3 & -1 \\ 2 & 4 \end{bmatrix}$. Flip: $3 \to -3$, $\ -1 \to 1$, $\ 2 \to -2$, $\ 4 \to -4$, so $-F = \begin{bmatrix} -3 & 1 \\ -2 & -4 \end{bmatrix}$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Stack $-F$ on top of $I$.</p>
+            <p class="k"><span class="kl">Why</span> Pivot variables come first here (rows 1–2), free ones last (rows 3–4), so no reordering is needed.</p>
+            $$ N = \begin{bmatrix} -3 & 1 \\ -2 & -4 \\ 1 & 0 \\ 0 & 1 \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check in the original $R$</span> Each row of $R$ times each column of $N$ must be $0$:</p>
+            <table>
+              <tr><th>Row of $R$</th><th>· $(-3, -2, 1, 0)$</th><th>· $(1, -4, 0, 1)$</th></tr>
+              <tr><td>$(1, 0, 3, -1)$</td><td>$-3 + 0 + 3 + 0 = 0$ ✓</td><td>$1 + 0 + 0 - 1 = 0$ ✓</td></tr>
+              <tr><td>$(0, 1, 2, 4)$</td><td>$0 - 2 + 2 + 0 = 0$ ✓</td><td>$0 - 4 + 0 + 4 = 0$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
+        <p class="answer">Special solutions $(-3, -2, 1, 0)$ and $(1, -4, 0, 1)$.</p>
+      </div>
+    </div>
+
+    <!-- E5 -->
+    <div class="worked">
+      <h3>Example 5: Counting</h3>
+      <div class="box example"><span class="label">Problem</span>
+        <p>$A$ is $5 \times 8$ with rank 3. How many pivot variables, free variables and special solutions? Can $Ax = 0$ have only the zero solution?</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>$5 \times 8$ = 5 rows (equations), 8 columns (unknowns), so $m = 5$, $n = 8$. Rank $r$ = how many pivots. Pivot variable = unknown of a pivot column (forced). Free variable = unknown of a column with no pivot (chosen). Special solution = one per free variable. Zero solution = $x = (0, \dots, 0)$.</p>
+      </div>
+      <div class="steps">
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Count pivot variables.</p>
+            <p class="k"><span class="kl">Why</span> Each pivot sits in its own column, and each pivot column gives one pivot variable.</p>
+            <p class="k"><span class="kl">What we have now</span> Pivot variables $= r = 3$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Count free variables.</p>
+            <p class="k"><span class="kl">How</span> Every column is pivot or free: $n - r = 8 - 3 = 5$.</p>
+            <p class="k"><span class="kl">What we have now</span> 5 free variables, so 5 special solutions (one per free variable).</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Decide if $x = 0$ is the only solution.</p>
+            <p class="k"><span class="kl">Why</span> Setting any free variable to $1$ gives a special solution that is <b>not</b> zero (it has a $1$ in it).</p>
+            <p class="k"><span class="kl">How</span> Even at the largest possible rank, $r \le m = 5$, so free variables $\ge 8 - 5 = 3 > 0$.</p>
+          </li>
+        </ol>
+        <p>Pivot variables $r = 3$; free variables $n - r = 8 - 3 = 5$; special solutions $= 5$.</p>
+        <p class="answer">No: with more unknowns than pivots there are always free variables, so always nonzero solutions. (Any matrix with $n > m$ has $n - r \ge n - m > 0$.)</p>
+      </div>
+    </div>
+
+    <!-- E6 -->
+    <div class="worked">
+      <h3>Example 6: Adding an option with a kink removes a copy (finance)</h3>
+      <div class="box finance"><span class="label">Problem</span>
+        <p>In Example 1's market, replace the future with the <b>20,000 CE</b>, which pays $(0, 0, 1)$ (its strike sits <b>inside</b> the range). What happens to the rank and the zero-payoff trades?</p>
+      </div>
+      <div class="box intuition"><span class="label">Story first</span>
+        <p>Straight-line payoffs (bonds, futures, deep-ITM options) can only ever give two directions. An option whose strike is <b>between</b> the scenarios bends: flat, then rising. That bend is a genuinely new direction the others can't copy.</p>
+      </div>
+      <div class="box intuition"><span class="label">Words used here</span>
+        <p>20,000 CE = call option with strike 20,000: pays $\max(S - 20{,}000, 0)$, i.e. 0 at 19,900, 0 at 20,000, 100 points (= 1) at 20,100. Kink = the bend where an option's payoff switches from flat to rising. Column = one product; row = one Nifty level. Rank = how many pivots. Free product = column with no pivot (a copy). Special solution = free product 1 lot, then solve. Zero-payoff trade = basket that pays 0 at every level.</p>
+      </div>
+      <div class="steps">
+        $$ A = \begin{bmatrix} 1 & 3 & 1 & 0 \\ 2 & 2 & 1 & 0 \\ 3 & 1 & 1 & 1 \end{bmatrix} \quad (\text{CE}_{19{,}800},\ \text{PE}_{20{,}200},\ \text{bond},\ \text{CE}_{20{,}000}) $$
+        <ol class="step-list kid-step">
+          <li>
+            <p class="k"><span class="kl">What we do</span> Leader = the $1$ at the top of column 1. Clear the $2$ in row 2.</p>
+            <p class="k"><span class="kl">Why this amount</span> $2 \div 1 = 2$: take away $2 \times (1, 3, 1, 0) = (2, 6, 2, 0)$.</p>
+            <p class="k"><span class="kl">How</span> $2 - 2 = 0$, $\ 2 - 6 = -4$, $\ 1 - 2 = -1$, $\ 0 - 0 = 0$.</p>
+            <p class="k"><span class="kl">What we have now</span> Row 2 $= (0, -4, -1, 0)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Clear the $3$ in row 3.</p>
+            <p class="k"><span class="kl">Why this amount</span> $3 \div 1 = 3$: take away $3 \times (1, 3, 1, 0) = (3, 9, 3, 0)$.</p>
+            <p class="k"><span class="kl">How</span> $3 - 3 = 0$, $\ 1 - 9 = -8$, $\ 1 - 3 = -2$, $\ 1 - 0 = 1$.</p>
+            <p class="k"><span class="kl">What we have now</span> Row 3 $= (0, -8, -2, 1)$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Leader 2 = the $-4$ in row 2. Clear the $-8$ under it.</p>
+            <p class="k"><span class="kl">Why this amount</span> $-8 \div -4 = 2$: take away $2 \times (0, -4, -1, 0) = (0, -8, -2, 0)$.</p>
+            <p class="k"><span class="kl">How</span> $0 - 0 = 0$, $\ -8 - (-8) = 0$, $\ -2 - (-2) = 0$, $\ 1 - 0 = 1$.</p>
+            <table>
+              <tr><th>Step</th><th>New row</th></tr>
+              <tr><td>row 2 − 2 × row 1</td><td>$(0, -4, -1, 0)$</td></tr>
+              <tr><td>row 3 − 3 × row 1</td><td>$(0, -8, -2, 1)$</td></tr>
+              <tr><td>row 3 − 2 × row 2</td><td>$(0, 0, 0, 1)$</td></tr>
+            </table>
+            <p class="k"><span class="kl">What we have now</span> Row 3 is <b>not</b> zero this time: the $1$ in column 4 is leader 3. The kinked option's own column saved it.</p>
+            $$ U = \begin{bmatrix} \boxed{1} & 3 & 1 & 0 \\ 0 & \boxed{-4} & -1 & 0 \\ 0 & 0 & 0 & \boxed{1} \end{bmatrix} $$
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Count leaders and label products.</p>
+            <p class="k"><span class="kl">How</span> Leaders in columns 1, 2, 4: rank 3. Column 3 (bond) has none: $4 - 3 = 1$ free product.</p>
+            <p class="k"><span class="kl">In market words</span> Three pivots, rank 3: the market now spans every payoff over the three scenarios. Only the bond is free.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Special solution: bond $x_3 = 1$. Bottom row of $U$ first: $x_4 = 0$.</p>
+            <p class="k"><span class="kl">Why</span> Row 3 of $U$ is $0 + 0 + 0 + 1x_4 = 0$, which just says $x_4 = 0$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 2 of $U$: $-4x_2 - x_3 + 0x_4 = 0$.</p>
+            <p class="k"><span class="kl">How</span> Put $x_3 = 1$, $x_4 = 0$: $-4x_2 - 1 = 0$. Add 1 to both sides: $-4x_2 = 1$. Divide by $-4$: $x_2 = -\tfrac14$.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">What we do</span> Row 1 of $U$: $x_1 + 3x_2 + x_3 + 0x_4 = 0$.</p>
+            <p class="k"><span class="kl">How</span> $3x_2 = 3 \times (-\tfrac14) = -\tfrac34$. So $x_1 - \tfrac34 + 1 = 0$. Tidy: $-\tfrac34 + 1 = \tfrac14$, so $x_1 + \tfrac14 = 0$, so $x_1 = -\tfrac14$.</p>
+            <p class="k"><span class="kl">What we have now</span> $(-\tfrac14, -\tfrac14, 1, 0)$. Scale by 4 for whole lots: $(-1, -1, 4, 0)$, the same "CE + PE = 4 bonds" trade as before.</p>
+          </li>
+          <li>
+            <p class="k"><span class="kl">Check in the original $A$</span> Row by row (Nifty level by level) with $(-1, -1, 4, 0)$:</p>
+            <table>
+              <tr><th>Nifty</th><th>Row · $(-1, -1, 4, 0)$</th><th>Result</th></tr>
+              <tr><td>19,900: $(1, 3, 1, 0)$</td><td>$-1 - 3 + 4 + 0$</td><td>$0$ ✓</td></tr>
+              <tr><td>20,000: $(2, 2, 1, 0)$</td><td>$-2 - 2 + 4 + 0$</td><td>$0$ ✓</td></tr>
+              <tr><td>20,100: $(3, 1, 1, 1)$</td><td>$-3 - 1 + 4 + 0$</td><td>$0$ ✓</td></tr>
+            </table>
+          </li>
+        </ol>
+        <p>Three pivots (columns 1, 2, 4), rank 3: the market now spans every payoff over the three scenarios. Only the bond is free; its special solution is still $(-1, -1, 4, 0)$ (after scaling).</p>
+        <p class="answer">Rank rises from 2 to 3 and the zero-payoff trades shrink from a plane to a line. The kinked option completes the market: now any payoff at these three levels can be built.</p>
+      </div>
+    </div>
+
+    <!-- ====================================================== -->
+<h2>Practice problems</h2>
+    <p>Answers are hidden. Click a problem to check your work.</p>
+    <details class="proof"><summary>1. Rank and special solutions of $\begin{bmatrix} 1 & 3 & 5 \end{bmatrix}$.</summary>
+      <p>Rank 1, free $x_2, x_3$: $(-3, 1, 0)$ and $(-5, 0, 1)$.</p>
+    </details>
+    <details class="proof"><summary>2. Rank of $\begin{bmatrix} 1 & 2 \\ 2 & 4 \\ 3 & 6 \end{bmatrix}$ and its nullspace.</summary>
+      <p>Rank 1 (every row is a multiple of $(1, 2)$). $N = \{ c(-2, 1) \}$.</p>
+    </details>
+    <details class="proof"><summary>3. $R = \begin{bmatrix} 1 & 0 & 5 \\ 0 & 1 & -3 \end{bmatrix}$. Write $N$.</summary>
+      <p>$F = (5, -3)$, so $N = (-5, 3, 1)$.</p>
+    </details>
+    <details class="proof"><summary>4. A $4 \times 4$ matrix has rank 4. What is its nullspace?</summary>
+      <p>No free variables, so $N = \{0\}$ only. (It is invertible.)</p>
+    </details>
+    <details class="proof"><summary>5. Which is always a subspace: the solutions of $Ax = 0$ or of $Ax = b$ with $b \ne 0$?</summary>
+      <p>Only $Ax = 0$ (it contains 0 and is closed under adding and scaling).</p>
+    </details>
+    <details class="proof"><summary>6. Market: bond $(1,1,1)$, future $(-1,0,1)$, 19,800 CE $(1,2,3)$. Find the zero-payoff trade.</summary>
+      <p>CE = 2 × bond + future: check $(2-1,\ 2+0,\ 2+1) = (1,2,3)$ ✓. So $(2, 1, -1)$: buy 2 bonds, buy 1 future, sell 1 CE.</p>
+    </details>
+
+  </div>
+  </section>
+
+  <nav class="pager">
+    <a href="07_column-space-and-nullspace.html">← 07 Column Space and Nullspace</a>
+    <a href="09_solving-ax-b-row-reduced-form.html">09 Solving Ax = b →</a>
+  </nav>
+  </div>
+</main>
+
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<script>
+// Example 1: four straight-line payoffs lie in one plane; a kinked option sticks out.
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var blue = c("--def-b"), green = c("--ex-b"), orange = c("--int-b"), red = c("--warn-b"), purple = c("--thm-b"),
+      ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+  function axis(t) {
+    return { title: { text: t, font: { size: 14, color: ink } }, range: [-2, 4], autorange: false, tickmode: "linear", tick0: 0, dtick: 1,
+      tickfont: { size: 11, color: soft }, gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 3,
+      showbackground: true, backgroundcolor: paper2, showspikes: false };
+  }
+  function seg(v, color, name, dash, pos) {
+    return { type: "scatter3d", mode: "lines+markers+text", name: name, line: { color: color, width: 7, dash: dash || "solid" },
+      marker: { size: [2, 5], color: color }, text: ["", name.split(" ")[0] === "20,000" ? "20,000 CE" : name.split(":")[0]],
+      textposition: pos || "top right", textfont: { size: 12, color: color }, x: [0, v[0]], y: [0, v[1]], z: [0, v[2]] };
+  }
+  // plane x - 2y + z = 0, i.e. y = (x + z) / 2
+  var plane = { type: "mesh3d", name: "plane of straight-line payoffs", opacity: 0.25, color: purple, hoverinfo: "name", showlegend: true,
+    x: [-2, 4, 4, -2], y: [-2, 1, 4, 1], z: [-2, -2, 4, 4], i: [0, 0], j: [1, 2], k: [2, 3] };
+  var data = [plane,
+    seg([1, 2, 3], blue, "CE 19,800: (1,2,3)"), seg([3, 2, 1], green, "PE 20,200: (3,2,1)"),
+    seg([1, 1, 1], orange, "Bond: (1,1,1)", null, "bottom right"), seg([-1, 0, 1], ink, "Future: (−1,0,1)", null, "middle left"),
+    seg([0, 0, 1], red, "20,000 CE: (0,0,1)", "dash", "top center")];
+  var layout = {
+    margin: { l: 0, r: 0, t: 0, b: 60 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true,
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 12 } },
+    scene: { xaxis: axis("pays at 19,900"), yaxis: axis("pays at 20,000"), zaxis: axis("pays at 20,100"), aspectmode: "cube",
+      dragmode: "turntable", camera: { eye: { x: 1.8, y: -1.4, z: 0.8 }, up: { x: 0, y: 0, z: 1 } } }
+  };
+  Plotly.newPlot("l8plot", data, layout, { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["toImage"] });
+  document.querySelectorAll(".tabs button[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () { setTimeout(function () { Plotly.Plots.resize("l8plot"); }, 0); });
+  });
+});
+</script>
+</body>
+</html>
